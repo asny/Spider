@@ -56,6 +56,8 @@ class GLObject {
     
     GLMaterial material;
     
+    void update_material();
+    
 public:
     
     GLObject(const GLShader& _shader, const GLMaterial& _material);

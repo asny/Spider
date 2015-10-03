@@ -57,6 +57,7 @@ GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material)
     
     glEnableVertexAttribArray(position_att);
     glEnableVertexAttribArray(vector_att);
+    
     check_gl_error();
 }
 
@@ -79,25 +80,9 @@ void GLObject::draw(GLenum mode)
 {
     if(data.size() != 0)
     {
+        update_material();
+        
         glUseProgram(shader.get_shader_id());
-        GLuint uniform = (GLuint) glGetUniformLocation(shader.get_shader_id(), "ambientMat");
-        if (uniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
-        }
-        glUniform4fv(uniform, 1, &material.ambient[0]);
-        
-        uniform = (GLuint) glGetUniformLocation(shader.get_shader_id(), "diffuseMat");
-        if (uniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'diffuseMat' uniform."<<std::endl;
-        }
-        glUniform4fv(uniform, 1, &material.diffuse[0]);
-        
-        uniform = (GLuint) glGetUniformLocation(shader.get_shader_id(), "specMat");
-        if (uniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'specMat' uniform."<<std::endl;
-        }
-        glUniform4fv(uniform, 1, &material.specular[0]);
-        
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
         const int vector_size = 3*sizeof(double);
@@ -105,8 +90,31 @@ void GLObject::draw(GLenum mode)
         glVertexAttribPointer(vector_att, 3, GL_DOUBLE, GL_FALSE, 2*vector_size, (const GLvoid *)vector_size);
         
         glDrawArrays(mode, 0, static_cast<int>(data.size())/(2*3));
+        
         check_gl_error();
     }
+}
+
+void GLObject::update_material()
+{
+    glUseProgram(shader.get_shader_id());
+    GLuint uniform = (GLuint) glGetUniformLocation(shader.get_shader_id(), "ambientMat");
+    if (uniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
+    }
+    glUniform4fv(uniform, 1, &material.ambient[0]);
+    
+    uniform = (GLuint) glGetUniformLocation(shader.get_shader_id(), "diffuseMat");
+    if (uniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'diffuseMat' uniform."<<std::endl;
+    }
+    glUniform4fv(uniform, 1, &material.diffuse[0]);
+    
+    uniform = (GLuint) glGetUniformLocation(shader.get_shader_id(), "specMat");
+    if (uniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'specMat' uniform."<<std::endl;
+    }
+    glUniform4fv(uniform, 1, &material.specular[0]);
 }
 
 // Create a NULL-terminated string by reading the provided file
