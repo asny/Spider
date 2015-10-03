@@ -230,6 +230,16 @@ GLShader::GLShader(std::string vertexShaderFilename, std::string fragmentShaderF
     check_gl_error();
 }
 
+void GLShader::set_uniform_variable(std::string name, const vec3& value)
+{
+    glUseProgram(shader_id);
+    GLuint lightPosUniform = glGetUniformLocation(shader_id, &name[0]);
+    if (lightPosUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the '" << name << "' uniform variable."<<std::endl;
+    }
+    glUniform3fv(lightPosUniform, 1, &value[0]);
+}
+
 Visualizer::Visualizer()
 {
     // Enable states
@@ -304,12 +314,7 @@ void Visualizer::set_light_position(const vec3& lightPosition)
 {
     for (GLShader shader : shaders)
     {
-        glUseProgram(shader.get_shader_id());
-        GLuint lightPosUniform = glGetUniformLocation(shader.get_shader_id(), "lightPos");
-        if (lightPosUniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
-        }
-        glUniform3fv(lightPosUniform, 1, &lightPosition[0]);
+        shader.set_uniform_variable("lightPos", lightPosition);
     }
     
     check_gl_error();

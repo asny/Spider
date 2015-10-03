@@ -40,6 +40,8 @@ public:
     {
         return shader_id;
     }
+    
+    void set_uniform_variable(std::string name, const glm::vec3& value);
 };
 
 /**
