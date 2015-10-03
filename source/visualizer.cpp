@@ -11,7 +11,9 @@
 
 using namespace glm;
 
-Visualizer::GLObject::GLObject(GLuint _shader, const glm::vec4& ambient_mat_, const glm::vec4& diffuse_mat_, const glm::vec4& specular_mat_) : shader(_shader), ambient_mat(ambient_mat_), diffuse_mat(diffuse_mat_), specular_mat(specular_mat_)
+const static unsigned int NULL_LOCATION = -1;
+
+GLObject::GLObject(GLuint _shader, const glm::vec4& ambient_mat_, const glm::vec4& diffuse_mat_, const glm::vec4& specular_mat_) : shader(_shader), ambient_mat(ambient_mat_), diffuse_mat(diffuse_mat_), specular_mat(specular_mat_)
 {
     // Generate arrays and buffers
     glGenVertexArrays(1, &array_id);
@@ -35,7 +37,7 @@ Visualizer::GLObject::GLObject(GLuint _shader, const glm::vec4& ambient_mat_, co
     check_gl_error();
 }
 
-void Visualizer::GLObject::update_data(std::vector<vec3> _data)
+void GLObject::update_data(std::vector<vec3> _data)
 {
     data.clear();
     for (vec3 vec : _data)
@@ -50,7 +52,7 @@ void Visualizer::GLObject::update_data(std::vector<vec3> _data)
     check_gl_error();
 }
 
-void Visualizer::GLObject::draw(GLenum mode)
+void GLObject::draw(GLenum mode)
 {
     if(data.size() != 0)
     {

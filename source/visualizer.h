@@ -42,33 +42,31 @@ inline void _check_gl_error(const char *file, int line)
 
 #define check_gl_error() _check_gl_error(__FILE__,__LINE__)
 
+class GLObject {
+    
+    GLuint shader;
+    
+    std::vector<double> data;
+    
+    GLuint array_id, buffer_id;
+    GLuint position_att, vector_att;
+    
+    glm::vec4 ambient_mat, diffuse_mat, specular_mat;
+    
+public:
+    
+    GLObject(GLuint _shader, const glm::vec4& ambient_mat, const glm::vec4& diffuse_mat, const glm::vec4& specular_mat);
+    
+    void update_data(std::vector<glm::vec3> _data);
+    
+    void draw(GLenum mode = GL_TRIANGLES);
+    
+};
+
 /**
  A visualizer which handles all draw functionality using OpenGL.
  */
 class Visualizer {
-    
-    const static unsigned int NULL_LOCATION = -1;
-    
-    class GLObject {
-        
-        GLuint shader;
-        
-        std::vector<double> data;
-        
-        GLuint array_id, buffer_id;
-        GLuint position_att, vector_att;
-        
-        glm::vec4 ambient_mat, diffuse_mat, specular_mat;
-        
-    public:
-        
-        GLObject(GLuint _shader, const glm::vec4& ambient_mat = glm::vec4(1.f), const glm::vec4& diffuse_mat = glm::vec4(0.f), const glm::vec4& specular_mat = glm::vec4(0.f));
-        
-        void update_data(std::vector<glm::vec3> _data);
-        
-        void draw(GLenum mode = GL_TRIANGLES);
-        
-    };
     
     int WIDTH, HEIGHT;
     GLuint gouraud_shader;
