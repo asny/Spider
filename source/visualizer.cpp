@@ -129,9 +129,6 @@ GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char*
         exit( EXIT_FAILURE );
     }
     
-    /* use program object */
-    glUseProgram(program);
-    
     return program;
 }
 
@@ -148,9 +145,13 @@ GLShader::GLShader(std::string vertexShaderFilename, std::string fragmentShaderF
     check_gl_error();
 }
 
-GLuint GLShader::get_uniform_location(std::string variable_name)
+void GLShader::use()
 {
     glUseProgram(shader_id);
+}
+
+GLuint GLShader::get_uniform_location(std::string variable_name)
+{
     GLuint uniformLocation = glGetUniformLocation(shader_id, &variable_name[0]);
     if (uniformLocation == NULL_LOCATION) {
         std::cerr << "Shader did not contain the '" << variable_name << "' uniform variable."<<std::endl;
@@ -222,11 +223,11 @@ void GLObject::draw(GLenum mode)
 {
     if(data.size() != 0)
     {
+        shader.use();
         shader.set_uniform_variable("ambientMat", material.ambient);
         shader.set_uniform_variable("diffuseMat", material.diffuse);
         shader.set_uniform_variable("specMat", material.specular);
         
-        glUseProgram(shader.get_shader_id());
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
         const int vector_size = 3*sizeof(double);
@@ -265,6 +266,7 @@ void Visualizer::reshape(int width, int height)
     // Send model-view matrix uniform to the shaders
     for (GLShader shader : shaders)
     {
+        shader.use();
         shader.set_uniform_variable("MVPMatrix", modelViewProjectionMatrix);
     }
     
@@ -281,6 +283,7 @@ void Visualizer::set_eye_position(const glm::vec3& eyePosition)
     // Send model-view, normal and model-view-projection matrix uniforms to the shaders
     for (GLShader shader : shaders)
     {
+        shader.use();
         shader.set_uniform_variable("MVMatrix", modelViewMatrix);
         shader.set_uniform_variable("NormalMatrix", normalMatrix);
         shader.set_uniform_variable("MVPMatrix", modelViewProjectionMatrix);
@@ -293,6 +296,7 @@ void Visualizer::set_light_position(const vec3& lightPosition)
 {
     for (GLShader shader : shaders)
     {
+        shader.use();
         shader.set_uniform_variable("lightPos", lightPosition);
     }
     
