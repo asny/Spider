@@ -84,7 +84,10 @@ class Visualizer {
     
     // Uniform variables
     glm::mat4 projectionMatrix, viewMatrix, modelMatrix = glm::mat4();
-    glm::vec3 center = glm::vec3(0.f);
+    glm::vec3 direction = glm::vec3(0.f, 0.f, -1.f);
+    glm::vec3 eye = glm::vec3(0.f, 0.f, 5.f);
+    
+    void update_view();
     
 public:
     
@@ -114,6 +117,8 @@ public:
      Set the position of the light source.
      */
     void set_light_position(const glm::vec3& lightPosition);
+    
+    void move_forward();
     
     /**
      Draw the objects.

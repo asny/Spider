@@ -99,7 +99,6 @@ GUI::GUI(int &argc, char** argv)
     
     glutDisplayFunc(display_);
     glutKeyboardFunc(keyboard_);
-    glutIgnoreKeyRepeat(true);
     glutVisibilityFunc(visible_);
     glutReshapeFunc(reshape_);
     glutIdleFunc(animate_);
@@ -110,6 +109,7 @@ GUI::GUI(int &argc, char** argv)
     create_shaders_and_objects();
     
     visualizer->set_light_position(light_pos);
+    visualizer->set_eye_position(eye_pos);
     
     glutMainLoop();
 }
@@ -133,9 +133,6 @@ void GUI::reshape(int width, int height)
 
 void GUI::animate()
 {
-    GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.001;
-    glm::vec3 ep( eye_pos[0] * sinf(timeValue), eye_pos[1] , eye_pos[2] * cosf(timeValue));
-    visualizer->set_eye_position(ep);
     glutPostRedisplay();
 }
 
@@ -143,6 +140,9 @@ void GUI::keyboard(unsigned char key, int x, int y) {
     switch(key) {
         case '\033':
             exit(0);
+            break;
+        case 'w':
+            visualizer->move_forward();
             break;
         case ' ':
             if(!CONTINUOUS)

@@ -273,9 +273,9 @@ void Visualizer::reshape(int width, int height)
     check_gl_error();
 }
 
-void Visualizer::set_eye_position(const glm::vec3& eyePosition)
+void Visualizer::update_view()
 {
-    viewMatrix = glm::lookAt(eyePosition, center, glm::vec3(0., 1., 0.));
+    viewMatrix = glm::lookAt(eye, eye + direction, glm::vec3(0., 1., 0.));
     glm::mat4 modelViewMatrix = viewMatrix * modelMatrix;
     glm::mat4 normalMatrix = glm::inverseTranspose(modelViewMatrix);
     glm::mat4 modelViewProjectionMatrix = projectionMatrix * modelViewMatrix;
@@ -290,6 +290,18 @@ void Visualizer::set_eye_position(const glm::vec3& eyePosition)
     }
     
     check_gl_error();
+}
+
+void Visualizer::move_forward()
+{
+    eye += 0.1f * direction;
+    update_view();
+}
+
+void Visualizer::set_eye_position(const glm::vec3& eyePosition)
+{
+    eye = eyePosition;
+    update_view();
 }
 
 void Visualizer::set_light_position(const vec3& lightPosition)
