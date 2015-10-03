@@ -8,10 +8,10 @@
 
 #include <iostream>
 
-#include "GUI.h"
+#include "controller.h"
 
 int main(int argc, char** argv)
 {
-    GUI gui(argc, argv);
+    Controller controller(argc, argv);
     return 0;
 }

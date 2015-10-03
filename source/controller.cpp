@@ -1,12 +1,12 @@
 //
-//  GUI.cpp
+//  Controller.cpp
 //  Spider
 //
 //  Created by Asger Nyman Christiansen on 03/10/15.
 //  Copyright (c) 2015 Asger Nyman Christiansen. All rights reserved.
 //
 
-#include "GUI.h"
+#include "Controller.h"
 
 #include <GLUT/glut.h>
 
@@ -19,26 +19,26 @@
 #include <atomic>
 
 void display_(){
-    GUI::get_instance()->display();
+    Controller::get_instance()->display();
 }
 
 void keyboard_(unsigned char key, int x, int y){
-    GUI::get_instance()->keyboard(key, x, y);
+    Controller::get_instance()->keyboard(key, x, y);
 }
 
 void reshape_(int width, int height){
-    GUI::get_instance()->reshape(width, height);
+    Controller::get_instance()->reshape(width, height);
 }
 
 void visible_(int v){
-    GUI::get_instance()->visible(v);
+    Controller::get_instance()->visible(v);
 }
 
 void animate_(){
-    GUI::get_instance()->animate();
+    Controller::get_instance()->animate();
 }
 
-GUI* GUI::instance = NULL;
+Controller* Controller::instance = NULL;
 
 static const glm::vec3 cube_data[] = {
     glm::vec3(-1.0f,-1.0f,-1.0f), // triangle 1 : begin
@@ -87,7 +87,7 @@ static const glm::vec3 triangles_data[] = {
         glm::vec3(0.), glm::vec3(0.,0.,1.), glm::vec3(0.,-1.,0.), glm::vec3(0.,0.,1.), glm::vec3(1.,0.,0.), glm::vec3(0.,0.,1.)
 };
 
-GUI::GUI(int &argc, char** argv)
+Controller::Controller(int &argc, char** argv)
 {
     instance = this;
     
@@ -114,7 +114,7 @@ GUI::GUI(int &argc, char** argv)
     glutMainLoop();
 }
 
-void GUI::display()
+void Controller::display()
 {
     if (glutGet(GLUT_WINDOW_WIDTH) != WIN_SIZE_X || glutGet(GLUT_WINDOW_HEIGHT) != WIN_SIZE_Y) {
         return;
@@ -123,7 +123,7 @@ void GUI::display()
     glutSwapBuffers();
 }
 
-void GUI::reshape(int width, int height)
+void Controller::reshape(int width, int height)
 {
     WIN_SIZE_X = width;
     WIN_SIZE_Y = height;
@@ -131,12 +131,12 @@ void GUI::reshape(int width, int height)
     glutPostRedisplay();
 }
 
-void GUI::animate()
+void Controller::animate()
 {
     glutPostRedisplay();
 }
 
-void GUI::keyboard(unsigned char key, int x, int y) {
+void Controller::keyboard(unsigned char key, int x, int y) {
     switch(key) {
         case '\033':
             exit(0);
@@ -166,7 +166,7 @@ void GUI::keyboard(unsigned char key, int x, int y) {
     }
 }
 
-void GUI::visible(int v)
+void Controller::visible(int v)
 {
     if(v==GLUT_VISIBLE)
         glutIdleFunc(animate_);
@@ -174,7 +174,7 @@ void GUI::visible(int v)
         glutIdleFunc(0);
 }
 
-void GUI::create_shaders_and_objects()
+void Controller::create_shaders_and_objects()
 {
     // Create shaders
     auto shader = GLShader("shaders/gouraud.vert",  "shaders/gouraud.frag");

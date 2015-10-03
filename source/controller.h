@@ -1,5 +1,5 @@
 //
-//  GUI.h
+//  controller.h
 //  Spider
 //
 //  Created by Asger Nyman Christiansen on 03/10/15.
@@ -11,9 +11,9 @@
 #include "view.h"
 
 /**
- A GUI application which utilizes OpenGL and GLUT for visualization.
+ A Controller application which utilizes OpenGL and GLUT for visualization.
  */
-class GUI
+class Controller
 {
     std::unique_ptr<View> visualizer;
     
@@ -25,13 +25,13 @@ class GUI
     
     bool CONTINUOUS = false;
     
-    static GUI* instance;
+    static Controller* instance;
     
 public:
     
-    GUI(int &argc, char** argv);
+    Controller(int &argc, char** argv);
     
-    static GUI* get_instance()
+    static Controller* get_instance()
     {
         return instance;
     }
