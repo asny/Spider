@@ -76,7 +76,7 @@ public:
 /**
  A visualizer which handles all draw functionality using OpenGL.
  */
-class Visualizer {
+class View {
     
     int WIDTH, HEIGHT;
     std::vector<GLShader> shaders;
@@ -95,7 +95,7 @@ class Visualizer {
     
 public:
     
-    Visualizer();
+    View();
     
     void add_shader(GLShader shader)
     {

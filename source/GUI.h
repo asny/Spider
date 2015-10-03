@@ -8,14 +8,14 @@
 
 #pragma once
 
-#include "visualizer.h"
+#include "view.h"
 
 /**
  A GUI application which utilizes OpenGL and GLUT for visualization.
  */
 class GUI
 {
-    std::unique_ptr<Visualizer> visualizer;
+    std::unique_ptr<View> visualizer;
     
     glm::vec3 eye_pos = {0., 0., 5.};
     glm::vec3 light_pos = {0., 2., 2.};

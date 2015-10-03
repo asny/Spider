@@ -104,7 +104,7 @@ GUI::GUI(int &argc, char** argv)
     glutIdleFunc(animate_);
     
     // Initialize the visualization
-    visualizer = std::unique_ptr<Visualizer>(new Visualizer());
+    visualizer = std::unique_ptr<View>(new View());
     
     create_shaders_and_objects();
     

@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Asger Nyman Christiansen. All rights reserved.
 //
 
-#include "visualizer.h"
+#include "view.h"
 #include "gtc/matrix_inverse.hpp"
 
 using namespace glm;
@@ -240,7 +240,7 @@ void GLObject::draw(GLenum mode)
     }
 }
 
-Visualizer::Visualizer()
+View::View()
 {
     // Enable states
     glEnable(GL_DEPTH_TEST);
@@ -255,7 +255,7 @@ Visualizer::Visualizer()
     check_gl_error();
 }
 
-void Visualizer::reshape(int width, int height)
+void View::reshape(int width, int height)
 {
     WIDTH = width;
     HEIGHT = height;
@@ -273,7 +273,7 @@ void Visualizer::reshape(int width, int height)
     check_gl_error();
 }
 
-void Visualizer::update_view()
+void View::update_view()
 {
     viewMatrix = glm::lookAt(eye, eye + direction, glm::vec3(0., 1., 0.));
     glm::mat4 modelViewMatrix = viewMatrix * modelMatrix;
@@ -292,40 +292,40 @@ void Visualizer::update_view()
     check_gl_error();
 }
 
-void Visualizer::move_forward()
+void View::move_forward()
 {
     eye += stepsize * direction;
     update_view();
 }
 
 
-void Visualizer::move_backwards()
+void View::move_backwards()
 {
     eye -= stepsize * direction;
     update_view();
 }
 
 
-void Visualizer::rotate_left()
+void View::rotate_left()
 {
     direction = vec3(glm::rotate(mat4(), stepangle, vec3(0.f,1.f,0.f)) * vec4(direction, 1.f));
     update_view();
 }
 
 
-void Visualizer::rotate_right()
+void View::rotate_right()
 {
     direction = vec3(glm::rotate(mat4(), -stepangle, vec3(0.f,1.f,0.f)) * vec4(direction, 1.f));
     update_view();
 }
 
-void Visualizer::set_eye_position(const glm::vec3& eyePosition)
+void View::set_eye_position(const glm::vec3& eyePosition)
 {
     eye = eyePosition;
     update_view();
 }
 
-void Visualizer::set_light_position(const vec3& lightPosition)
+void View::set_light_position(const vec3& lightPosition)
 {
     for (GLShader shader : shaders)
     {
@@ -336,7 +336,7 @@ void Visualizer::set_light_position(const vec3& lightPosition)
     check_gl_error();
 }
 
-void Visualizer::draw()
+void View::draw()
 {
     glClearColor(1., 1., 1., 0.);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
