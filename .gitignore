@@ -1,3 +1,8 @@
+# Xcode user project files
+*.xcuserstate
+*.xcscheme
+*.plist
+
 # Compiled Object files
 *.slo
 *.lo

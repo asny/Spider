@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>A9ADC250-351D-4767-8236-D9F56D60B5DD</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Spider</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>AA0ED5B31F89499E45FD996C7623235EF9EAEF80</key>
+		<string>https://github.com/asny/Spider.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Spider.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>AA0ED5B31F89499E45FD996C7623235EF9EAEF80</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/asny/Spider.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>AA0ED5B31F89499E45FD996C7623235EF9EAEF80</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>AA0ED5B31F89499E45FD996C7623235EF9EAEF80</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Spider</string>
+		</dict>
+	</array>
+</dict>
+</plist>
