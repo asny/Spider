@@ -102,7 +102,7 @@ GUI::GUI(int &argc, char** argv)
     visualizer->add_shader(shader);
     
     // Create objects
-    auto cube = GLObject(shader.get_shader_id(), {0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f});
+    auto cube = GLObject(shader, {0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f});
     std::vector<glm::vec3> data;
     for (auto pos : cube_data)
     {
@@ -114,9 +114,7 @@ GUI::GUI(int &argc, char** argv)
     
     visualizer->set_light_position(light_pos);
     
-    check_gl_error();
     glutMainLoop();
-    check_gl_error();
 }
 
 void GUI::display()
@@ -126,7 +124,6 @@ void GUI::display()
     }
     visualizer->draw();
     glutSwapBuffers();
-    check_gl_error();
 }
 
 void GUI::reshape(int width, int height)

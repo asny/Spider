@@ -9,11 +9,33 @@
 #include "visualizer.h"
 #include "gtc/matrix_inverse.hpp"
 
+inline void _check_gl_error(const char *file, int line)
+{
+    GLenum err (glGetError());
+    
+    while(err!=GL_NO_ERROR) {
+        std::string error;
+        
+        switch(err) {
+            case GL_INVALID_OPERATION:      error="INVALID_OPERATION";      break;
+            case GL_INVALID_ENUM:           error="INVALID_ENUM";           break;
+            case GL_INVALID_VALUE:          error="INVALID_VALUE";          break;
+            case GL_OUT_OF_MEMORY:          error="OUT_OF_MEMORY";          break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION:  error="INVALID_FRAMEBUFFER_OPERATION";  break;
+        }
+        
+        std::cerr << "GL_" << error.c_str() <<" - "<<file<<":"<<line<<std::endl;
+        err=glGetError();
+    }
+}
+
+#define check_gl_error() _check_gl_error(__FILE__,__LINE__)
+
 using namespace glm;
 
 const static unsigned int NULL_LOCATION = -1;
 
-GLObject::GLObject(GLuint _shader, const glm::vec4& ambient_mat_, const glm::vec4& diffuse_mat_, const glm::vec4& specular_mat_) : shader(_shader), ambient_mat(ambient_mat_), diffuse_mat(diffuse_mat_), specular_mat(specular_mat_)
+GLObject::GLObject(GLShader _shader, const glm::vec4& ambient_mat_, const glm::vec4& diffuse_mat_, const glm::vec4& specular_mat_) : shader(_shader), ambient_mat(ambient_mat_), diffuse_mat(diffuse_mat_), specular_mat(specular_mat_)
 {
     // Generate arrays and buffers
     glGenVertexArrays(1, &array_id);
@@ -23,11 +45,11 @@ GLObject::GLObject(GLuint _shader, const glm::vec4& ambient_mat_, const glm::vec
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     
     // Initialize shader attributes
-    position_att = glGetAttribLocation(shader, "position");
+    position_att = glGetAttribLocation(shader.get_shader_id(), "position");
     if (position_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
     }
-    vector_att = glGetAttribLocation(shader, "vector");
+    vector_att = glGetAttribLocation(shader.get_shader_id(), "vector");
     if (vector_att == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'vector' attribute." << std::endl;
     }
@@ -56,20 +78,20 @@ void GLObject::draw(GLenum mode)
 {
     if(data.size() != 0)
     {
-        glUseProgram(shader);
-        GLuint uniform = (GLuint) glGetUniformLocation(shader, "ambientMat");
+        glUseProgram(shader.get_shader_id());
+        GLuint uniform = (GLuint) glGetUniformLocation(shader.get_shader_id(), "ambientMat");
         if (uniform == NULL_LOCATION) {
             std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
         }
         glUniform4fv(uniform, 1, &ambient_mat[0]);
         
-        uniform = (GLuint) glGetUniformLocation(shader, "diffuseMat");
+        uniform = (GLuint) glGetUniformLocation(shader.get_shader_id(), "diffuseMat");
         if (uniform == NULL_LOCATION) {
             std::cerr << "Shader did not contain the 'diffuseMat' uniform."<<std::endl;
         }
         glUniform4fv(uniform, 1, &diffuse_mat[0]);
         
-        uniform = (GLuint) glGetUniformLocation(shader, "specMat");
+        uniform = (GLuint) glGetUniformLocation(shader.get_shader_id(), "specMat");
         if (uniform == NULL_LOCATION) {
             std::cerr << "Shader did not contain the 'specMat' uniform."<<std::endl;
         }
