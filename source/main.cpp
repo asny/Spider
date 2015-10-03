@@ -10,10 +10,9 @@
 
 #include "GUI.h"
 
-int main(int argc, char** argv) {
-    // insert code here...
+int main(int argc, char** argv)
+{
     std::cout << "Hello, World!\n";
     GUI gui(argc, argv);
-    glutMainLoop();
     return 0;
 }

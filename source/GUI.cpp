@@ -8,6 +8,8 @@
 
 #include "GUI.h"
 
+#include <GLUT/glut.h>
+
 #include <iostream>
 #include <iomanip>
 #include <ctime>
@@ -66,14 +68,14 @@ GUI::GUI(int &argc, char** argv)
     check_gl_error(); // Catches a GL_INVALID_ENUM error. See http://www.opengl.org/wiki/OpenGL_Loading_Library
 #endif
     
-    visualizer = std::unique_ptr<Visualizer>(new Visualizer(light_pos));
-    
     glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
     
+    visualizer = std::unique_ptr<Visualizer>(new Visualizer(light_pos));
     visualizer->update();
     glutPostRedisplay();
     
     check_gl_error();
+    glutMainLoop();
 }
 
 void GUI::display()
