@@ -220,7 +220,7 @@ void Visualizer::reshape(int width, int height)
 {
     WIDTH = width;
     HEIGHT = height;
-    projectionMatrix = glm::perspective(53.f, width/float(height), 1.f, 1000000.f);
+    projectionMatrix = glm::perspective(53.f, width/float(height), 0.01f, 1000.f);
     glViewport(0, 0, width, height);
     glm::mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     
@@ -234,9 +234,9 @@ void Visualizer::reshape(int width, int height)
     check_gl_error();
 }
 
-void Visualizer::set_view_position(glm::vec3 pos)
+void Visualizer::set_view_position(const glm::vec3& pos)
 {
-    viewMatrix = glm::lookAt(glm::vec3(pos), center, glm::vec3(0., 1., 0.));
+    viewMatrix = glm::lookAt(pos, center, glm::vec3(0., 1., 0.));
     glm::mat4 modelViewMatrix = viewMatrix * modelMatrix;
     glm::mat4 normalMatrix = glm::inverseTranspose(modelViewMatrix);
     glm::mat4 modelViewProjectionMatrix = projectionMatrix * modelViewMatrix;
@@ -246,7 +246,7 @@ void Visualizer::set_view_position(glm::vec3 pos)
     if (MVMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
     }
-    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
+    glUniformMatrix4fv(MVMatrixUniform, 1, GL_FALSE, &modelViewMatrix[0][0]);
     
     GLuint NormalMatrixUniform = glGetUniformLocation(gouraud_shader, "NormalMatrix");
     if (NormalMatrixUniform == NULL_LOCATION) {
@@ -258,7 +258,7 @@ void Visualizer::set_view_position(glm::vec3 pos)
     if (MVPMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
     }
-    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
+    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_FALSE, &modelViewProjectionMatrix[0][0]);
     
     check_gl_error();
 }
@@ -315,16 +315,11 @@ static const vec3 cube[] = {
 void Visualizer::update()
 {
     std::vector<vec3> data;
-    /*for (auto pos : cube)
+    for (auto pos : cube)
     {
-        data.push_back(vec3(5.*pos[0], 5.*pos[1], 5.*pos[2]));
+        data.push_back(pos);
         data.push_back(vec3(0.,1.,0.));
-    }*/
-    
-    data = {vec3(0.), vec3(0.,0.,1.), vec3(1.,0.,0.), vec3(0.,0.,1.), vec3(0.,1.,0.), vec3(0.,0.,1.),
-        vec3(0.), vec3(1.,0.,0.), vec3(-1.,0.,-1.), vec3(1.,0.,0.), vec3(0.,1.,0.), vec3(1.,0.,0.),
-    vec3(0.), vec3(0.,0.,1.), vec3(0.,-1.,0.), vec3(0.,0.,1.), vec3(1.,0.,0.), vec3(0.,0.,1.)};
-    
+    }
     interface->add_data(data);
     
 }

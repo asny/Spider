@@ -69,9 +69,6 @@ void GUI::display()
     if (glutGet(GLUT_WINDOW_WIDTH) != WIN_SIZE_X || glutGet(GLUT_WINDOW_HEIGHT) != WIN_SIZE_Y) {
         return;
     }
-    GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.0002;
-    glm::vec3 ep( eye_pos[0] * sinf(timeValue), eye_pos[1] * cosf(timeValue) , eye_pos[2] * cosf(timeValue));
-    visualizer->set_view_position(ep);
     visualizer->draw();
     glutSwapBuffers();
     check_gl_error();
@@ -82,10 +79,14 @@ void GUI::reshape(int width, int height)
     WIN_SIZE_X = width;
     WIN_SIZE_Y = height;
     visualizer->reshape(width, height);
+    glutPostRedisplay();
 }
 
 void GUI::animate()
 {
+    GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.001;
+    glm::vec3 ep( eye_pos[0] * sinf(timeValue), eye_pos[1] , eye_pos[2] * cosf(timeValue));
+    visualizer->set_view_position(ep);
     glutPostRedisplay();
 }
 

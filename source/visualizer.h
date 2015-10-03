@@ -77,7 +77,7 @@ class Visualizer {
     
     // Uniform variables
     glm::mat4 projectionMatrix, viewMatrix, modelMatrix = glm::mat4();
-    glm::vec3 center = glm::vec3(0.);
+    glm::vec3 center = glm::vec3(0.f);
     
 public:
     
@@ -96,7 +96,7 @@ public:
     /**
      Set the position of the camera/eye.
      */
-    void set_view_position(glm::vec3 pos);
+    void set_view_position(const glm::vec3& pos);
     
     /**
      Draws the simplicial complex.
