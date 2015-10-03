@@ -258,7 +258,7 @@ void Visualizer::reshape(int width, int height)
 {
     WIDTH = width;
     HEIGHT = height;
-    projectionMatrix = glm::perspective(53.f, width/float(height), 0.01f, 1000.f);
+    projectionMatrix = glm::perspective(45.f, width/float(height), 0.01f, 100.f);
     glViewport(0, 0, width, height);
     glm::mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     
