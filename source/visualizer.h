@@ -53,7 +53,7 @@ class Visualizer {
         
         GLuint shader;
         
-        std::vector<glm::vec3> data;
+        std::vector<double> data;
         
         GLuint array_id, buffer_id;
         GLuint position_att, vector_att;
@@ -65,11 +65,6 @@ class Visualizer {
         GLObject(GLuint _shader, const glm::vec4& ambient_mat = glm::vec4(1.f), const glm::vec4& diffuse_mat = glm::vec4(0.f), const glm::vec4& specular_mat = glm::vec4(0.f));
         
         void add_data(std::vector<glm::vec3> _data);
-        
-        void clear_data()
-        {
-            data.clear();
-        }
         
         void draw(GLenum mode = GL_TRIANGLES);
         

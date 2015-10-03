@@ -35,11 +35,19 @@ Visualizer::GLObject::GLObject(GLuint _shader, const glm::vec4& ambient_mat_, co
     check_gl_error();
 }
 
-void Visualizer::GLObject::add_data(std::vector<glm::vec3> _data)
+void Visualizer::GLObject::add_data(std::vector<vec3> _data)
 {
-    data = std::vector<glm::vec3>(_data);
+    data.clear();
+    for (vec3 vec : _data)
+    {
+        data.push_back(vec.x);
+        data.push_back(vec.y);
+        data.push_back(vec.z);
+    }
+    
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*data.size(), &data[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(double)*data.size(), &data[0], GL_STATIC_DRAW);
+    check_gl_error();
 }
 
 void Visualizer::GLObject::draw(GLenum mode)
@@ -68,10 +76,11 @@ void Visualizer::GLObject::draw(GLenum mode)
         glUseProgram(shader);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
-        glVertexAttribPointer(position_att, 3, GL_DOUBLE, GL_FALSE, 2*sizeof(glm::vec3), (const GLvoid *)0);
-        glVertexAttribPointer(vector_att, 3, GL_DOUBLE, GL_FALSE, 2*sizeof(glm::vec3), (const GLvoid *)sizeof(glm::vec3));
+        const int vector_size = 3*sizeof(double);
+        glVertexAttribPointer(position_att, 3, GL_DOUBLE, GL_FALSE, 2*vector_size, (const GLvoid *)0);
+        glVertexAttribPointer(vector_att, 3, GL_DOUBLE, GL_FALSE, 2*vector_size, (const GLvoid *)vector_size);
         
-        glDrawArrays(mode, 0, static_cast<int>(data.size())/2);
+        glDrawArrays(mode, 0, static_cast<int>(data.size())/(2*3));
         check_gl_error();
     }
 }
@@ -198,11 +207,11 @@ Visualizer::Visualizer(const glm::vec3& light_pos)
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
     
-    glEnable(GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_BLEND);
+    //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     check_gl_error();
 }
@@ -305,13 +314,16 @@ static const vec3 cube[] = {
 
 void Visualizer::update()
 {
-    interface->clear_data();
     std::vector<vec3> data;
-    for (auto pos : cube)
+    /*for (auto pos : cube)
     {
-        data.push_back(10.f*pos);
-        data.push_back(vec3(0.f,1.f,0.f));
-    }
+        data.push_back(vec3(5.*pos[0], 5.*pos[1], 5.*pos[2]));
+        data.push_back(vec3(0.,1.,0.));
+    }*/
+    
+    data = {vec3(0.), vec3(0.,0.,1.), vec3(1.,0.,0.), vec3(0.,0.,1.), vec3(0.,1.,0.), vec3(0.,0.,1.),
+        vec3(0.), vec3(1.,0.,0.), vec3(-1.,0.,-1.), vec3(1.,0.,0.), vec3(0.,1.,0.), vec3(1.,0.,0.),
+    vec3(0.), vec3(0.,0.,1.), vec3(0.,-1.,0.), vec3(0.,0.,1.), vec3(1.,0.,0.), vec3(0.,0.,1.)};
     
     interface->add_data(data);
     

@@ -58,10 +58,10 @@ GUI::GUI(int &argc, char** argv)
     
     visualizer = std::unique_ptr<Visualizer>(new Visualizer(light_pos));
     visualizer->update();
-    glutPostRedisplay();
     
     check_gl_error();
     glutMainLoop();
+    check_gl_error();
 }
 
 void GUI::display()

@@ -17,9 +17,8 @@ class GUI
 {
     std::unique_ptr<Visualizer> visualizer;
     
-    glm::vec3 eye_pos = {70., 30., 70.};
-    glm::vec3 camera_pos = {30., 30., 70.};
-    glm::vec3 light_pos = {0., 0., 70.};
+    glm::vec3 eye_pos = {-10., 5., 10.};
+    glm::vec3 light_pos = {0., 5., 5.};
     
     int WIN_SIZE_X = 1280;
     int WIN_SIZE_Y = 720;
