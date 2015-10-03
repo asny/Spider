@@ -83,6 +83,7 @@ GUI::GUI(int &argc, char** argv)
 {
     instance = this;
     
+    // Initialize glut
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutCreateWindow("Spider");
@@ -95,6 +96,7 @@ GUI::GUI(int &argc, char** argv)
     glutReshapeFunc(reshape_);
     glutIdleFunc(animate_);
     
+    // Initialize the visualization
     visualizer = std::unique_ptr<Visualizer>(new Visualizer());
     
     // Create shaders

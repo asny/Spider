@@ -218,6 +218,8 @@ GLShader::GLShader(std::string vertexShaderFilename, std::string fragmentShaderF
     else {
         shader_id = init_shader(&vertexShaderFilename[0], &fragmentShaderFilename[0], "fragColour", nullptr);
     }
+    
+    check_gl_error();
 }
 
 Visualizer::Visualizer()
@@ -231,23 +233,6 @@ Visualizer::Visualizer()
     
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    check_gl_error();
-}
-
-void Visualizer::set_light_position(const vec3& lightPosition)
-{
-    // Send light position uniform to the shaders
-    for (GLShader shader : shaders)
-    {
-        glUseProgram(shader.get_shader_id());
-        glm::vec3 lp(lightPosition);
-        GLuint lightPosUniform = glGetUniformLocation(shader.get_shader_id(), "lightPos");
-        if (lightPosUniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
-        }
-        glUniform3fv(lightPosUniform, 1, &lp[0]);
-    }
     
     check_gl_error();
 }
@@ -302,6 +287,21 @@ void Visualizer::set_eye_position(const glm::vec3& eyePosition)
             std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
         }
         glUniformMatrix4fv(MVPMatrixUniform, 1, GL_FALSE, &modelViewProjectionMatrix[0][0]);
+    }
+    
+    check_gl_error();
+}
+
+void Visualizer::set_light_position(const vec3& lightPosition)
+{
+    for (GLShader shader : shaders)
+    {
+        glUseProgram(shader.get_shader_id());
+        GLuint lightPosUniform = glGetUniformLocation(shader.get_shader_id(), "lightPos");
+        if (lightPosUniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
+        }
+        glUniform3fv(lightPosUniform, 1, &lightPosition[0]);
     }
     
     check_gl_error();
