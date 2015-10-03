@@ -9,6 +9,8 @@
 #include "visualizer.h"
 #include "gtc/matrix_inverse.hpp"
 
+using namespace glm;
+
 Visualizer::GLObject::GLObject(GLuint _shader, const glm::vec4& ambient_mat_, const glm::vec4& diffuse_mat_, const glm::vec4& specular_mat_) : shader(_shader), ambient_mat(ambient_mat_), diffuse_mat(diffuse_mat_), specular_mat(specular_mat_)
 {
     // Generate arrays and buffers
@@ -262,8 +264,55 @@ void Visualizer::draw()
     check_gl_error();
 }
 
+static const vec3 cube[] = {
+    vec3(-1.0f,-1.0f,-1.0f), // triangle 1 : begin
+    vec3(-1.0f,-1.0f, 1.0f),
+    vec3(-1.0f, 1.0f, 1.0f), // triangle 1 : end
+    vec3(1.0f, 1.0f,-1.0f), // triangle 2 : begin
+    vec3(-1.0f,-1.0f,-1.0f),
+    vec3(-1.0f, 1.0f,-1.0f), // triangle 2 : end
+    vec3(1.0f,-1.0f, 1.0f),
+    vec3(-1.0f,-1.0f,-1.0f),
+    vec3(1.0f,-1.0f,-1.0f),
+    vec3(1.0f, 1.0f,-1.0f),
+    vec3(1.0f,-1.0f,-1.0f),
+    vec3(-1.0f,-1.0f,-1.0f),
+    vec3(-1.0f,-1.0f,-1.0f),
+    vec3(-1.0f, 1.0f, 1.0f),
+    vec3(-1.0f, 1.0f,-1.0f),
+    vec3(1.0f,-1.0f, 1.0f),
+    vec3(-1.0f,-1.0f, 1.0f),
+    vec3(-1.0f,-1.0f,-1.0f),
+    vec3(-1.0f, 1.0f, 1.0f),
+    vec3(-1.0f,-1.0f, 1.0f),
+    vec3(1.0f,-1.0f, 1.0f),
+    vec3(1.0f, 1.0f, 1.0f),
+    vec3(1.0f,-1.0f,-1.0f),
+    vec3(1.0f, 1.0f,-1.0f),
+    vec3(1.0f,-1.0f,-1.0f),
+    vec3(1.0f, 1.0f, 1.0f),
+    vec3(1.0f,-1.0f, 1.0f),
+    vec3(1.0f, 1.0f, 1.0f),
+    vec3(1.0f, 1.0f,-1.0f),
+    vec3(-1.0f, 1.0f,-1.0f),
+    vec3(1.0f, 1.0f, 1.0f),
+    vec3(-1.0f, 1.0f,-1.0f),
+    vec3(-1.0f, 1.0f, 1.0f),
+    vec3(1.0f, 1.0f, 1.0f),
+    vec3(-1.0f, 1.0f, 1.0f),
+    vec3(1.0f,-1.0f, 1.0f)
+};
+
 void Visualizer::update()
 {
     interface->clear_data();
+    std::vector<vec3> data;
+    for (auto pos : cube)
+    {
+        data.push_back(10.f*pos);
+        data.push_back(vec3(0.f,1.f,0.f));
+    }
+    
+    interface->add_data(data);
     
 }
