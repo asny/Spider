@@ -63,13 +63,25 @@ public:
     
 };
 
+class GLShader {
+    GLuint shader_id;
+    
+public:
+    GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
+    
+    GLuint get_shader_id()
+    {
+        return shader_id;
+    }
+};
+
 /**
  A visualizer which handles all draw functionality using OpenGL.
  */
 class Visualizer {
     
     int WIDTH, HEIGHT;
-    GLuint gouraud_shader;
+    GLShader gouraud_shader;
     
     std::unique_ptr<GLObject> interface;
     
@@ -79,11 +91,7 @@ class Visualizer {
     
 public:
     
-    Visualizer(const glm::vec3& light_pos);
-    
-private:
-    // Create a GLSL program object from vertex and fragment shader files
-    GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName, const char* gShaderFile = nullptr);
+    Visualizer(GLShader shader, const glm::vec3& light_pos);
     
 public:
     /**
@@ -95,6 +103,8 @@ public:
      Set the position of the camera/eye.
      */
     void set_view_position(const glm::vec3& pos);
+    
+    void set_light_position(const glm::vec3& lightPosition);
     
     /**
      Draws the objects.

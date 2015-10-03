@@ -56,7 +56,8 @@ GUI::GUI(int &argc, char** argv)
     glutReshapeFunc(reshape_);
     glutIdleFunc(animate_);
     
-    visualizer = std::unique_ptr<Visualizer>(new Visualizer(light_pos));
+    GLShader shader = GLShader("shaders/gouraud.vert",  "shaders/gouraud.frag");
+    visualizer = std::unique_ptr<Visualizer>(new Visualizer(shader, light_pos));
     visualizer->update();
     
     check_gl_error();

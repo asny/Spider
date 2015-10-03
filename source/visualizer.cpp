@@ -115,7 +115,7 @@ char* readShaderSource(const char* shaderFile)
 }
 
 // Create a GLSL program object from vertex and fragment shader files
-GLuint Visualizer::init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName, const char* gShaderFile)
+GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName, const char* gShaderFile)
 {
     struct Shader {
         const char*  filename;
@@ -186,23 +186,24 @@ GLuint Visualizer::init_shader(const char* vShaderFile, const char* fShaderFile,
     return program;
 }
 
-Visualizer::Visualizer(const glm::vec3& light_pos)
+GLShader::GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename)
+{
+    if(geometryShaderFilename.length() != 0)
+    {
+        shader_id = init_shader(&vertexShaderFilename[0], &fragmentShaderFilename[0], "fragColour", &geometryShaderFilename[0]);
+    }
+    else {
+        shader_id = init_shader(&vertexShaderFilename[0], &fragmentShaderFilename[0], "fragColour", nullptr);
+    }
+    std::cout << "Shaders initialized" << std::endl;
+}
+
+Visualizer::Visualizer(GLShader shader, const glm::vec3& light_pos) : gouraud_shader(shader)
 {
     // Initialize shaders
-    gouraud_shader = init_shader("shaders/gouraud.vert",  "shaders/gouraud.frag", "fragColour");
+    set_light_position(light_pos);
     
-    // Send light position uniform to the shaders
-    glUseProgram(gouraud_shader);
-    glm::vec3 lp(light_pos);
-    GLuint lightPosUniform = glGetUniformLocation(gouraud_shader, "lightPos");
-    if (lightPosUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
-    }
-    glUniform3fv(lightPosUniform, 1, &lp[0]);
-    
-    check_gl_error();
-    
-    interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader, {0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}));
+    interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader.get_shader_id(), {0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}));
     
     // Enable states
     glEnable(GL_DEPTH_TEST);
@@ -217,6 +218,20 @@ Visualizer::Visualizer(const glm::vec3& light_pos)
     check_gl_error();
 }
 
+void Visualizer::set_light_position(const vec3& lightPosition)
+{
+    // Send light position uniform to the shaders
+    glUseProgram(gouraud_shader.get_shader_id());
+    glm::vec3 lp(lightPosition);
+    GLuint lightPosUniform = glGetUniformLocation(gouraud_shader.get_shader_id(), "lightPos");
+    if (lightPosUniform == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
+    }
+    glUniform3fv(lightPosUniform, 1, &lp[0]);
+    
+    check_gl_error();
+}
+
 void Visualizer::reshape(int width, int height)
 {
     WIDTH = width;
@@ -225,8 +240,8 @@ void Visualizer::reshape(int width, int height)
     glViewport(0, 0, width, height);
     glm::mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     
-    glUseProgram(gouraud_shader);
-    GLuint MVPMatrixUniform = glGetUniformLocation(gouraud_shader, "MVPMatrix");
+    glUseProgram(gouraud_shader.get_shader_id());
+    GLuint MVPMatrixUniform = glGetUniformLocation(gouraud_shader.get_shader_id(), "MVPMatrix");
     if (MVPMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
     }
@@ -242,20 +257,20 @@ void Visualizer::set_view_position(const glm::vec3& pos)
     glm::mat4 normalMatrix = glm::inverseTranspose(modelViewMatrix);
     glm::mat4 modelViewProjectionMatrix = projectionMatrix * modelViewMatrix;
     
-    glUseProgram(gouraud_shader);
-    GLuint MVMatrixUniform = glGetUniformLocation(gouraud_shader, "MVMatrix");
+    glUseProgram(gouraud_shader.get_shader_id());
+    GLuint MVMatrixUniform = glGetUniformLocation(gouraud_shader.get_shader_id(), "MVMatrix");
     if (MVMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
     }
     glUniformMatrix4fv(MVMatrixUniform, 1, GL_FALSE, &modelViewMatrix[0][0]);
     
-    GLuint NormalMatrixUniform = glGetUniformLocation(gouraud_shader, "NormalMatrix");
+    GLuint NormalMatrixUniform = glGetUniformLocation(gouraud_shader.get_shader_id(), "NormalMatrix");
     if (NormalMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
     }
     glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
     
-    GLuint MVPMatrixUniform = glGetUniformLocation(gouraud_shader, "MVPMatrix");
+    GLuint MVPMatrixUniform = glGetUniformLocation(gouraud_shader.get_shader_id(), "MVPMatrix");
     if (MVPMatrixUniform == NULL_LOCATION) {
         std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
     }
