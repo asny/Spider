@@ -79,6 +79,14 @@ static const glm::vec3 cube_data[] = {
     glm::vec3(1.0f,-1.0f, 1.0f)
 };
 
+
+
+static const glm::vec3 triangles_data[] = {
+        glm::vec3(0.), glm::vec3(0.,0.,1.), glm::vec3(1.,0.,0.), glm::vec3(0.,0.,1.), glm::vec3(0.,1.,0.), glm::vec3(0.,0.,1.),
+        glm::vec3(0.), glm::vec3(1.,0.,0.), glm::vec3(-1.,0.,-1.), glm::vec3(1.,0.,0.), glm::vec3(0.,1.,0.), glm::vec3(1.,0.,0.),
+        glm::vec3(0.), glm::vec3(0.,0.,1.), glm::vec3(0.,-1.,0.), glm::vec3(0.,0.,1.), glm::vec3(1.,0.,0.), glm::vec3(0.,0.,1.)
+};
+
 GUI::GUI(int &argc, char** argv)
 {
     instance = this;
@@ -99,21 +107,7 @@ GUI::GUI(int &argc, char** argv)
     // Initialize the visualization
     visualizer = std::unique_ptr<Visualizer>(new Visualizer());
     
-    // Create shaders
-    auto shader = GLShader("shaders/gouraud.vert",  "shaders/gouraud.frag");
-    visualizer->add_shader(shader);
-    
-    // Create objects
-    auto material = GLMaterial {{0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}};
-    auto cube = GLObject(shader, material);
-    std::vector<glm::vec3> data;
-    for (auto pos : cube_data)
-    {
-        data.push_back(pos);
-        data.push_back(glm::vec3(0.,1.,0.));
-    }
-    cube.update_data(data);
-    visualizer->add_object(cube);
+    create_shaders_and_objects();
     
     visualizer->set_light_position(light_pos);
     
@@ -169,4 +163,34 @@ void GUI::visible(int v)
         glutIdleFunc(animate_);
     else
         glutIdleFunc(0);
+}
+
+void GUI::create_shaders_and_objects()
+{
+    // Create shaders
+    auto shader = GLShader("shaders/gouraud.vert",  "shaders/gouraud.frag");
+    visualizer->add_shader(shader);
+    
+    // Create objects
+    auto material = GLMaterial {{0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}};
+    auto cube = GLObject(shader, material);
+    std::vector<glm::vec3> data;
+    for (auto pos : cube_data)
+    {
+        data.push_back(pos);
+        data.push_back(glm::vec3(0.,1.,0.));
+    }
+    cube.set_data(data);
+    visualizer->add_object(cube);
+    
+    material = GLMaterial {{0.55f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}};
+    auto triangles = GLObject(shader, material);
+    data.clear();
+    for (auto pos : triangles_data)
+    {
+        data.push_back(2.f*pos);
+        data.push_back(glm::vec3(0.,1.,0.));
+    }
+    triangles.set_data(data);
+    visualizer->add_object(triangles);
 }

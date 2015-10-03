@@ -48,4 +48,5 @@ public:
     
     void keyboard(unsigned char key, int x, int y);
     
+    void create_shaders_and_objects();
 };
