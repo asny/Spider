@@ -45,11 +45,7 @@ GUI::GUI(int &argc, char** argv)
     instance = this;
     
     glutInit(&argc, argv);
-#ifdef _WIN32
-    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-#else
     glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-#endif
     glutCreateWindow("Spider");
     
     glutDisplayFunc(display_);
@@ -58,15 +54,6 @@ GUI::GUI(int &argc, char** argv)
     glutVisibilityFunc(visible_);
     glutReshapeFunc(reshape_);
     glutIdleFunc(animate_);
-    
-#ifndef __APPLE__
-    glewExperimental = GL_TRUE;  // See http://www.opengl.org/wiki/OpenGL_Loading_Library
-    GLint GlewInitResult = glewInit();
-    if (GlewInitResult != GLEW_OK) {
-        printf("ERROR: %s\n", glewGetErrorString(GlewInitResult));
-    }
-    check_gl_error(); // Catches a GL_INVALID_ENUM error. See http://www.opengl.org/wiki/OpenGL_Loading_Library
-#endif
     
     glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
     
