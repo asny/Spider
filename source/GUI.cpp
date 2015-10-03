@@ -144,6 +144,15 @@ void GUI::keyboard(unsigned char key, int x, int y) {
         case 'w':
             visualizer->move_forward();
             break;
+        case 'a':
+            visualizer->rotate_left();
+            break;
+        case 'd':
+            visualizer->rotate_right();
+            break;
+        case 's':
+            visualizer->move_backwards();
+            break;
         case ' ':
             if(!CONTINUOUS)
             {

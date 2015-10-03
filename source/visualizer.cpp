@@ -294,7 +294,28 @@ void Visualizer::update_view()
 
 void Visualizer::move_forward()
 {
-    eye += 0.1f * direction;
+    eye += stepsize * direction;
+    update_view();
+}
+
+
+void Visualizer::move_backwards()
+{
+    eye -= stepsize * direction;
+    update_view();
+}
+
+
+void Visualizer::rotate_left()
+{
+    direction = vec3(glm::rotate(mat4(), stepangle, vec3(0.f,1.f,0.f)) * vec4(direction, 1.f));
+    update_view();
+}
+
+
+void Visualizer::rotate_right()
+{
+    direction = vec3(glm::rotate(mat4(), -stepangle, vec3(0.f,1.f,0.f)) * vec4(direction, 1.f));
     update_view();
 }
 

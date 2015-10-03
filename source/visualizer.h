@@ -84,6 +84,10 @@ class Visualizer {
     
     // Uniform variables
     glm::mat4 projectionMatrix, viewMatrix, modelMatrix = glm::mat4();
+    
+    // Camera
+    const float stepsize = 0.1f;
+    const float stepangle = 0.01f;
     glm::vec3 direction = glm::vec3(0.f, 0.f, -1.f);
     glm::vec3 eye = glm::vec3(0.f, 0.f, 5.f);
     
@@ -119,6 +123,9 @@ public:
     void set_light_position(const glm::vec3& lightPosition);
     
     void move_forward();
+    void move_backwards();
+    void rotate_left();
+    void rotate_right();
     
     /**
      Draw the objects.
