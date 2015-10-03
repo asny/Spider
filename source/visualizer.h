@@ -43,6 +43,9 @@ public:
     }
     
     void set_uniform_variable(std::string name, const glm::vec3& value);
+    
+    void set_uniform_variable(std::string name, const glm::vec4& value);
+    
     void set_uniform_variable(std::string name, const glm::mat4& value);
 };
 
@@ -59,8 +62,6 @@ class GLObject {
     GLuint position_att, vector_att;
     
     GLMaterial material;
-    
-    void update_material();
     
 public:
     
