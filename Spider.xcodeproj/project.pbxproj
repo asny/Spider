@@ -12,6 +12,7 @@
 		7A383A2E1BBFBB1700E29333 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2D1BBFBB1700E29333 /* OpenGL.framework */; };
 		7A383A301BBFBB3300E29333 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2F1BBFBB3300E29333 /* GLUT.framework */; };
 		7A383A331BBFCE5700E29333 /* controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A311BBFCE5700E29333 /* controller.cpp */; };
+		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +38,8 @@
 		7A383A321BBFCE5700E29333 /* controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = controller.h; path = source/controller.h; sourceTree = "<group>"; };
 		7A383A371BBFDC3300E29333 /* gouraud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gouraud.vert; path = shaders/gouraud.vert; sourceTree = "<group>"; };
 		7A383A391BBFDC9F00E29333 /* gouraud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gouraud.frag; path = shaders/gouraud.frag; sourceTree = "<group>"; };
+		7AB0F2BA1BC07AA0009D85FD /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = model.cpp; path = source/model.cpp; sourceTree = "<group>"; };
+		7AB0F2BB1BC07AA0009D85FD /* model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = model.hpp; path = source/model.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +61,9 @@
 				7A383A341BBFD93A00E29333 /* Shaders */,
 				7A383A2F1BBFBB3300E29333 /* GLUT.framework */,
 				7A383A2D1BBFBB1700E29333 /* OpenGL.framework */,
-				7A383A281BBFB6FC00E29333 /* Source */,
+				7A383A281BBFB6FC00E29333 /* View */,
+				7AB0F2BD1BC07AB1009D85FD /* Model */,
+				7A383A261BBFB6F700E29333 /* game.cpp */,
 				7A383A1D1BBFB6AC00E29333 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,16 +76,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7A383A281BBFB6FC00E29333 /* Source */ = {
+		7A383A281BBFB6FC00E29333 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7A383A261BBFB6F700E29333 /* game.cpp */,
 				7A383A291BBFBA0600E29333 /* view.h */,
 				7A383A2A1BBFBA5300E29333 /* view.cpp */,
-				7A383A311BBFCE5700E29333 /* controller.cpp */,
 				7A383A321BBFCE5700E29333 /* controller.h */,
+				7A383A311BBFCE5700E29333 /* controller.cpp */,
 			);
-			name = Source;
+			name = View;
 			sourceTree = "<group>";
 		};
 		7A383A341BBFD93A00E29333 /* Shaders */ = {
@@ -90,6 +94,15 @@
 				7A383A371BBFDC3300E29333 /* gouraud.vert */,
 			);
 			name = Shaders;
+			sourceTree = "<group>";
+		};
+		7AB0F2BD1BC07AB1009D85FD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7AB0F2BA1BC07AA0009D85FD /* model.cpp */,
+				7AB0F2BB1BC07AA0009D85FD /* model.hpp */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -151,6 +164,7 @@
 				7A383A331BBFCE5700E29333 /* controller.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
 				7A383A2B1BBFBA5300E29333 /* view.cpp in Sources */,
+				7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
