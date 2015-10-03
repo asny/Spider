@@ -11,6 +11,7 @@
 		7A383A2B1BBFBA5300E29333 /* visualizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A2A1BBFBA5300E29333 /* visualizer.cpp */; };
 		7A383A2E1BBFBB1700E29333 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2D1BBFBB1700E29333 /* OpenGL.framework */; };
 		7A383A301BBFBB3300E29333 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2F1BBFBB3300E29333 /* GLUT.framework */; };
+		7A383A331BBFCE5700E29333 /* GUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A311BBFCE5700E29333 /* GUI.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,6 +33,8 @@
 		7A383A2A1BBFBA5300E29333 /* visualizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = visualizer.cpp; path = source/visualizer.cpp; sourceTree = "<group>"; };
 		7A383A2D1BBFBB1700E29333 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		7A383A2F1BBFBB3300E29333 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		7A383A311BBFCE5700E29333 /* GUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUI.cpp; path = source/GUI.cpp; sourceTree = "<group>"; };
+		7A383A321BBFCE5700E29333 /* GUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUI.h; path = source/GUI.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +74,8 @@
 				7A383A261BBFB6F700E29333 /* main.cpp */,
 				7A383A291BBFBA0600E29333 /* visualizer.h */,
 				7A383A2A1BBFBA5300E29333 /* visualizer.cpp */,
+				7A383A311BBFCE5700E29333 /* GUI.cpp */,
+				7A383A321BBFCE5700E29333 /* GUI.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -131,6 +136,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A383A331BBFCE5700E29333 /* GUI.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* main.cpp in Sources */,
 				7A383A2B1BBFBA5300E29333 /* visualizer.cpp in Sources */,
 			);
