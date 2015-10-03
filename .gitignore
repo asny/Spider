@@ -2,6 +2,7 @@
 *.xcuserstate
 *.xcscheme
 *.plist
+*.xcbkptlist
 
 # Compiled Object files
 *.slo

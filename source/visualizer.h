@@ -46,9 +46,6 @@ inline void _check_gl_error(const char *file, int line)
  A visualizer which handles all draw functionality using OpenGL.
  */
 class Visualizer {
-    enum DISPLAY_TYPE {INTERFACE = 0, WIRE_FRAME = 1, BOUNDARY = 2, EDGES = 3, LOW_QUALITY = 4, UNMOVED = 5, DISPLAY_TYPE_END = 6};
-    
-    DISPLAY_TYPE display_type = INTERFACE;
     
     const static unsigned int NULL_LOCATION = -1;
     
@@ -79,7 +76,7 @@ class Visualizer {
     };
     
     int WIDTH, HEIGHT;
-    GLuint gouraud_shader, line_shader, wire_shader;
+    GLuint gouraud_shader;
     
     std::unique_ptr<GLObject> interface;
     
@@ -110,11 +107,6 @@ public:
      Draws the simplicial complex.
      */
     void draw();
-    
-    /**
-     Switches between different types of display.
-     */
-    void switch_display_type();
     
     /**
      Updates the data to visualize.

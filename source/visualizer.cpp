@@ -11,7 +11,7 @@
 
 Visualizer::GLObject::GLObject(GLuint _shader, const glm::vec4& ambient_mat_, const glm::vec4& diffuse_mat_, const glm::vec4& specular_mat_) : shader(_shader), ambient_mat(ambient_mat_), diffuse_mat(diffuse_mat_), specular_mat(specular_mat_)
 {
-    // Generate arrays and buffers for visualising the interface
+    // Generate arrays and buffers
     glGenVertexArrays(1, &array_id);
     glBindVertexArray(array_id);
     
@@ -176,12 +176,10 @@ GLuint Visualizer::init_shader(const char* vShaderFile, const char* fShaderFile,
 
 Visualizer::Visualizer(const glm::vec3& light_pos)
 {
-    // Initialize shader
-    wire_shader = init_shader("shaders/gouraud.vert", "shaders/wire.frag", "fragColour", "shaders/wire.geom");
-    line_shader = init_shader("shaders/line.vert", "shaders/line.frag", "fragColour", "shaders/line.geom");
+    // Initialize shaders
     gouraud_shader = init_shader("shaders/gouraud.vert",  "shaders/gouraud.frag", "fragColour");
     
-    // Send light position uniform to the shader
+    // Send light position uniform to the shaders
     glUseProgram(gouraud_shader);
     glm::vec3 lp(light_pos);
     GLuint lightPosUniform = glGetUniformLocation(gouraud_shader, "lightPos");
@@ -189,20 +187,6 @@ Visualizer::Visualizer(const glm::vec3& light_pos)
         std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
     }
     glUniform3fv(lightPosUniform, 1, &lp[0]);
-    
-    glUseProgram(wire_shader);
-    lightPosUniform = glGetUniformLocation(wire_shader, "lightPos");
-    if (lightPosUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
-    }
-    glUniform3fv(lightPosUniform, 1, &lp[0]);
-    
-    glm::vec4 wire_col(0.25,0.5,0.6, 1.);
-    GLuint wireColUniform = glGetUniformLocation(wire_shader, "wireCol");
-    if (wireColUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'wireCol' uniform."<<std::endl;
-    }
-    glUniform4fv(wireColUniform, 1, &wire_col[0]);
     
     check_gl_error();
     
@@ -236,25 +220,6 @@ void Visualizer::reshape(int width, int height)
     }
     glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
     
-    glUseProgram(line_shader);
-    GLuint PMatrixUniform = glGetUniformLocation(line_shader, "PMatrix");
-    if (PMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'PMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(PMatrixUniform, 1, GL_TRUE, &projectionMatrix[0][0]);
-    
-    glUseProgram(wire_shader);
-    MVPMatrixUniform = glGetUniformLocation(wire_shader, "MVPMatrix");
-    if (MVPMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
-    
-    GLuint scaleUniform = glGetUniformLocation(wire_shader, "WScale");
-    if (scaleUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'WScale' uniform."<<std::endl;
-    }
-    glUniform2f(scaleUniform, width, height);
     check_gl_error();
 }
 
@@ -284,38 +249,6 @@ void Visualizer::set_view_position(glm::vec3 pos)
     }
     glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
     
-    glUseProgram(line_shader);
-    MVMatrixUniform = glGetUniformLocation(line_shader, "MVMatrix");
-    if (MVMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
-    
-    NormalMatrixUniform = glGetUniformLocation(line_shader, "NormalMatrix");
-    if (NormalMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
-    
-    glUseProgram(wire_shader);
-    MVMatrixUniform = glGetUniformLocation(wire_shader, "MVMatrix");
-    if (MVMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVMatrixUniform, 1, GL_TRUE, &modelViewMatrix[0][0]);
-    
-    MVPMatrixUniform = glGetUniformLocation(wire_shader, "MVPMatrix");
-    if (MVPMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
-    
-    NormalMatrixUniform = glGetUniformLocation(wire_shader, "NormalMatrix");
-    if (NormalMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
-    
     check_gl_error();
 }
 
@@ -327,11 +260,6 @@ void Visualizer::draw()
     interface->draw();
     
     check_gl_error();
-}
-
-void Visualizer::switch_display_type()
-{
-    display_type = static_cast<DISPLAY_TYPE>((display_type+1)%DISPLAY_TYPE_END);
 }
 
 void Visualizer::update()

@@ -47,6 +47,7 @@ GUI::GUI(int &argc, char** argv)
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutCreateWindow("Spider");
+    glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
     
     glutDisplayFunc(display_);
     glutKeyboardFunc(keyboard_);
@@ -54,8 +55,6 @@ GUI::GUI(int &argc, char** argv)
     glutVisibilityFunc(visible_);
     glutReshapeFunc(reshape_);
     glutIdleFunc(animate_);
-    
-    glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
     
     visualizer = std::unique_ptr<Visualizer>(new Visualizer(light_pos));
     visualizer->update();
