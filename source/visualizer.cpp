@@ -230,14 +230,24 @@ GLShader::GLShader(std::string vertexShaderFilename, std::string fragmentShaderF
     check_gl_error();
 }
 
-void GLShader::set_uniform_variable(std::string name, const vec3& value)
+GLuint GLShader::get_uniform_location(std::string variable_name)
 {
     glUseProgram(shader_id);
-    GLuint lightPosUniform = glGetUniformLocation(shader_id, &name[0]);
-    if (lightPosUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the '" << name << "' uniform variable."<<std::endl;
+    GLuint uniformLocation = glGetUniformLocation(shader_id, &variable_name[0]);
+    if (uniformLocation == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the '" << variable_name << "' uniform variable."<<std::endl;
     }
-    glUniform3fv(lightPosUniform, 1, &value[0]);
+    return uniformLocation;
+}
+
+void GLShader::set_uniform_variable(std::string name, const vec3& value)
+{
+    glUniform3fv(get_uniform_location(name), 1, &value[0]);
+}
+
+void GLShader::set_uniform_variable(std::string name, const mat4& value)
+{
+    glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, &value[0][0]);
 }
 
 Visualizer::Visualizer()
@@ -266,12 +276,7 @@ void Visualizer::reshape(int width, int height)
     // Send model-view matrix uniform to the shaders
     for (GLShader shader : shaders)
     {
-        glUseProgram(shader.get_shader_id());
-        GLuint MVPMatrixUniform = glGetUniformLocation(shader.get_shader_id(), "MVPMatrix");
-        if (MVPMatrixUniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
-        }
-        glUniformMatrix4fv(MVPMatrixUniform, 1, GL_FALSE, &modelViewProjectionMatrix[0][0]);
+        shader.set_uniform_variable("MVPMatrix", modelViewProjectionMatrix);
     }
     
     check_gl_error();
@@ -287,24 +292,9 @@ void Visualizer::set_eye_position(const glm::vec3& eyePosition)
     // Send model-view, normal and model-view-projection matrix uniforms to the shaders
     for (GLShader shader : shaders)
     {
-        glUseProgram(shader.get_shader_id());
-        GLuint MVMatrixUniform = glGetUniformLocation(shader.get_shader_id(), "MVMatrix");
-        if (MVMatrixUniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
-        }
-        glUniformMatrix4fv(MVMatrixUniform, 1, GL_FALSE, &modelViewMatrix[0][0]);
-        
-        GLuint NormalMatrixUniform = glGetUniformLocation(shader.get_shader_id(), "NormalMatrix");
-        if (NormalMatrixUniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
-        }
-        glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
-        
-        GLuint MVPMatrixUniform = glGetUniformLocation(shader.get_shader_id(), "MVPMatrix");
-        if (MVPMatrixUniform == NULL_LOCATION) {
-            std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
-        }
-        glUniformMatrix4fv(MVPMatrixUniform, 1, GL_FALSE, &modelViewProjectionMatrix[0][0]);
+        shader.set_uniform_variable("MVMatrix", modelViewMatrix);
+        shader.set_uniform_variable("NormalMatrix", normalMatrix);
+        shader.set_uniform_variable("MVPMatrix", modelViewProjectionMatrix);
     }
     
     check_gl_error();

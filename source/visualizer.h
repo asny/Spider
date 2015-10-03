@@ -33,6 +33,7 @@ struct GLMaterial
 class GLShader {
     GLuint shader_id;
     
+    GLuint get_uniform_location(std::string variable_name);
 public:
     GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
     
@@ -42,6 +43,7 @@ public:
     }
     
     void set_uniform_variable(std::string name, const glm::vec3& value);
+    void set_uniform_variable(std::string name, const glm::mat4& value);
 };
 
 /**
