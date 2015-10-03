@@ -9,6 +9,8 @@
 #include "visualizer.h"
 #include "gtc/matrix_inverse.hpp"
 
+using namespace glm;
+
 inline void _check_gl_error(const char *file, int line)
 {
     GLenum err (glGetError());
@@ -31,71 +33,7 @@ inline void _check_gl_error(const char *file, int line)
 
 #define check_gl_error() _check_gl_error(__FILE__,__LINE__)
 
-using namespace glm;
-
 const static unsigned int NULL_LOCATION = -1;
-
-GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material)
-: shader(_shader), material(_material)
-{
-    // Generate arrays and buffers
-    glGenVertexArrays(1, &array_id);
-    glBindVertexArray(array_id);
-    
-    glGenBuffers(1, &buffer_id);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-    
-    // Initialize shader attributes
-    position_att = glGetAttribLocation(shader.get_shader_id(), "position");
-    if (position_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
-    }
-    vector_att = glGetAttribLocation(shader.get_shader_id(), "vector");
-    if (vector_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'vector' attribute." << std::endl;
-    }
-    
-    glEnableVertexAttribArray(position_att);
-    glEnableVertexAttribArray(vector_att);
-    
-    check_gl_error();
-}
-
-void GLObject::update_data(std::vector<vec3> _data)
-{
-    data.clear();
-    for (vec3 vec : _data)
-    {
-        data.push_back(vec.x);
-        data.push_back(vec.y);
-        data.push_back(vec.z);
-    }
-    
-    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(double)*data.size(), &data[0], GL_STATIC_DRAW);
-    check_gl_error();
-}
-
-void GLObject::draw(GLenum mode)
-{
-    if(data.size() != 0)
-    {
-        shader.set_uniform_variable("ambientMat", material.ambient);
-        shader.set_uniform_variable("diffuseMat", material.diffuse);
-        shader.set_uniform_variable("specMat", material.specular);
-        
-        glUseProgram(shader.get_shader_id());
-        glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-        
-        const int vector_size = 3*sizeof(double);
-        glVertexAttribPointer(position_att, 3, GL_DOUBLE, GL_FALSE, 2*vector_size, (const GLvoid *)0);
-        glVertexAttribPointer(vector_att, 3, GL_DOUBLE, GL_FALSE, 2*vector_size, (const GLvoid *)vector_size);
-        
-        glDrawArrays(mode, 0, static_cast<int>(data.size())/(2*3));
-        
-        check_gl_error();
-    }
-}
 
 // Create a NULL-terminated string by reading the provided file
 char* readShaderSource(const char* shaderFile)
@@ -233,6 +171,69 @@ void GLShader::set_uniform_variable(std::string name, const vec4& value)
 void GLShader::set_uniform_variable(std::string name, const mat4& value)
 {
     glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, &value[0][0]);
+}
+
+
+GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material)
+: shader(_shader), material(_material)
+{
+    // Generate arrays and buffers
+    glGenVertexArrays(1, &array_id);
+    glBindVertexArray(array_id);
+    
+    glGenBuffers(1, &buffer_id);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+    
+    // Initialize shader attributes
+    position_att = glGetAttribLocation(shader.get_shader_id(), "position");
+    if (position_att == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
+    }
+    vector_att = glGetAttribLocation(shader.get_shader_id(), "vector");
+    if (vector_att == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the 'vector' attribute." << std::endl;
+    }
+    
+    glEnableVertexAttribArray(position_att);
+    glEnableVertexAttribArray(vector_att);
+    
+    check_gl_error();
+}
+
+void GLObject::update_data(std::vector<vec3> _data)
+{
+    data.clear();
+    for (vec3 vec : _data)
+    {
+        data.push_back(vec.x);
+        data.push_back(vec.y);
+        data.push_back(vec.z);
+    }
+    
+    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(double)*data.size(), &data[0], GL_STATIC_DRAW);
+    check_gl_error();
+}
+
+void GLObject::draw(GLenum mode)
+{
+    if(data.size() != 0)
+    {
+        shader.set_uniform_variable("ambientMat", material.ambient);
+        shader.set_uniform_variable("diffuseMat", material.diffuse);
+        shader.set_uniform_variable("specMat", material.specular);
+        
+        glUseProgram(shader.get_shader_id());
+        glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+        
+        const int vector_size = 3*sizeof(double);
+        glVertexAttribPointer(position_att, 3, GL_DOUBLE, GL_FALSE, 2*vector_size, (const GLvoid *)0);
+        glVertexAttribPointer(vector_att, 3, GL_DOUBLE, GL_FALSE, 2*vector_size, (const GLvoid *)vector_size);
+        
+        glDrawArrays(mode, 0, static_cast<int>(data.size())/(2*3));
+        
+        check_gl_error();
+    }
 }
 
 Visualizer::Visualizer()
