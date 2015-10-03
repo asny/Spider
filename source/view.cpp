@@ -1,5 +1,5 @@
 //
-//  visualizer.cpp
+//  view.cpp
 //  Spider
 //
 //  Created by Asger Nyman Christiansen on 03/10/15.

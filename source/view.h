@@ -14,7 +14,6 @@
 #include <iostream>
 #include <vector>
 
-// GLM
 #include "vec3.hpp"
 #include "vec4.hpp"
 #include "mat4x4.hpp"

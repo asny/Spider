@@ -9,9 +9,11 @@
 #include <iostream>
 
 #include "controller.h"
+#include "model.hpp"
 
 int main(int argc, char** argv)
 {
+    Model model;
     Controller controller(argc, argv);
     return 0;
 }

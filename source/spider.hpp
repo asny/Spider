@@ -1,5 +1,5 @@
 //
-//  model.hpp
+//  spider.hpp
 //  Spider
 //
 //  Created by Asger Nyman Christiansen on 03/10/15.
@@ -10,16 +10,12 @@
 
 #include "vec3.hpp"
 
-#include "spider.hpp"
-
-class Model {
-    
-    Spider spider = Spider(glm::vec3(0.f));
+class Spider {
+    glm::vec3 position;
     
 public:
-    Model()
+    Spider(glm::vec3 _position) : position(_position)
     {
         
     }
-    
 };
