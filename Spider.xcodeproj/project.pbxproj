@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		7A383A271BBFB6F700E29333 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A261BBFB6F700E29333 /* main.cpp */; };
+		7A383A2B1BBFBA5300E29333 /* visualizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A2A1BBFBA5300E29333 /* visualizer.cpp */; };
+		7A383A2E1BBFBB1700E29333 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2D1BBFBB1700E29333 /* OpenGL.framework */; };
+		7A383A301BBFBB3300E29333 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2F1BBFBB3300E29333 /* GLUT.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +28,10 @@
 /* Begin PBXFileReference section */
 		7A383A1C1BBFB6AC00E29333 /* Spider */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Spider; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A383A261BBFB6F700E29333 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = source/main.cpp; sourceTree = "<group>"; };
+		7A383A291BBFBA0600E29333 /* visualizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = visualizer.h; path = source/visualizer.h; sourceTree = "<group>"; };
+		7A383A2A1BBFBA5300E29333 /* visualizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = visualizer.cpp; path = source/visualizer.cpp; sourceTree = "<group>"; };
+		7A383A2D1BBFBB1700E29333 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		7A383A2F1BBFBB3300E29333 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +39,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A383A301BBFBB3300E29333 /* GLUT.framework in Frameworks */,
+				7A383A2E1BBFBB1700E29333 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +50,8 @@
 		7A383A131BBFB6AC00E29333 = {
 			isa = PBXGroup;
 			children = (
+				7A383A2F1BBFBB3300E29333 /* GLUT.framework */,
+				7A383A2D1BBFBB1700E29333 /* OpenGL.framework */,
 				7A383A281BBFB6FC00E29333 /* Source */,
 				7A383A1D1BBFB6AC00E29333 /* Products */,
 			);
@@ -58,6 +69,8 @@
 			isa = PBXGroup;
 			children = (
 				7A383A261BBFB6F700E29333 /* main.cpp */,
+				7A383A291BBFBA0600E29333 /* visualizer.h */,
+				7A383A2A1BBFBA5300E29333 /* visualizer.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -119,6 +132,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A383A271BBFB6F700E29333 /* main.cpp in Sources */,
+				7A383A2B1BBFBA5300E29333 /* visualizer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,6 +220,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = ../glm/glm;
 			};
 			name = Debug;
 		};
@@ -213,6 +228,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = ../glm/glm;
 			};
 			name = Release;
 		};
