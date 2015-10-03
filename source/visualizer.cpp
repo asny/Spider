@@ -261,7 +261,7 @@ void Visualizer::reshape(int width, int height)
         if (MVPMatrixUniform == NULL_LOCATION) {
             std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
         }
-        glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
+        glUniformMatrix4fv(MVPMatrixUniform, 1, GL_FALSE, &modelViewProjectionMatrix[0][0]);
     }
     
     check_gl_error();
