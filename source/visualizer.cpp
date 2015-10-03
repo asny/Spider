@@ -158,6 +158,15 @@ GLuint GLShader::get_uniform_location(std::string variable_name)
     return uniformLocation;
 }
 
+GLuint GLShader::get_attribute_location(std::string variable_name)
+{
+    GLuint attributeLocation = glGetAttribLocation(shader_id, &variable_name[0]);
+    if (attributeLocation == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the '" << variable_name << "' attribute variable."<<std::endl;
+    }
+    return attributeLocation;
+}
+
 void GLShader::set_uniform_variable(std::string name, const vec3& value)
 {
     glUniform3fv(get_uniform_location(name), 1, &value[0]);
@@ -185,14 +194,8 @@ GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material)
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     
     // Initialize shader attributes
-    position_att = glGetAttribLocation(shader.get_shader_id(), "position");
-    if (position_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'position' attribute." << std::endl;
-    }
-    vector_att = glGetAttribLocation(shader.get_shader_id(), "vector");
-    if (vector_att == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'vector' attribute." << std::endl;
-    }
+    position_att = shader.get_attribute_location("position");
+    vector_att = shader.get_attribute_location("vector");
     
     glEnableVertexAttribArray(position_att);
     glEnableVertexAttribArray(vector_att);

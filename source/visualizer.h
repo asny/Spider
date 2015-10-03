@@ -35,12 +35,15 @@ class GLShader {
     
     GLuint get_uniform_location(std::string variable_name);
 public:
+    
     GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
     
     GLuint get_shader_id()
     {
         return shader_id;
     }
+    
+    GLuint get_attribute_location(std::string variable_name);
     
     void set_uniform_variable(std::string name, const glm::vec3& value);
     
