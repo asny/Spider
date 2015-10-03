@@ -198,13 +198,8 @@ GLShader::GLShader(std::string vertexShaderFilename, std::string fragmentShaderF
     std::cout << "Shaders initialized" << std::endl;
 }
 
-Visualizer::Visualizer(GLShader shader, const glm::vec3& light_pos) : gouraud_shader(shader)
+Visualizer::Visualizer()
 {
-    // Initialize shaders
-    set_light_position(light_pos);
-    
-    interface = std::unique_ptr<GLObject>(new GLObject(gouraud_shader.get_shader_id(), {0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}));
-    
     // Enable states
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
@@ -221,13 +216,16 @@ Visualizer::Visualizer(GLShader shader, const glm::vec3& light_pos) : gouraud_sh
 void Visualizer::set_light_position(const vec3& lightPosition)
 {
     // Send light position uniform to the shaders
-    glUseProgram(gouraud_shader.get_shader_id());
-    glm::vec3 lp(lightPosition);
-    GLuint lightPosUniform = glGetUniformLocation(gouraud_shader.get_shader_id(), "lightPos");
-    if (lightPosUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
+    for (GLShader shader : shaders)
+    {
+        glUseProgram(shader.get_shader_id());
+        glm::vec3 lp(lightPosition);
+        GLuint lightPosUniform = glGetUniformLocation(shader.get_shader_id(), "lightPos");
+        if (lightPosUniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'lightPos' uniform."<<std::endl;
+        }
+        glUniform3fv(lightPosUniform, 1, &lp[0]);
     }
-    glUniform3fv(lightPosUniform, 1, &lp[0]);
     
     check_gl_error();
 }
@@ -240,12 +238,16 @@ void Visualizer::reshape(int width, int height)
     glViewport(0, 0, width, height);
     glm::mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     
-    glUseProgram(gouraud_shader.get_shader_id());
-    GLuint MVPMatrixUniform = glGetUniformLocation(gouraud_shader.get_shader_id(), "MVPMatrix");
-    if (MVPMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
+    // Send model-view matrix uniform to the shaders
+    for (GLShader shader : shaders)
+    {
+        glUseProgram(shader.get_shader_id());
+        GLuint MVPMatrixUniform = glGetUniformLocation(shader.get_shader_id(), "MVPMatrix");
+        if (MVPMatrixUniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
+        }
+        glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
     }
-    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
     
     check_gl_error();
 }
@@ -257,24 +259,28 @@ void Visualizer::set_view_position(const glm::vec3& pos)
     glm::mat4 normalMatrix = glm::inverseTranspose(modelViewMatrix);
     glm::mat4 modelViewProjectionMatrix = projectionMatrix * modelViewMatrix;
     
-    glUseProgram(gouraud_shader.get_shader_id());
-    GLuint MVMatrixUniform = glGetUniformLocation(gouraud_shader.get_shader_id(), "MVMatrix");
-    if (MVMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
+    // Send model-view, normal and model-view-projection matrix uniforms to the shaders
+    for (GLShader shader : shaders)
+    {
+        glUseProgram(shader.get_shader_id());
+        GLuint MVMatrixUniform = glGetUniformLocation(shader.get_shader_id(), "MVMatrix");
+        if (MVMatrixUniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'MVMatrix' uniform."<<std::endl;
+        }
+        glUniformMatrix4fv(MVMatrixUniform, 1, GL_FALSE, &modelViewMatrix[0][0]);
+        
+        GLuint NormalMatrixUniform = glGetUniformLocation(shader.get_shader_id(), "NormalMatrix");
+        if (NormalMatrixUniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
+        }
+        glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
+        
+        GLuint MVPMatrixUniform = glGetUniformLocation(shader.get_shader_id(), "MVPMatrix");
+        if (MVPMatrixUniform == NULL_LOCATION) {
+            std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
+        }
+        glUniformMatrix4fv(MVPMatrixUniform, 1, GL_FALSE, &modelViewProjectionMatrix[0][0]);
     }
-    glUniformMatrix4fv(MVMatrixUniform, 1, GL_FALSE, &modelViewMatrix[0][0]);
-    
-    GLuint NormalMatrixUniform = glGetUniformLocation(gouraud_shader.get_shader_id(), "NormalMatrix");
-    if (NormalMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'NormalMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(NormalMatrixUniform, 1, GL_FALSE, &normalMatrix[0][0]);
-    
-    GLuint MVPMatrixUniform = glGetUniformLocation(gouraud_shader.get_shader_id(), "MVPMatrix");
-    if (MVPMatrixUniform == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the 'MVPMatrix' uniform."<<std::endl;
-    }
-    glUniformMatrix4fv(MVPMatrixUniform, 1, GL_FALSE, &modelViewProjectionMatrix[0][0]);
     
     check_gl_error();
 }
@@ -284,58 +290,10 @@ void Visualizer::draw()
     glClearColor(1., 1., 1., 0.);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    interface->draw();
+    for (GLObject object : objects)
+    {
+        object.draw();
+    }
     
     check_gl_error();
-}
-
-static const vec3 cube[] = {
-    vec3(-1.0f,-1.0f,-1.0f), // triangle 1 : begin
-    vec3(-1.0f,-1.0f, 1.0f),
-    vec3(-1.0f, 1.0f, 1.0f), // triangle 1 : end
-    vec3(1.0f, 1.0f,-1.0f), // triangle 2 : begin
-    vec3(-1.0f,-1.0f,-1.0f),
-    vec3(-1.0f, 1.0f,-1.0f), // triangle 2 : end
-    vec3(1.0f,-1.0f, 1.0f),
-    vec3(-1.0f,-1.0f,-1.0f),
-    vec3(1.0f,-1.0f,-1.0f),
-    vec3(1.0f, 1.0f,-1.0f),
-    vec3(1.0f,-1.0f,-1.0f),
-    vec3(-1.0f,-1.0f,-1.0f),
-    vec3(-1.0f,-1.0f,-1.0f),
-    vec3(-1.0f, 1.0f, 1.0f),
-    vec3(-1.0f, 1.0f,-1.0f),
-    vec3(1.0f,-1.0f, 1.0f),
-    vec3(-1.0f,-1.0f, 1.0f),
-    vec3(-1.0f,-1.0f,-1.0f),
-    vec3(-1.0f, 1.0f, 1.0f),
-    vec3(-1.0f,-1.0f, 1.0f),
-    vec3(1.0f,-1.0f, 1.0f),
-    vec3(1.0f, 1.0f, 1.0f),
-    vec3(1.0f,-1.0f,-1.0f),
-    vec3(1.0f, 1.0f,-1.0f),
-    vec3(1.0f,-1.0f,-1.0f),
-    vec3(1.0f, 1.0f, 1.0f),
-    vec3(1.0f,-1.0f, 1.0f),
-    vec3(1.0f, 1.0f, 1.0f),
-    vec3(1.0f, 1.0f,-1.0f),
-    vec3(-1.0f, 1.0f,-1.0f),
-    vec3(1.0f, 1.0f, 1.0f),
-    vec3(-1.0f, 1.0f,-1.0f),
-    vec3(-1.0f, 1.0f, 1.0f),
-    vec3(1.0f, 1.0f, 1.0f),
-    vec3(-1.0f, 1.0f, 1.0f),
-    vec3(1.0f,-1.0f, 1.0f)
-};
-
-void Visualizer::update()
-{
-    std::vector<vec3> data;
-    for (auto pos : cube)
-    {
-        data.push_back(pos);
-        data.push_back(vec3(0.,1.,0.));
-    }
-    interface->update_data(data);
-    
 }

@@ -40,6 +40,45 @@ void animate_(){
 
 GUI* GUI::instance = NULL;
 
+static const glm::vec3 cube_data[] = {
+    glm::vec3(-1.0f,-1.0f,-1.0f), // triangle 1 : begin
+    glm::vec3(-1.0f,-1.0f, 1.0f),
+    glm::vec3(-1.0f, 1.0f, 1.0f), // triangle 1 : end
+    glm::vec3(1.0f, 1.0f,-1.0f), // triangle 2 : begin
+    glm::vec3(-1.0f,-1.0f,-1.0f),
+    glm::vec3(-1.0f, 1.0f,-1.0f), // triangle 2 : end
+    glm::vec3(1.0f,-1.0f, 1.0f),
+    glm::vec3(-1.0f,-1.0f,-1.0f),
+    glm::vec3(1.0f,-1.0f,-1.0f),
+    glm::vec3(1.0f, 1.0f,-1.0f),
+    glm::vec3(1.0f,-1.0f,-1.0f),
+    glm::vec3(-1.0f,-1.0f,-1.0f),
+    glm::vec3(-1.0f,-1.0f,-1.0f),
+    glm::vec3(-1.0f, 1.0f, 1.0f),
+    glm::vec3(-1.0f, 1.0f,-1.0f),
+    glm::vec3(1.0f,-1.0f, 1.0f),
+    glm::vec3(-1.0f,-1.0f, 1.0f),
+    glm::vec3(-1.0f,-1.0f,-1.0f),
+    glm::vec3(-1.0f, 1.0f, 1.0f),
+    glm::vec3(-1.0f,-1.0f, 1.0f),
+    glm::vec3(1.0f,-1.0f, 1.0f),
+    glm::vec3(1.0f, 1.0f, 1.0f),
+    glm::vec3(1.0f,-1.0f,-1.0f),
+    glm::vec3(1.0f, 1.0f,-1.0f),
+    glm::vec3(1.0f,-1.0f,-1.0f),
+    glm::vec3(1.0f, 1.0f, 1.0f),
+    glm::vec3(1.0f,-1.0f, 1.0f),
+    glm::vec3(1.0f, 1.0f, 1.0f),
+    glm::vec3(1.0f, 1.0f,-1.0f),
+    glm::vec3(-1.0f, 1.0f,-1.0f),
+    glm::vec3(1.0f, 1.0f, 1.0f),
+    glm::vec3(-1.0f, 1.0f,-1.0f),
+    glm::vec3(-1.0f, 1.0f, 1.0f),
+    glm::vec3(1.0f, 1.0f, 1.0f),
+    glm::vec3(-1.0f, 1.0f, 1.0f),
+    glm::vec3(1.0f,-1.0f, 1.0f)
+};
+
 GUI::GUI(int &argc, char** argv)
 {
     instance = this;
@@ -56,9 +95,24 @@ GUI::GUI(int &argc, char** argv)
     glutReshapeFunc(reshape_);
     glutIdleFunc(animate_);
     
-    GLShader shader = GLShader("shaders/gouraud.vert",  "shaders/gouraud.frag");
-    visualizer = std::unique_ptr<Visualizer>(new Visualizer(shader, light_pos));
-    visualizer->update();
+    visualizer = std::unique_ptr<Visualizer>(new Visualizer());
+    
+    // Create shaders
+    auto shader = GLShader("shaders/gouraud.vert",  "shaders/gouraud.frag");
+    visualizer->add_shader(shader);
+    
+    // Create objects
+    auto cube = GLObject(shader.get_shader_id(), {0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f});
+    std::vector<glm::vec3> data;
+    for (auto pos : cube_data)
+    {
+        data.push_back(pos);
+        data.push_back(glm::vec3(0.,1.,0.));
+    }
+    cube.update_data(data);
+    visualizer->add_object(cube);
+    
+    visualizer->set_light_position(light_pos);
     
     check_gl_error();
     glutMainLoop();

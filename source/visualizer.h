@@ -81,9 +81,8 @@ public:
 class Visualizer {
     
     int WIDTH, HEIGHT;
-    GLShader gouraud_shader;
-    
-    std::unique_ptr<GLObject> interface;
+    std::vector<GLShader> shaders;
+    std::vector<GLObject> objects;
     
     // Uniform variables
     glm::mat4 projectionMatrix, viewMatrix, modelMatrix = glm::mat4();
@@ -91,9 +90,18 @@ class Visualizer {
     
 public:
     
-    Visualizer(GLShader shader, const glm::vec3& light_pos);
+    Visualizer();
     
-public:
+    void add_shader(GLShader shader)
+    {
+        shaders.push_back(shader);
+    }
+    
+    void add_object(GLObject object)
+    {
+        objects.push_back(object);
+    }
+    
     /**
      Reshape the window.
      */
@@ -104,15 +112,13 @@ public:
      */
     void set_view_position(const glm::vec3& pos);
     
+    /**
+     Set the position of the light source.
+     */
     void set_light_position(const glm::vec3& lightPosition);
     
     /**
      Draws the objects.
      */
     void draw();
-    
-    /**
-     Updates the data to visualize.
-     */
-    void update();
 };
