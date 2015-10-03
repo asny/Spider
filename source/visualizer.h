@@ -20,6 +20,13 @@
 #include "mat4x4.hpp"
 #include "gtc/matrix_transform.hpp"
 
+struct GLMaterial
+{
+    glm::vec4 ambient;
+    glm::vec4 diffuse;
+    glm::vec4 specular;
+};
+
 /**
  Represents a shader used to draw a GLObject.
  */
@@ -47,11 +54,11 @@ class GLObject {
     GLuint array_id, buffer_id;
     GLuint position_att, vector_att;
     
-    glm::vec4 ambient_mat, diffuse_mat, specular_mat;
+    GLMaterial material;
     
 public:
     
-    GLObject(GLShader _shader, const glm::vec4& ambient_mat, const glm::vec4& diffuse_mat, const glm::vec4& specular_mat);
+    GLObject(const GLShader& _shader, const GLMaterial& _material);
     
     void update_data(std::vector<glm::vec3> _data);
     

@@ -35,7 +35,8 @@ using namespace glm;
 
 const static unsigned int NULL_LOCATION = -1;
 
-GLObject::GLObject(GLShader _shader, const glm::vec4& ambient_mat_, const glm::vec4& diffuse_mat_, const glm::vec4& specular_mat_) : shader(_shader), ambient_mat(ambient_mat_), diffuse_mat(diffuse_mat_), specular_mat(specular_mat_)
+GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material)
+: shader(_shader), material(_material)
 {
     // Generate arrays and buffers
     glGenVertexArrays(1, &array_id);
@@ -83,19 +84,19 @@ void GLObject::draw(GLenum mode)
         if (uniform == NULL_LOCATION) {
             std::cerr << "Shader did not contain the 'ambientMat' uniform."<<std::endl;
         }
-        glUniform4fv(uniform, 1, &ambient_mat[0]);
+        glUniform4fv(uniform, 1, &material.ambient[0]);
         
         uniform = (GLuint) glGetUniformLocation(shader.get_shader_id(), "diffuseMat");
         if (uniform == NULL_LOCATION) {
             std::cerr << "Shader did not contain the 'diffuseMat' uniform."<<std::endl;
         }
-        glUniform4fv(uniform, 1, &diffuse_mat[0]);
+        glUniform4fv(uniform, 1, &material.diffuse[0]);
         
         uniform = (GLuint) glGetUniformLocation(shader.get_shader_id(), "specMat");
         if (uniform == NULL_LOCATION) {
             std::cerr << "Shader did not contain the 'specMat' uniform."<<std::endl;
         }
-        glUniform4fv(uniform, 1, &specular_mat[0]);
+        glUniform4fv(uniform, 1, &material.specular[0]);
         
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         

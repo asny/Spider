@@ -102,7 +102,8 @@ GUI::GUI(int &argc, char** argv)
     visualizer->add_shader(shader);
     
     // Create objects
-    auto cube = GLObject(shader, {0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f});
+    auto material = GLMaterial {{0.15f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}};
+    auto cube = GLObject(shader, material);
     std::vector<glm::vec3> data;
     for (auto pos : cube_data)
     {
