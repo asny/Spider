@@ -64,7 +64,7 @@ class Visualizer {
         
         GLObject(GLuint _shader, const glm::vec4& ambient_mat = glm::vec4(1.f), const glm::vec4& diffuse_mat = glm::vec4(0.f), const glm::vec4& specular_mat = glm::vec4(0.f));
         
-        void add_data(std::vector<glm::vec3> _data);
+        void update_data(std::vector<glm::vec3> _data);
         
         void draw(GLenum mode = GL_TRIANGLES);
         
@@ -99,7 +99,7 @@ public:
     void set_view_position(const glm::vec3& pos);
     
     /**
-     Draws the simplicial complex.
+     Draws the objects.
      */
     void draw();
     

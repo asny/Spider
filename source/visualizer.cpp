@@ -35,7 +35,7 @@ Visualizer::GLObject::GLObject(GLuint _shader, const glm::vec4& ambient_mat_, co
     check_gl_error();
 }
 
-void Visualizer::GLObject::add_data(std::vector<vec3> _data)
+void Visualizer::GLObject::update_data(std::vector<vec3> _data)
 {
     data.clear();
     for (vec3 vec : _data)
@@ -73,7 +73,6 @@ void Visualizer::GLObject::draw(GLenum mode)
         }
         glUniform4fv(uniform, 1, &specular_mat[0]);
         
-        glUseProgram(shader);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
         const int vector_size = 3*sizeof(double);
@@ -207,11 +206,11 @@ Visualizer::Visualizer(const glm::vec3& light_pos)
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     
-    //glEnable(GL_BLEND);
-    //glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     check_gl_error();
 }
@@ -320,6 +319,6 @@ void Visualizer::update()
         data.push_back(pos);
         data.push_back(vec3(0.,1.,0.));
     }
-    interface->add_data(data);
+    interface->update_data(data);
     
 }
