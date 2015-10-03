@@ -195,7 +195,6 @@ GLShader::GLShader(std::string vertexShaderFilename, std::string fragmentShaderF
     else {
         shader_id = init_shader(&vertexShaderFilename[0], &fragmentShaderFilename[0], "fragColour", nullptr);
     }
-    std::cout << "Shaders initialized" << std::endl;
 }
 
 Visualizer::Visualizer()
@@ -252,9 +251,9 @@ void Visualizer::reshape(int width, int height)
     check_gl_error();
 }
 
-void Visualizer::set_view_position(const glm::vec3& pos)
+void Visualizer::set_eye_position(const glm::vec3& eyePosition)
 {
-    viewMatrix = glm::lookAt(pos, center, glm::vec3(0., 1., 0.));
+    viewMatrix = glm::lookAt(eyePosition, center, glm::vec3(0., 1., 0.));
     glm::mat4 modelViewMatrix = viewMatrix * modelMatrix;
     glm::mat4 normalMatrix = glm::inverseTranspose(modelViewMatrix);
     glm::mat4 modelViewProjectionMatrix = projectionMatrix * modelViewMatrix;

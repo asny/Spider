@@ -12,7 +12,6 @@
 
 int main(int argc, char** argv)
 {
-    std::cout << "Hello, World!\n";
     GUI gui(argc, argv);
     return 0;
 }

@@ -110,7 +110,7 @@ public:
     /**
      Set the position of the camera/eye.
      */
-    void set_view_position(const glm::vec3& pos);
+    void set_eye_position(const glm::vec3& eyePosition);
     
     /**
      Set the position of the light source.
@@ -118,7 +118,7 @@ public:
     void set_light_position(const glm::vec3& lightPosition);
     
     /**
-     Draws the objects.
+     Draw the objects.
      */
     void draw();
 };
