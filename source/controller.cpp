@@ -133,6 +133,9 @@ void Controller::reshape(int width, int height)
 
 void Controller::animate()
 {
+    GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.001;
+    glm::vec3 ep( eye_pos[0] * sinf(timeValue), eye_pos[1] * cosf(timeValue) , eye_pos[2]);
+    visualizer->set_eye_position(ep);
     glutPostRedisplay();
 }
 

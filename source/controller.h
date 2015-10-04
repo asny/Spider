@@ -17,7 +17,7 @@ class Controller
 {
     std::unique_ptr<View> visualizer;
     
-    glm::vec3 eye_pos = {0., 0., 5.};
+    glm::vec3 eye_pos = {1., 1., 5.};
     glm::vec3 light_pos = {0., 2., 2.};
     
     int WIN_SIZE_X = 1280;
