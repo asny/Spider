@@ -112,7 +112,7 @@ public:
     /**
      Set the camera/eye.
      */
-    void set_eye(const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
+    void set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
     
     /**
      Set the position of the light source.

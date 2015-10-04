@@ -110,7 +110,7 @@ Controller::Controller(std::shared_ptr<Model> _model, int &argc, char** argv)
     create_shaders_and_objects();
     
     visualizer->set_light_position(light_pos);
-    visualizer->set_eye(model->get_spider_position(), model->get_view_direction());
+    visualizer->set_view(model->get_spider_position(), model->get_view_direction());
     
     glutMainLoop();
 }
@@ -136,7 +136,7 @@ void Controller::animate()
 {
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.001;
     glm::vec3 animation(sinf(timeValue), cosf(timeValue) , 0.f);
-    visualizer->set_eye(model->get_spider_position() + animation, model->get_view_direction());
+    visualizer->set_view(model->get_spider_position() + animation, model->get_view_direction());
     glutPostRedisplay();
 }
 

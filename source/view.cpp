@@ -292,7 +292,7 @@ void View::update_view()
     check_gl_error();
 }
 
-void View::set_eye(const glm::vec3& eyePosition, const glm::vec3& eyeDirection)
+void View::set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection)
 {
     eye = eyePosition;
     direction = eyeDirection;
