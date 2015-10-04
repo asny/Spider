@@ -240,7 +240,7 @@ void GLObject::draw(GLenum mode)
     }
 }
 
-View::View()
+GLWrapper::GLWrapper()
 {
     // Enable states
     glEnable(GL_DEPTH_TEST);
@@ -252,13 +252,13 @@ View::View()
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
+    set_view(vec3(0.f, 0.f, 5.f), vec3(0.f, 0.f, -1.f));
+    
     check_gl_error();
 }
 
-void View::reshape(int width, int height)
+void GLWrapper::reshape(int width, int height)
 {
-    WIDTH = width;
-    HEIGHT = height;
     projectionMatrix = glm::perspective(45.f, width/float(height), 0.01f, 100.f);
     glViewport(0, 0, width, height);
     glm::mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
@@ -273,9 +273,9 @@ void View::reshape(int width, int height)
     check_gl_error();
 }
 
-void View::update_view()
+void GLWrapper::set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection)
 {
-    viewMatrix = glm::lookAt(eye, eye + direction, glm::vec3(0., 1., 0.));
+    viewMatrix = glm::lookAt(eyePosition, eyePosition + eyeDirection, glm::vec3(0., 1., 0.));
     glm::mat4 modelViewMatrix = viewMatrix * modelMatrix;
     glm::mat4 normalMatrix = glm::inverseTranspose(modelViewMatrix);
     glm::mat4 modelViewProjectionMatrix = projectionMatrix * modelViewMatrix;
@@ -292,14 +292,7 @@ void View::update_view()
     check_gl_error();
 }
 
-void View::set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection)
-{
-    eye = eyePosition;
-    direction = eyeDirection;
-    update_view();
-}
-
-void View::set_light_position(const vec3& lightPosition)
+void GLWrapper::set_light_position(const vec3& lightPosition)
 {
     for (GLShader shader : shaders)
     {
@@ -310,7 +303,7 @@ void View::set_light_position(const vec3& lightPosition)
     check_gl_error();
 }
 
-void View::draw()
+void GLWrapper::draw()
 {
     glClearColor(1., 1., 1., 0.);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

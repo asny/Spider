@@ -105,7 +105,7 @@ Controller::Controller(std::shared_ptr<Model> _model, int &argc, char** argv)
     glutIdleFunc(animate_);
     
     // Initialize the visualization
-    visualizer = std::unique_ptr<View>(new View());
+    visualizer = std::unique_ptr<GLWrapper>(new GLWrapper());
     
     create_shaders_and_objects();
     

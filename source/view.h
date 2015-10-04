@@ -73,26 +73,19 @@ public:
 };
 
 /**
- A visualizer which handles all draw functionality using OpenGL.
+ A wrapper for OpenGL.
  */
-class View {
+class GLWrapper {
     
-    int WIDTH, HEIGHT;
     std::vector<GLShader> shaders;
     std::vector<GLObject> objects;
     
     // Uniform variables
     glm::mat4 projectionMatrix, viewMatrix, modelMatrix = glm::mat4();
     
-    // Camera
-    glm::vec3 direction = glm::vec3(0.f, 0.f, -1.f);
-    glm::vec3 eye = glm::vec3(0.f, 0.f, 5.f);
-    
-    void update_view();
-    
 public:
     
-    View();
+    GLWrapper();
     
     void add_shader(GLShader shader)
     {
