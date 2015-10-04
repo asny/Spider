@@ -9,6 +9,7 @@
 #pragma once
 
 #include "view.h"
+#include "model.hpp"
 
 /**
  A Controller application which utilizes OpenGL and GLUT for visualization.
@@ -16,8 +17,8 @@
 class Controller
 {
     std::unique_ptr<View> visualizer;
+    Model model;
     
-    glm::vec3 eye_pos = {1., 1., 5.};
     glm::vec3 light_pos = {0., 2., 2.};
     
     int WIN_SIZE_X = 1280;
@@ -29,7 +30,7 @@ class Controller
     
 public:
     
-    Controller(int &argc, char** argv);
+    Controller(Model& _model, int &argc, char** argv);
     
     static Controller* get_instance()
     {

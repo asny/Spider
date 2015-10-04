@@ -87,9 +87,10 @@ static const glm::vec3 triangles_data[] = {
         glm::vec3(0.), glm::vec3(0.,0.,1.), glm::vec3(0.,-1.,0.), glm::vec3(0.,0.,1.), glm::vec3(1.,0.,0.), glm::vec3(0.,0.,1.)
 };
 
-Controller::Controller(int &argc, char** argv)
+Controller::Controller(Model& _model, int &argc, char** argv)
 {
     instance = this;
+    model = _model;
     
     // Initialize glut
     glutInit(&argc, argv);
@@ -109,7 +110,7 @@ Controller::Controller(int &argc, char** argv)
     create_shaders_and_objects();
     
     visualizer->set_light_position(light_pos);
-    visualizer->set_eye_position(eye_pos);
+    visualizer->set_eye_position(model.get_position());
     
     glutMainLoop();
 }
@@ -134,8 +135,8 @@ void Controller::reshape(int width, int height)
 void Controller::animate()
 {
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.001;
-    glm::vec3 ep( eye_pos[0] * sinf(timeValue), eye_pos[1] * cosf(timeValue) , eye_pos[2]);
-    visualizer->set_eye_position(ep);
+    glm::vec3 animation(sinf(timeValue), cosf(timeValue) , 0.f);
+    visualizer->set_eye_position(model.get_position() + animation);
     glutPostRedisplay();
 }
 

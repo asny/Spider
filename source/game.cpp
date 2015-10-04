@@ -14,6 +14,6 @@
 int main(int argc, char** argv)
 {
     Model model;
-    Controller controller(argc, argv);
+    Controller controller(model, argc, argv);
     return 0;
 }

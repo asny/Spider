@@ -14,12 +14,17 @@
 
 class Model {
     
-    Spider spider = Spider(glm::vec3(0.f));
+    Spider spider = Spider(glm::vec3(0.f, 0.f, 5.f), glm::vec3(0.f, 0.f, -1.f));
     
 public:
     Model()
     {
         
+    }
+    
+    glm::vec3 get_position()
+    {
+        return spider.get_position();
     }
     
 };
