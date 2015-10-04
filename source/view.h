@@ -66,7 +66,7 @@ public:
     
     GLObject(const GLShader& _shader, const GLMaterial& _material);
     
-    void set_data(std::vector<glm::vec3> _data);
+    void set_data(const std::vector<glm::vec3>& _data);
     
     void draw(GLenum mode = GL_TRIANGLES);
     

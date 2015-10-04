@@ -204,7 +204,7 @@ GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material)
     check_gl_error();
 }
 
-void GLObject::set_data(std::vector<vec3> _data)
+void GLObject::set_data(const std::vector<vec3>& _data)
 {
     data.clear();
     for (vec3 vec : _data)
