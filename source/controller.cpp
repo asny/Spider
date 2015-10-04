@@ -87,7 +87,7 @@ static const glm::vec3 triangles_data[] = {
         glm::vec3(0.), glm::vec3(0.,0.,1.), glm::vec3(0.,-1.,0.), glm::vec3(0.,0.,1.), glm::vec3(1.,0.,0.), glm::vec3(0.,0.,1.)
 };
 
-Controller::Controller(Model& _model, int &argc, char** argv)
+Controller::Controller(std::shared_ptr<Model> _model, int &argc, char** argv)
 {
     instance = this;
     model = _model;
@@ -110,7 +110,7 @@ Controller::Controller(Model& _model, int &argc, char** argv)
     create_shaders_and_objects();
     
     visualizer->set_light_position(light_pos);
-    visualizer->set_eye_position(model.get_position());
+    visualizer->set_eye(model->get_spider_position(), model->get_view_direction());
     
     glutMainLoop();
 }
@@ -136,7 +136,7 @@ void Controller::animate()
 {
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.001;
     glm::vec3 animation(sinf(timeValue), cosf(timeValue) , 0.f);
-    visualizer->set_eye_position(model.get_position() + animation);
+    visualizer->set_eye(model->get_spider_position() + animation, model->get_view_direction());
     glutPostRedisplay();
 }
 
@@ -146,16 +146,16 @@ void Controller::keyboard(unsigned char key, int x, int y) {
             exit(0);
             break;
         case 'w':
-            visualizer->move_forward();
+            model->move_forward();
             break;
         case 'a':
-            visualizer->rotate_left();
+            model->rotate_left();
             break;
         case 'd':
-            visualizer->rotate_right();
+            model->rotate_right();
             break;
         case 's':
-            visualizer->move_backwards();
+            model->move_backwards();
             break;
         case ' ':
             if(!CONTINUOUS)

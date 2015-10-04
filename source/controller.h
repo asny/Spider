@@ -17,7 +17,7 @@
 class Controller
 {
     std::unique_ptr<View> visualizer;
-    Model model;
+    std::shared_ptr<Model> model;
     
     glm::vec3 light_pos = {0., 2., 2.};
     
@@ -30,7 +30,7 @@ class Controller
     
 public:
     
-    Controller(Model& _model, int &argc, char** argv);
+    Controller(std::shared_ptr<Model> _model, int &argc, char** argv);
     
     static Controller* get_instance()
     {

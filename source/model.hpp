@@ -22,9 +22,33 @@ public:
         
     }
     
-    glm::vec3 get_position()
+    glm::vec3 get_spider_position()
     {
         return spider.get_position();
     }
     
+    glm::vec3 get_view_direction()
+    {
+        return spider.get_view_direction();
+    }
+    
+    void move_forward()
+    {
+        spider.move_forward();
+    }
+    
+    void move_backwards()
+    {
+        spider.move_backwards();
+    }
+    
+    void rotate_left()
+    {
+        spider.rotate_left();
+    }
+    
+    void rotate_right()
+    {
+        spider.rotate_right();
+    }
 };

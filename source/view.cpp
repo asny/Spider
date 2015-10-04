@@ -292,36 +292,10 @@ void View::update_view()
     check_gl_error();
 }
 
-void View::move_forward()
-{
-    eye += stepsize * direction;
-    update_view();
-}
-
-
-void View::move_backwards()
-{
-    eye -= stepsize * direction;
-    update_view();
-}
-
-
-void View::rotate_left()
-{
-    direction = vec3(glm::rotate(mat4(), stepangle, vec3(0.f,1.f,0.f)) * vec4(direction, 1.f));
-    update_view();
-}
-
-
-void View::rotate_right()
-{
-    direction = vec3(glm::rotate(mat4(), -stepangle, vec3(0.f,1.f,0.f)) * vec4(direction, 1.f));
-    update_view();
-}
-
-void View::set_eye_position(const glm::vec3& eyePosition)
+void View::set_eye(const glm::vec3& eyePosition, const glm::vec3& eyeDirection)
 {
     eye = eyePosition;
+    direction = eyeDirection;
     update_view();
 }
 

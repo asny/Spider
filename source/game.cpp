@@ -13,7 +13,7 @@
 
 int main(int argc, char** argv)
 {
-    Model model;
+    auto model = std::shared_ptr<Model>(new Model());
     Controller controller(model, argc, argv);
     return 0;
 }

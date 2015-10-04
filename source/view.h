@@ -85,8 +85,6 @@ class View {
     glm::mat4 projectionMatrix, viewMatrix, modelMatrix = glm::mat4();
     
     // Camera
-    const float stepsize = 0.1f;
-    const float stepangle = 0.01f;
     glm::vec3 direction = glm::vec3(0.f, 0.f, -1.f);
     glm::vec3 eye = glm::vec3(0.f, 0.f, 5.f);
     
@@ -112,19 +110,14 @@ public:
     void reshape(int width, int height);
     
     /**
-     Set the position of the camera/eye.
+     Set the camera/eye.
      */
-    void set_eye_position(const glm::vec3& eyePosition);
+    void set_eye(const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
     
     /**
      Set the position of the light source.
      */
     void set_light_position(const glm::vec3& lightPosition);
-    
-    void move_forward();
-    void move_backwards();
-    void rotate_left();
-    void rotate_right();
     
     /**
      Draw the objects.
