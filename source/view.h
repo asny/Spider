@@ -35,6 +35,11 @@ class GLShader {
     GLuint get_uniform_location(std::string variable_name);
 public:
     
+    GLShader()
+    {
+        
+    }
+    
     GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
     
     void use();
@@ -57,7 +62,7 @@ class GLObject {
     
     std::vector<double> data;
     
-    GLuint array_id, buffer_id;
+    GLuint buffer_id;
     GLuint position_att, vector_att;
     
     GLMaterial material;
@@ -65,6 +70,11 @@ class GLObject {
     GLenum drawmode;
     
 public:
+    
+    GLObject()
+    {
+        
+    }
     
     GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES);
     
@@ -80,7 +90,6 @@ public:
 class GLWrapper {
     
     std::vector<GLShader> shaders;
-    std::vector<GLObject> objects;
     
     // Uniform variables
     glm::mat4 projectionMatrix, viewMatrix, modelMatrix = glm::mat4();
@@ -92,11 +101,6 @@ public:
     void add_shader(GLShader shader)
     {
         shaders.push_back(shader);
-    }
-    
-    void add_object(GLObject object)
-    {
-        objects.push_back(object);
     }
     
     /**

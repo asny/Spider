@@ -188,6 +188,7 @@ GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum 
 : shader(_shader), material(_material), drawmode(_drawmode)
 {
     // Generate arrays and buffers
+    GLuint array_id;
     glGenVertexArrays(1, &array_id);
     glBindVertexArray(array_id);
     
@@ -307,11 +308,6 @@ void GLWrapper::draw()
 {
     glClearColor(1., 1., 1., 0.);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    for (GLObject object : objects)
-    {
-        object.draw();
-    }
     
     check_gl_error();
 }

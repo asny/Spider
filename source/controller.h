@@ -19,6 +19,8 @@ class Controller
     std::unique_ptr<GLWrapper> visualizer;
     std::shared_ptr<Model> model;
     
+    GLObject terrain, cube;
+    
     glm::vec3 light_pos = {0., 2., 2.};
     
     int WIN_SIZE_X = 1280;
