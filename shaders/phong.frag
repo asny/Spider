@@ -24,7 +24,7 @@ void main(void)
     
     // Calculate colour
     vec4 ambient = ambientMat;
-    vec4 diffuse = clamp( diffuseMat * max(dot(N,L), 0.0)  , 0.0, 1.0 ) ;
-    vec4 spec = clamp ( specMat * pow(max(dot(R,E),0.0), 0.3*specPow) , 0.0, 1.0 );
+    vec4 diffuse = clamp( diffuseMat * max(dot(N,L), 0.0) , 0.0, 1.0 ) ;
+    vec4 spec = clamp ( specMat * pow(max(dot(R,E), 0.0), specPow) , 0.0, 1.0 );
     fragColour = ambient + diffuse + spec;
 }
