@@ -10,14 +10,6 @@
 
 #include <GLUT/glut.h>
 
-#include <iostream>
-#include <iomanip>
-#include <ctime>
-#include <chrono>
-#include <random>
-#include <algorithm>
-#include <atomic>
-
 void display_(){
     Controller::get_instance()->display();
 }
