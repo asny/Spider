@@ -204,7 +204,7 @@ void Controller::create_shaders_and_objects()
     
     // terrain
     material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
-    auto terrain = GLObject(phong_shader, material);
+    auto terrain = GLObject(phong_shader, material, GL_TRIANGLE_STRIP);
     data.clear();
     for (auto pos : model->get_terrain())
     {

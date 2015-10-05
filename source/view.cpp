@@ -184,8 +184,8 @@ void GLShader::set_uniform_variable(std::string name, const mat4& value)
 }
 
 
-GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material)
-: shader(_shader), material(_material)
+GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum _drawmode)
+: shader(_shader), material(_material), drawmode(_drawmode)
 {
     // Generate arrays and buffers
     glGenVertexArrays(1, &array_id);
@@ -219,7 +219,7 @@ void GLObject::set_data(const std::vector<vec3>& _data)
     check_gl_error();
 }
 
-void GLObject::draw(GLenum mode)
+void GLObject::draw()
 {
     if(data.size() != 0)
     {
@@ -234,7 +234,7 @@ void GLObject::draw(GLenum mode)
         glVertexAttribPointer(position_att, 3, GL_DOUBLE, GL_FALSE, 2*vector_size, (const GLvoid *)0);
         glVertexAttribPointer(vector_att, 3, GL_DOUBLE, GL_FALSE, 2*vector_size, (const GLvoid *)vector_size);
         
-        glDrawArrays(mode, 0, static_cast<int>(data.size())/(2*3));
+        glDrawArrays(drawmode, 0, static_cast<int>(data.size())/(2*3));
         
         check_gl_error();
     }

@@ -62,13 +62,15 @@ class GLObject {
     
     GLMaterial material;
     
+    GLenum drawmode;
+    
 public:
     
-    GLObject(const GLShader& _shader, const GLMaterial& _material);
+    GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES);
     
     void set_data(const std::vector<glm::vec3>& _data);
     
-    void draw(GLenum mode = GL_TRIANGLES);
+    void draw();
     
 };
 
