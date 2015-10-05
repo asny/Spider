@@ -48,6 +48,8 @@
 		7AB0F2C21BC2497F009D85FD /* phong.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = phong.vert; path = shaders/phong.vert; sourceTree = "<group>"; };
 		7AB0F2C31BC25326009D85FD /* terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = terrain.cpp; path = source/terrain.cpp; sourceTree = "<group>"; };
 		7AB0F2C41BC25326009D85FD /* terrain.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = terrain.hpp; path = source/terrain.hpp; sourceTree = "<group>"; };
+		7AB0F2C61BC28EEB009D85FD /* terrain.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = terrain.geom; path = shaders/terrain.geom; sourceTree = "<group>"; };
+		7AB0F2C71BC28EEB009D85FD /* terrain.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = terrain.vert; path = shaders/terrain.vert; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,8 @@
 		7A383A341BBFD93A00E29333 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				7AB0F2C61BC28EEB009D85FD /* terrain.geom */,
+				7AB0F2C71BC28EEB009D85FD /* terrain.vert */,
 				7AB0F2C11BC2497F009D85FD /* phong.frag */,
 				7AB0F2C21BC2497F009D85FD /* phong.vert */,
 				7A383A391BBFDC9F00E29333 /* gouraud.frag */,
