@@ -14,6 +14,7 @@
 		7A383A331BBFCE5700E29333 /* controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A311BBFCE5700E29333 /* controller.cpp */; };
 		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; settings = {ASSET_TAGS = (); }; };
 		7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* spider.cpp */; settings = {ASSET_TAGS = (); }; };
+		7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2C31BC25326009D85FD /* terrain.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +46,8 @@
 		7AB0F2BF1BC07B52009D85FD /* spider.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = spider.hpp; path = source/spider.hpp; sourceTree = "<group>"; };
 		7AB0F2C11BC2497F009D85FD /* phong.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = phong.frag; path = shaders/phong.frag; sourceTree = "<group>"; };
 		7AB0F2C21BC2497F009D85FD /* phong.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = phong.vert; path = shaders/phong.vert; sourceTree = "<group>"; };
+		7AB0F2C31BC25326009D85FD /* terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = terrain.cpp; path = source/terrain.cpp; sourceTree = "<group>"; };
+		7AB0F2C41BC25326009D85FD /* terrain.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = terrain.hpp; path = source/terrain.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +113,8 @@
 				7AB0F2BB1BC07AA0009D85FD /* model.hpp */,
 				7AB0F2BE1BC07B52009D85FD /* spider.cpp */,
 				7AB0F2BF1BC07B52009D85FD /* spider.hpp */,
+				7AB0F2C31BC25326009D85FD /* terrain.cpp */,
+				7AB0F2C41BC25326009D85FD /* terrain.hpp */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -175,6 +180,7 @@
 				7A383A2B1BBFBA5300E29333 /* view.cpp in Sources */,
 				7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */,
 				7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */,
+				7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
