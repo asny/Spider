@@ -12,9 +12,9 @@ out vec3 nor;
 
 void main()
 {
-    
     pos = mat3(MVMatrix) * position;
     nor = mat3(NormalMatrix) * vector;
+    
     // Calculate position
     gl_Position = MVPMatrix * vec4(position.xyz, 1.);
 }

@@ -46,8 +46,7 @@ public:
         {
             for(int x = pos.x -10; x < pos.y + 10; x++)
             {
-                glm::vec2 p = glm::vec2(x,y);
-                terrain.push_back(glm::vec3(p, patch.get_height_at(p)));
+                terrain.push_back(glm::vec3(x, patch.get_height_at(glm::vec2(x,y)), y));
             }
         }
         

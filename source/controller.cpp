@@ -212,5 +212,5 @@ void Controller::create_shaders_and_objects()
         data.push_back(glm::vec3(0.,1.,0.));
     }
     terrain.set_data(data);
-    visualizer->add_object(cube);
+    visualizer->add_object(terrain);
 }
