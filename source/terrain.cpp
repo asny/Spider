@@ -21,7 +21,7 @@ TerrainPatch::TerrainPatch(vec2 _origo, vec2 _size) : origo(_origo), size(_size)
         row = vector<double>(size.x);
         for ( double& height : row)
         {
-            height = (double)(random()/RAND_MAX);
+            height = (double)rand()/(double)RAND_MAX - 3.;
         }
     }
 }
