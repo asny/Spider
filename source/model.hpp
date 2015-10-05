@@ -11,10 +11,12 @@
 #include "vec3.hpp"
 
 #include "spider.hpp"
+#include "terrain.hpp"
 
 class Model {
     
     Spider spider = Spider(glm::vec3(0.f, 0.f, 5.f), glm::vec3(0.f, 0.f, -1.f));
+    Terrain terrain = Terrain();
     
 public:
     Model()
@@ -22,15 +24,19 @@ public:
         
     }
     
+    // ******** VIEW ********
+    
     glm::vec3 get_spider_position()
     {
         return spider.get_position();
     }
     
-    glm::vec3 get_view_direction()
+    glm::vec3 get_spider_view_direction()
     {
         return spider.get_view_direction();
     }
+    
+    // ******** CONTROL ********
     
     void move_forward()
     {

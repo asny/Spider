@@ -15,13 +15,17 @@ class TerrainPatch {
     
 public:
     
+    TerrainPatch(int size_x, int size_y);
+    
 };
 
 class Terrain {
     
-    
+    std::vector<std::vector<TerrainPatch>> terrain_patches;
     
     
 public:
+    
+    Terrain();
     
 };
