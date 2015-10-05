@@ -36,22 +36,7 @@ public:
         return spider.get_view_direction();
     }
     
-    std::vector<glm::vec3> get_terrain()
-    {
-        glm::vec3 pos = spider.get_position();
-        TerrainPatch patch = terrain.get_patch_at(0,0);
-        
-        std::vector<glm::vec3> terrain;
-        for(int y = pos.x - 10; y < pos.y + 10; y++)
-        {
-            for(int x = pos.x -10; x < pos.y + 10; x++)
-            {
-                terrain.push_back(glm::vec3(x, patch.get_height_at(glm::vec2(x,y)), y));
-            }
-        }
-        
-        return terrain;
-    }
+    std::vector<glm::vec3> get_terrain();
     
     // ******** CONTROL ********
     
