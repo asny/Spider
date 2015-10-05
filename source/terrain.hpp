@@ -10,22 +10,35 @@
 
 #include <vector>
 
+#include "vec2.hpp"
+
 class TerrainPatch {
+    glm::vec2 origo, size;
     std::vector<std::vector<double>> heightmap;
     
 public:
     
-    TerrainPatch(int size_x, int size_y);
+    TerrainPatch(glm::vec2 _origo, glm::vec2 _size);
     
+    std::vector<std::vector<double>> get_heightmap()
+    {
+        return heightmap;
+    }
+    
+    double get_height_at(glm::vec2 position);
 };
 
 class Terrain {
     
-    std::vector<std::vector<TerrainPatch>> terrain_patches;
-    
+    TerrainPatch terrain_patch = TerrainPatch(glm::vec2(-50., -50.), glm::vec2(100., 100.));
     
 public:
     
     Terrain();
+    
+    TerrainPatch get_patch_at(int x, int y)
+    {
+        return terrain_patch;
+    }
     
 };

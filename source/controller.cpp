@@ -178,7 +178,7 @@ void Controller::create_shaders_and_objects()
     auto gauraud_shader = GLShader("shaders/gouraud.vert",  "shaders/gouraud.frag");
     visualizer->add_shader(gauraud_shader);
     
-    // Create objects
+    // cube
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
     auto cube = GLObject(phong_shader, material);
     std::vector<glm::vec3> data;
@@ -190,6 +190,7 @@ void Controller::create_shaders_and_objects()
     cube.set_data(data);
     visualizer->add_object(cube);
     
+    // triangles
     material = GLMaterial {{0.55f,0.4f,0.5f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}, {0.2f, 0.3f, 0.4f, 1.f}};
     auto triangles = GLObject(gauraud_shader, material);
     data.clear();
@@ -200,4 +201,16 @@ void Controller::create_shaders_and_objects()
     }
     triangles.set_data(data);
     visualizer->add_object(triangles);
+    
+    // terrain
+    material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
+    auto terrain = GLObject(phong_shader, material);
+    data.clear();
+    for (auto pos : model->get_terrain())
+    {
+        data.push_back(pos);
+        data.push_back(glm::vec3(0.,1.,0.));
+    }
+    terrain.set_data(data);
+    visualizer->add_object(cube);
 }
