@@ -43,6 +43,8 @@
 		7AB0F2BB1BC07AA0009D85FD /* model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = model.hpp; path = source/model.hpp; sourceTree = "<group>"; };
 		7AB0F2BE1BC07B52009D85FD /* spider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = spider.cpp; path = source/spider.cpp; sourceTree = "<group>"; };
 		7AB0F2BF1BC07B52009D85FD /* spider.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = spider.hpp; path = source/spider.hpp; sourceTree = "<group>"; };
+		7AB0F2C11BC2497F009D85FD /* phong.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = phong.frag; path = shaders/phong.frag; sourceTree = "<group>"; };
+		7AB0F2C21BC2497F009D85FD /* phong.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = phong.vert; path = shaders/phong.vert; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,8 @@
 		7A383A341BBFD93A00E29333 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				7AB0F2C11BC2497F009D85FD /* phong.frag */,
+				7AB0F2C21BC2497F009D85FD /* phong.vert */,
 				7A383A391BBFDC9F00E29333 /* gouraud.frag */,
 				7A383A371BBFDC3300E29333 /* gouraud.vert */,
 			);
