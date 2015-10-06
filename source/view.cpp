@@ -196,8 +196,13 @@ GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum 
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     
     // Initialize shader attributes
-    attributes.push_back(VertexAttribute(shader, "position", 3));
-    attributes.push_back(VertexAttribute(shader, "vector", 3));
+    shader.use();
+    for (std::string attribute_name : {"position", "vector"})
+    {
+        auto attribute = VertexAttribute(shader, attribute_name, stride, 3);
+        stride += attribute.get_size() * sizeof(double);
+        attributes.push_back(attribute);
+    }
     
     check_gl_error();
 }
@@ -230,17 +235,9 @@ void GLObject::draw()
         
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
-        int stride = 0;
         for (VertexAttribute attribute : attributes)
         {
-            stride += attribute.get_size();
-        }
-        
-        int start_index = 0;
-        for (VertexAttribute attribute : attributes)
-        {
-            glVertexAttribPointer(attribute.get_index(), attribute.get_size(), GL_DOUBLE, GL_FALSE, stride * sizeof(double), (const GLvoid *)start_index);
-            start_index += attribute.get_size() * sizeof(double);
+            glVertexAttribPointer(attribute.get_index(), attribute.get_size(), GL_DOUBLE, GL_FALSE, stride, (const GLvoid *)attribute.get_start_index());
         }
         
         glDrawArrays(drawmode, 0, no_vertices);
