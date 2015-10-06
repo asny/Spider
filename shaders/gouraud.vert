@@ -1,7 +1,7 @@
 #version 150
 
 uniform mat4 MVMatrix;
-uniform mat4 MVPMatrix;
+uniform mat4 PMatrix;
 uniform mat4 NormalMatrix;
 
 uniform vec3 lightPos;
@@ -34,5 +34,5 @@ void main()
     colourV = ambient + diffuse + spec;
     
     // Calculate position
-    gl_Position = MVPMatrix * vec4(position.xyz, 1.);
+    gl_Position = PMatrix * MVMatrix * vec4(position.xyz, 1.);
 }

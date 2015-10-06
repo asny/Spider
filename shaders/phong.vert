@@ -1,7 +1,7 @@
 #version 150
 
 uniform mat4 MVMatrix;
-uniform mat4 MVPMatrix;
+uniform mat4 PMatrix;
 uniform mat4 NormalMatrix;
 
 in vec3 position;
@@ -16,5 +16,5 @@ void main()
     nor = mat3(NormalMatrix) * vector;
     
     // Calculate position
-    gl_Position = MVPMatrix * vec4(position.xyz, 1.);
+    gl_Position = PMatrix * MVMatrix * vec4(position.xyz, 1.);
 }

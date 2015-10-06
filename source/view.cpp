@@ -260,15 +260,14 @@ GLWrapper::GLWrapper()
 
 void GLWrapper::reshape(int width, int height)
 {
-    projectionMatrix = glm::perspective(45.f, width/float(height), 0.01f, 100.f);
+    mat4 projectionMatrix = glm::perspective(45.f, width/float(height), 0.01f, 100.f);
     glViewport(0, 0, width, height);
-    glm::mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     
     // Send model-view matrix uniform to the shaders
     for (GLShader shader : shaders)
     {
         shader.use();
-        shader.set_uniform_variable("MVPMatrix", modelViewProjectionMatrix);
+        shader.set_uniform_variable("PMatrix", projectionMatrix);
     }
     
     check_gl_error();
@@ -279,7 +278,6 @@ void GLWrapper::set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirec
     viewMatrix = glm::lookAt(eyePosition, eyePosition + eyeDirection, glm::vec3(0., 1., 0.));
     glm::mat4 modelViewMatrix = viewMatrix * modelMatrix;
     glm::mat4 normalMatrix = glm::inverseTranspose(modelViewMatrix);
-    glm::mat4 modelViewProjectionMatrix = projectionMatrix * modelViewMatrix;
     
     // Send model-view, normal and model-view-projection matrix uniforms to the shaders
     for (GLShader shader : shaders)
@@ -287,7 +285,6 @@ void GLWrapper::set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirec
         shader.use();
         shader.set_uniform_variable("MVMatrix", modelViewMatrix);
         shader.set_uniform_variable("NormalMatrix", normalMatrix);
-        shader.set_uniform_variable("MVPMatrix", modelViewProjectionMatrix);
     }
     
     check_gl_error();
