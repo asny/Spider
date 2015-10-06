@@ -58,12 +58,37 @@ public:
  */
 class GLObject {
     
+    class VertexAttribute
+    {
+        std::string name;
+        GLuint index;
+        GLint size;
+        
+    public:
+        VertexAttribute(GLShader shader, std::string _name, int _size) : name(_name), size(_size)
+        {
+            index = shader.get_attribute_location(name);
+            
+            glEnableVertexAttribArray(index);
+        }
+        
+        GLint get_size()
+        {
+            return size;
+        }
+        
+        GLint get_index()
+        {
+            return index;
+        }
+    };
+    
     GLShader shader;
     
     std::vector<double> data;
     
     GLuint buffer_id;
-    GLuint position_att, vector_att;
+    std::vector<VertexAttribute> attributes = std::vector<VertexAttribute>();
     
     GLMaterial material;
     
@@ -81,7 +106,6 @@ public:
     void set_data(const std::vector<glm::vec3>& _data);
     
     void draw();
-    
 };
 
 /**
