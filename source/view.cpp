@@ -204,8 +204,9 @@ GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum 
 
 void GLObject::set_data(const std::vector<vec3>& _data)
 {
+    no_vertices = static_cast<int>(_data.size() / attributes.size());
     data.clear();
-    for (vec3 vec : _data)
+    for (auto vec : _data)
     {
         data.push_back(vec.x);
         data.push_back(vec.y);
@@ -220,7 +221,7 @@ void GLObject::set_data(const std::vector<vec3>& _data)
 
 void GLObject::draw()
 {
-    if(data.size() != 0)
+    if(no_vertices != 0)
     {
         shader.use();
         shader.set_uniform_variable("ambientMat", material.ambient);
@@ -242,7 +243,7 @@ void GLObject::draw()
             start_index += attribute.get_size() * sizeof(double);
         }
         
-        glDrawArrays(drawmode, 0, static_cast<int>(data.size())/stride);
+        glDrawArrays(drawmode, 0, no_vertices);
         
         check_gl_error();
     }

@@ -63,12 +63,12 @@ class GLObject {
         std::string name;
         GLuint index;
         GLint size;
+        GLenum type;
         
     public:
-        VertexAttribute(GLShader shader, std::string _name, int _size) : name(_name), size(_size)
+        VertexAttribute(GLShader shader, std::string _name, int _size, GLenum _type = GL_DOUBLE) : name(_name), size(_size), type(_type)
         {
             index = shader.get_attribute_location(name);
-            
             glEnableVertexAttribArray(index);
         }
         
@@ -80,6 +80,11 @@ class GLObject {
         GLint get_index()
         {
             return index;
+        }
+        
+        GLenum get_type()
+        {
+            return type;
         }
     };
     
@@ -93,6 +98,8 @@ class GLObject {
     GLMaterial material;
     
     GLenum drawmode;
+    
+    int no_vertices = 0;
     
 public:
     
