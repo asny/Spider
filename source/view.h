@@ -92,7 +92,7 @@ class GLWrapper {
     std::vector<GLShader> shaders;
     
     // Uniform variables
-    glm::mat4 viewMatrix, modelMatrix = glm::mat4();
+    glm::mat4 modelMatrix = glm::mat4();
     
 public:
     

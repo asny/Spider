@@ -275,11 +275,11 @@ void GLWrapper::reshape(int width, int height)
 
 void GLWrapper::set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection)
 {
-    viewMatrix = glm::lookAt(eyePosition, eyePosition + eyeDirection, glm::vec3(0., 1., 0.));
+    mat4 viewMatrix = glm::lookAt(eyePosition, eyePosition + eyeDirection, glm::vec3(0., 1., 0.));
     glm::mat4 modelViewMatrix = viewMatrix * modelMatrix;
     glm::mat4 normalMatrix = glm::inverseTranspose(modelViewMatrix);
     
-    // Send model-view, normal and model-view-projection matrix uniforms to the shaders
+    // Send model-view and normal matrix uniforms to the shaders
     for (GLShader shader : shaders)
     {
         shader.use();
