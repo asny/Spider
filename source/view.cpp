@@ -200,7 +200,7 @@ GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum 
     for (std::string attribute_name : {"position", "vector"})
     {
         auto attribute = VertexAttribute(shader, attribute_name, stride, 3);
-        stride += attribute.get_size() * sizeof(double);
+        stride += attribute.size();
         attributes.push_back(attribute);
     }
     
@@ -237,7 +237,7 @@ void GLObject::draw()
         
         for (VertexAttribute attribute : attributes)
         {
-            glVertexAttribPointer(attribute.get_index(), attribute.get_size(), GL_DOUBLE, GL_FALSE, stride, (const GLvoid *)attribute.get_start_index());
+            glVertexAttribPointer(attribute.get_index(), attribute.length(), attribute.get_type(), GL_FALSE, stride, (const GLvoid *)attribute.get_start_index());
         }
         
         glDrawArrays(drawmode, 0, no_vertices);

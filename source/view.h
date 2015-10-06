@@ -61,29 +61,42 @@ class GLObject {
     class VertexAttribute
     {
         std::string name;
-        GLuint index;
-        GLint start_index;
-        GLint size;
+        int index;
+        int start_index;
+        int l;
         GLenum type;
         
     public:
-        VertexAttribute(GLShader shader, std::string _name, int _start_index, int _size, GLenum _type = GL_DOUBLE) : name(_name), start_index(_start_index), size(_size), type(_type)
+        VertexAttribute(GLShader shader, std::string _name, int _start_index, int _length, GLenum _type = GL_DOUBLE) : name(_name), start_index(_start_index), l(_length), type(_type)
         {
             index = shader.get_attribute_location(name);
             glEnableVertexAttribArray(index);
         }
         
-        GLint get_size()
+        int length()
         {
-            return size;
+            return l;
         }
         
-        GLint get_index()
+        int size()
+        {
+            if(type == GL_FLOAT)
+            {
+                return l * sizeof(float);
+            }
+            if(type == GL_DOUBLE)
+            {
+                return l * sizeof(double);
+            }
+            assert(false);
+        }
+        
+        int get_index()
         {
             return index;
         }
         
-        GLint get_start_index()
+        int get_start_index()
         {
             return start_index;
         }
