@@ -203,8 +203,7 @@ void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_n
     shader.use();
     for (std::string attribute_name : attribute_names)
     {
-        auto attribute = VertexAttribute(shader, attribute_name, stride, 3);
-        stride += attribute.size();
+        auto attribute = VertexAttribute(shader, attribute_name, 3);
         attributes.insert( {attribute_name, attribute} );
     }
 }
@@ -257,7 +256,7 @@ void GLObject::draw()
         
         for (auto attribute : attributes)
         {
-            attribute.second.use(stride);
+            attribute.second.use();
         }
         
         glDrawArrays(drawmode, 0, no_vertices);

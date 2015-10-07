@@ -64,12 +64,13 @@ class GLObject {
         const GLenum PRECISION = GL_FLOAT;
         
         int location;
-        int start_index;
+        int start;
+        int stride;
         int l;
     public:
         
-        VertexAttribute(GLShader shader, std::string _name, int _start_index, int _length)
-            : start_index(_start_index), l(_length)
+        VertexAttribute(GLShader shader, std::string _name, int _length)
+            : l(_length)
         {
             location = shader.get_attribute_location(_name);
             glEnableVertexAttribArray(location);
@@ -77,6 +78,9 @@ class GLObject {
         
         void set_data(int start_index, int stride_index, std::vector<glm::vec3> _data, std::vector<float>& data)
         {
+            start = start_index * sizeof(float);
+            stride = stride_index * sizeof(float);
+            
             for (int i = 0; i < _data.size(); i++)
             {
                 glm::vec3 vec = _data[i];
@@ -86,9 +90,9 @@ class GLObject {
             }
         }
         
-        void use(int stride)
+        void use()
         {
-            glVertexAttribPointer(location, l, PRECISION, GL_FALSE, stride, (const GLvoid *)start_index);
+            glVertexAttribPointer(location, l, PRECISION, GL_FALSE, stride, (const GLvoid *)start);
         }
         
         int length()
@@ -122,7 +126,6 @@ class GLObject {
     GLenum drawmode;
     
     int no_vertices = 0;
-    int stride = 0;
     
 public:
     
