@@ -32,7 +32,7 @@ void animate_(){
 
 Controller* Controller::instance = NULL;
 
-static const glm::vec3 cube_data[] = {
+static const std::vector<glm::vec3> cube_data = {
     glm::vec3(-1.0f,-1.0f,-1.0f), // triangle 1 : begin
     glm::vec3(-1.0f,-1.0f, 1.0f),
     glm::vec3(-1.0f, 1.0f, 1.0f), // triangle 1 : end
@@ -181,18 +181,16 @@ void Controller::create_shaders_and_objects()
     visualizer->add_shader(phong_shader);
     auto gauraud_shader = GLShader("shaders/gouraud.vert",  "shaders/gouraud.frag");
     visualizer->add_shader(gauraud_shader);
+    auto terrain_shader = GLShader("shaders/terrain.vert",  "shaders/phong.frag", "shaders/terrain.geom");
+    visualizer->add_shader(terrain_shader);
     
     // cube
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
     cube = GLObject(phong_shader, material);
     cube.initialize_vertex_attributes({"position", "vector"});
+    cube.set_vertex_attribute("position", cube_data);
+    
     std::vector<glm::vec3> data;
-    for (auto pos : cube_data)
-    {
-        data.push_back(pos);
-    }
-    cube.set_vertex_attribute("position", data);
-    data.clear();
     for (auto pos : cube_data)
     {
         data.push_back(glm::vec3(0.,1.,0.));
@@ -202,7 +200,7 @@ void Controller::create_shaders_and_objects()
     
     // terrain
     material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
-    terrain = GLObject(phong_shader, material, GL_TRIANGLE_STRIP);
+    terrain = GLObject(gauraud_shader, material, GL_TRIANGLE_STRIP);
     terrain.initialize_vertex_attributes({"position", "vector"});
     
     terrain.set_vertex_attribute("position", model->get_terrain());

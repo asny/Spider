@@ -1,55 +1,31 @@
 #version 150
 
-layout (points) in;
-layout (triangle_strip, max_vertices = 6) out;
+layout (triangles) in;
+layout (triangle_strip, max_vertices = 3) out;
 
 uniform mat4 PMatrix;
-
-in vec3 n[1];
 
 out vec3 pos;
 out vec3 nor;
 
 void main()
 {
-    vec3 p = gl_in[0].gl_Position.xyz;
-    vec3 E = normalize(-p);
-    vec3 V = normalize(n[0]);
-    vec3 T = normalize(cross(E, V));
-    vec3 D = 0.1*E;
+    vec3 p1 = gl_in[0].gl_Position.xyz;
+    vec3 p2 = gl_in[1].gl_Position.xyz;
+    vec3 p3 = gl_in[2].gl_Position.xyz;
     
-    float w = 0.005*length(n[0]);
+    nor = normalize(cross(p2 - p1, p3 - p1));
     
-    pos = p + w * T + D;
+    pos = p1;
     gl_Position = PMatrix * vec4(pos, 1.);
-    nor = n[0];
     EmitVertex();
     
-    pos = p - w * T + D;
+    pos = p2;
     gl_Position = PMatrix * vec4(pos, 1.);
-    nor = n[0];
     EmitVertex();
     
-    pos = p - w * T + n[0] + D;
+    pos = p3;
     gl_Position = PMatrix * vec4(pos, 1.);
-    nor = n[0];
-    EmitVertex();
-    
-    EndPrimitive();
-    
-    pos = p - w * T + n[0] + D;
-    gl_Position = PMatrix * vec4(pos, 1.);
-    nor = n[0];
-    EmitVertex();
-    
-    pos = p + w * T + n[0] + D;
-    gl_Position = PMatrix * vec4(pos, 1.);
-    nor = n[0];
-    EmitVertex();
-    
-    pos = p + w * T + D;
-    gl_Position = PMatrix * vec4(pos, 1.);
-    nor = n[0];
     EmitVertex();
     
     EndPrimitive();
