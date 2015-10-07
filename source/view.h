@@ -60,7 +60,7 @@ class GLObject {
     
     class VertexAttribute
     {
-        const GLenum PRECISION = GL_DOUBLE;
+        const GLenum PRECISION = GL_FLOAT;
         
         std::string name;
         int index;
@@ -96,7 +96,7 @@ class GLObject {
     
     GLShader shader;
     
-    std::vector<double> data;
+    std::vector<float> data;
     
     GLuint buffer_id;
     std::vector<VertexAttribute> attributes = std::vector<VertexAttribute>();

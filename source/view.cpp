@@ -218,8 +218,14 @@ void GLObject::set_data(const std::vector<vec3>& _data)
         data.push_back(vec.z);
     }
     
+    int buffer_size = 0;
+    for (auto attribute : attributes)
+    {
+        buffer_size += attribute.size() * no_vertices;
+    }
+    
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(double)*data.size(), &data[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, buffer_size, &data[0], GL_STATIC_DRAW);
     
     check_gl_error();
 }
