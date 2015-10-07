@@ -231,14 +231,8 @@ void GLObject::set_vertex_attribute(std::string attribute_name, const std::vecto
 
 void GLObject::finalize_vertex_attributes()
 {
-    int buffer_size = 0;
-    for (auto attribute : attributes)
-    {
-        buffer_size += attribute.second.size() * no_vertices;
-    }
-    
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-    glBufferData(GL_ARRAY_BUFFER, buffer_size, &data[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, data.size() * VertexAttribute::size_of_type(), &data[0], GL_STATIC_DRAW);
     
     check_gl_error();
 }

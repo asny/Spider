@@ -61,12 +61,13 @@ class GLObject {
     
     class VertexAttribute
     {
-        const GLenum PRECISION = GL_FLOAT;
+        static const GLenum PRECISION = GL_FLOAT;
         
         int location;
         int start;
         int stride;
         int l;
+        
     public:
         
         VertexAttribute(GLShader shader, std::string _name, int _length)
@@ -78,8 +79,8 @@ class GLObject {
         
         void set_data(int start_index, int stride_index, std::vector<glm::vec3> _data, std::vector<float>& data)
         {
-            start = start_index * sizeof(float);
-            stride = stride_index * sizeof(float);
+            start = start_index * size_of_type();
+            stride = stride_index * size_of_type();
             
             for (int i = 0; i < _data.size(); i++)
             {
@@ -100,15 +101,15 @@ class GLObject {
             return l;
         }
         
-        int size()
+        static int size_of_type()
         {
             if(PRECISION == GL_FLOAT)
             {
-                return l * sizeof(float);
+                return sizeof(float);
             }
             if(PRECISION == GL_DOUBLE)
             {
-                return l * sizeof(double);
+                return sizeof(double);
             }
             assert(false);
         }
