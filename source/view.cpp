@@ -212,7 +212,6 @@ void GLObject::set_vertex_attribute(std::string attribute_name, const std::vecto
 {
     no_vertices = static_cast<int>(_data.size());
     
-    int data_count = 0;
     int start_index = 0;
     int stride_index = 0;
     for (auto attribute : attributes)
@@ -222,9 +221,8 @@ void GLObject::set_vertex_attribute(std::string attribute_name, const std::vecto
             start_index = stride_index;
         }
         stride_index += attribute.second.length();
-        data_count += attribute.second.length() * no_vertices;
     }
-    data.resize(data_count);
+    data.resize(stride_index * no_vertices);
     
     attributes.at(attribute_name).set_data(start_index, stride_index, _data, data);
 }
