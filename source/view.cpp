@@ -188,7 +188,6 @@ GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum 
 : shader(_shader), material(_material), drawmode(_drawmode)
 {
     // Generate arrays and buffers
-    GLuint array_id;
     glGenVertexArrays(1, &array_id);
     glBindVertexArray(array_id);
     
@@ -244,6 +243,7 @@ void GLObject::draw()
         shader.set_uniform_variable("diffuseMat", material.diffuse);
         shader.set_uniform_variable("specMat", material.specular);
         
+        glBindVertexArray(array_id);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
         for (auto attribute : attributes)

@@ -119,7 +119,8 @@ class GLObject {
     
     std::vector<float> data;
     
-    GLuint buffer_id;
+    GLuint buffer_id, array_id;
+    
     std::map<std::string, VertexAttribute> attributes = std::map<std::string, VertexAttribute>();
     
     GLMaterial material;
