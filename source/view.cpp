@@ -195,19 +195,10 @@ GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum 
     glGenBuffers(1, &buffer_id);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     
-    // Initialize shader attributes
-    shader.use();
-    for (std::string attribute_name : {"position", "vector"})
-    {
-        auto attribute = VertexAttribute(shader, attribute_name, stride, 3);
-        stride += attribute.size();
-        attributes.insert( {attribute_name, attribute} );
-    }
-    
     check_gl_error();
 }
 
-void GLObject::set_data()
+void GLObject::finalize_vertex_attributes()
 {
     int buffer_size = 0;
     for (auto attribute : attributes)
