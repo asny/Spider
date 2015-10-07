@@ -198,6 +198,31 @@ GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum 
     check_gl_error();
 }
 
+void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_names)
+{
+    shader.use();
+    for (std::string attribute_name : attribute_names)
+    {
+        auto attribute = VertexAttribute(shader, attribute_name, stride, 3);
+        stride += attribute.size();
+        attributes.insert( {attribute_name, attribute} );
+    }
+}
+
+void GLObject::set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data)
+{
+    no_vertices = static_cast<int>(_data.size());
+    
+    int data_count = 0;
+    for (auto attribute : attributes)
+    {
+        data_count += attribute.second.length() * no_vertices;
+    }
+    data.resize(data_count);
+    
+    attributes.at(attribute_name).set_data(_data, stride, data);
+}
+
 void GLObject::finalize_vertex_attributes()
 {
     int buffer_size = 0;

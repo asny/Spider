@@ -136,30 +136,9 @@ public:
     
     GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES);
     
-    void initialize_vertex_attributes(std::vector<std::string> attribute_names)
-    {
-        shader.use();
-        for (std::string attribute_name : attribute_names)
-        {
-            auto attribute = VertexAttribute(shader, attribute_name, stride, 3);
-            stride += attribute.size();
-            attributes.insert( {attribute_name, attribute} );
-        }
-    }
+    void initialize_vertex_attributes(std::vector<std::string> attribute_names);
     
-    void set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data)
-    {
-        no_vertices = static_cast<int>(_data.size());
-        
-        int data_count = 0;
-        for (auto attribute : attributes)
-        {
-            data_count += attribute.second.length() * no_vertices;
-        }
-        data.resize(data_count);
-        
-        attributes.at(attribute_name).set_data(_data, stride, data);
-    }
+    void set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data);
     
     void finalize_vertex_attributes();
     
