@@ -63,12 +63,12 @@ class GLObject {
         std::string name;
         int index;
         int start_index;
-        int l;
+        int length;
         GLenum type;
         
     public:
         
-        VertexAttribute(GLShader shader, std::string _name, int _start_index, int _length, GLenum _type = GL_DOUBLE) : name(_name), start_index(_start_index), l(_length), type(_type)
+        VertexAttribute(GLShader shader, std::string _name, int _start_index, int _length, GLenum _type = GL_DOUBLE) : name(_name), start_index(_start_index), length(_length), type(_type)
         {
             index = shader.get_attribute_location(name);
             glEnableVertexAttribArray(index);
@@ -76,18 +76,18 @@ class GLObject {
         
         void use(int stride)
         {
-            glVertexAttribPointer(index, l, type, GL_FALSE, stride, (const GLvoid *)start_index);
+            glVertexAttribPointer(index, length, type, GL_FALSE, stride, (const GLvoid *)start_index);
         }
         
         int size()
         {
             if(type == GL_FLOAT)
             {
-                return l * sizeof(float);
+                return length * sizeof(float);
             }
             if(type == GL_DOUBLE)
             {
-                return l * sizeof(double);
+                return length * sizeof(double);
             }
             assert(false);
         }
