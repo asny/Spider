@@ -201,27 +201,18 @@ GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum 
     {
         auto attribute = VertexAttribute(shader, attribute_name, stride, 3);
         stride += attribute.size();
-        attributes.push_back(attribute);
+        attributes.insert( {attribute_name, attribute} );
     }
     
     check_gl_error();
 }
 
-void GLObject::set_data(const std::vector<vec3>& _data)
+void GLObject::set_data()
 {
-    no_vertices = static_cast<int>(_data.size() / attributes.size());
-    data.clear();
-    for (auto vec : _data)
-    {
-        data.push_back(vec.x);
-        data.push_back(vec.y);
-        data.push_back(vec.z);
-    }
-    
     int buffer_size = 0;
     for (auto attribute : attributes)
     {
-        buffer_size += attribute.size() * no_vertices;
+        buffer_size += attribute.second.size() * no_vertices;
     }
     
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
@@ -241,9 +232,9 @@ void GLObject::draw()
         
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
-        for (VertexAttribute attribute : attributes)
+        for (auto attribute : attributes)
         {
-            attribute.use(stride);
+            attribute.second.use(stride);
         }
         
         glDrawArrays(drawmode, 0, no_vertices);

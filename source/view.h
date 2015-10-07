@@ -13,6 +13,7 @@
 #include <memory>
 #include <iostream>
 #include <vector>
+#include <map>
 
 #include "vec3.hpp"
 #include "vec4.hpp"
@@ -62,33 +63,51 @@ class GLObject {
     {
         const GLenum PRECISION = GL_FLOAT;
         
-        std::string name;
-        int index;
+        int location;
         int start_index;
-        int length;
+        int l;
     public:
         
         VertexAttribute(GLShader shader, std::string _name, int _start_index, int _length)
-            : name(_name), start_index(_start_index), length(_length)
+            : start_index(_start_index), l(_length)
         {
-            index = shader.get_attribute_location(name);
-            glEnableVertexAttribArray(index);
+            location = shader.get_attribute_location(_name);
+            glEnableVertexAttribArray(location);
+        }
+        
+        void set_data(std::vector<glm::vec3> _data, int _stride, std::vector<float>& data)
+        {
+            int stride = _stride / sizeof(float);
+            int start = start_index / sizeof(float);
+            
+            for (int i = 0; i < _data.size(); i++)
+            {
+                glm::vec3 vec = _data[i];
+                data[start + i*stride] = vec.x;
+                data[start + i*stride + 1] = vec.y;
+                data[start + i*stride + 2] = vec.z;
+            }
         }
         
         void use(int stride)
         {
-            glVertexAttribPointer(index, length, PRECISION, GL_FALSE, stride, (const GLvoid *)start_index);
+            glVertexAttribPointer(location, l, PRECISION, GL_FALSE, stride, (const GLvoid *)start_index);
+        }
+        
+        int length()
+        {
+            return l;
         }
         
         int size()
         {
             if(PRECISION == GL_FLOAT)
             {
-                return length * sizeof(float);
+                return l * sizeof(float);
             }
             if(PRECISION == GL_DOUBLE)
             {
-                return length * sizeof(double);
+                return l * sizeof(double);
             }
             assert(false);
         }
@@ -99,7 +118,7 @@ class GLObject {
     std::vector<float> data;
     
     GLuint buffer_id;
-    std::vector<VertexAttribute> attributes = std::vector<VertexAttribute>();
+    std::map<std::string, VertexAttribute> attributes = std::map<std::string, VertexAttribute>();
     
     GLMaterial material;
     
@@ -117,7 +136,21 @@ public:
     
     GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES);
     
-    void set_data(const std::vector<glm::vec3>& _data);
+    void set_data();
+    
+    void set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data)
+    {
+        no_vertices = static_cast<int>(_data.size());
+        
+        int data_count = 0;
+        for (auto attribute : attributes)
+        {
+            data_count += attribute.second.length() * no_vertices;
+        }
+        data.resize(data_count);
+        
+        attributes.at(attribute_name).set_data(_data, stride, data);
+    }
     
     void draw();
 };

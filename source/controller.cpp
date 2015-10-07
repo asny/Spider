@@ -189,18 +189,27 @@ void Controller::create_shaders_and_objects()
     for (auto pos : cube_data)
     {
         data.push_back(pos);
+    }
+    cube.set_vertex_attribute("position", data);
+    data.clear();
+    for (auto pos : cube_data)
+    {
         data.push_back(glm::vec3(0.,1.,0.));
     }
-    cube.set_data(data);
+    cube.set_vertex_attribute("vector", data);
+    cube.set_data();
     
     // terrain
     material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
     terrain = GLObject(phong_shader, material, GL_TRIANGLE_STRIP);
-    data.clear();
+    
+    terrain.set_vertex_attribute("position", model->get_terrain());
+    
+    auto normals = std::vector<glm::vec3>();
     for (auto pos : model->get_terrain())
     {
-        data.push_back(pos);
-        data.push_back(glm::vec3(0.,1.,0.));
+        normals.push_back(glm::vec3(0.,1.,0.));
     }
-    terrain.set_data(data);
+    terrain.set_vertex_attribute("vector", normals);
+    terrain.set_data();
 }
