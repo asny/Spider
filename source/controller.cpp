@@ -187,29 +187,23 @@ void Controller::create_shaders_and_objects()
     // cube
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
     cube = GLObject(phong_shader, material);
-    cube.initialize_vertex_attributes({"position", "vector"});
-    cube.set_vertex_attribute("position", cube_data);
     
-    std::vector<glm::vec3> data;
+    std::vector<glm::vec3> normals;
     for (auto pos : cube_data)
     {
-        data.push_back(glm::vec3(0.,1.,0.));
+        normals.push_back(glm::vec3(0.,1.,0.));
     }
-    cube.set_vertex_attribute("vector", data);
+    
+    cube.initialize_vertex_attributes({"position", "vector"});
+    cube.set_vertex_attribute("position", cube_data);
+    cube.set_vertex_attribute("vector", normals);
     cube.finalize_vertex_attributes();
     
     // terrain
     material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
-    terrain = GLObject(gauraud_shader, material, GL_TRIANGLE_STRIP);
-    terrain.initialize_vertex_attributes({"position", "vector"});
+    terrain = GLObject(terrain_shader, material, GL_TRIANGLE_STRIP);
     
+    terrain.initialize_vertex_attributes({"position"});
     terrain.set_vertex_attribute("position", model->get_terrain());
-    
-    auto normals = std::vector<glm::vec3>();
-    for (auto pos : model->get_terrain())
-    {
-        normals.push_back(glm::vec3(0.,1.,0.));
-    }
-    terrain.set_vertex_attribute("vector", normals);
     terrain.finalize_vertex_attributes();
 }
