@@ -179,6 +179,8 @@ void Controller::create_shaders_and_objects()
     // Create shaders
     auto phong_shader = GLShader("shaders/phong.vert",  "shaders/phong.frag");
     visualizer->add_shader(phong_shader);
+    auto fastphong_shader = GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom");
+    visualizer->add_shader(fastphong_shader);
     auto gauraud_shader = GLShader("shaders/gouraud.vert",  "shaders/gouraud.frag");
     visualizer->add_shader(gauraud_shader);
     auto terrain_shader = GLShader("shaders/terrain.vert",  "shaders/phong.frag", "shaders/terrain.geom");
@@ -186,17 +188,10 @@ void Controller::create_shaders_and_objects()
     
     // cube
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
-    cube = GLObject(phong_shader, material);
+    cube = GLObject(fastphong_shader, material);
     
-    std::vector<glm::vec3> normals;
-    for (auto pos : cube_data)
-    {
-        normals.push_back(glm::vec3(0.,1.,0.));
-    }
-    
-    cube.initialize_vertex_attributes({"position", "vector"});
+    cube.initialize_vertex_attributes({"position"});
     cube.set_vertex_attribute("position", cube_data);
-    cube.set_vertex_attribute("vector", normals);
     cube.finalize_vertex_attributes();
     
     // terrain
