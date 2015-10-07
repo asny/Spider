@@ -75,17 +75,14 @@ class GLObject {
             glEnableVertexAttribArray(location);
         }
         
-        void set_data(std::vector<glm::vec3> _data, int _stride, std::vector<float>& data)
+        void set_data(int start_index, int stride_index, std::vector<glm::vec3> _data, std::vector<float>& data)
         {
-            int stride = _stride / sizeof(float);
-            int start = start_index / sizeof(float);
-            
             for (int i = 0; i < _data.size(); i++)
             {
                 glm::vec3 vec = _data[i];
-                data[start + i*stride] = vec.x;
-                data[start + i*stride + 1] = vec.y;
-                data[start + i*stride + 2] = vec.z;
+                data[start_index + i*stride_index] = vec.x;
+                data[start_index + i*stride_index + 1] = vec.y;
+                data[start_index + i*stride_index + 2] = vec.z;
             }
         }
         
