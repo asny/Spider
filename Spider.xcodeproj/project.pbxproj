@@ -40,6 +40,8 @@
 		7A383A321BBFCE5700E29333 /* controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = controller.h; path = source/controller.h; sourceTree = "<group>"; };
 		7A383A371BBFDC3300E29333 /* gouraud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gouraud.vert; path = shaders/gouraud.vert; sourceTree = "<group>"; };
 		7A383A391BBFDC9F00E29333 /* gouraud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gouraud.frag; path = shaders/gouraud.frag; sourceTree = "<group>"; };
+		7A70D0F11BC5BF19003E859B /* fastphong.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fastphong.geom; path = shaders/fastphong.geom; sourceTree = "<group>"; };
+		7A70D0F21BC5BF19003E859B /* fastphong.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fastphong.vert; path = shaders/fastphong.vert; sourceTree = "<group>"; };
 		7AB0F2BA1BC07AA0009D85FD /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = model.cpp; path = source/model.cpp; sourceTree = "<group>"; };
 		7AB0F2BB1BC07AA0009D85FD /* model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = model.hpp; path = source/model.hpp; sourceTree = "<group>"; };
 		7AB0F2BE1BC07B52009D85FD /* spider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = spider.cpp; path = source/spider.cpp; sourceTree = "<group>"; };
@@ -100,6 +102,8 @@
 		7A383A341BBFD93A00E29333 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				7A70D0F11BC5BF19003E859B /* fastphong.geom */,
+				7A70D0F21BC5BF19003E859B /* fastphong.vert */,
 				7AB0F2C61BC28EEB009D85FD /* terrain.geom */,
 				7AB0F2C71BC28EEB009D85FD /* terrain.vert */,
 				7AB0F2C11BC2497F009D85FD /* phong.frag */,
