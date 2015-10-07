@@ -237,7 +237,7 @@ void GLObject::draw()
         
         for (VertexAttribute attribute : attributes)
         {
-            glVertexAttribPointer(attribute.get_index(), attribute.length(), attribute.get_type(), GL_FALSE, stride, (const GLvoid *)attribute.get_start_index());
+            attribute.use(stride);
         }
         
         glDrawArrays(drawmode, 0, no_vertices);

@@ -67,15 +67,16 @@ class GLObject {
         GLenum type;
         
     public:
+        
         VertexAttribute(GLShader shader, std::string _name, int _start_index, int _length, GLenum _type = GL_DOUBLE) : name(_name), start_index(_start_index), l(_length), type(_type)
         {
             index = shader.get_attribute_location(name);
             glEnableVertexAttribArray(index);
         }
         
-        int length()
+        void use(int stride)
         {
-            return l;
+            glVertexAttribPointer(index, l, type, GL_FALSE, stride, (const GLvoid *)start_index);
         }
         
         int size()
@@ -89,21 +90,6 @@ class GLObject {
                 return l * sizeof(double);
             }
             assert(false);
-        }
-        
-        int get_index()
-        {
-            return index;
-        }
-        
-        int get_start_index()
-        {
-            return start_index;
-        }
-        
-        GLenum get_type()
-        {
-            return type;
         }
     };
     
