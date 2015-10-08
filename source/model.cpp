@@ -13,10 +13,10 @@ using namespace glm;
 std::vector<glm::vec3> Model::get_terrain()
 {
     glm::vec3 pos = spider.get_position();
-    TerrainPatch patch = terrain.get_patch_at(0,0);
+    TerrainPatch patch = terrain.get_patch_at(glm::vec2(pos.x, pos.z));
     
     int radius = 10;
-    vec2 origo = vec2((int)pos.x - radius, (int)pos.y - radius);
+    vec2 origo = vec2((int)pos.x, (int)pos.y);
     vec2 size = vec2((int)pos.x + radius, (int)pos.y + radius);
     
     glm::vec2 p;

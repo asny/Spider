@@ -9,17 +9,18 @@
 #pragma once
 
 #include <vector>
+#include <map>
+#include <math.h>
 
 #include "vec2.hpp"
 
 class TerrainPatch {
-    int discretization = 2;
-    glm::vec2 origo, size;
+    glm::vec2 origo;
     std::vector<std::vector<double>> heightmap;
     
 public:
     
-    TerrainPatch(glm::vec2 _origo, glm::vec2 _size);
+    TerrainPatch(glm::vec2 _origo);
     
     std::vector<std::vector<double>> get_heightmap()
     {
@@ -31,15 +32,13 @@ public:
 
 class Terrain {
     
-    TerrainPatch terrain_patch = TerrainPatch(glm::vec2(-50., -50.), glm::vec2(100., 100.));
+    
+    std::map<std::pair<int, int>, TerrainPatch> terrain_patches = std::map<std::pair<int, int>, TerrainPatch>();
     
 public:
     
     Terrain();
     
-    TerrainPatch get_patch_at(int x, int y)
-    {
-        return terrain_patch;
-    }
+    TerrainPatch get_patch_at(glm::vec2 position);
     
 };
