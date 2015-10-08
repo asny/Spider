@@ -6,31 +6,31 @@
 //  Copyright (c) 2015 Asger Nyman Christiansen. All rights reserved.
 //
 
-#include "Controller.h"
+#include "View.h"
 
 #include <GLUT/glut.h>
 
 void display_(){
-    Controller::get_instance()->display();
+    View::get_instance()->display();
 }
 
 void keyboard_(unsigned char key, int x, int y){
-    Controller::get_instance()->keyboard(key, x, y);
+    View::get_instance()->keyboard(key, x, y);
 }
 
 void reshape_(int width, int height){
-    Controller::get_instance()->reshape(width, height);
+    View::get_instance()->reshape(width, height);
 }
 
 void visible_(int v){
-    Controller::get_instance()->visible(v);
+    View::get_instance()->visible(v);
 }
 
 void animate_(){
-    Controller::get_instance()->animate();
+    View::get_instance()->animate();
 }
 
-Controller* Controller::instance = NULL;
+View* View::instance = NULL;
 
 static const std::vector<glm::vec3> cube_data = {
     glm::vec3(-1.0f,-1.0f,-1.0f), // triangle 1 : begin
@@ -79,7 +79,7 @@ static const glm::vec3 triangles_data[] = {
         glm::vec3(0.), glm::vec3(0.,0.,1.), glm::vec3(0.,-1.,0.), glm::vec3(0.,0.,1.), glm::vec3(1.,0.,0.), glm::vec3(0.,0.,1.)
 };
 
-Controller::Controller(std::shared_ptr<Model> _model, int &argc, char** argv)
+View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
 {
     instance = this;
     model = _model;
@@ -107,7 +107,7 @@ Controller::Controller(std::shared_ptr<Model> _model, int &argc, char** argv)
     glutMainLoop();
 }
 
-void Controller::display()
+void View::display()
 {
     if (glutGet(GLUT_WINDOW_WIDTH) != WIN_SIZE_X || glutGet(GLUT_WINDOW_HEIGHT) != WIN_SIZE_Y) {
         return;
@@ -120,7 +120,7 @@ void Controller::display()
     glutSwapBuffers();
 }
 
-void Controller::reshape(int width, int height)
+void View::reshape(int width, int height)
 {
     WIN_SIZE_X = width;
     WIN_SIZE_Y = height;
@@ -128,15 +128,22 @@ void Controller::reshape(int width, int height)
     glutPostRedisplay();
 }
 
-void Controller::animate()
+void View::animate()
 {
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.001;
     glm::vec3 animation(sinf(timeValue), cosf(timeValue) , 0.f);
     visualizer->set_view(model->get_spider_position() + animation, model->get_spider_view_direction());
+    
+    if((int)(timeValue) % 5 == 0)
+    {
+        terrain.set_vertex_attribute("position", model->get_terrain());
+        terrain.finalize_vertex_attributes();
+    }
+    
     glutPostRedisplay();
 }
 
-void Controller::keyboard(unsigned char key, int x, int y) {
+void View::keyboard(unsigned char key, int x, int y) {
     switch(key) {
         case '\033':
             exit(0);
@@ -166,7 +173,7 @@ void Controller::keyboard(unsigned char key, int x, int y) {
     }
 }
 
-void Controller::visible(int v)
+void View::visible(int v)
 {
     if(v==GLUT_VISIBLE)
         glutIdleFunc(animate_);
@@ -174,7 +181,7 @@ void Controller::visible(int v)
         glutIdleFunc(0);
 }
 
-void Controller::create_shaders_and_objects()
+void View::create_shaders_and_objects()
 {
     // Create shaders
     auto phong_shader = GLShader("shaders/phong.vert",  "shaders/phong.frag");

@@ -11,10 +11,7 @@
 #include "GLWrapper.h"
 #include "model.hpp"
 
-/**
- A Controller application which utilizes OpenGL and GLUT for visualization.
- */
-class Controller
+class View
 {
     std::unique_ptr<GLWrapper> visualizer;
     std::shared_ptr<Model> model;
@@ -28,13 +25,13 @@ class Controller
     
     bool CONTINUOUS = false;
     
-    static Controller* instance;
+    static View* instance;
     
 public:
     
-    Controller(std::shared_ptr<Model> _model, int &argc, char** argv);
+    View(std::shared_ptr<Model> _model, int &argc, char** argv);
     
-    static Controller* get_instance()
+    static View* get_instance()
     {
         return instance;
     }

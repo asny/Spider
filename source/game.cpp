@@ -8,12 +8,12 @@
 
 #include <iostream>
 
-#include "controller.h"
+#include "View.h"
 #include "model.hpp"
 
 int main(int argc, char** argv)
 {
     auto model = std::shared_ptr<Model>(new Model());
-    Controller controller(model, argc, argv);
+    View view(model, argc, argv);
     return 0;
 }
