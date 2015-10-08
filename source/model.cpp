@@ -8,37 +8,31 @@
 
 #include "model.hpp"
 
+using namespace std;
 using namespace glm;
 
 std::vector<glm::vec3> Model::get_terrain()
 {
-    glm::vec3 pos = spider.get_position();
-    TerrainPatch patch = terrain.get_patch_at(glm::vec2(pos.x, pos.z));
+    vec3 pos = spider.get_position();
+    vector<vector<vec3>> patch = terrain.get_patch_at(pos);
     
-    int radius = 10;
-    vec2 origo = vec2((int)pos.x, (int)pos.y);
-    vec2 size = vec2((int)pos.x + radius, (int)pos.y + radius);
-    
-    glm::vec2 p;
-    std::vector<glm::vec3> terrain;
-    for(int y = origo.y; y < size.y - 1; y++)
+    vector<vec3> terrain;
+    for(int r = 0; r < patch.size() - 1; r++)
     {
-        for(int x = origo.x; x < size.x; x++)
+        for(int c = 0; c < patch[0].size(); c++)
         {
-            p = glm::vec2(x,y);
-            terrain.push_back(glm::vec3(p.y, patch.get_height_at(p), p.x));
+            terrain.push_back(patch[r][c]);
             
-            if (x == origo.x)
+            if (c == 0)
             {
-                terrain.push_back(glm::vec3(p.y, patch.get_height_at(p), p.x));
+                terrain.push_back(patch[r][c]);
             }
             
-            p = glm::vec2(x,y + 1);
-            terrain.push_back(glm::vec3(p.y, patch.get_height_at(p), p.x));
+            terrain.push_back(patch[r+1][c]);
             
-            if (x == size.x - 1)
+            if (c == patch[0].size() - 1)
             {
-                terrain.push_back(glm::vec3(p.y, patch.get_height_at(p), p.x));
+                terrain.push_back(patch[r+1][c]);
             }
         }
     }

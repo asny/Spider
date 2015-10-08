@@ -13,6 +13,7 @@
 #include <math.h>
 
 #include "vec2.hpp"
+#include "vec3.hpp"
 
 class TerrainPatch {
     glm::vec2 origo;
@@ -22,10 +23,7 @@ public:
     
     TerrainPatch(glm::vec2 _origo);
     
-    std::vector<std::vector<double>> get_heightmap()
-    {
-        return heightmap;
-    }
+    std::vector<std::vector<glm::vec3>> get_data();
     
     double get_height_at(glm::vec2 position);
 };
@@ -39,6 +37,6 @@ public:
     
     Terrain();
     
-    TerrainPatch get_patch_at(glm::vec2 position);
+    std::vector<std::vector<glm::vec3>> get_patch_at(glm::vec3 position);
     
 };
