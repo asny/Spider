@@ -13,6 +13,7 @@
 #include "vec2.hpp"
 
 class TerrainPatch {
+    int discretization = 2;
     glm::vec2 origo, size;
     std::vector<std::vector<double>> heightmap;
     
