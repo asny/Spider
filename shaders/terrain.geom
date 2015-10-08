@@ -22,7 +22,7 @@ vec3 calc_normal(Triangle triangle)
 vec3 calc_subdivision_point(Triangle triangle)
 {
     vec3 normal = calc_normal(triangle);
-    return (triangle.p1 + triangle.p2 + triangle.p3) / 3.f + normal * 0.1f;
+    return 0.333333f * (triangle.p1 + triangle.p2 + triangle.p3) + 0.1f * normal;
 }
 
 void emit_vertex(vec3 p, vec3 n)
@@ -45,7 +45,7 @@ void emit_triangle(Triangle triangle)
 
 void main()
 {
-    const int depth = 2;
+    const int depth = 1;
     const int no_triangles = int(pow(3, depth));
     
     // Add first triangle
@@ -53,7 +53,7 @@ void main()
     triangles[0] = Triangle(gl_in[0].gl_Position.xyz, gl_in[1].gl_Position.xyz, gl_in[2].gl_Position.xyz);
     
     int end_index = 1;
-    for (int d = depth; d > 0; d--)
+    for (int d = 0; d < depth; d++)
     {
         int end = end_index;
         for (int i = 0; i < end; i++)
