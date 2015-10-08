@@ -8,15 +8,21 @@ uniform mat4 PMatrix;
 out vec3 pos;
 out vec3 nor;
 
-vec3 calc_normal(vec3 p1, vec3 p2, vec3 p3)
+struct Triangle {
+    vec3 p1;
+    vec3 p2;
+    vec3 p3;
+};
+
+vec3 calc_normal(Triangle triangle)
 {
-    return normalize(cross(p2 - p1, p3 - p1));
+    return normalize(cross(triangle.p2 - triangle.p1, triangle.p3 - triangle.p1));
 }
 
-vec3 calc_subdivision_point(vec3 p1, vec3 p2, vec3 p3)
+vec3 calc_subdivision_point(Triangle triangle)
 {
-    vec3 normal = calc_normal(p1, p2, p3);
-    return (p1 + p2 + p3) / 3.f + normal * 0.1f;
+    vec3 normal = calc_normal(triangle);
+    return (triangle.p1 + triangle.p2 + triangle.p3) / 3.f + normal * 0.1f;
 }
 
 void emit_vertex(vec3 p)
@@ -26,22 +32,14 @@ void emit_vertex(vec3 p)
     EmitVertex();
 }
 
-void emit_triangle(vec3 p1, vec3 p2, vec3 p3)
+void emit_triangle(Triangle triangle)
 {
-    nor = calc_normal(p1, p2, p3);
-    emit_vertex(p1);
-    emit_vertex(p2);
-    emit_vertex(p3);
+    nor = calc_normal(triangle);
+    emit_vertex(triangle.p1);
+    emit_vertex(triangle.p2);
+    emit_vertex(triangle.p3);
     
     EndPrimitive();
-}
-
-void subdivide(vec3 p1, vec3 p2, vec3 p3)
-{
-    vec3 center = calc_subdivision_point(p1, p2, p3);
-    emit_triangle(center, p1, p2);
-    emit_triangle(center, p2, p3);
-    emit_triangle(center, p3, p1);
 }
 
 void main()
@@ -50,5 +48,25 @@ void main()
     vec3 p2 = gl_in[1].gl_Position.xyz;
     vec3 p3 = gl_in[2].gl_Position.xyz;
     
-    subdivide(p1, p2, p3);
+    const int depth = 1;
+    Triangle[depth * 3 + 1] triangles;
+    
+    triangles[0] = Triangle(p1,p2,p3);
+    
+    for (int d = depth; d > 0; d--)
+    {
+        for (int i = 0; i < 1; i++)
+        {
+            Triangle triangle = triangles[i];
+            vec3 center = calc_subdivision_point(triangle);
+            triangles[1] = Triangle(center, triangle.p1, triangle.p2);
+            triangles[2] = Triangle(center, triangle.p2, triangle.p3);
+            triangles[3] = Triangle(center, triangle.p3, triangle.p1);
+        }
+    }
+    
+    for (int i = 0; i < triangles.length(); i++)
+    {
+        emit_triangle(triangles[i]);
+    }
 }
