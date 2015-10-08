@@ -7,8 +7,7 @@
 //
 
 #include "terrain.hpp"
-
-#include <random>
+#include "simplexnoise.h"
 
 using namespace std;
 using namespace glm;
@@ -16,12 +15,12 @@ using namespace glm;
 TerrainPatch::TerrainPatch(vec2 _origo, vec2 _size) : origo(_origo), size(_size)
 {
     heightmap = vector<vector<double>>(size.y);
-    for ( vector<double>& row : heightmap )
+    for ( auto r = 0; r < size.y; r++ )
     {
-        row = vector<double>(size.x);
-        for ( double& height : row)
+        heightmap[r] = vector<double>(size.x);
+        for ( auto c = 0; c < size.x; c++ )
         {
-            height = (double)rand()/(double)RAND_MAX - 3.;
+            heightmap[r][c] = (double)raw_noise_2d(r, c);
         }
     }
 }
