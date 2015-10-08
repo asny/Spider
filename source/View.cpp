@@ -130,15 +130,9 @@ void View::reshape(int width, int height)
 
 void View::animate()
 {
-    GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.001;
-    glm::vec3 animation(sinf(timeValue), cosf(timeValue) , 0.f);
+    GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.002;
+    glm::vec3 animation(0.5f * sinf(timeValue), 0.1f * cosf(timeValue) , 0.f);
     visualizer->set_view(model->get_spider_position() + animation, model->get_spider_view_direction());
-    
-    if((int)(timeValue) % 5 == 0)
-    {
-        terrain.set_vertex_attribute("position", model->get_terrain());
-        terrain.finalize_vertex_attributes();
-    }
     
     glutPostRedisplay();
 }

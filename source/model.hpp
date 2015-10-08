@@ -15,7 +15,7 @@
 
 class Model {
     
-    Spider spider = Spider(glm::vec3(0.f, 0.f, 5.f), glm::vec3(0.f, 0.f, -1.f));
+    Spider spider = Spider(glm::vec3(0.f, 1.f, 5.f), glm::vec3(0.f, 0.f, -1.f));
     Terrain terrain = Terrain();
     
 public:
