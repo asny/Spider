@@ -1,7 +1,7 @@
 #version 150
 
 layout (triangles) in;
-layout (triangle_strip, max_vertices = 11) out;
+layout (triangle_strip, max_vertices = 9) out;
 
 uniform mat4 PMatrix;
 
@@ -29,18 +29,22 @@ void subdivide(vec3 p1, vec3 p2, vec3 p3)
     emit_vertex(center);
     emit_vertex(p1);
     emit_vertex(p2);
-    emit_vertex(center);
+    
+    EndPrimitive();
 
     nor = calc_normal(center, p2, p3);
     emit_vertex(center);
     emit_vertex(p2);
     emit_vertex(p3);
-    emit_vertex(center);
+    
+    EndPrimitive();
     
     nor = calc_normal(center, p3, p1);
     emit_vertex(center);
     emit_vertex(p3);
     emit_vertex(p1);
+    
+    EndPrimitive();
 }
 
 void main()
@@ -50,6 +54,4 @@ void main()
     vec3 p3 = gl_in[2].gl_Position.xyz;
     
     subdivide(p1, p2, p3);
-    
-    EndPrimitive();
 }
