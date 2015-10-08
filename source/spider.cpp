@@ -26,10 +26,10 @@ void Spider::move_backwards()
 
 void Spider::rotate_left()
 {
-    view_direction = vec3(rotate(mat4(), stepangle, vec3(0.f,1.f,0.f)) * vec4(view_direction, 1.f));
+    view_direction = vec3(rotate(mat4(), stepangle, vec3(0.,1.,0.)) * vec4(view_direction, 1.));
 }
 
 void Spider::rotate_right()
 {
-    view_direction = vec3(rotate(mat4(), -stepangle, vec3(0.f,1.f,0.f)) * vec4(view_direction, 1.f));
+    view_direction = vec3(rotate(mat4(), -stepangle, vec3(0.,1.,0.)) * vec4(view_direction, 1.));
 }

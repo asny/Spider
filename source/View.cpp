@@ -131,7 +131,7 @@ void View::reshape(int width, int height)
 void View::animate()
 {
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.002;
-    glm::vec3 animation(0.5f * sinf(timeValue), 0.1f * cosf(timeValue) , 0.f);
+    glm::vec3 animation(0.5 * sin(timeValue), 0.1 * cos(timeValue) , 0.);
     visualizer->set_view(model->get_spider_position() + animation, model->get_spider_view_direction());
     
     glutPostRedisplay();

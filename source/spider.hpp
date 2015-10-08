@@ -14,8 +14,8 @@ class Spider {
     glm::vec3 position;
     glm::vec3 view_direction;
     
-    const float stepsize = 0.1f;
-    const float stepangle = 0.01f;
+    const float stepsize = 0.1;
+    const float stepangle = 0.01;
     
 public:
     Spider(glm::vec3 _position, glm::vec3 _view_direction) : position(_position), view_direction(_view_direction)
