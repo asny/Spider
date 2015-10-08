@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "view.h"
+#include "GLWrapper.h"
 #include "model.hpp"
 
 /**

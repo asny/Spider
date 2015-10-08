@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Asger Nyman Christiansen. All rights reserved.
 //
 
-#include "view.h"
+#include "GLWrapper.h"
 #include "gtc/matrix_inverse.hpp"
 
 using namespace glm;
