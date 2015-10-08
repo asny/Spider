@@ -20,31 +20,24 @@ void emit_vertex(vec3 p)
     EmitVertex();
 }
 
+void emit_triangle(vec3 p1, vec3 p2, vec3 p3)
+{
+    nor = calc_normal(p1, p2, p3);
+    emit_vertex(p1);
+    emit_vertex(p2);
+    emit_vertex(p3);
+    
+    EndPrimitive();
+}
+
 void subdivide(vec3 p1, vec3 p2, vec3 p3)
 {
     vec3 normal = calc_normal(p1, p2, p3);
     vec3 center = (p1 + p2 + p3) / 3.f + normal * 0.1f;
     
-    nor = calc_normal(center, p1, p2);
-    emit_vertex(center);
-    emit_vertex(p1);
-    emit_vertex(p2);
-    
-    EndPrimitive();
-
-    nor = calc_normal(center, p2, p3);
-    emit_vertex(center);
-    emit_vertex(p2);
-    emit_vertex(p3);
-    
-    EndPrimitive();
-    
-    nor = calc_normal(center, p3, p1);
-    emit_vertex(center);
-    emit_vertex(p3);
-    emit_vertex(p1);
-    
-    EndPrimitive();
+    emit_triangle(center, p1, p2);
+    emit_triangle(center, p2, p3);
+    emit_triangle(center, p3, p1);
 }
 
 void main()
