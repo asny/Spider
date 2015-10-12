@@ -26,9 +26,12 @@ public:
     
     TerrainPatch(glm::vec2 _origo);
     
-    std::vector<std::vector<glm::vec3>> get_data();
-    
     double get_height_at(glm::vec2 position);
+    
+    glm::vec2 get_origo()
+    {
+        return origo;
+    }
 };
 
 class Terrain {

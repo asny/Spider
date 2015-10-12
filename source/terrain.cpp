@@ -70,21 +70,6 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
     }
 }
 
-vector<vector<vec3>> TerrainPatch::get_data()
-{
-    auto data = vector<vector<vec3>>(map_size);
-    for ( int r = 0; r < map_size; r++ )
-    {
-        data[r] = vector<vec3>(map_size);
-        for ( int c = 0; c < map_size; c++ )
-        {
-            vec2 pos = vec2(origo.x + static_cast<double>(c)/patch_discretization, origo.y + static_cast<double>(r)/patch_discretization);
-            data[r][c] = vec3(pos.y, get_height_at(pos), pos.x);
-        }
-    }
-    return data;
-}
-
 double TerrainPatch::get_height_at(glm::vec2 position)
 {
     vec2 index = (position - origo) * (float)patch_discretization;
@@ -115,7 +100,20 @@ TerrainPatch Terrain::get_or_create_patch_at(glm::vec3 position)
 
 vector<vector<vec3>> Terrain::get_terrain_positions_at(glm::vec3 position)
 {
-    return get_or_create_patch_at(position).get_data();
+    TerrainPatch patch = get_or_create_patch_at(position);
+    vec2 origo = patch.get_origo();
+    
+    auto data = vector<vector<vec3>>(map_size);
+    for ( int r = 0; r < map_size; r++ )
+    {
+        data[r] = vector<vec3>(map_size);
+        for ( int c = 0; c < map_size; c++ )
+        {
+            vec2 pos = vec2(origo.x + static_cast<double>(c)/patch_discretization, origo.y + static_cast<double>(r)/patch_discretization);
+            data[r][c] = vec3(pos.y, patch.get_height_at(pos), pos.x);
+        }
+    }
+    return data;
 }
 
 
