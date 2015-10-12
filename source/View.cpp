@@ -197,9 +197,13 @@ void View::create_shaders_and_objects()
     
     // terrain
     material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
-    terrain = GLObject(fastphong_shader, material, GL_TRIANGLE_STRIP);
+    terrain = GLObject(phong_shader, material, GL_TRIANGLE_STRIP);
     
-    terrain.initialize_vertex_attributes({"position"});
-    terrain.set_vertex_attribute("position", model->get_terrain());
+    std::vector<glm::vec3> terrain_positions, terrain_normals;
+    model->get_terrain(terrain_positions, terrain_normals);
+    
+    terrain.initialize_vertex_attributes({"position", "vector"});
+    terrain.set_vertex_attribute("position", terrain_positions);
+    terrain.set_vertex_attribute("vector", terrain_normals);
     terrain.finalize_vertex_attributes();
 }
