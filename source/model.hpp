@@ -29,7 +29,7 @@ public:
     glm::vec3 get_spider_position()
     {
         glm::vec3 pos = spider.get_position();
-        double height = terrain.get_height_at(pos);
+        double height = terrain.get_terrain_position_at(pos).y;
         return glm::vec3(pos.x, pos.y + height, pos.z);
     }
     

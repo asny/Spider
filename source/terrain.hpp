@@ -26,7 +26,7 @@ public:
     
     TerrainPatch(glm::vec2 _origo);
     
-    double get_height_at(glm::vec2 position);
+    glm::vec3 get_position_at(glm::vec2 parameter);
     
     glm::vec2 get_origo()
     {
@@ -40,7 +40,7 @@ class Terrain {
     std::map<std::pair<int, int>, TerrainPatch> terrain_patches = std::map<std::pair<int, int>, TerrainPatch>();
     
     
-    TerrainPatch get_or_create_patch_at(glm::vec2 position);
+    TerrainPatch get_or_create_patch_at(glm::vec2 parameter);
     
     glm::vec2 pos2par(glm::vec3 pos)
     {
@@ -53,6 +53,6 @@ public:
     
     std::vector<std::vector<glm::vec3>> get_terrain_positions_at(glm::vec3 position);
     
-    double get_height_at(glm::vec3 position);
+    glm::vec3 get_terrain_position_at(glm::vec3 position);
     
 };

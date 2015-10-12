@@ -70,12 +70,12 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
     }
 }
 
-double TerrainPatch::get_height_at(glm::vec2 position)
+vec3 TerrainPatch::get_position_at(glm::vec2 parameter)
 {
-    vec2 index = (position - origo) * (float)patch_discretization;
+    vec2 index = (parameter - origo) * (float)patch_discretization;
     assert(0 <= index.x <= map_size);
     assert(0 <= index.y <= map_size);
-    return heightmap[floor(index.x)][floor(index.y)];
+    return vec3(parameter.x, heightmap[floor(index.x)][floor(index.y)], parameter.y);
 }
 
 Terrain::Terrain()
@@ -110,16 +110,16 @@ vector<vector<vec3>> Terrain::get_terrain_positions_at(glm::vec3 position)
         data[r] = vector<vec3>(map_size);
         for ( int c = 0; c < map_size; c++ )
         {
-            vec2 pos = vec2(origo.x + static_cast<double>(c)/patch_discretization, origo.y + static_cast<double>(r)/patch_discretization);
-            data[r][c] = vec3(pos.y, patch.get_height_at(pos), pos.x);
+            vec2 pos = vec2(origo.y + static_cast<double>(r)/patch_discretization, origo.x + static_cast<double>(c)/patch_discretization);
+            data[r][c] = patch.get_position_at(pos);
         }
     }
     return data;
 }
 
 
-double Terrain::get_height_at(glm::vec3 position)
+vec3 Terrain::get_terrain_position_at(glm::vec3 position)
 {
     vec2 parameter = pos2par(position);
-    return get_or_create_patch_at(parameter).get_height_at(parameter);
+    return get_or_create_patch_at(parameter).get_position_at(parameter);
 }
