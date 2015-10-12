@@ -28,7 +28,9 @@ public:
     
     glm::vec3 get_spider_position()
     {
-        return spider.get_position();
+        glm::vec3 pos = spider.get_position();
+        double height = terrain.get_height_at(pos);
+        return glm::vec3(pos.x, pos.y + height, pos.z);
     }
     
     glm::vec3 get_spider_view_direction()
