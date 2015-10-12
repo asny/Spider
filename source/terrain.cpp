@@ -84,14 +84,14 @@ Terrain::Terrain()
     
 }
 
-TerrainPatch Terrain::get_or_create_patch_at(glm::vec3 position)
+TerrainPatch Terrain::get_or_create_patch_at(glm::vec2 parameter)
 {
-    pair<int, int> index = make_pair((int)floor(position.x / patch_size), (int)floor(position.z / patch_size));
+    pair<int, int> index = make_pair((int)floor(parameter.x / patch_size), (int)floor(parameter.y / patch_size));
     auto origo_patch_pair = terrain_patches.find(index);
     
     if (origo_patch_pair == terrain_patches.end())
     {
-        auto patch = TerrainPatch(vec2((double)index.first, (double)index.second));
+        auto patch = TerrainPatch(vec2(patch_size * (double)index.first, patch_size * (double)index.second));
         terrain_patches.insert(make_pair(index, patch));
         return patch;
     }
@@ -100,7 +100,8 @@ TerrainPatch Terrain::get_or_create_patch_at(glm::vec3 position)
 
 vector<vector<vec3>> Terrain::get_terrain_positions_at(glm::vec3 position)
 {
-    TerrainPatch patch = get_or_create_patch_at(position);
+    vec2 parameter = convert(position);
+    TerrainPatch patch = get_or_create_patch_at(parameter);
     vec2 origo = patch.get_origo();
     
     auto data = vector<vector<vec3>>(map_size);
@@ -119,5 +120,6 @@ vector<vector<vec3>> Terrain::get_terrain_positions_at(glm::vec3 position)
 
 double Terrain::get_height_at(glm::vec3 position)
 {
-    return get_or_create_patch_at(position).get_height_at(vec2(position.x, position.z));
+    vec2 parameter = convert(position);
+    return get_or_create_patch_at(parameter).get_height_at(parameter);
 }

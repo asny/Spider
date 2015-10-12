@@ -40,7 +40,12 @@ class Terrain {
     std::map<std::pair<int, int>, TerrainPatch> terrain_patches = std::map<std::pair<int, int>, TerrainPatch>();
     
     
-    TerrainPatch get_or_create_patch_at(glm::vec3 position);
+    TerrainPatch get_or_create_patch_at(glm::vec2 position);
+    
+    glm::vec2 convert(glm::vec3 pos)
+    {
+        return glm::vec2(pos.x, pos.z);
+    }
     
 public:
     
