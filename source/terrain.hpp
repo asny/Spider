@@ -42,7 +42,7 @@ class Terrain {
     
     TerrainPatch get_or_create_patch_at(glm::vec2 position);
     
-    glm::vec2 convert(glm::vec3 pos)
+    glm::vec2 pos2par(glm::vec3 pos)
     {
         return glm::vec2(pos.x, pos.z);
     }

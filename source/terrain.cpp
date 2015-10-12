@@ -100,7 +100,7 @@ TerrainPatch Terrain::get_or_create_patch_at(glm::vec2 parameter)
 
 vector<vector<vec3>> Terrain::get_terrain_positions_at(glm::vec3 position)
 {
-    vec2 parameter = convert(position);
+    vec2 parameter = pos2par(position);
     TerrainPatch patch = get_or_create_patch_at(parameter);
     vec2 origo = patch.get_origo();
     
@@ -120,6 +120,6 @@ vector<vector<vec3>> Terrain::get_terrain_positions_at(glm::vec3 position)
 
 double Terrain::get_height_at(glm::vec3 position)
 {
-    vec2 parameter = convert(position);
+    vec2 parameter = pos2par(position);
     return get_or_create_patch_at(parameter).get_height_at(parameter);
 }
