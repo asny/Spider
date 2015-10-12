@@ -98,8 +98,8 @@ TerrainPatch Terrain::get_or_create_patch_at(glm::vec2 parameter)
     return origo_patch_pair->second;
 }
 
-vec3 Terrain::get_terrain_position_at(glm::vec3 position)
+vec3 Terrain::get_terrain_position_at(const glm::vec3& position)
 {
-    vec2 parameter = pos2par(position);
+    vec2 parameter = vec2(position.x, position.z);
     return get_or_create_patch_at(parameter).get_surface_position_at(position);
 }

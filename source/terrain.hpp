@@ -40,15 +40,10 @@ class Terrain {
     
     TerrainPatch get_or_create_patch_at(glm::vec2 parameter);
     
-    glm::vec2 pos2par(glm::vec3 pos)
-    {
-        return glm::vec2(pos.x, pos.z);
-    }
-    
 public:
     
     Terrain();
     
-    glm::vec3 get_terrain_position_at(glm::vec3 position);
+    glm::vec3 get_terrain_position_at(const glm::vec3& position);
     
 };
