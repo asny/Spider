@@ -197,7 +197,7 @@ void View::create_shaders_and_objects()
     
     // terrain
     material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
-    terrain = GLObject(terrain_shader, material, GL_TRIANGLE_STRIP);
+    terrain = GLObject(fastphong_shader, material, GL_TRIANGLE_STRIP);
     
     terrain.initialize_vertex_attributes({"position"});
     terrain.set_vertex_attribute("position", model->get_terrain());

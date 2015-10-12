@@ -13,7 +13,7 @@ using namespace std;
 using namespace glm;
 
 const double patch_size = 100.;
-const double patch_discretization = 1.;
+const double patch_discretization = 10.;
 const int map_size = patch_size * patch_discretization;
 
 TerrainPatch::TerrainPatch(vec2 _origo) : origo(_origo)
@@ -24,7 +24,7 @@ TerrainPatch::TerrainPatch(vec2 _origo) : origo(_origo)
         heightmap[r] = vector<double>(map_size);
         for ( auto c = 0; c < map_size; c++ )
         {
-            heightmap[r][c] = (double)raw_noise_2d(r, c);
+            heightmap[r][c] = 0.1*(double)raw_noise_2d(r, c);
         }
     }
 }
