@@ -12,20 +12,50 @@
 using namespace std;
 using namespace glm;
 
-const double patch_size = 100.;
-const double patch_discretization = 10.;
+const double patch_size = 10.;
+const double patch_discretization = 8.;
 const int map_size = patch_size * patch_discretization;
 
 TerrainPatch::TerrainPatch(vec2 _origo) : origo(_origo)
 {
-    heightmap = vector<vector<double>>(map_size);
-    for ( auto r = 0; r < map_size; r++ )
+    heightmap = vector<vector<double>>(map_size+1);
+    for ( auto r = 0; r < map_size+1; r++ )
     {
-        heightmap[r] = vector<double>(map_size);
-        for ( auto c = 0; c < map_size; c++ )
-        {
-            heightmap[r][c] = 0.1*(double)raw_noise_2d(r, c);
-        }
+        heightmap[r] = vector<double>(map_size+1);
+    }
+    
+    subdivide(0, 0, map_size);
+}
+
+void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
+{
+    int half_size = size/2;
+    if(half_size >= 1)
+    {
+        int r = origo_r + half_size;
+        int c = origo_c;
+        heightmap[r][c] = 0.1*(double)raw_noise_2d(r, c);
+        
+        r = origo_r;
+        c = origo_c + half_size;
+        heightmap[r][c] = 0.1*(double)raw_noise_2d(r, c);
+        
+        r = origo_r + size;
+        c = origo_c + half_size;
+        heightmap[r][c] = 0.1*(double)raw_noise_2d(r, c);
+        
+        r = origo_r + half_size;
+        c = origo_c + size;
+        heightmap[r][c] = 0.1*(double)raw_noise_2d(r, c);
+        
+        r = origo_r + half_size;
+        c = origo_c + half_size;
+        heightmap[r][c] = 0.1*(double)raw_noise_2d(r, c);
+        
+        subdivide(origo_r, origo_c, half_size);
+        subdivide(origo_r + half_size, origo_c, half_size);
+        subdivide(origo_r, origo_c + half_size, half_size);
+        subdivide(origo_r + half_size, origo_c + half_size, half_size);
     }
 }
 
