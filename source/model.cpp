@@ -12,28 +12,45 @@
 using namespace std;
 using namespace glm;
 
-vec3 approximate_normal(vec3 pos, vec3 neighbour_pos)
+vec3 approximate_normal(const vec3& position, const vec3& neighbour_position)
 {
-    vec3 tangent1 = normalize(neighbour_pos - pos);
+    vec3 tangent1 = normalize(neighbour_position - position);
     vec3 tangent2 = cross(vec3(0., 1., 0.), tangent1);
     return normalize(cross(tangent1, tangent2));
 }
 
+
+vec3 approximate_normal(const vec3& position, const vector<vec3>& neighbour_positions)
+{
+    vec3 normal = vec3(0.);
+    for (vec3 pos : neighbour_positions)
+    {
+        normal += approximate_normal(position, pos);
+    }
+    return normalize(normal);
+}
+
 vec3 calculate_normal_at(int row, int col, const vector<vector<vec3>>& positions)
 {
-    if(row == 0 || col == 0 || row == positions.size() - 1 || col == positions[0].size() - 1)
+    vector<vec3> neighbour_positions;
+    if(row > 0)
     {
-        return vec3(0., 1., 0.);
+        neighbour_positions.push_back(positions[row-1][col]);
+    }
+    if(col > 0)
+    {
+        neighbour_positions.push_back(positions[row][col-1]);
+    }
+    if(row + 1 < positions.size())
+    {
+        neighbour_positions.push_back(positions[row+1][col]);
+    }
+    if(col + 1 < positions[0].size())
+    {
+        neighbour_positions.push_back(positions[row][col+1]);
     }
     
-    vec3 pos_at_origo = positions[row][col];
-    
-    vec3 normal = approximate_normal(pos_at_origo, positions[row+1][col]);
-    normal += approximate_normal(pos_at_origo, positions[row][col+1]);
-    normal += approximate_normal(pos_at_origo, positions[row-1][col]);
-    normal += approximate_normal(pos_at_origo, positions[row][col-1]);
-    
-    return normalize(normal);
+    return approximate_normal(positions[row][col], neighbour_positions);
 }
 
 void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals)
