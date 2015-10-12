@@ -30,7 +30,7 @@ vec3 approximate_normal(const vec3& position, const vector<vec3>& neighbour_posi
     return normalize(normal);
 }
 
-vec3 calculate_normal_at(int row, int col, const vector<vector<vec3>>& positions)
+vec3 approximate_normal_at(int row, int col, const vector<vector<vec3>>& positions)
 {
     vector<vec3> neighbour_positions;
     if(row > 0)
@@ -65,7 +65,7 @@ void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals)
             auto position = patch[r][c];
             positions.push_back(position);
             
-            auto normal = calculate_normal_at(r, c, patch);
+            auto normal = approximate_normal_at(r, c, patch);
             normals.push_back(normal);
             
             if (c == 0)
@@ -77,7 +77,7 @@ void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals)
             position = patch[r+1][c];
             positions.push_back(position);
             
-            normal = calculate_normal_at(r+1, c, patch);
+            normal = approximate_normal_at(r+1, c, patch);
             normals.push_back(normal);
             
             if (c == patch[0].size() - 1)
