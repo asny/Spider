@@ -56,7 +56,7 @@ vec3 approximate_normal_at(int row, int col, const vector<vector<vec3>>& positio
 void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals)
 {
     vec3 spider_position = spider.get_position();
-    vector<vector<vec3>> patch = terrain.get_patch_at(spider_position);
+    vector<vector<vec3>> patch = terrain.get_terrain_positions_at(spider_position);
     
     for(int r = 0; r < patch.size() - 1; r++)
     {

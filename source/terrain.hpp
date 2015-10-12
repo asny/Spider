@@ -43,7 +43,7 @@ public:
     
     Terrain();
     
-    std::vector<std::vector<glm::vec3>> get_patch_at(glm::vec3 position);
+    std::vector<std::vector<glm::vec3>> get_terrain_positions_at(glm::vec3 position);
     
     double get_height_at(glm::vec3 position);
     
