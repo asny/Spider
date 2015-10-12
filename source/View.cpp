@@ -202,8 +202,8 @@ void View::create_shaders_and_objects()
     std::vector<glm::vec3> terrain_positions, terrain_normals;
     model->get_terrain(terrain_positions, terrain_normals);
     
-    terrain.initialize_vertex_attributes({"position", "vector"});
+    terrain.initialize_vertex_attributes({"position", "normal"});
     terrain.set_vertex_attribute("position", terrain_positions);
-    terrain.set_vertex_attribute("vector", terrain_normals);
+    terrain.set_vertex_attribute("normal", terrain_normals);
     terrain.finalize_vertex_attributes();
 }

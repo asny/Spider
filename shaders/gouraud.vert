@@ -11,7 +11,7 @@ uniform vec4 diffuseMat;
 uniform vec4 specMat;
 
 in vec3 position;
-in vec3 vector;
+in vec3 normal;
 
 out vec4 colourV;
 
@@ -22,7 +22,7 @@ void main()
     
     // Compute vectors
     vec3 p = mat3(MVMatrix) * position;
-    vec3 N = normalize(mat3(NormalMatrix) * vector);
+    vec3 N = normalize(mat3(NormalMatrix) * normal);
     vec3 L = normalize(lightPos - p);
     vec3 E = normalize(-p);
     vec3 R = normalize(reflect(-L,N));
