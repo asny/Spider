@@ -23,10 +23,10 @@ TerrainPatch::TerrainPatch(vec2 _origo) : origo(_origo)
     {
         heightmap[r] = vector<double>(map_size+1);
     }
-    heightmap[0][0] = 0.;
-    heightmap[0][map_size] = 0.;
-    heightmap[map_size][0] = 0.;
-    heightmap[map_size][map_size] = 1.;
+    heightmap[0][0] = -0.5;
+    heightmap[0][map_size] = 0.5;
+    heightmap[map_size][0] = 1.;
+    heightmap[map_size][map_size] = 2.;
     
     subdivide(0, 0, map_size);
 }
@@ -48,7 +48,7 @@ double average(std::vector<double> heights)
 void TerrainPatch::set_height(int r, int c, std::vector<double> neighbour_heights)
 {
     
-    heightmap[r][c] = average(neighbour_heights) + 0.1*(double)raw_noise_2d(r, c);
+    heightmap[r][c] = average(neighbour_heights) + 0.05*(double)raw_noise_2d(r, c);
 }
 
 void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
@@ -92,7 +92,6 @@ double TerrainPatch::get_height_at(glm::vec2 position)
     assert(0 <= index.y <= map_size);
     return heightmap[floor(index.x)][floor(index.y)];
 }
-
 
 Terrain::Terrain()
 {
