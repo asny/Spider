@@ -18,6 +18,7 @@ class Model {
     Spider spider = Spider(glm::vec3(0., 1., 5.), glm::vec3(0., 0., -1.));
     Terrain terrain = Terrain();
     
+    glm::vec3 approximate_normal_at(const glm::vec3& position, double filter_size);
 public:
     Model()
     {

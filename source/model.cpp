@@ -30,57 +30,57 @@ vec3 approximate_normal(const vec3& position, const vector<vec3>& neighbour_posi
     return normalize(normal);
 }
 
-vec3 approximate_normal_at(int row, int col, const vector<vector<vec3>>& positions)
+vec3 Model::approximate_normal_at(const vec3& position, double filter_size)
 {
     vector<vec3> neighbour_positions;
-    if(row > 0)
-    {
-        neighbour_positions.push_back(positions[row-1][col]);
-    }
-    if(col > 0)
-    {
-        neighbour_positions.push_back(positions[row][col-1]);
-    }
-    if(row + 1 < positions.size())
-    {
-        neighbour_positions.push_back(positions[row+1][col]);
-    }
-    if(col + 1 < positions[0].size())
-    {
-        neighbour_positions.push_back(positions[row][col+1]);
-    }
+    vec3 p = position + vec3(filter_size, 0., 0.);
+    neighbour_positions.push_back(terrain.get_terrain_position_at(p));
     
-    return approximate_normal(positions[row][col], neighbour_positions);
+    p = position - vec3(filter_size, 0., 0.);
+    neighbour_positions.push_back(terrain.get_terrain_position_at(p));
+    
+    p = position + vec3(0., 0., filter_size);
+    neighbour_positions.push_back(terrain.get_terrain_position_at(p));
+    
+    p = position - vec3(0., 0., filter_size);
+    neighbour_positions.push_back(terrain.get_terrain_position_at(p));
+    
+    return approximate_normal(position, neighbour_positions);
 }
 
 void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals)
 {
     vec3 spider_position = spider.get_position();
-    vector<vector<vec3>> patch = terrain.get_terrain_positions_at(spider_position);
     
-    for(int r = 0; r < patch.size() - 1; r++)
+    const double radius = 5.;
+    const double step_size = 1./8.;
+    for(double x = -radius; x <= radius; x += step_size)
     {
-        for(int c = 0; c < patch[0].size(); c++)
+        for(double z = -radius; z <= radius; z += step_size)
         {
-            auto position = patch[r][c];
+            vec3 p = spider_position + vec3(x, 0., z);
+            
+            vec3 position = terrain.get_terrain_position_at(p);
             positions.push_back(position);
             
-            auto normal = approximate_normal_at(r, c, patch);
+            vec3 normal = approximate_normal_at(position, step_size);
             normals.push_back(normal);
             
-            if (c == 0)
+            if (z == -radius)
             {
                 positions.push_back(position);
                 normals.push_back(normal);
             }
             
-            position = patch[r+1][c];
+            p.x += step_size;
+            
+            position = terrain.get_terrain_position_at(p);
             positions.push_back(position);
             
-            normal = approximate_normal_at(r+1, c, patch);
+            normal = approximate_normal_at(position, step_size);
             normals.push_back(normal);
             
-            if (c == patch[0].size() - 1)
+            if (z == radius)
             {
                 positions.push_back(position);
                 normals.push_back(normal);

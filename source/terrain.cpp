@@ -47,7 +47,6 @@ double average(std::vector<double> heights)
 
 void TerrainPatch::set_height(int r, int c, std::vector<double> neighbour_heights)
 {
-    
     heightmap[r][c] = average(neighbour_heights) + 0.05*(double)raw_noise_2d(r, c);
 }
 
@@ -70,12 +69,13 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
     }
 }
 
-vec3 TerrainPatch::get_position_at(glm::vec2 parameter)
+vec3 TerrainPatch::get_surface_position_at(glm::vec3 position)
 {
+    vec2 parameter = vec2(position.x, position.z);
     vec2 index = (parameter - origo) * (float)patch_discretization;
     assert(0 <= index.x <= map_size);
     assert(0 <= index.y <= map_size);
-    return vec3(parameter.x, heightmap[floor(index.x)][floor(index.y)], parameter.y);
+    return vec3(position.x, heightmap[floor(index.x)][floor(index.y)], position.z);
 }
 
 Terrain::Terrain()
@@ -98,28 +98,8 @@ TerrainPatch Terrain::get_or_create_patch_at(glm::vec2 parameter)
     return origo_patch_pair->second;
 }
 
-vector<vector<vec3>> Terrain::get_terrain_positions_at(glm::vec3 position)
-{
-    vec2 parameter = pos2par(position);
-    TerrainPatch patch = get_or_create_patch_at(parameter);
-    vec2 origo = patch.get_origo();
-    
-    auto data = vector<vector<vec3>>(map_size);
-    for ( int r = 0; r < map_size; r++ )
-    {
-        data[r] = vector<vec3>(map_size);
-        for ( int c = 0; c < map_size; c++ )
-        {
-            vec2 pos = vec2(origo.y + static_cast<double>(r)/patch_discretization, origo.x + static_cast<double>(c)/patch_discretization);
-            data[r][c] = patch.get_position_at(pos);
-        }
-    }
-    return data;
-}
-
-
 vec3 Terrain::get_terrain_position_at(glm::vec3 position)
 {
     vec2 parameter = pos2par(position);
-    return get_or_create_patch_at(parameter).get_position_at(parameter);
+    return get_or_create_patch_at(parameter).get_surface_position_at(position);
 }
