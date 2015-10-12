@@ -19,6 +19,7 @@ class TerrainPatch {
     glm::vec2 origo;
     std::vector<std::vector<double>> heightmap;
     
+    void set_height(int r, int c, std::vector<double> neighbour_heights);
     void subdivide(int origo_x, int origo_y, int size);
     
 public:
