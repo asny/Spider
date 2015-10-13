@@ -12,20 +12,20 @@
 using namespace std;
 using namespace glm;
 
-TerrainPatch::TerrainPatch(vec2 _origo) : origo(_origo)
+TerrainPatch::TerrainPatch(vec2 _origo, double size) : origo(_origo)
 {
-    double map_size = SIZE * Terrain::VERTICES_PER_UNIT;
-    heightmap = vector<vector<double>>(map_size+1);
-    for ( auto r = 0; r < map_size+1; r++ )
+    int map_size = static_cast<int>(size) * Terrain::VERTICES_PER_UNIT + 1;
+    heightmap = vector<vector<double>>(map_size);
+    for ( auto r = 0; r < map_size; r++ )
     {
-        heightmap[r] = vector<double>(map_size+1);
+        heightmap[r] = vector<double>(map_size);
     }
-    heightmap[0][0] = -0.5;
-    heightmap[0][map_size] = 0.5;
-    heightmap[map_size][0] = 1.;
-    heightmap[map_size][map_size] = 2.;
+    heightmap.front().front() = -0.5;
+    heightmap.front().back() = 0.5;
+    heightmap.back().front() = 1.;
+    heightmap.back().back() = 2.;
     
-    subdivide(0, 0, map_size);
+    subdivide(0, 0, map_size-1);
 }
 
 double average(std::vector<double> heights)
@@ -85,15 +85,16 @@ Terrain::Terrain()
 
 TerrainPatch Terrain::get_or_create_patch_at(glm::vec2 parameter)
 {
-    vec2 index_vector = vec2(floor(parameter.x / TerrainPatch::SIZE), floor(parameter.y / TerrainPatch::SIZE));
+    const double patch_size = 8.;
+    vec2 index_vector = vec2(floor(parameter.x / patch_size), floor(parameter.y / patch_size));
     pair<int, int> index = make_pair(static_cast<int>(index_vector.x), static_cast<int>(index_vector.y));
     auto index_patch_pair = terrain_patches.find(index);
     
     // If the patch hasn't been created, then we create it.
     if (index_patch_pair == terrain_patches.end())
     {
-        vec2 origo = vec2(TerrainPatch::SIZE * index_vector.x, TerrainPatch::SIZE * index_vector.y);
-        TerrainPatch patch = TerrainPatch(origo);
+        vec2 origo = vec2(patch_size * index_vector.x, patch_size * index_vector.y);
+        TerrainPatch patch = TerrainPatch(origo, patch_size);
         terrain_patches.insert(make_pair(index, patch));
         return patch;
     }

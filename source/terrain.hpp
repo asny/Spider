@@ -24,16 +24,9 @@ class TerrainPatch {
     
 public:
     
-    constexpr static double SIZE = 8.;
-    
-    TerrainPatch(glm::vec2 _origo);
+    TerrainPatch(glm::vec2 _origo, double _size);
     
     glm::vec3 get_surface_position_at(glm::vec3 position);
-    
-    glm::vec2 get_origo()
-    {
-        return origo;
-    }
 };
 
 class Terrain {
