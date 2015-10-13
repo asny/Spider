@@ -24,6 +24,8 @@ class TerrainPatch {
     
 public:
     
+    constexpr static double SIZE = 8.;
+    
     TerrainPatch(glm::vec2 _origo);
     
     glm::vec3 get_surface_position_at(glm::vec3 position);
@@ -42,7 +44,7 @@ class Terrain {
     
 public:
     
-    static const int VERTICES_PER_UNIT = 8;
+    const static int VERTICES_PER_UNIT = 8;
     
     Terrain();
     

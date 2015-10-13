@@ -12,11 +12,9 @@
 using namespace std;
 using namespace glm;
 
-const double patch_size = 8.;
-
 TerrainPatch::TerrainPatch(vec2 _origo) : origo(_origo)
 {
-    double map_size = patch_size * Terrain::VERTICES_PER_UNIT;
+    double map_size = SIZE * Terrain::VERTICES_PER_UNIT;
     heightmap = vector<vector<double>>(map_size+1);
     for ( auto r = 0; r < map_size+1; r++ )
     {
@@ -74,8 +72,8 @@ vec3 TerrainPatch::get_surface_position_at(glm::vec3 position)
     double vertices_per_unit = static_cast<double>(Terrain::VERTICES_PER_UNIT);
     vec2 index = vec2((int)floor(parameter.x * vertices_per_unit), (int)floor(parameter.y * vertices_per_unit));
     
-    assert(0 <= index.x <= patch_size * Terrain::VERTICES_PER_UNIT);
-    assert(0 <= index.y <= patch_size * Terrain::VERTICES_PER_UNIT);
+    assert(0 <= index.x < heightmap.size());
+    assert(0 <= index.y < heightmap[0].size());
     return vec3(position.x, heightmap[index.x][index.y], position.z);
 }
 
@@ -87,12 +85,12 @@ Terrain::Terrain()
 
 TerrainPatch Terrain::get_or_create_patch_at(glm::vec2 parameter)
 {
-    pair<int, int> index = make_pair((int)floor(parameter.x / patch_size), (int)floor(parameter.y / patch_size));
+    pair<int, int> index = make_pair((int)floor(parameter.x / TerrainPatch::SIZE), (int)floor(parameter.y / TerrainPatch::SIZE));
     auto origo_patch_pair = terrain_patches.find(index);
     
     if (origo_patch_pair == terrain_patches.end())
     {
-        auto patch = TerrainPatch(vec2(patch_size * (double)index.first, patch_size * (double)index.second));
+        auto patch = TerrainPatch(vec2(TerrainPatch::SIZE * (double)index.first, TerrainPatch::SIZE * (double)index.second));
         terrain_patches.insert(make_pair(index, patch));
         return patch;
     }
