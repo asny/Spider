@@ -70,11 +70,13 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
 
 vec3 TerrainPatch::get_surface_position_at(glm::vec3 position)
 {
-    vec2 parameter = vec2(position.x, position.z);
-    vec2 index = (parameter - origo) * (float)Terrain::VERTICES_PER_UNIT;
+    vec2 parameter = vec2(position.x, position.z) - origo;
+    double vertices_per_unit = static_cast<double>(Terrain::VERTICES_PER_UNIT);
+    vec2 index = vec2((int)floor(parameter.x * vertices_per_unit), (int)floor(parameter.y * vertices_per_unit));
+    
     assert(0 <= index.x <= patch_size * Terrain::VERTICES_PER_UNIT);
     assert(0 <= index.y <= patch_size * Terrain::VERTICES_PER_UNIT);
-    return vec3(position.x, heightmap[floor(index.x)][floor(index.y)], position.z);
+    return vec3(position.x, heightmap[index.x][index.y], position.z);
 }
 
 Terrain::Terrain()
