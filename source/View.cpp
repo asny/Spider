@@ -192,10 +192,6 @@ void View::create_shaders_and_objects()
     visualizer->add_shader(phong_shader);
     auto fastphong_shader = GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom");
     visualizer->add_shader(fastphong_shader);
-    auto gauraud_shader = GLShader("shaders/gouraud.vert",  "shaders/gouraud.frag");
-    visualizer->add_shader(gauraud_shader);
-    auto terrain_shader = GLShader("shaders/terrain.vert",  "shaders/phong.frag", "shaders/terrain.geom");
-    visualizer->add_shader(terrain_shader);
     
     // cube
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
