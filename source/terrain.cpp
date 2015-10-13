@@ -13,11 +13,10 @@ using namespace std;
 using namespace glm;
 
 const double patch_size = 8.;
-const double patch_discretization = 8.;
-const int map_size = patch_size * patch_discretization;
 
 TerrainPatch::TerrainPatch(vec2 _origo) : origo(_origo)
 {
+    double map_size = patch_size * Terrain::VERTICES_PER_UNIT;
     heightmap = vector<vector<double>>(map_size+1);
     for ( auto r = 0; r < map_size+1; r++ )
     {
@@ -72,9 +71,9 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
 vec3 TerrainPatch::get_surface_position_at(glm::vec3 position)
 {
     vec2 parameter = vec2(position.x, position.z);
-    vec2 index = (parameter - origo) * (float)patch_discretization;
-    assert(0 <= index.x <= map_size);
-    assert(0 <= index.y <= map_size);
+    vec2 index = (parameter - origo) * (float)Terrain::VERTICES_PER_UNIT;
+    assert(0 <= index.x <= patch_size * Terrain::VERTICES_PER_UNIT);
+    assert(0 <= index.y <= patch_size * Terrain::VERTICES_PER_UNIT);
     return vec3(position.x, heightmap[floor(index.x)][floor(index.y)], position.z);
 }
 

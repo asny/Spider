@@ -42,6 +42,8 @@ class Terrain {
     
 public:
     
+    static const int VERTICES_PER_UNIT = 8;
+    
     Terrain();
     
     glm::vec3 get_terrain_position_at(const glm::vec3& position);

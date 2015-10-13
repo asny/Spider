@@ -53,7 +53,7 @@ void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals)
     vec3 spider_position = spider.get_position();
     
     const double radius = 5.;
-    const double step_size = 1./8.;
+    const double step_size = 1./Terrain::VERTICES_PER_UNIT;
     for(double x = -radius; x <= radius; x += step_size)
     {
         for(double z = -radius; z <= radius; z += step_size)
