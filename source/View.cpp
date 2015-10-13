@@ -134,6 +134,16 @@ void View::animate()
     glm::vec3 animation(0.5 * sin(timeValue), 0.1 * cos(timeValue) , 0.);
     visualizer->set_view(model->get_spider_position() + animation, model->get_spider_view_direction());
     
+    if(model->terrain_needs_update())
+    {
+        std::vector<glm::vec3> terrain_positions, terrain_normals;
+        model->get_terrain(terrain_positions, terrain_normals);
+        
+        terrain.set_vertex_attribute("position", terrain_positions);
+        terrain.set_vertex_attribute("normal", terrain_normals);
+        terrain.finalize_vertex_attributes();
+    }
+    
     glutPostRedisplay();
 }
 
@@ -198,12 +208,5 @@ void View::create_shaders_and_objects()
     // terrain
     material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
     terrain = GLObject(phong_shader, material, GL_TRIANGLE_STRIP);
-    
-    std::vector<glm::vec3> terrain_positions, terrain_normals;
-    model->get_terrain(terrain_positions, terrain_normals);
-    
     terrain.initialize_vertex_attributes({"position", "normal"});
-    terrain.set_vertex_attribute("position", terrain_positions);
-    terrain.set_vertex_attribute("normal", terrain_normals);
-    terrain.finalize_vertex_attributes();
 }

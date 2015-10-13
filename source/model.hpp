@@ -39,6 +39,8 @@ public:
         return spider.get_view_direction();
     }
     
+    bool terrain_needs_update();
+    
     void get_terrain(std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals);
     
     // ******** CONTROL ********

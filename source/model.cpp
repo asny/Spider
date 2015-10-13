@@ -48,11 +48,24 @@ vec3 Model::approximate_normal_at(const vec3& position, double filter_size)
     return approximate_normal(position, neighbour_positions);
 }
 
+vec2 old_pos = vec2(INFINITY);
+bool Model::terrain_needs_update()
+{
+    vec3 spider_pos = spider.get_position();
+    vec2 spider_xz = vec2(spider_pos.x, spider_pos.z);
+    if(distance(spider_xz, old_pos) > 4.)
+    {
+        old_pos = spider_xz;
+        return true;
+    }
+    return false;
+}
+
 void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals)
 {
     vec3 spider_position = spider.get_position();
     
-    const double radius = 5.;
+    const double radius = 6.;
     const double step_size = 1./Terrain::VERTICES_PER_UNIT;
     for(double x = -radius; x <= radius; x += step_size)
     {
