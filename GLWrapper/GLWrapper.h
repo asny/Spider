@@ -182,7 +182,7 @@ public:
     void set_light_position(const glm::vec3& lightPosition);
     
     /**
-     Draw the objects.
+     Initialize drawing the objects. Should be called before any draw calls to a GLObject.
      */
-    void draw();
+    void initialize_draw();
 };

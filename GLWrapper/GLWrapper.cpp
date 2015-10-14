@@ -269,8 +269,6 @@ GLWrapper::GLWrapper()
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    set_view(vec3(0.f, 0.f, 5.f), vec3(0.f, 0.f, -1.f));
-    
     check_gl_error();
 }
 
@@ -317,7 +315,7 @@ void GLWrapper::set_light_position(const vec3& lightPosition)
     check_gl_error();
 }
 
-void GLWrapper::draw()
+void GLWrapper::initialize_draw()
 {
     glClearColor(1., 1., 1., 0.);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

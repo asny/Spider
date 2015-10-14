@@ -102,7 +102,6 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     create_shaders_and_objects();
     
     visualizer->set_light_position(light_pos);
-    visualizer->set_view(model->get_spider_position(), model->get_spider_view_direction());
     
     glutMainLoop();
 }
@@ -112,7 +111,7 @@ void View::display()
     if (glutGet(GLUT_WINDOW_WIDTH) != WIN_SIZE_X || glutGet(GLUT_WINDOW_HEIGHT) != WIN_SIZE_Y) {
         return;
     }
-    visualizer->draw();
+    visualizer->initialize_draw();
     
     terrain.draw();
     cube.draw();
