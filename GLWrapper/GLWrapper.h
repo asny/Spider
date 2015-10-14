@@ -166,22 +166,22 @@ class GLWrapper {
     
 public:
     
-    GLWrapper();
+    static void initialize();
     
     /**
      Reshape the window.
      */
-    glm::mat4 reshape(int width, int height);
+    static glm::mat4 reshape(int width, int height);
     
     /**
      Set the camera/eye.
      */
-    glm::mat4 set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
+    static glm::mat4 get_view_matrix(const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
     
-    glm::mat4 get_normal_matrix(glm::mat4 modelViewMatrix);
+    static glm::mat4 get_normal_matrix(glm::mat4 modelViewMatrix);
     
     /**
      Initialize drawing the objects. Should be called before any draw calls to a GLObject.
      */
-    void initialize_draw();
+    static void initialize_draw();
 };

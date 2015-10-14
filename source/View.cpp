@@ -96,9 +96,7 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     glutReshapeFunc(reshape_);
     glutIdleFunc(animate_);
     
-    // Initialize the visualization
-    visualizer = std::unique_ptr<GLWrapper>(new GLWrapper());
-    
+    GLWrapper::initialize();
     create_shaders_and_objects();
     
     for (GLShader shader : shaders)
@@ -115,7 +113,7 @@ void View::display()
     if (glutGet(GLUT_WINDOW_WIDTH) != WIN_SIZE_X || glutGet(GLUT_WINDOW_HEIGHT) != WIN_SIZE_Y) {
         return;
     }
-    visualizer->initialize_draw();
+    GLWrapper::initialize_draw();
     
     terrain.draw();
     cube.draw();
@@ -127,7 +125,7 @@ void View::reshape(int width, int height)
 {
     WIN_SIZE_X = width;
     WIN_SIZE_Y = height;
-    glm::mat4 projectionMatrix = visualizer->reshape(width, height);
+    glm::mat4 projectionMatrix = GLWrapper::reshape(width, height);
     
     // Send projection matrix uniform to the shaders
     for (GLShader shader : shaders)
@@ -142,13 +140,14 @@ void View::animate()
 {
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.002;
     glm::vec3 animation(0.5 * sin(timeValue), 0.1 * cos(timeValue) , 0.);
-    visualizer->set_view(model->get_spider_position() + animation, model->get_spider_view_direction());
+    
+    glm::mat4 viewMatrix = GLWrapper::get_view_matrix(model->get_spider_position(), model->get_spider_view_direction());
     
     // Send model-view and normal matrix uniforms to the shaders
     for (GLObject object : {terrain, cube})
     {
         glm::mat4 modelViewMatrix = viewMatrix * object.get_model_matrix();
-        glm::mat4 normalMatrix = visualizer->get_normal_matrix(modelViewMatrix);
+        glm::mat4 normalMatrix = GLWrapper::get_normal_matrix(modelViewMatrix);
         
         GLShader& shader = object.get_shader();
         shader.use();

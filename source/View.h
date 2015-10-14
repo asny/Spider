@@ -13,7 +13,6 @@
 
 class View
 {
-    std::unique_ptr<GLWrapper> visualizer;
     std::shared_ptr<Model> model;
     
     GLObject terrain, cube;

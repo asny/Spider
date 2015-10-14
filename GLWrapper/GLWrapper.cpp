@@ -257,7 +257,7 @@ void GLObject::draw()
     }
 }
 
-GLWrapper::GLWrapper()
+void GLWrapper::initialize()
 {
     // Enable states
     glEnable(GL_DEPTH_TEST);
@@ -280,7 +280,7 @@ mat4 GLWrapper::reshape(int width, int height)
     return perspective(45.f, width/float(height), 0.01f, 100.f);
 }
 
-mat4 GLWrapper::set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection)
+mat4 GLWrapper::get_view_matrix(const glm::vec3& eyePosition, const glm::vec3& eyeDirection)
 {
     return lookAt(eyePosition, eyePosition + eyeDirection, glm::vec3(0., 1., 0.));
 }
