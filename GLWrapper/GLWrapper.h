@@ -33,6 +33,8 @@ struct GLMaterial
 class GLShader {
     GLuint shader_id;
     
+    std::string projectionMatrixName, modelViewMatrixName, normalMatrixName;
+    
     GLuint get_uniform_location(std::string variable_name);
 public:
     
@@ -41,7 +43,7 @@ public:
         
     }
     
-    GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
+    GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "", std::string _normalMatrixName = "NMatrix", std::string _projectionMatrixName = "PMatrix", std::string _modelViewMatrixName = "MVMatrix");
     
     void use();
     
@@ -52,6 +54,10 @@ public:
     void set_uniform_variable(std::string name, const glm::vec4& value);
     
     void set_uniform_variable(std::string name, const glm::mat4& value);
+    
+    void set_model_view_matrix(const glm::mat4& value);
+    
+    void set_projection_matrix(const glm::mat4& value);
 };
 
 /**
@@ -171,14 +177,12 @@ public:
     /**
      Reshape the window.
      */
-    static glm::mat4 reshape(int width, int height);
+    static void set_screen_size(const std::vector<GLShader>& shaders, int width, int height);
     
     /**
      Set the camera/eye.
      */
-    static glm::mat4 get_view_matrix(const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
-    
-    static glm::mat4 get_normal_matrix(glm::mat4 modelViewMatrix);
+    static void set_view(const std::vector<GLShader>& shaders, const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
     
     /**
      Initialize drawing the objects. Should be called before any draw calls to a GLObject.

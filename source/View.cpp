@@ -125,14 +125,8 @@ void View::reshape(int width, int height)
 {
     WIN_SIZE_X = width;
     WIN_SIZE_Y = height;
-    glm::mat4 projectionMatrix = GLWrapper::reshape(width, height);
+    GLWrapper::set_screen_size(shaders, width, height);
     
-    // Send projection matrix uniform to the shaders
-    for (GLShader shader : shaders)
-    {
-        shader.use();
-        shader.set_uniform_variable("PMatrix", projectionMatrix);
-    }
     glutPostRedisplay();
 }
 
@@ -141,19 +135,7 @@ void View::animate()
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.002;
     glm::vec3 animation(0.5 * sin(timeValue), 0.1 * cos(timeValue) , 0.);
     
-    glm::mat4 viewMatrix = GLWrapper::get_view_matrix(model->get_spider_position(), model->get_spider_view_direction());
-    
-    // Send model-view and normal matrix uniforms to the shaders
-    for (GLObject object : {terrain, cube})
-    {
-        glm::mat4 modelViewMatrix = viewMatrix * object.get_model_matrix();
-        glm::mat4 normalMatrix = GLWrapper::get_normal_matrix(modelViewMatrix);
-        
-        GLShader& shader = object.get_shader();
-        shader.use();
-        shader.set_uniform_variable("MVMatrix", modelViewMatrix);
-        shader.set_uniform_variable("NormalMatrix", normalMatrix);
-    }
+    GLWrapper::set_view(shaders, model->get_spider_position(), model->get_spider_view_direction());
     
     if(model->terrain_needs_update())
     {

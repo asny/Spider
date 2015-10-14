@@ -2,7 +2,7 @@
 
 uniform mat4 MVMatrix;
 uniform mat4 PMatrix;
-uniform mat4 NormalMatrix;
+uniform mat4 NMatrix;
 
 uniform vec3 lightPos;
 
@@ -22,7 +22,7 @@ void main()
     
     // Compute vectors
     vec3 p = mat3(MVMatrix) * position;
-    vec3 N = normalize(mat3(NormalMatrix) * normal);
+    vec3 N = normalize(mat3(NMatrix) * normal);
     vec3 L = normalize(lightPos - p);
     vec3 E = normalize(-p);
     vec3 R = normalize(reflect(-L,N));
