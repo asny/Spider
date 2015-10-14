@@ -117,6 +117,8 @@ class GLObject {
     
     GLShader shader;
     
+    glm::mat4 modelMatrix = glm::mat4();
+    
     std::vector<float> data;
     
     GLuint buffer_id, array_id;
@@ -145,6 +147,16 @@ public:
     void finalize_vertex_attributes();
     
     void draw();
+    
+    GLShader& get_shader()
+    {
+        return shader;
+    }
+    
+    glm::mat4 get_model_matrix()
+    {
+        return modelMatrix;
+    }
 };
 
 /**
@@ -152,34 +164,21 @@ public:
  */
 class GLWrapper {
     
-    std::vector<GLShader> shaders;
-    
-    // Uniform variables
-    glm::mat4 modelMatrix = glm::mat4();
-    
 public:
     
     GLWrapper();
     
-    void add_shader(GLShader shader)
-    {
-        shaders.push_back(shader);
-    }
-    
     /**
      Reshape the window.
      */
-    void reshape(int width, int height);
+    glm::mat4 reshape(int width, int height);
     
     /**
      Set the camera/eye.
      */
-    void set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
+    glm::mat4 set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
     
-    /**
-     Set the position of the light source.
-     */
-    void set_light_position(const glm::vec3& lightPosition);
+    glm::mat4 get_normal_matrix(glm::mat4 modelViewMatrix);
     
     /**
      Initialize drawing the objects. Should be called before any draw calls to a GLObject.

@@ -272,47 +272,22 @@ GLWrapper::GLWrapper()
     check_gl_error();
 }
 
-void GLWrapper::reshape(int width, int height)
+mat4 GLWrapper::reshape(int width, int height)
 {
-    mat4 projectionMatrix = glm::perspective(45.f, width/float(height), 0.01f, 100.f);
     glViewport(0, 0, width, height);
-    
-    // Send model-view matrix uniform to the shaders
-    for (GLShader shader : shaders)
-    {
-        shader.use();
-        shader.set_uniform_variable("PMatrix", projectionMatrix);
-    }
-    
     check_gl_error();
+    
+    return perspective(45.f, width/float(height), 0.01f, 100.f);
 }
 
-void GLWrapper::set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection)
+mat4 GLWrapper::set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection)
 {
-    mat4 viewMatrix = glm::lookAt(eyePosition, eyePosition + eyeDirection, glm::vec3(0., 1., 0.));
-    glm::mat4 modelViewMatrix = viewMatrix * modelMatrix;
-    glm::mat4 normalMatrix = glm::inverseTranspose(modelViewMatrix);
-    
-    // Send model-view and normal matrix uniforms to the shaders
-    for (GLShader shader : shaders)
-    {
-        shader.use();
-        shader.set_uniform_variable("MVMatrix", modelViewMatrix);
-        shader.set_uniform_variable("NormalMatrix", normalMatrix);
-    }
-    
-    check_gl_error();
+    return lookAt(eyePosition, eyePosition + eyeDirection, glm::vec3(0., 1., 0.));
 }
 
-void GLWrapper::set_light_position(const vec3& lightPosition)
+mat4 GLWrapper::get_normal_matrix(mat4 modelViewMatrix)
 {
-    for (GLShader shader : shaders)
-    {
-        shader.use();
-        shader.set_uniform_variable("lightPos", lightPosition);
-    }
-    
-    check_gl_error();
+    return inverseTranspose(modelViewMatrix);
 }
 
 void GLWrapper::initialize_draw()

@@ -101,7 +101,11 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     
     create_shaders_and_objects();
     
-    visualizer->set_light_position(light_pos);
+    for (GLShader shader : shaders)
+    {
+        shader.use();
+        shader.set_uniform_variable("lightPos", light_pos);
+    }
     
     glutMainLoop();
 }
@@ -123,7 +127,14 @@ void View::reshape(int width, int height)
 {
     WIN_SIZE_X = width;
     WIN_SIZE_Y = height;
-    visualizer->reshape(width, height);
+    glm::mat4 projectionMatrix = visualizer->reshape(width, height);
+    
+    // Send projection matrix uniform to the shaders
+    for (GLShader shader : shaders)
+    {
+        shader.use();
+        shader.set_uniform_variable("PMatrix", projectionMatrix);
+    }
     glutPostRedisplay();
 }
 
@@ -132,6 +143,18 @@ void View::animate()
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.002;
     glm::vec3 animation(0.5 * sin(timeValue), 0.1 * cos(timeValue) , 0.);
     visualizer->set_view(model->get_spider_position() + animation, model->get_spider_view_direction());
+    
+    // Send model-view and normal matrix uniforms to the shaders
+    for (GLObject object : {terrain, cube})
+    {
+        glm::mat4 modelViewMatrix = viewMatrix * object.get_model_matrix();
+        glm::mat4 normalMatrix = visualizer->get_normal_matrix(modelViewMatrix);
+        
+        GLShader& shader = object.get_shader();
+        shader.use();
+        shader.set_uniform_variable("MVMatrix", modelViewMatrix);
+        shader.set_uniform_variable("NormalMatrix", normalMatrix);
+    }
     
     if(model->terrain_needs_update())
     {
@@ -188,9 +211,9 @@ void View::create_shaders_and_objects()
 {
     // Create shaders
     auto phong_shader = GLShader("shaders/phong.vert",  "shaders/phong.frag");
-    visualizer->add_shader(phong_shader);
+    shaders.push_back(phong_shader);
     auto fastphong_shader = GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom");
-    visualizer->add_shader(fastphong_shader);
+    shaders.push_back(fastphong_shader);
     
     // cube
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
