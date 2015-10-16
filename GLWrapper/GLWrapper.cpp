@@ -191,10 +191,11 @@ void GLShader::set_uniform_variable(std::string name, const mat4& value)
 void GLShader::initialize_draw(const mat4& modelMatrix)
 {
     set_uniform_variable(projectionMatrixName, projectionMatrix);
-    set_uniform_variable(modelViewMatrixName, GLShader::viewMatrix * modelMatrix);
+    mat4 modelViewMatrix = GLShader::viewMatrix * modelMatrix;
+    set_uniform_variable(modelViewMatrixName, modelViewMatrix);
     if(normalMatrixName.length() != 0)
     {
-        set_uniform_variable(normalMatrixName, inverseTranspose(viewMatrix));
+        set_uniform_variable(normalMatrixName, inverseTranspose(modelViewMatrix));
     }
 }
 
