@@ -219,7 +219,6 @@ GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum 
 
 void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_names)
 {
-    shader.use();
     for (std::string attribute_name : attribute_names)
     {
         auto attribute = VertexAttribute(shader, attribute_name, 3);
