@@ -133,7 +133,8 @@ void View::reshape(int width, int height)
 void View::animate()
 {
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.002;
-    glm::vec3 animation(0.5 * sin(timeValue), 0.1 * cos(timeValue) , 0.);
+    glm::vec3 animation(sin(timeValue), cos(timeValue) , 0.);
+    cube.set_model_matrix(glm::translate(glm::mat4(), animation));
     
     GLWrapper::set_view(shaders, model->get_spider_position(), model->get_spider_view_direction());
     

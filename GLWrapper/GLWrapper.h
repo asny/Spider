@@ -125,7 +125,7 @@ class GLObject {
     
     GLShader shader;
     
-    glm::mat4 modelMatrix = glm::mat4();
+    glm::mat4 modelMatrix = glm::mat4(1.);
     
     std::vector<float> data;
     
@@ -161,9 +161,9 @@ public:
         return shader;
     }
     
-    glm::mat4 get_model_matrix()
+    void set_model_matrix(glm::mat4 _modelMatrix)
     {
-        return modelMatrix;
+        modelMatrix = _modelMatrix;
     }
 };
 
