@@ -193,7 +193,7 @@ void View::create_shaders_and_objects()
     // Create shaders
     auto phong_shader = GLShader("shaders/phong.vert",  "shaders/phong.frag");
     shaders.push_back(phong_shader);
-    auto fastphong_shader = GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom", "");
+    auto fastphong_shader = GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom");
     shaders.push_back(fastphong_shader);
     
     // cube

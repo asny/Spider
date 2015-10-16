@@ -33,9 +33,10 @@ struct GLMaterial
 class GLShader {
     GLuint shader_id;
     
-    std::string projectionMatrixName, modelViewMatrixName, normalMatrixName;
-    
     GLuint get_uniform_location(std::string variable_name);
+    GLuint get_uniform_location_with_warning(std::string variable_name);
+    
+    void set_uniform_variable_if_defined(std::string name, const glm::mat4& value);
     
 public:
     static glm::mat4 viewMatrix;
@@ -46,7 +47,7 @@ public:
         
     }
     
-    GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "", std::string _normalMatrixName = "NMatrix", std::string _projectionMatrixName = "PMatrix", std::string _modelViewMatrixName = "MVMatrix");
+    GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
     
     void use();
     

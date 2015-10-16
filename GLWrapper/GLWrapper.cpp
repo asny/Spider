@@ -136,8 +136,7 @@ GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char*
 mat4 GLShader::viewMatrix = mat4(1.);
 mat4 GLShader::projectionMatrix = mat4(1.);
 
-GLShader::GLShader(string vertexShaderFilename, string fragmentShaderFilename, string geometryShaderFilename, string _normalMatrixName, string _projectionMatrixName, string _modelViewMatrixName)
-: projectionMatrixName(_projectionMatrixName), modelViewMatrixName(_modelViewMatrixName), normalMatrixName(_normalMatrixName)
+GLShader::GLShader(string vertexShaderFilename, string fragmentShaderFilename, string geometryShaderFilename)
 {
     if(geometryShaderFilename.length() != 0)
     {
@@ -173,6 +172,14 @@ GLuint GLShader::get_attribute_location(std::string variable_name)
     return attributeLocation;
 }
 
+void GLShader::set_uniform_variable_if_defined(std::string name, const mat4& value)
+{
+    GLuint uniformLocation = glGetUniformLocation(shader_id, &name[0]);
+    if (uniformLocation != NULL_LOCATION) {
+        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &value[0][0]);
+    }
+}
+
 void GLShader::set_uniform_variable(std::string name, const vec3& value)
 {
     glUniform3fv(get_uniform_location(name), 1, &value[0]);
@@ -190,13 +197,11 @@ void GLShader::set_uniform_variable(std::string name, const mat4& value)
 
 void GLShader::initialize_draw(const mat4& modelMatrix)
 {
-    set_uniform_variable(projectionMatrixName, projectionMatrix);
     mat4 modelViewMatrix = GLShader::viewMatrix * modelMatrix;
-    set_uniform_variable(modelViewMatrixName, modelViewMatrix);
-    if(normalMatrixName.length() != 0)
-    {
-        set_uniform_variable(normalMatrixName, inverseTranspose(modelViewMatrix));
-    }
+    set_uniform_variable_if_defined("MVMatrix", modelViewMatrix);
+    set_uniform_variable_if_defined("NMatrix", inverseTranspose(modelViewMatrix));
+    set_uniform_variable_if_defined("PMatrix", projectionMatrix);
+    set_uniform_variable_if_defined("MVPMatrix", projectionMatrix * modelViewMatrix);
 }
 
 GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum _drawmode)
