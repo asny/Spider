@@ -59,7 +59,7 @@ public:
     
     void set_uniform_variable(std::string name, const glm::mat4& value);
     
-    void initialize_draw(const glm::mat4& modelMatrix);
+    void update_draw_matrices(const glm::mat4& modelMatrix);
 };
 
 /**

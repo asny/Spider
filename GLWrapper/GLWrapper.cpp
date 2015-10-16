@@ -195,7 +195,7 @@ void GLShader::set_uniform_variable(std::string name, const mat4& value)
     glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, &value[0][0]);
 }
 
-void GLShader::initialize_draw(const mat4& modelMatrix)
+void GLShader::update_draw_matrices(const mat4& modelMatrix)
 {
     mat4 modelViewMatrix = GLShader::viewMatrix * modelMatrix;
     set_uniform_variable_if_defined("MVMatrix", modelViewMatrix);
@@ -262,7 +262,7 @@ void GLObject::draw()
         shader.set_uniform_variable("ambientMat", material.ambient);
         shader.set_uniform_variable("diffuseMat", material.diffuse);
         shader.set_uniform_variable("specMat", material.specular);
-        shader.initialize_draw(modelMatrix);
+        shader.update_draw_matrices(modelMatrix);
         
         glBindVertexArray(array_id);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
