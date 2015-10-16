@@ -20,10 +20,10 @@ TerrainPatch::TerrainPatch(vec2 _origo, double size) : origo(_origo)
     {
         heightmap[r] = vector<double>(map_size);
     }
-    heightmap.front().front() = -0.5;
-    heightmap.front().back() = 0.5;
-    heightmap.back().front() = 1.;
-    heightmap.back().back() = 2.;
+    heightmap.front().front() = 0.;
+    heightmap.front().back() = 0.;
+    heightmap.back().front() = 0.;
+    heightmap.back().back() = 0.;
     
     subdivide(0, 0, map_size-1);
 }
@@ -42,9 +42,9 @@ double average(std::vector<double> heights)
     return sum / static_cast<double>(heights.size());
 }
 
-void TerrainPatch::set_height(int r, int c, std::vector<double> neighbour_heights)
+void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
 {
-    heightmap[r][c] = average(neighbour_heights) + 0.05*(double)raw_noise_2d(r, c);
+    heightmap[r][c] = average(neighbour_heights) + 0.3 * scale * static_cast<double>(raw_noise_2d(r, c));
 }
 
 void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
@@ -52,11 +52,13 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
     int half_size = size/2;
     if(half_size >= 1)
     {
-        set_height(origo_r + half_size, origo_c, {heightmap[origo_r][origo_c], heightmap[origo_r + size][origo_c]});
-        set_height(origo_r, origo_c + half_size, {heightmap[origo_r][origo_c], heightmap[origo_r][origo_c + size]});
-        set_height(origo_r + half_size, origo_c + size, {heightmap[origo_r + size][origo_c + size], heightmap[origo_r][origo_c + size]});
-        set_height(origo_r + size, origo_c + half_size, {heightmap[origo_r + size][origo_c + size], heightmap[origo_r + size][origo_c]});
-        set_height(origo_r + half_size, origo_c + half_size, {heightmap[origo_r + half_size][origo_c], heightmap[origo_r][origo_c + half_size],
+        double scale = size / static_cast<double>(Terrain::VERTICES_PER_UNIT);
+        
+        set_height(scale, origo_r + half_size, origo_c, {heightmap[origo_r][origo_c], heightmap[origo_r + size][origo_c]});
+        set_height(scale, origo_r, origo_c + half_size, {heightmap[origo_r][origo_c], heightmap[origo_r][origo_c + size]});
+        set_height(scale, origo_r + half_size, origo_c + size, {heightmap[origo_r + size][origo_c + size], heightmap[origo_r][origo_c + size]});
+        set_height(scale, origo_r + size, origo_c + half_size, {heightmap[origo_r + size][origo_c + size], heightmap[origo_r + size][origo_c]});
+        set_height(scale, origo_r + half_size, origo_c + half_size, {heightmap[origo_r + half_size][origo_c], heightmap[origo_r][origo_c + half_size],
             heightmap[origo_r + half_size][origo_c + size], heightmap[origo_r + size][origo_c + half_size]});
         
         subdivide(origo_r, origo_c, half_size);
