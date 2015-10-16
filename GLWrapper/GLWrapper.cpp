@@ -133,6 +133,9 @@ GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char*
     return program;
 }
 
+mat4 GLShader::viewMatrix = mat4(1.);
+mat4 GLShader::projectionMatrix = mat4(1.);
+
 GLShader::GLShader(string vertexShaderFilename, string fragmentShaderFilename, string geometryShaderFilename, string _normalMatrixName, string _projectionMatrixName, string _modelViewMatrixName)
 : projectionMatrixName(_projectionMatrixName), modelViewMatrixName(_modelViewMatrixName), normalMatrixName(_normalMatrixName)
 {
@@ -185,18 +188,14 @@ void GLShader::set_uniform_variable(std::string name, const mat4& value)
     glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, &value[0][0]);
 }
 
-void GLShader::set_model_view_matrix(const mat4& value)
+void GLShader::initialize_draw(const mat4& modelMatrix)
 {
-    set_uniform_variable(modelViewMatrixName, value);
+    set_uniform_variable(projectionMatrixName, projectionMatrix);
+    set_uniform_variable(modelViewMatrixName, GLShader::viewMatrix * modelMatrix);
     if(normalMatrixName.length() != 0)
     {
-        set_uniform_variable(normalMatrixName, inverseTranspose(value));
+        set_uniform_variable(normalMatrixName, inverseTranspose(viewMatrix));
     }
-}
-
-void GLShader::set_projection_matrix(const glm::mat4& value)
-{
-    set_uniform_variable(projectionMatrixName, value);
 }
 
 GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum _drawmode)
@@ -257,6 +256,7 @@ void GLObject::draw()
         shader.set_uniform_variable("ambientMat", material.ambient);
         shader.set_uniform_variable("diffuseMat", material.diffuse);
         shader.set_uniform_variable("specMat", material.specular);
+        shader.initialize_draw(modelMatrix);
         
         glBindVertexArray(array_id);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
@@ -290,26 +290,13 @@ void GLWrapper::initialize()
 void GLWrapper::set_screen_size(const vector<GLShader>& shaders, int width, int height)
 {
     glViewport(0, 0, width, height);
-    mat4 projectionMatrix = perspective(45.f, width/float(height), 0.01f, 100.f);
-    
-    // Send projection matrix uniform to the shaders
-    for (GLShader shader : shaders)
-    {
-        shader.use();
-        shader.set_projection_matrix(projectionMatrix);
-    }
+    GLShader::projectionMatrix = perspective(45.f, width/float(height), 0.01f, 100.f);
     check_gl_error();
 }
 
 void GLWrapper::set_view(const vector<GLShader>& shaders, const vec3& eyePosition, const vec3& eyeDirection)
 {
-    mat4 viewMatrix = lookAt(eyePosition, eyePosition + eyeDirection, vec3(0., 1., 0.));
-    
-    // Send model-view matrix uniform to the shaders
-    for (auto shader : shaders) {
-        shader.use();
-        shader.set_model_view_matrix(viewMatrix);
-    }
+    GLShader::viewMatrix = lookAt(eyePosition, eyePosition + eyeDirection, vec3(0., 1., 0.));
     check_gl_error();
 }
 

@@ -36,7 +36,10 @@ class GLShader {
     std::string projectionMatrixName, modelViewMatrixName, normalMatrixName;
     
     GLuint get_uniform_location(std::string variable_name);
+    
 public:
+    static glm::mat4 viewMatrix;
+    static glm::mat4 projectionMatrix;
     
     GLShader()
     {
@@ -55,9 +58,7 @@ public:
     
     void set_uniform_variable(std::string name, const glm::mat4& value);
     
-    void set_model_view_matrix(const glm::mat4& value);
-    
-    void set_projection_matrix(const glm::mat4& value);
+    void initialize_draw(const glm::mat4& modelMatrix);
 };
 
 /**
