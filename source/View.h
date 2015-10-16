@@ -15,7 +15,7 @@ class View
 {
     std::shared_ptr<Model> model;
     
-    GLObject terrain, cube;
+    std::unique_ptr<GLObject> terrain, cube;
     std::vector<std::shared_ptr<GLShader>> shaders;
     
     glm::vec3 light_pos = {0., 2., 2.};

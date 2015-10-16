@@ -115,8 +115,8 @@ void View::display()
     }
     GLWrapper::initialize_draw();
     
-    terrain.draw();
-    cube.draw();
+    terrain->draw();
+    cube->draw();
     
     glutSwapBuffers();
 }
@@ -134,7 +134,7 @@ void View::animate()
 {
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.002;
     glm::vec3 animation(sin(timeValue), cos(timeValue) , 0.);
-    cube.set_model_matrix(glm::translate(glm::mat4(), animation));
+    cube->set_model_matrix(glm::translate(glm::mat4(), animation));
     
     GLWrapper::set_view(model->get_spider_position(), model->get_spider_view_direction());
     
@@ -143,9 +143,9 @@ void View::animate()
         std::vector<glm::vec3> terrain_positions, terrain_normals;
         model->get_terrain(terrain_positions, terrain_normals);
         
-        terrain.set_vertex_attribute("position", terrain_positions);
-        terrain.set_vertex_attribute("normal", terrain_normals);
-        terrain.finalize_vertex_attributes();
+        terrain->set_vertex_attribute("position", terrain_positions);
+        terrain->set_vertex_attribute("normal", terrain_normals);
+        terrain->finalize_vertex_attributes();
     }
     
     glutPostRedisplay();
@@ -199,14 +199,14 @@ void View::create_shaders_and_objects()
     
     // cube
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
-    cube = GLObject(fastphong_shader, material);
+    cube = std::unique_ptr<GLObject>(new GLObject(fastphong_shader, material));
     
-    cube.initialize_vertex_attributes({"position"});
-    cube.set_vertex_attribute("position", cube_data);
-    cube.finalize_vertex_attributes();
+    cube->initialize_vertex_attributes({"position"});
+    cube->set_vertex_attribute("position", cube_data);
+    cube->finalize_vertex_attributes();
     
     // terrain
     material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
-    terrain = GLObject(phong_shader, material, GL_TRIANGLE_STRIP);
-    terrain.initialize_vertex_attributes({"position", "normal"});
+    terrain = std::unique_ptr<GLObject>(new GLObject(phong_shader, material, GL_TRIANGLE_STRIP));
+    terrain->initialize_vertex_attributes({"position", "normal"});
 }
