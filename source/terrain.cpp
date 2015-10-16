@@ -44,7 +44,7 @@ double average(std::vector<double> heights)
 
 void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
 {
-    heightmap[r][c] = average(neighbour_heights) + 0.3 * scale * static_cast<double>(raw_noise_2d(r, c));
+    heightmap[r][c] = average(neighbour_heights) + 0.3 * scale * static_cast<double>(octave_noise_2d(3.f, 0.25f, scale, r, c));
 }
 
 void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
