@@ -99,10 +99,10 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     GLWrapper::initialize();
     create_shaders_and_objects();
     
-    for (GLShader shader : shaders)
+    for (auto shader : shaders)
     {
-        shader.use();
-        shader.set_uniform_variable("lightPos", light_pos);
+        shader->use();
+        shader->set_uniform_variable("lightPos", light_pos);
     }
     
     glutMainLoop();
@@ -192,9 +192,9 @@ void View::visible(int v)
 void View::create_shaders_and_objects()
 {
     // Create shaders
-    auto phong_shader = GLShader("shaders/phong.vert",  "shaders/phong.frag");
+    auto phong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/phong.vert",  "shaders/phong.frag"));
     shaders.push_back(phong_shader);
-    auto fastphong_shader = GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom");
+    auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
     shaders.push_back(fastphong_shader);
     
     // cube

@@ -78,10 +78,10 @@ class GLObject {
         
     public:
         
-        VertexAttribute(GLShader shader, std::string _name, int _length)
+        VertexAttribute(std::shared_ptr<GLShader> shader, std::string _name, int _length)
             : l(_length)
         {
-            location = shader.get_attribute_location(_name);
+            location = shader->get_attribute_location(_name);
             glEnableVertexAttribArray(location);
         }
         
@@ -123,7 +123,7 @@ class GLObject {
         }
     };
     
-    GLShader shader;
+    std::shared_ptr<GLShader> shader;
     
     glm::mat4 modelMatrix = glm::mat4(1.);
     
@@ -146,7 +146,7 @@ public:
         
     }
     
-    GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES);
+    GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES);
     
     void initialize_vertex_attributes(std::vector<std::string> attribute_names);
     

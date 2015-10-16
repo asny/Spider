@@ -204,7 +204,7 @@ void GLShader::update_draw_matrices(const mat4& modelMatrix)
     set_uniform_variable_if_defined("MVPMatrix", projectionMatrix * modelViewMatrix);
 }
 
-GLObject::GLObject(const GLShader& _shader, const GLMaterial& _material, GLenum _drawmode)
+GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode)
 : shader(_shader), material(_material), drawmode(_drawmode)
 {
     // Generate arrays and buffers
@@ -257,11 +257,11 @@ void GLObject::draw()
 {
     if(no_vertices != 0)
     {
-        shader.use();
-        shader.set_uniform_variable("ambientMat", material.ambient);
-        shader.set_uniform_variable("diffuseMat", material.diffuse);
-        shader.set_uniform_variable("specMat", material.specular);
-        shader.update_draw_matrices(modelMatrix);
+        shader->use();
+        shader->set_uniform_variable("ambientMat", material.ambient);
+        shader->set_uniform_variable("diffuseMat", material.diffuse);
+        shader->set_uniform_variable("specMat", material.specular);
+        shader->update_draw_matrices(modelMatrix);
         
         glBindVertexArray(array_id);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
