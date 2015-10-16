@@ -26,7 +26,8 @@ public:
     
     TerrainPatch(glm::vec2 _origo, double _size);
     
-    glm::vec3 get_surface_position_at(glm::vec3 position);
+    double get_surface_height_at(glm::vec2 parameter);
+    
 };
 
 class Terrain {

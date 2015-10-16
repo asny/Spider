@@ -68,15 +68,14 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
     }
 }
 
-vec3 TerrainPatch::get_surface_position_at(glm::vec3 position)
+double TerrainPatch::get_surface_height_at(glm::vec2 parameter)
 {
-    vec2 parameter = vec2(position.x, position.z) - origo;
     double vertices_per_unit = static_cast<double>(Terrain::VERTICES_PER_UNIT);
-    vec2 index = vec2((int)floor(parameter.x * vertices_per_unit), (int)floor(parameter.y * vertices_per_unit));
+    vec2 index = vec2((int)floor((parameter.x - origo.x) * vertices_per_unit), (int)floor((parameter.y - origo.y) * vertices_per_unit));
     
     assert(0 <= index.x < heightmap.size());
     assert(0 <= index.y < heightmap[0].size());
-    return vec3(position.x, heightmap[index.x][index.y], position.z);
+    return heightmap[index.x][index.y];
 }
 
 Terrain::Terrain()
@@ -106,5 +105,6 @@ TerrainPatch Terrain::get_or_create_patch_at(glm::vec2 parameter)
 vec3 Terrain::get_terrain_position_at(const glm::vec3& position)
 {
     vec2 parameter = vec2(position.x, position.z);
-    return get_or_create_patch_at(parameter).get_surface_position_at(position);
+    double height = get_or_create_patch_at(parameter).get_surface_height_at(parameter);
+    return vec3(position.x, height, position.z);
 }
