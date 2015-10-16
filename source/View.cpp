@@ -125,7 +125,7 @@ void View::reshape(int width, int height)
 {
     WIN_SIZE_X = width;
     WIN_SIZE_Y = height;
-    GLWrapper::set_screen_size(shaders, width, height);
+    GLWrapper::set_screen_size(width, height);
     
     glutPostRedisplay();
 }
@@ -136,7 +136,7 @@ void View::animate()
     glm::vec3 animation(sin(timeValue), cos(timeValue) , 0.);
     cube.set_model_matrix(glm::translate(glm::mat4(), animation));
     
-    GLWrapper::set_view(shaders, model->get_spider_position(), model->get_spider_view_direction());
+    GLWrapper::set_view(model->get_spider_position(), model->get_spider_view_direction());
     
     if(model->terrain_needs_update())
     {

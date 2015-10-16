@@ -156,11 +156,6 @@ public:
     
     void draw();
     
-    GLShader& get_shader()
-    {
-        return shader;
-    }
-    
     void set_model_matrix(glm::mat4 _modelMatrix)
     {
         modelMatrix = _modelMatrix;
@@ -179,12 +174,12 @@ public:
     /**
      Reshape the window.
      */
-    static void set_screen_size(const std::vector<GLShader>& shaders, int width, int height);
+    static void set_screen_size(int width, int height);
     
     /**
      Set the camera/eye.
      */
-    static void set_view(const std::vector<GLShader>& shaders, const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
+    static void set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
     
     /**
      Initialize drawing the objects. Should be called before any draw calls to a GLObject.

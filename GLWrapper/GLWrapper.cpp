@@ -292,14 +292,14 @@ void GLWrapper::initialize()
     check_gl_error();
 }
 
-void GLWrapper::set_screen_size(const vector<GLShader>& shaders, int width, int height)
+void GLWrapper::set_screen_size(int width, int height)
 {
     glViewport(0, 0, width, height);
     GLShader::projectionMatrix = perspective(45.f, width/float(height), 0.01f, 100.f);
     check_gl_error();
 }
 
-void GLWrapper::set_view(const vector<GLShader>& shaders, const vec3& eyePosition, const vec3& eyeDirection)
+void GLWrapper::set_view(const vec3& eyePosition, const vec3& eyeDirection)
 {
     GLShader::viewMatrix = lookAt(eyePosition, eyePosition + eyeDirection, vec3(0., 1., 0.));
     check_gl_error();
