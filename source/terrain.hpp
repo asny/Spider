@@ -32,9 +32,16 @@ public:
 
 class Terrain {
     
+    const double patch_size = 8.;
+    
     std::map<std::pair<int, int>, TerrainPatch> terrain_patches = std::map<std::pair<int, int>, TerrainPatch>();
     
-    TerrainPatch get_or_create_patch_at(glm::vec2 parameter);
+    
+    std::pair<int, int> index_at(glm::vec2 parameter);
+    
+    TerrainPatch* create_patch_at(std::pair<int, int> index);
+    
+    TerrainPatch* get_patch_at(glm::vec2 parameter);
     
 public:
     

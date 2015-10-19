@@ -84,27 +84,36 @@ Terrain::Terrain()
     
 }
 
-TerrainPatch Terrain::get_or_create_patch_at(glm::vec2 parameter)
+pair<int, int> Terrain::index_at(vec2 parameter)
 {
-    const double patch_size = 8.;
     vec2 index_vector = vec2(floor(parameter.x / patch_size), floor(parameter.y / patch_size));
-    pair<int, int> index = make_pair(static_cast<int>(index_vector.x), static_cast<int>(index_vector.y));
+    return make_pair(static_cast<int>(index_vector.x), static_cast<int>(index_vector.y));
+}
+
+TerrainPatch* Terrain::create_patch_at(pair<int, int> index)
+{
+    vec2 origo = vec2(patch_size * static_cast<double>(index.first), patch_size * static_cast<double>(index.second));
+    TerrainPatch patch = TerrainPatch(origo, patch_size);
+    return &terrain_patches.insert(make_pair(index, patch)).first->second;
+}
+
+TerrainPatch* Terrain::get_patch_at(glm::vec2 parameter)
+{
+    auto index = index_at(parameter);
     auto index_patch_pair = terrain_patches.find(index);
     
     // If the patch hasn't been created, then we create it.
     if (index_patch_pair == terrain_patches.end())
     {
-        vec2 origo = vec2(patch_size * index_vector.x, patch_size * index_vector.y);
-        TerrainPatch patch = TerrainPatch(origo, patch_size);
-        terrain_patches.insert(make_pair(index, patch));
-        return patch;
+        return create_patch_at(index);
     }
-    return index_patch_pair->second;
+    return &index_patch_pair->second;
 }
 
 vec3 Terrain::get_terrain_position_at(const glm::vec3& position)
 {
     vec2 parameter = vec2(position.x, position.z);
-    double height = get_or_create_patch_at(parameter).get_surface_height_at(parameter);
+    TerrainPatch* patch = get_patch_at(parameter);
+    double height = patch->get_surface_height_at(parameter);
     return vec3(position.x, height, position.z);
 }
