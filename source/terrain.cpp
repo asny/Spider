@@ -12,7 +12,7 @@
 using namespace std;
 using namespace glm;
 
-TerrainPatch::TerrainPatch(vec2 _origo, double size) : origo(_origo)
+TerrainPatch::TerrainPatch(vec2 _origo, double size, vector<const TerrainPatch*> _neighbour_patches) : origo(_origo), neighbour_patches(_neighbour_patches)
 {
     int map_size = static_cast<int>(size) * Terrain::VERTICES_PER_UNIT + 1;
     heightmap = vector<vector<double>>(map_size);
@@ -44,7 +44,26 @@ double average(std::vector<double> heights)
 
 void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
 {
-    heightmap[r][c] = average(neighbour_heights) + 0.3 * scale * static_cast<double>(octave_noise_2d(3.f, 0.25f, scale, r, c));
+    vec2 parameter = origo + vec2(r/static_cast<double>(Terrain::VERTICES_PER_UNIT),c/static_cast<double>(Terrain::VERTICES_PER_UNIT));
+    if(r == 0 && neighbour_patches[NORTH])
+    {
+        heightmap[r][c] = neighbour_patches[NORTH]->get_surface_height_at(parameter);
+    }
+    else if(c == 0 && neighbour_patches[WEST])
+    {
+        heightmap[r][c] = neighbour_patches[WEST]->get_surface_height_at(parameter);
+    }
+    else if(r == heightmap.size() && neighbour_patches[SOUTH])
+    {
+        heightmap[r][c] = neighbour_patches[SOUTH]->get_surface_height_at(parameter);
+    }
+    else if(c == heightmap[0].size() && neighbour_patches[EAST])
+    {
+        heightmap[r][c] = neighbour_patches[EAST]->get_surface_height_at(parameter);
+    }
+    else {
+        heightmap[r][c] = average(neighbour_heights) + 0.3 * scale * static_cast<double>(octave_noise_2d(3.f, 0.25f, scale, r, c));
+    }
 }
 
 void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
@@ -68,7 +87,7 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
     }
 }
 
-double TerrainPatch::get_surface_height_at(glm::vec2 parameter)
+double TerrainPatch::get_surface_height_at(glm::vec2 parameter) const
 {
     double vertices_per_unit = static_cast<double>(Terrain::VERTICES_PER_UNIT);
     vec2 index = vec2((int)floor((parameter.x - origo.x) * vertices_per_unit), (int)floor((parameter.y - origo.y) * vertices_per_unit));
@@ -93,7 +112,21 @@ pair<int, int> Terrain::index_at(vec2 parameter)
 TerrainPatch* Terrain::create_patch_at(pair<int, int> index)
 {
     vec2 origo = vec2(patch_size * static_cast<double>(index.first), patch_size * static_cast<double>(index.second));
-    TerrainPatch patch = TerrainPatch(origo, patch_size);
+    
+    vector<const TerrainPatch*> neighbour_patches(4);
+    auto index_patch_pair = terrain_patches.find(make_pair(index.first - 1, index.second));
+    neighbour_patches[TerrainPatch::NORTH] = index_patch_pair != terrain_patches.end() ? &index_patch_pair->second : nullptr;
+    
+    index_patch_pair = terrain_patches.find(make_pair(index.first + 1, index.second));
+    neighbour_patches[TerrainPatch::SOUTH] = index_patch_pair != terrain_patches.end() ? &index_patch_pair->second : nullptr;
+    
+    index_patch_pair = terrain_patches.find(make_pair(index.first, index.second - 1));
+    neighbour_patches[TerrainPatch::WEST] = index_patch_pair != terrain_patches.end() ? &index_patch_pair->second : nullptr;
+    
+    index_patch_pair = terrain_patches.find(make_pair(index.first, index.second + 1));
+    neighbour_patches[TerrainPatch::EAST] = index_patch_pair != terrain_patches.end() ? &index_patch_pair->second : nullptr;
+    
+    TerrainPatch patch = TerrainPatch(origo, patch_size, neighbour_patches);
     return &terrain_patches.insert(make_pair(index, patch)).first->second;
 }
 

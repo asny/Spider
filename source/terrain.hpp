@@ -18,16 +18,22 @@
 class TerrainPatch {
     glm::vec2 origo;
     std::vector<std::vector<double>> heightmap;
+    std::vector<const TerrainPatch*> neighbour_patches;
     
     void set_height(double scale, int r, int c, std::vector<double> neighbour_heights);
     void subdivide(int origo_x, int origo_y, int size);
     
 public:
+    enum DIRECTION {
+        NORTH = 0,
+        SOUTH = 1,
+        WEST = 2,
+        EAST = 3
+    };
     
-    TerrainPatch(glm::vec2 _origo, double _size);
+    TerrainPatch(glm::vec2 _origo, double _size, std::vector<const TerrainPatch*> _neighbour_patches);
     
-    double get_surface_height_at(glm::vec2 parameter);
-    
+    double get_surface_height_at(glm::vec2 parameter) const;
 };
 
 class Terrain {
