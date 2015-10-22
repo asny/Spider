@@ -117,6 +117,7 @@ void View::display()
     
     terrain->draw();
     cube->draw();
+    grass->draw();
     
     glutSwapBuffers();
 }
@@ -194,6 +195,8 @@ void View::create_shaders_and_objects()
     // Create shaders
     auto phong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/phong.vert",  "shaders/phong.frag"));
     shaders.push_back(phong_shader);
+    auto grass_shader = std::shared_ptr<GLShader>(new GLShader("shaders/grass.vert",  "shaders/phong.frag", "shaders/grass.geom"));
+    shaders.push_back(grass_shader);
     auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
     shaders.push_back(fastphong_shader);
     
@@ -206,7 +209,14 @@ void View::create_shaders_and_objects()
     cube->finalize_vertex_attributes();
     
     // terrain
-    material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
+    material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.2f, 1.f}};
     terrain = std::unique_ptr<GLObject>(new GLObject(phong_shader, material, GL_TRIANGLE_STRIP));
     terrain->initialize_vertex_attributes({"position", "normal"});
+    
+    // Grass
+    material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.2f, 0.6f, 0.2f, 1.f}, {0.2f, 0.2f, 0.2f, 1.f}};
+    grass = std::unique_ptr<GLObject>(new GLObject(grass_shader, material, GL_LINES));
+    grass->initialize_vertex_attributes({"end_point"});
+    grass->set_vertex_attribute("end_point", {glm::vec3(0., 0., 2.), glm::vec3(1.,2.,2.)});
+    grass->finalize_vertex_attributes();
 }
