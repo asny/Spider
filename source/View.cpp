@@ -141,12 +141,16 @@ void View::animate()
     
     if(model->terrain_needs_update())
     {
-        std::vector<glm::vec3> terrain_positions, terrain_normals;
+        std::vector<glm::vec3> terrain_positions, terrain_normals, grass_end_points;
         model->get_terrain(terrain_positions, terrain_normals);
+        model->get_grass(grass_end_points);
         
         terrain->set_vertex_attribute("position", terrain_positions);
         terrain->set_vertex_attribute("normal", terrain_normals);
         terrain->finalize_vertex_attributes();
+        
+        grass->set_vertex_attribute("end_point", grass_end_points);
+        grass->finalize_vertex_attributes();
     }
     
     glutPostRedisplay();
@@ -217,6 +221,4 @@ void View::create_shaders_and_objects()
     material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.2f, 0.6f, 0.2f, 1.f}, {0.2f, 0.2f, 0.2f, 1.f}};
     grass = std::unique_ptr<GLObject>(new GLObject(grass_shader, material, GL_LINES));
     grass->initialize_vertex_attributes({"end_point"});
-    grass->set_vertex_attribute("end_point", {glm::vec3(0., 0., 2.), glm::vec3(1.,2.,2.)});
-    grass->finalize_vertex_attributes();
 }

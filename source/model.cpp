@@ -8,6 +8,7 @@
 
 #include "model.hpp"
 #include "glm.hpp"
+#include "simplexnoise.h"
 
 using namespace std;
 using namespace glm;
@@ -98,6 +99,25 @@ void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals)
                 positions.push_back(position);
                 normals.push_back(normal);
             }
+        }
+    }
+}
+
+void Model::get_grass(vector<vec3>& end_points)
+{
+    vec3 spider_position = spider.get_position();
+    
+    const double radius = 6.;
+    const double step_size = 1./Terrain::VERTICES_PER_UNIT;
+    for(double x = -radius; x <= radius; x += step_size)
+    {
+        for(double z = -radius; z <= radius; z += step_size)
+        {
+            vec3 p = spider_position + vec3(x, 0., z);
+            vec3 origin = terrain.get_terrain_position_at(p);
+            vec3 top = origin + vec3(raw_noise_2d(x, z), 1. + raw_noise_2d(x, z), raw_noise_2d(z, x));
+            end_points.push_back(origin);
+            end_points.push_back(top);
         }
     }
 }

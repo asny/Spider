@@ -43,6 +43,8 @@ public:
     
     void get_terrain(std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals);
     
+    void get_grass(std::vector<glm::vec3>& end_points);
+    
     // ******** CONTROL ********
     
     void move_forward()
