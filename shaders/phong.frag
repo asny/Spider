@@ -18,6 +18,10 @@ void main(void)
     
     // Compute vectors
     vec3 N = normalize(nor);
+    if(!gl_FrontFacing)
+    {
+        N = -N;
+    }
     vec3 L = normalize(lightPos - pos);
     vec3 E = normalize(-pos);
     vec3 R = normalize(reflect(-L,N));

@@ -52,5 +52,5 @@ void main()
     }
     
     emit_triangle(Triangle(origin, top, origin + 0.1 * leave_direction - 0.01 * bend_direction));
-    emit_triangle(Triangle(origin, top, origin - 0.1 * leave_direction - 0.01 * bend_direction));
+    emit_triangle(Triangle(top, origin, origin - 0.1 * leave_direction - 0.01 * bend_direction));
 }
