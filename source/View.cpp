@@ -115,8 +115,11 @@ void View::display()
     }
     GLWrapper::initialize_draw();
     
+    GLWrapper::cull_backface();
     terrain->draw();
     cube->draw();
+    
+    GLWrapper::cull_backface(false);
     grass->draw();
     
     glutSwapBuffers();
