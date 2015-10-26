@@ -29,16 +29,6 @@ void emit_vertex(vec3 position, vec3 normal)
     EmitVertex();
 }
 
-void emit_triangle(Triangle triangle)
-{
-    vec3 n = calc_normal(triangle);
-    emit_vertex(triangle.p1, n);
-    emit_vertex(triangle.p2, n);
-    emit_vertex(triangle.p3, n);
-    
-    EndPrimitive();
-}
-
 float func(float x)
 {
     return sqrt(x);
@@ -46,10 +36,8 @@ float func(float x)
 
 vec3 func(vec3 origin, vec3 top, float parameter)
 {
-    float x = parameter * (top.x - origin.x);
-    float y = func(parameter) * (top.y - origin.y);
-    float z = parameter * (top.z - origin.z);
-    return origin + vec3(x, y, z);
+    vec3 vec = top - origin;
+    return origin + vec3(parameter * vec.x, func(parameter) * vec.y, parameter * vec.z);
 }
 
 void emit_straw_half(vec3 origin1, vec3 origin2, vec3 top)
@@ -60,9 +48,14 @@ void emit_straw_half(vec3 origin1, vec3 origin2, vec3 top)
         vec3 p2 = func(origin2, top, parameter);
         vec3 p3 = func(origin1, top, parameter + step_size);
         vec3 p4 = func(origin2, top, parameter + step_size);
-        emit_triangle(Triangle(p1, p2, p3));
-        emit_triangle(Triangle(p2, p3, p4));
+        
+        vec3 n = calc_normal(Triangle(p1, p2, p3));
+        emit_vertex(p1, n);
+        emit_vertex(p2, n);
+        emit_vertex(p3, n);
+        emit_vertex(p4, n);
     }
+    EndPrimitive();
 }
 
 void main()
