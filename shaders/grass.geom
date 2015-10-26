@@ -1,12 +1,14 @@
 #version 150
 
 layout (lines) in;
-layout (triangle_strip, max_vertices = 6) out;
+layout (triangle_strip, max_vertices = 264) out;
 
 uniform mat4 PMatrix;
 
 out vec3 pos;
 out vec3 nor;
+
+const float step_size = 0.05f;
 
 struct Triangle {
     vec3 p1;
@@ -37,6 +39,32 @@ void emit_triangle(Triangle triangle)
     EndPrimitive();
 }
 
+float func(float x)
+{
+    return sqrt(x);
+}
+
+vec3 func(vec3 origin, vec3 top, float parameter)
+{
+    float x = parameter * (top.x - origin.x);
+    float y = func(parameter) * (top.y - origin.y);
+    float z = parameter * (top.z - origin.z);
+    return origin + vec3(x, y, z);
+}
+
+void emit_straw_half(vec3 origin1, vec3 origin2, vec3 top)
+{
+    for (float parameter = 0.f; parameter < 1.f - step_size; parameter += step_size)
+    {
+        vec3 p1 = func(origin1, top, parameter);
+        vec3 p2 = func(origin2, top, parameter);
+        vec3 p3 = func(origin1, top, parameter + step_size);
+        vec3 p4 = func(origin2, top, parameter + step_size);
+        emit_triangle(Triangle(p1, p2, p3));
+        emit_triangle(Triangle(p2, p3, p4));
+    }
+}
+
 void main()
 {
     vec3 origin = gl_in[0].gl_Position.xyz;
@@ -51,6 +79,9 @@ void main()
         bend_direction = -bend_direction;
     }
     
-    emit_triangle(Triangle(origin, top, origin + 0.1 * leave_direction - 0.01 * bend_direction));
-    emit_triangle(Triangle(top, origin, origin - 0.1 * leave_direction - 0.01 * bend_direction));
+    const float half_width = 0.05;
+    vec3 corner = origin + half_width * leave_direction - half_width * bend_direction;
+    emit_straw_half(corner, origin, top);
+    corner = origin - half_width * leave_direction - half_width * bend_direction;
+    emit_straw_half(origin, corner, top);
 }

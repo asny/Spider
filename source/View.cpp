@@ -221,7 +221,7 @@ void View::create_shaders_and_objects()
     terrain->initialize_vertex_attributes({"position", "normal"});
     
     // Grass
-    material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.2f, 0.6f, 0.2f, 1.f}, {0.2f, 0.2f, 0.2f, 1.f}};
+    material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.2f, 0.6f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
     grass = std::unique_ptr<GLObject>(new GLObject(grass_shader, material, GL_LINES));
     grass->initialize_vertex_attributes({"end_point"});
 }
