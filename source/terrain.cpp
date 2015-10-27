@@ -50,25 +50,37 @@ void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> ne
     if(r == 0 && neighbour_patches[NORTH])
     {
         heightmap[r][c] = neighbour_patches[NORTH]->get_surface_height_at(parameter);
+        grass[r][c] = neighbour_patches[NORTH]->get_grass_vector_at(parameter);
     }
     else if(c == 0 && neighbour_patches[WEST])
     {
         heightmap[r][c] = neighbour_patches[WEST]->get_surface_height_at(parameter);
+        grass[r][c] = neighbour_patches[WEST]->get_grass_vector_at(parameter);
     }
     else if(r == heightmap.size() && neighbour_patches[SOUTH])
     {
         heightmap[r][c] = neighbour_patches[SOUTH]->get_surface_height_at(parameter);
+        grass[r][c] = neighbour_patches[SOUTH]->get_grass_vector_at(parameter);
     }
     else if(c == heightmap[0].size() && neighbour_patches[EAST])
     {
         heightmap[r][c] = neighbour_patches[EAST]->get_surface_height_at(parameter);
+        grass[r][c] = neighbour_patches[EAST]->get_grass_vector_at(parameter);
     }
-    else {
+    else
+    {
         heightmap[r][c] = average(neighbour_heights) + 0.3 * scale * static_cast<double>(octave_noise_2d(3.f, 0.25f, scale, r, c));
+        
+        if(rand() % 2 == 0)
+        {
+            grass[r][c] = vec3(static_cast<double>(scaled_octave_noise_2d(3.f, 0.25f, scale, -1., 1., r, c)),
+                               static_cast<double>(scaled_octave_noise_2d(3.f, 0.25f, scale, 0.25, 1.5, r, c)),
+                               static_cast<double>(scaled_octave_noise_2d(3.f, 0.25f, scale, -1., 1., r, c)));
+        }
+        else {
+            grass[r][c] = vec3(0.);
+        }
     }
-    
-    grass[r][c] = vec3(static_cast<double>(octave_noise_2d(3.f, 0.25f, scale, r, c)),
-                       std::max(1. + raw_noise_2d(r, c), 0.3), raw_noise_2d(r, c));
 }
 
 void TerrainPatch::subdivide(int origo_r, int origo_c, int size)

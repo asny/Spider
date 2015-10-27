@@ -100,9 +100,12 @@ void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals, vector<v
                 normals.push_back(normal);
             }
             
-            vec3 top = position + terrain.get_grass_vector_at(p);
-            grass_end_points.push_back(position);
-            grass_end_points.push_back(top);
+            vec3 grass_vector = terrain.get_grass_vector_at(p);
+            if(dot(grass_vector, grass_vector) > 0)
+            {
+                grass_end_points.push_back(position);
+                grass_end_points.push_back(position + grass_vector);
+            }
         }
     }
 }
