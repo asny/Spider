@@ -16,9 +16,11 @@ TerrainPatch::TerrainPatch(vec2 _origo, double size, vector<const TerrainPatch*>
 {
     int map_size = static_cast<int>(size) * Terrain::VERTICES_PER_UNIT + 1;
     heightmap = vector<vector<double>>(map_size);
+    grass = vector<vector<vec3>>(map_size);
     for ( auto r = 0; r < map_size; r++ )
     {
         heightmap[r] = vector<double>(map_size);
+        grass[r] = vector<vec3>(map_size);
     }
     heightmap.front().front() = 0.;
     heightmap.front().back() = 0.;
@@ -64,6 +66,9 @@ void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> ne
     else {
         heightmap[r][c] = average(neighbour_heights) + 0.3 * scale * static_cast<double>(octave_noise_2d(3.f, 0.25f, scale, r, c));
     }
+    
+    grass[r][c] = vec3(static_cast<double>(octave_noise_2d(3.f, 0.25f, scale, r, c)),
+                       std::max(1. + raw_noise_2d(r, c), 0.3), raw_noise_2d(r, c));
 }
 
 void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
@@ -87,14 +92,26 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
     }
 }
 
-double TerrainPatch::get_surface_height_at(glm::vec2 parameter) const
+vec2 TerrainPatch::index_at(glm::vec2 parameter) const
 {
     double vertices_per_unit = static_cast<double>(Terrain::VERTICES_PER_UNIT);
     vec2 index = vec2((int)floor((parameter.x - origo.x) * vertices_per_unit), (int)floor((parameter.y - origo.y) * vertices_per_unit));
     
     assert(0 <= index.x < heightmap.size());
     assert(0 <= index.y < heightmap[0].size());
+    return index;
+}
+
+double TerrainPatch::get_surface_height_at(glm::vec2 parameter) const
+{
+    vec2 index = index_at(parameter);
     return heightmap[index.x][index.y];
+}
+
+vec3 TerrainPatch::get_grass_vector_at(vec2 parameter) const
+{
+    vec2 index = index_at(parameter);
+    return grass[index.x][index.y];
 }
 
 Terrain::Terrain()
@@ -149,4 +166,11 @@ vec3 Terrain::get_terrain_position_at(const glm::vec3& position)
     TerrainPatch* patch = get_patch_at(parameter);
     double height = patch->get_surface_height_at(parameter);
     return vec3(position.x, height, position.z);
+}
+
+vec3 Terrain::get_grass_vector_at(const glm::vec3& position)
+{
+    vec2 parameter = vec2(position.x, position.z);
+    TerrainPatch* patch = get_patch_at(parameter);
+    return patch->get_grass_vector_at(parameter);
 }

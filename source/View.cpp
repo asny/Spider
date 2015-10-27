@@ -145,8 +145,7 @@ void View::animate()
     if(model->terrain_needs_update())
     {
         std::vector<glm::vec3> terrain_positions, terrain_normals, grass_end_points;
-        model->get_terrain(terrain_positions, terrain_normals);
-        model->get_grass(grass_end_points);
+        model->get_terrain(terrain_positions, terrain_normals, grass_end_points);
         
         terrain->set_vertex_attribute("position", terrain_positions);
         terrain->set_vertex_attribute("normal", terrain_normals);

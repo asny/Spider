@@ -15,13 +15,18 @@
 #include "vec2.hpp"
 #include "vec3.hpp"
 
-class TerrainPatch {
+class TerrainPatch
+{
     glm::vec2 origo;
     std::vector<std::vector<double>> heightmap;
+    std::vector<std::vector<glm::vec3>> grass;
     std::vector<const TerrainPatch*> neighbour_patches;
     
     void set_height(double scale, int r, int c, std::vector<double> neighbour_heights);
+    
     void subdivide(int origo_x, int origo_y, int size);
+    
+    glm::vec2 index_at(glm::vec2 parameter) const;
     
 public:
     enum DIRECTION {
@@ -34,6 +39,8 @@ public:
     TerrainPatch(glm::vec2 _origo, double _size, std::vector<const TerrainPatch*> _neighbour_patches);
     
     double get_surface_height_at(glm::vec2 parameter) const;
+    
+    glm::vec3 get_grass_vector_at(glm::vec2 parameter) const;
 };
 
 class Terrain {
@@ -57,4 +64,5 @@ public:
     
     glm::vec3 get_terrain_position_at(const glm::vec3& position);
     
+    glm::vec3 get_grass_vector_at(const glm::vec3& position);
 };

@@ -41,9 +41,7 @@ public:
     
     bool terrain_needs_update();
     
-    void get_terrain(std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals);
-    
-    void get_grass(std::vector<glm::vec3>& end_points);
+    void get_terrain(std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec3>& grass_end_points);
     
     // ******** CONTROL ********
     
