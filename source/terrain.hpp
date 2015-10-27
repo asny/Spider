@@ -58,7 +58,7 @@ class Terrain {
     
 public:
     
-    const static int VERTICES_PER_UNIT = 8;
+    const static int VERTICES_PER_UNIT = 16;
     
     Terrain();
     

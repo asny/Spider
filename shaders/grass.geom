@@ -9,7 +9,7 @@ out vec3 pos;
 out vec3 nor;
 
 const float step_size = 0.05f;
-const float half_width = 0.05f;
+const float half_width = 0.025f;
 const vec3 up_direction = vec3(0., 1., 0.);
 
 void emit_vertex(vec3 position, vec3 normal)
