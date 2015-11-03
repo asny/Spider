@@ -4,6 +4,8 @@ layout (lines) in;
 layout (triangle_strip, max_vertices = 264) out;
 
 uniform mat4 PMatrix;
+uniform vec3 spiderPosition;
+uniform vec3 wind;
 
 out vec3 pos;
 out vec3 nor;
@@ -70,9 +72,14 @@ void main()
     vec3 origin = gl_in[0].gl_Position.xyz;
     vec3 top = gl_in[1].gl_Position.xyz;
     
-    vec3 straw_direction = normalize(top-origin);
+    vec3 straw = top - origin;
+    float l = length(straw);
+    vec3 straw_direction = normalize(straw);
     vec3 leave_direction = normalize(cross(up_direction, straw_direction));
     vec3 bend_direction = normalize(cross(leave_direction, up_direction));
+    
+    straw -= 0.5 * length(wind) * l * dot(straw_direction, normalize(wind)) * normalize(cross(straw_direction, leave_direction));
+    top = origin + normalize(straw) * l;
     
     vec3 corner = origin + half_width * leave_direction - half_width * bend_direction;
     emit_straw_half(corner, origin, top);

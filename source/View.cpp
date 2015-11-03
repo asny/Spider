@@ -137,10 +137,14 @@ void View::reshape(int width, int height)
 void View::animate()
 {
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.002;
-    glm::vec3 animation(sin(timeValue), cos(timeValue) , 0.);
+    glm::vec3 animation(sin(timeValue), 0., cos(timeValue));
     cube->set_model_matrix(glm::translate(glm::mat4(), animation));
     
     GLWrapper::set_view(model->get_spider_position(), model->get_spider_view_direction());
+    
+    grass->get_shader()->use();
+    grass->get_shader()->set_uniform_variable("spiderPosition", model->get_spider_position());
+    grass->get_shader()->set_uniform_variable("wind", animation);
     
     if(model->terrain_needs_update())
     {

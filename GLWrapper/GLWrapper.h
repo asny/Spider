@@ -138,6 +138,11 @@ public:
     
     GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES);
     
+    std::shared_ptr<GLShader> get_shader()
+    {
+        return shader;
+    }
+    
     void initialize_vertex_attributes(std::vector<std::string> attribute_names);
     
     void set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data);
