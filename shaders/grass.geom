@@ -10,9 +10,8 @@ uniform vec3 wind;
 out vec3 pos;
 out vec3 nor;
 
-const float step_size = 0.05f;
 const float half_width = 0.025f;
-const vec3 up_direction = vec3(0., 1., 0.);
+const vec3 up_direction = vec3(0.f, 1.f, 0.f);
 
 void emit_vertex(vec3 position, vec3 normal)
 {
@@ -29,7 +28,7 @@ float func(float x)
 
 float dfunc(float x)
 {
-    return 0.5 / sqrt(x);
+    return 0.5f / sqrt(x);
 }
 
 vec3 compute_position(vec3 origin, vec3 top, float parameter)
@@ -42,7 +41,7 @@ vec3 compute_normal(vec3 origin1, vec3 origin2, vec3 top, float parameter)
 {
     vec3 vec = top - origin1;
     vec3 tangent_t;
-    if ( parameter < 0.0001)
+    if ( parameter < 0.0001f)
     {
         tangent_t = up_direction;
     }
@@ -52,7 +51,7 @@ vec3 compute_normal(vec3 origin1, vec3 origin2, vec3 top, float parameter)
     return normalize(cross(normalize(origin2 - origin1), tangent_t));
 }
 
-void emit_straw_half(vec3 origin1, vec3 origin2, vec3 top)
+void emit_straw_half(vec3 origin1, vec3 origin2, vec3 top, float step_size)
 {
     for (float parameter = 0.f; parameter < 1.f; parameter += step_size)
     {
@@ -89,14 +88,15 @@ void main()
     float spider_power = 0.2f * l * max(10.f-distance_to_spider, 0.f);
     straw = bend_straw(spider_power, straw);
     
-    vec3 top = origin + straw;
-    
+    // Compute top and corners
     vec3 leave_direction = normalize(cross(up_direction, straw));
     vec3 bend_direction = normalize(cross(leave_direction, up_direction));
+    vec3 corner1 = origin + half_width * leave_direction - half_width * bend_direction;
+    vec3 corner2 = origin - half_width * leave_direction - half_width * bend_direction;
+    vec3 top = origin + straw;
     
-    vec3 corner = origin + half_width * leave_direction - half_width * bend_direction;
-    emit_straw_half(corner, origin, top);
-    
-    corner = origin - half_width * leave_direction - half_width * bend_direction;
-    emit_straw_half(origin, corner, top);
+    // Emit vertices
+    float step_size = 1.f / max(ceil(40.f - 2.f * distance_to_spider), 4);
+    emit_straw_half(corner1, origin, top, step_size);
+    emit_straw_half(origin, corner2, top, step_size);
 }
