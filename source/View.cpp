@@ -91,11 +91,14 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     GLWrapper::initialize();
     create_shaders_and_objects();
     
-    for (auto shader : shaders)
-    {
-        shader->use();
-        shader->set_uniform_variable("lightPos", light_pos);
-    }
+    cube->get_shader()->use();
+    cube->get_shader()->set_uniform_variable("lightPos", light_pos);
+    
+    grass->get_shader()->use();
+    grass->get_shader()->set_uniform_variable("lightPos", light_pos);
+    
+    terrain->get_shader()->use();
+    terrain->get_shader()->set_uniform_variable("lightPos", light_pos);
     
     glutMainLoop();
 }
@@ -196,11 +199,8 @@ void View::create_shaders_and_objects()
 {
     // Create shaders
     auto phong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/phong.vert",  "shaders/phong.frag"));
-    shaders.push_back(phong_shader);
     auto grass_shader = std::shared_ptr<GLShader>(new GLShader("shaders/grass.vert",  "shaders/phong.frag", "shaders/grass.geom"));
-    shaders.push_back(grass_shader);
     auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
-    shaders.push_back(fastphong_shader);
     
     // cube
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
