@@ -3,7 +3,10 @@
 layout (lines) in;
 layout (triangle_strip, max_vertices = 264) out;
 
+uniform mat4 NMatrix;
+uniform mat4 MVMatrix;
 uniform mat4 PMatrix;
+
 uniform vec3 spiderPosition;
 uniform vec3 wind;
 
@@ -11,7 +14,8 @@ out vec3 pos;
 out vec3 nor;
 
 const float half_width = 0.025f;
-const vec3 up_direction = vec3(0.f, 1.f, 0.f);
+
+vec3 up_direction;
 
 void emit_vertex(vec3 position, vec3 normal)
 {
@@ -66,37 +70,34 @@ void emit_straw_half(vec3 origin1, vec3 origin2, vec3 top, float step_size)
     EndPrimitive();
 }
 
-vec3 bend_straw(float power, vec3 straw)
-{
-    float l = length(straw);
-    vec3 bend_direction = normalize(cross(cross(up_direction, straw), straw));
-    return l * normalize(straw + power * bend_direction);
-}
-
 void main()
 {
+    up_direction = (NMatrix * vec4(0., 1., 0., 1.)).xyz;
+    
     vec3 origin = gl_in[0].gl_Position.xyz;
     vec3 straw = gl_in[1].gl_Position.xyz - origin;
     float l = length(straw);
-    float distance_to_spider = distance(origin.xz, spiderPosition.xz);
+    vec3 straw_direction = straw/l;
+    vec3 leave_direction = normalize(cross(up_direction, straw_direction));
+    vec3 bend_direction = normalize(cross(leave_direction, straw_direction));
     
-    // Bend straw for wind
-    float wind_power = dot(straw, wind);
-    straw = bend_straw(wind_power, straw);
+    // Find distance to spider
+    vec3 spiderP = (MVMatrix * vec4(spiderPosition, 1.)).xyz;
+    float distance_to_spider = distance(origin.xz, spiderP.xz);
     
-    // Bend straw for spider
-    float spider_power = 0.2f * l * max(10.f-distance_to_spider, 0.f);
-    straw = bend_straw(spider_power, straw);
+    // Bend straw for wind and spider
+    vec3 w = (NMatrix * vec4(wind, 1.)).xyz;
+    float wind_power = dot(straw, w);
+    float spider_power = 2.f * l * max(1.f - distance_to_spider, 0.f);
+    vec3 top = origin + l * normalize(straw + (spider_power + wind_power) * bend_direction);
     
-    // Compute top and corners
-    vec3 leave_direction = normalize(cross(up_direction, straw));
-    vec3 bend_direction = normalize(cross(leave_direction, up_direction));
-    vec3 corner1 = origin + half_width * leave_direction - half_width * bend_direction;
-    vec3 corner2 = origin - half_width * leave_direction - half_width * bend_direction;
-    vec3 top = origin + straw;
+    // Compute corners
+    vec3 bend_direction_xz = normalize(vec3(bend_direction.x, 0.f, bend_direction.z));
+    vec3 corner1 = origin + half_width * leave_direction - half_width * bend_direction_xz;
+    vec3 corner2 = origin - half_width * leave_direction - half_width * bend_direction_xz;
     
     // Emit vertices
-    float step_size = 1.f / max(ceil(40.f - 2.f * distance_to_spider), 4);
+    float step_size = 1.f / max(ceil(30.f - 3.f * distance_to_spider), 4);
     emit_straw_half(corner1, origin, top, step_size);
     emit_straw_half(origin, corner2, top, step_size);
 }
