@@ -74,11 +74,10 @@ vec3 bend_straw_for_spider(vec3 straw)
 
 vec3 bend_straw_for_wind(vec3 straw)
 {
+    float wind_speed = dot(straw, wind);
     float l = length(straw);
-    vec3 straw_direction = normalize(straw);
-    vec3 leave_direction = normalize(cross(up_direction, straw_direction));
-    straw -= 0.5 * length(wind) * l * dot(straw_direction, normalize(wind)) * normalize(cross(straw_direction, leave_direction));
-    return normalize(straw) * l;
+    vec3 bend_direction = normalize(cross(cross(up_direction, straw), straw));
+    return l * normalize(straw + wind_speed * bend_direction);
 }
 
 void main()
