@@ -43,13 +43,13 @@ vec3 compute_position(vec3 origin, vec3 top, float parameter)
 
 vec3 compute_normal(vec3 origin1, vec3 origin2, vec3 top, float parameter)
 {
-    vec3 vec = top - origin1;
     vec3 tangent_t;
     if ( parameter < 0.0001f)
     {
         tangent_t = up_direction;
     }
     else {
+        vec3 vec = top - origin1;
         tangent_t = normalize(vec3(vec.x, dfunc(parameter) * vec.y, vec.z));
     }
     return normalize(cross(normalize(origin2 - origin1), tangent_t));

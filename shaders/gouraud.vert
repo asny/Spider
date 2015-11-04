@@ -1,7 +1,7 @@
 #version 150
 
 uniform mat4 MVMatrix;
-uniform mat4 PMatrix;
+uniform mat4 MVPMatrix;
 uniform mat4 NMatrix;
 
 uniform vec3 lightPos;
@@ -21,7 +21,7 @@ void main()
     float specPow = 5.;
     
     // Compute vectors
-    vec3 p = mat3(MVMatrix) * position;
+    vec3 p = (MVMatrix * vec4(position, 1.)).xyz;
     vec3 N = normalize(mat3(NMatrix) * normal);
     vec3 L = normalize(lightPos - p);
     vec3 E = normalize(-p);
@@ -34,5 +34,5 @@ void main()
     colourV = ambient + diffuse + spec;
     
     // Calculate position
-    gl_Position = PMatrix * MVMatrix * vec4(position.xyz, 1.);
+    gl_Position = MVPMatrix * vec4(position, 1.);
 }
