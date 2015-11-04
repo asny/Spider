@@ -211,12 +211,12 @@ void View::create_shaders_and_objects()
     cube->finalize_vertex_attributes();
     
     // terrain
-    material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.2f, 0.2f, 0.2f, 1.f}};
+    material = GLMaterial {{0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
     terrain = std::unique_ptr<GLObject>(new GLObject(phong_shader, material, GL_TRIANGLE_STRIP));
     terrain->initialize_vertex_attributes({"position", "normal"});
     
     // Grass
-    material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.2f, 0.6f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
+    material = GLMaterial {{0.2f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
     grass = std::unique_ptr<GLObject>(new GLObject(grass_shader, material, GL_LINES));
     grass->initialize_vertex_attributes({"end_point"});
 }
