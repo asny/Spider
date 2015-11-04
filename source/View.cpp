@@ -71,14 +71,6 @@ static const std::vector<glm::vec3> cube_data = {
     glm::vec3(1.0f,-1.0f, 1.0f)
 };
 
-
-
-static const glm::vec3 triangles_data[] = {
-        glm::vec3(0.), glm::vec3(0.,0.,1.), glm::vec3(1.,0.,0.), glm::vec3(0.,0.,1.), glm::vec3(0.,1.,0.), glm::vec3(0.,0.,1.),
-        glm::vec3(0.), glm::vec3(1.,0.,0.), glm::vec3(-1.,0.,-1.), glm::vec3(1.,0.,0.), glm::vec3(0.,1.,0.), glm::vec3(1.,0.,0.),
-        glm::vec3(0.), glm::vec3(0.,0.,1.), glm::vec3(0.,-1.,0.), glm::vec3(0.,0.,1.), glm::vec3(1.,0.,0.), glm::vec3(0.,0.,1.)
-};
-
 View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
 {
     instance = this;
@@ -137,7 +129,7 @@ void View::reshape(int width, int height)
 void View::animate()
 {
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.002;
-    glm::vec3 animation(sin(timeValue), 0., cos(timeValue));
+    glm::vec3 animation(0.5 * sin(timeValue) + 0.5, 0., 0.);
     cube->set_model_matrix(glm::translate(glm::mat4(), animation));
     
     GLWrapper::set_view(model->get_spider_position(), model->get_spider_view_direction());
