@@ -1,5 +1,7 @@
 #version 150
 
+uniform mat4 MVMatrix;
+
 uniform vec3 lightPos;
 
 uniform vec4 ambientMat;
@@ -22,7 +24,7 @@ void main(void)
     {
         N = -N;
     }
-    vec3 L = normalize(lightPos - pos);
+    vec3 L = normalize((MVMatrix * vec4(lightPos, 1.f)).xyz - pos);
     vec3 E = normalize(-pos);
     vec3 R = normalize(reflect(-L,N));
     
