@@ -67,28 +67,29 @@ void emit_straw_half(vec3 origin1, vec3 origin2, vec3 top)
     EndPrimitive();
 }
 
-vec3 bend_straw_for_spider(vec3 straw)
+vec3 bend_straw(float power, vec3 straw)
 {
-    return straw;
-}
-
-vec3 bend_straw_for_wind(vec3 straw)
-{
-    float wind_speed = dot(straw, wind);
     float l = length(straw);
     vec3 bend_direction = normalize(cross(cross(up_direction, straw), straw));
-    return l * normalize(straw + wind_speed * bend_direction);
+    return l * normalize(straw + power * bend_direction);
 }
 
 void main()
 {
     vec3 origin = gl_in[0].gl_Position.xyz;
-    vec3 top = gl_in[1].gl_Position.xyz;
+    vec3 straw = gl_in[1].gl_Position.xyz - origin;
+    float l = length(straw);
+    float distance_to_spider = distance(origin.xz, spiderPosition.xz);
     
-    vec3 straw = top - origin;
-    straw = bend_straw_for_wind(straw);
-    straw = bend_straw_for_spider(straw);
-    top = origin + straw;
+    // Bend straw for wind
+    float wind_power = dot(straw, wind);
+    straw = bend_straw(wind_power, straw);
+    
+    // Bend straw for spider
+    float spider_power = 0.2f * l * max(10.f-distance_to_spider, 0.f);
+    straw = bend_straw(spider_power, straw);
+    
+    vec3 top = origin + straw;
     
     vec3 leave_direction = normalize(cross(up_direction, straw));
     vec3 bend_direction = normalize(cross(leave_direction, up_direction));
