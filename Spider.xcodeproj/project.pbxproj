@@ -16,6 +16,7 @@
 		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; settings = {ASSET_TAGS = (); }; };
 		7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* spider.cpp */; settings = {ASSET_TAGS = (); }; };
 		7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2C31BC25326009D85FD /* terrain.cpp */; settings = {ASSET_TAGS = (); }; };
+		7AF9C41D1BEBEB6F008AE5F5 /* OBJLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9C41B1BEBEB6F008AE5F5 /* OBJLoader.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,6 +58,8 @@
 		7AB0F2C41BC25326009D85FD /* terrain.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = terrain.hpp; path = source/terrain.hpp; sourceTree = "<group>"; };
 		7AB0F2C61BC28EEB009D85FD /* terrain.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = terrain.geom; path = shaders/terrain.geom; sourceTree = "<group>"; };
 		7AB0F2C71BC28EEB009D85FD /* terrain.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = terrain.vert; path = shaders/terrain.vert; sourceTree = "<group>"; };
+		7AF9C41B1BEBEB6F008AE5F5 /* OBJLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OBJLoader.cpp; path = Loaders/OBJLoader.cpp; sourceTree = "<group>"; };
+		7AF9C41C1BEBEB6F008AE5F5 /* OBJLoader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = OBJLoader.hpp; path = Loaders/OBJLoader.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +82,7 @@
 				7A383A2D1BBFBB1700E29333 /* OpenGL.framework */,
 				7A383A341BBFD93A00E29333 /* Shaders */,
 				7A70D0FB1BC6BEE8003E859B /* SimplexNoise */,
+				7AF9C41A1BEBEB12008AE5F5 /* Loaders */,
 				7A70D0F31BC68B1B003E859B /* GLWrapper */,
 				7A383A281BBFB6FC00E29333 /* View */,
 				7AB0F2BD1BC07AB1009D85FD /* Model */,
@@ -153,6 +157,15 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		7AF9C41A1BEBEB12008AE5F5 /* Loaders */ = {
+			isa = PBXGroup;
+			children = (
+				7AF9C41B1BEBEB6F008AE5F5 /* OBJLoader.cpp */,
+				7AF9C41C1BEBEB6F008AE5F5 /* OBJLoader.hpp */,
+			);
+			name = Loaders;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -209,6 +222,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7AF9C41D1BEBEB6F008AE5F5 /* OBJLoader.cpp in Sources */,
 				7A383A331BBFCE5700E29333 /* View.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
 				7A70D0F91BC68BAA003E859B /* GLWrapper.cpp in Sources */,
