@@ -91,14 +91,9 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     GLWrapper::initialize();
     create_shaders_and_objects();
     
-    cube->get_shader()->use();
-    cube->get_shader()->set_uniform_variable("lightPos", light_pos);
-    
-    grass->get_shader()->use();
-    grass->get_shader()->set_uniform_variable("lightPos", light_pos);
-    
-    terrain->get_shader()->use();
-    terrain->get_shader()->set_uniform_variable("lightPos", light_pos);
+    cube->set_uniform_variable("lightPos", light_pos);
+    grass->set_uniform_variable("lightPos", light_pos);
+    terrain->set_uniform_variable("lightPos", light_pos);
     
     glutMainLoop();
 }
@@ -137,9 +132,8 @@ void View::animate()
     
     GLWrapper::set_view(model->get_spider_position(), model->get_spider_view_direction());
     
-    grass->get_shader()->use();
-    grass->get_shader()->set_uniform_variable("spiderPosition", model->get_spider_position());
-    grass->get_shader()->set_uniform_variable("wind", animation);
+    grass->set_uniform_variable("spiderPosition", model->get_spider_position());
+    grass->set_uniform_variable("wind", animation);
     
     if(model->terrain_needs_update())
     {
