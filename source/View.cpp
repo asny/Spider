@@ -7,8 +7,13 @@
 //
 
 #include "View.h"
+#include "OBJLoader.hpp"
+#include "gtx/rotate_vector.hpp"
 
 #include <GLUT/glut.h>
+
+using namespace std;
+using namespace glm;
 
 void display_(){
     View::get_instance()->display();
@@ -92,6 +97,7 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     create_shaders_and_objects();
     
     cube->set_uniform_variable("lightPos", light_pos);
+    spider->set_uniform_variable("lightPos", light_pos);
     grass->set_uniform_variable("lightPos", light_pos);
     terrain->set_uniform_variable("lightPos", light_pos);
     
@@ -106,6 +112,7 @@ void View::display()
     GLWrapper::initialize_draw();
     
     GLWrapper::cull_backface();
+    spider->draw();
     terrain->draw();
     cube->draw();
     
@@ -128,11 +135,18 @@ void View::animate()
 {
     GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.002;
     glm::vec3 animation(0.5 * sin(timeValue) + 0.5, 0., 0.);
-    cube->set_model_matrix(glm::translate(glm::mat4(), animation));
+    cube->set_model_matrix(translate(mat4(), animation));
     
-    GLWrapper::set_view(model->get_spider_position(), model->get_spider_view_direction());
+    vec3 spider_position = model->get_spider_position();
+    vec3 spider_view_direction = model->get_spider_view_direction();
     
-    grass->set_uniform_variable("spiderPosition", model->get_spider_position());
+    mat4 spider_rotation = orientation(vec3(spider_view_direction.x, 0.f, spider_view_direction.z), vec3(0., 0., 1.));
+    mat4 spider_translation = translate(mat4(), spider_position + 0.15f*spider_view_direction + vec3(0.,-0.05,0.));
+    spider->set_model_matrix((spider_translation * spider_rotation));
+    
+    GLWrapper::set_view(spider_position, spider_view_direction);
+    
+    grass->set_uniform_variable("spiderPosition", spider_position);
     grass->set_uniform_variable("wind", animation);
     
     if(model->terrain_needs_update())
@@ -213,4 +227,21 @@ void View::create_shaders_and_objects()
     material = GLMaterial {{0.2f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
     grass = std::unique_ptr<GLObject>(new GLObject(grass_shader, material, GL_LINES));
     grass->initialize_vertex_attributes({"end_point"});
+    
+    // Spider
+    std::vector<glm::vec3> spider_vertices;
+    std::vector<glm::vec2> spider_uvs;
+    bool load_success = OBJLoader::load("models/spider/TRANTULA.OBJ", spider_vertices, spider_uvs);
+    if(load_success)
+    {
+        material = GLMaterial {{0.5f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
+        spider = std::unique_ptr<GLObject>(new GLObject(fastphong_shader, material));
+        
+        spider->initialize_vertex_attributes({"position"});
+        spider->set_vertex_attribute("position", spider_vertices);
+        spider->finalize_vertex_attributes();
+    }
 }
+
+
+

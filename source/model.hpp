@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vec3.hpp"
+#include "glm.hpp"
 
 #include "spider.hpp"
 #include "terrain.hpp"
@@ -42,7 +43,7 @@ public:
         double height1 = terrain.get_terrain_position_at(pos + 0.5f * view_dir).y;
         double height2 = terrain.get_terrain_position_at(pos + view_dir).y;
         double y_view_dir = 0.25 * ((height2 - height0) + (height1 - height0));
-        return glm::vec3(view_dir.x, y_view_dir, view_dir.z);
+        return glm::normalize(glm::vec3(view_dir.x, y_view_dir, view_dir.z));
     }
     
     bool terrain_needs_update();
