@@ -140,11 +140,13 @@ void View::animate()
     vec3 spider_position = model->get_spider_position();
     vec3 spider_view_direction = model->get_spider_view_direction();
     
+    mat4 spider_scale = scale(mat4(), vec3(10.f));
     mat4 spider_rotation = orientation(vec3(spider_view_direction.x, 0.f, spider_view_direction.z), vec3(0., 0., 1.));
-    mat4 spider_translation = translate(mat4(), spider_position + 0.15f*spider_view_direction + vec3(0.,-0.05,0.));
-    spider->set_model_matrix((spider_translation * spider_rotation));
+    mat4 spider_translation = translate(mat4(), spider_position);
+    spider->set_model_matrix((spider_translation * spider_rotation * spider_scale));
     
-    GLWrapper::set_view(spider_position, spider_view_direction);
+    vec3 camera_view = normalize(vec3(0., -0.5, 0.) + spider_view_direction);
+    GLWrapper::set_view(spider_position - 3.f * camera_view, camera_view);
     
     grass->set_uniform_variable("spiderPosition", spider_position);
     grass->set_uniform_variable("wind", animation);
