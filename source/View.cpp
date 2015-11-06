@@ -196,15 +196,15 @@ void View::keyboard(unsigned char key, int x, int y) {
         case 's':
             model->move_backwards();
             break;
-        case ' ':
-            if(!CONTINUOUS)
+        case 'v':
+            if(view_type == FIRST_PERSON)
             {
-                std::cout << "MOTION STARTED" << std::endl;
+                view_type = THIRD_PERSON;
             }
-            else {
-                std::cout << "MOTION PAUSED" << std::endl;
+            else if(view_type == THIRD_PERSON)
+            {
+                view_type = FIRST_PERSON;
             }
-            CONTINUOUS = !CONTINUOUS;
             break;
     }
 }

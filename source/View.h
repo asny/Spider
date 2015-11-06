@@ -26,8 +26,6 @@ class View
     int WIN_SIZE_X = 1280;
     int WIN_SIZE_Y = 720;
     
-    bool CONTINUOUS = false;
-    
     static View* instance;
     
 public:
