@@ -14,6 +14,7 @@
 
 using namespace std;
 using namespace glm;
+using namespace oogl;
 
 void display_(){
     View::get_instance()->display();

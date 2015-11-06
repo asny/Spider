@@ -9,6 +9,7 @@
 #include "GLWrapper.h"
 #include "gtc/matrix_inverse.hpp"
 
+using namespace oogl;
 using namespace std;
 using namespace glm;
 
