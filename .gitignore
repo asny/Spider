@@ -6,6 +6,7 @@
 *.tif
 *.dxf
 *.jpg
+*.png
 
 # Xcode user project files
 *.xcuserstate
