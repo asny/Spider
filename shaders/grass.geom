@@ -88,8 +88,14 @@ void main()
     // Bend straw for wind and spider
     vec3 w = (NMatrix * vec4(wind, 1.)).xyz;
     float wind_power = dot(straw, w);
-    float spider_power = 2.f * l * max(1.f - distance_to_spider, 0.f);
-    vec3 top = origin + l * normalize(straw + (spider_power + wind_power) * bend_direction);
+    float spider_power = 20.f * l * max(0.5f - distance_to_spider, 0.f);
+    vec3 away_direction = vec3(origin.x - spiderP.x, 0., origin.z - spiderP.z);
+    if (length(away_direction) < 0.0001)
+    {
+        away_direction = vec3(1.,0.,0.);
+    }
+    vec3 top = origin + l * normalize(straw + wind_power * bend_direction + spider_power * normalize(away_direction));
+    top.y = max(origin.y, top.y);
     
     // Compute corners
     vec3 bend_direction_xz = normalize(vec3(bend_direction.x, 0.f, bend_direction.z));
