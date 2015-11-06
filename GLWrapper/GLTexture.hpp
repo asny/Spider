@@ -9,28 +9,10 @@
 #pragma once
 
 #include <OpenGL/gl3.h>
+#include "Bitmap.h"
 
 namespace oogl
 {
-    class Bitmap
-    {
-    public:
-        const GLvoid* get_pixels() const
-        {
-            return 0;
-        }
-        
-        int get_width() const
-        {
-            return 0;
-        }
-        
-        int get_height() const
-        {
-            return 0;
-        }
-    };
-    
     /**
      Represents an OpenGL texture
      */
@@ -39,7 +21,7 @@ namespace oogl
         GLuint texture_id;
         GLfloat width;
         GLfloat height;
-        GLenum format = GL_RGB;
+        GLenum format = GL_RGB; // GL_RGB or GL_RGBA
         GLenum minMagFilter = GL_LINEAR; // GL_NEAREST or GL_LINEAR
         GLenum wrapMode = GL_CLAMP_TO_EDGE; // GL_REPEAT, GL_MIRRORED_REPEAT, GL_CLAMP_TO_EDGE, or GL_CLAMP_TO_BORDER
         
@@ -47,7 +29,7 @@ namespace oogl
         /**
          Creates a texture from a bitmap.
          */
-        GLTexture(const Bitmap& bitmap);
+        GLTexture(const tdogl::Bitmap& bitmap);
         
         /**
          Deletes the texture

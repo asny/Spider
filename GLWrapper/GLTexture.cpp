@@ -10,7 +10,7 @@
 
 using namespace oogl;
 
-GLTexture::GLTexture(const Bitmap& bitmap) : width((GLfloat)bitmap.get_width()), height((GLfloat)bitmap.get_height())
+GLTexture::GLTexture(const tdogl::Bitmap& bitmap) : width((GLfloat)bitmap.width()), height((GLfloat)bitmap.height())
 {
     glGenTextures(1, &texture_id);
     glBindTexture(GL_TEXTURE_2D, texture_id);
@@ -21,12 +21,12 @@ GLTexture::GLTexture(const Bitmap& bitmap) : width((GLfloat)bitmap.get_width()),
     glTexImage2D(GL_TEXTURE_2D,
                  0,
                  format,
-                 (GLsizei)bitmap.get_width(),
-                 (GLsizei)bitmap.get_height(),
+                 (GLsizei)bitmap.width(),
+                 (GLsizei)bitmap.height(),
                  0,
                  format,
                  GL_UNSIGNED_BYTE,
-                 bitmap.get_pixels());
+                 bitmap.pixelBuffer());
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
