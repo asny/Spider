@@ -13,6 +13,10 @@
 
 class View
 {
+    enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON };
+    
+    VIEW_TYPE view_type = FIRST_PERSON;
+    
     std::shared_ptr<Model> model;
     
     std::unique_ptr<oogl::GLObject> terrain, cube, grass, spider;

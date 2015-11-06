@@ -150,8 +150,15 @@ void View::animate()
     vec3 spider_view_direction = model->get_spider_view_direction();
     spider->set_model_matrix(compute_spider_model_matrix(spider_position, spider_view_direction));
     
-    vec3 camera_view = normalize(vec3(0., -0.5, 0.) + spider_view_direction);
-    GLWrapper::set_view(spider_position - 3.f * camera_view, camera_view);
+    if(view_type == FIRST_PERSON)
+    {
+        GLWrapper::set_view(spider_position - 0.5f * spider_view_direction + vec3(0.,0.4,0.), spider_view_direction);
+    }
+    else if(view_type == THIRD_PERSON)
+    {
+        vec3 camera_view = normalize(vec3(0., -0.5, 0.) + spider_view_direction);
+        GLWrapper::set_view(spider_position - 3.f * camera_view, camera_view);
+    }
     
     grass->set_uniform_variable("spiderPosition", spider_position);
     grass->set_uniform_variable("wind", animation);
