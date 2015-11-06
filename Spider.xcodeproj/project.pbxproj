@@ -18,6 +18,7 @@
 		7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2C31BC25326009D85FD /* terrain.cpp */; settings = {ASSET_TAGS = (); }; };
 		7AF9C41D1BEBEB6F008AE5F5 /* OBJLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9C41B1BEBEB6F008AE5F5 /* OBJLoader.cpp */; settings = {ASSET_TAGS = (); }; };
 		7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */; settings = {ASSET_TAGS = (); }; };
+		7AF9C42C1BED62F8008AE5F5 /* Bitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9C42A1BED62F8008AE5F5 /* Bitmap.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -64,6 +65,8 @@
 		7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLTexture.cpp; path = GLWrapper/GLTexture.cpp; sourceTree = SOURCE_ROOT; };
 		7AF9C41F1BED491F008AE5F5 /* GLTexture.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLTexture.hpp; path = GLWrapper/GLTexture.hpp; sourceTree = SOURCE_ROOT; };
 		7AF9C4281BED51FB008AE5F5 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		7AF9C42A1BED62F8008AE5F5 /* Bitmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bitmap.cpp; path = Loaders/Bitmap.cpp; sourceTree = "<group>"; };
+		7AF9C42B1BED62F8008AE5F5 /* Bitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bitmap.h; path = Loaders/Bitmap.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +170,8 @@
 		7AF9C41A1BEBEB12008AE5F5 /* Loaders */ = {
 			isa = PBXGroup;
 			children = (
+				7AF9C42A1BED62F8008AE5F5 /* Bitmap.cpp */,
+				7AF9C42B1BED62F8008AE5F5 /* Bitmap.h */,
 				7AF9C41B1BEBEB6F008AE5F5 /* OBJLoader.cpp */,
 				7AF9C41C1BEBEB6F008AE5F5 /* OBJLoader.hpp */,
 			);
@@ -235,6 +240,7 @@
 				7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */,
 				7A70D0F91BC68BAA003E859B /* GLWrapper.cpp in Sources */,
 				7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */,
+				7AF9C42C1BED62F8008AE5F5 /* Bitmap.cpp in Sources */,
 				7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */,
 				7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */,
 				7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */,
