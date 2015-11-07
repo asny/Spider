@@ -11,6 +11,7 @@
 		7A383A2E1BBFBB1700E29333 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2D1BBFBB1700E29333 /* OpenGL.framework */; };
 		7A383A301BBFBB3300E29333 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2F1BBFBB3300E29333 /* GLUT.framework */; };
 		7A383A331BBFCE5700E29333 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A311BBFCE5700E29333 /* View.cpp */; };
+		7A38959E1BEE447B00D6E095 /* GLShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A38959C1BEE447B00D6E095 /* GLShader.cpp */; settings = {ASSET_TAGS = (); }; };
 		7A70D0F91BC68BAA003E859B /* GLWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0F71BC68BAA003E859B /* GLWrapper.cpp */; settings = {ASSET_TAGS = (); }; };
 		7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */; settings = {ASSET_TAGS = (); }; };
 		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -44,6 +45,9 @@
 		7A383A321BBFCE5700E29333 /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = View.h; path = source/View.h; sourceTree = "<group>"; };
 		7A383A371BBFDC3300E29333 /* gouraud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gouraud.vert; path = shaders/gouraud.vert; sourceTree = "<group>"; };
 		7A383A391BBFDC9F00E29333 /* gouraud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gouraud.frag; path = shaders/gouraud.frag; sourceTree = "<group>"; };
+		7A38959C1BEE447B00D6E095 /* GLShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLShader.cpp; path = GLWrapper/GLShader.cpp; sourceTree = SOURCE_ROOT; };
+		7A38959D1BEE447B00D6E095 /* GLShader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLShader.hpp; path = GLWrapper/GLShader.hpp; sourceTree = SOURCE_ROOT; };
+		7A38959F1BEE45F200D6E095 /* GLUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLUtility.h; path = GLWrapper/GLUtility.h; sourceTree = SOURCE_ROOT; };
 		7A70D0F11BC5BF19003E859B /* fastphong.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fastphong.geom; path = shaders/fastphong.geom; sourceTree = "<group>"; };
 		7A70D0F21BC5BF19003E859B /* fastphong.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fastphong.vert; path = shaders/fastphong.vert; sourceTree = "<group>"; };
 		7A70D0F71BC68BAA003E859B /* GLWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLWrapper.cpp; path = GLWrapper/GLWrapper.cpp; sourceTree = SOURCE_ROOT; };
@@ -140,6 +144,9 @@
 				7A70D0F81BC68BAA003E859B /* GLWrapper.h */,
 				7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */,
 				7AF9C41F1BED491F008AE5F5 /* GLTexture.hpp */,
+				7A38959C1BEE447B00D6E095 /* GLShader.cpp */,
+				7A38959D1BEE447B00D6E095 /* GLShader.hpp */,
+				7A38959F1BEE45F200D6E095 /* GLUtility.h */,
 			);
 			name = GLWrapper;
 			path = ../GLWrapper;
@@ -234,6 +241,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A38959E1BEE447B00D6E095 /* GLShader.cpp in Sources */,
 				7AF9C41D1BEBEB6F008AE5F5 /* OBJLoader.cpp in Sources */,
 				7A383A331BBFCE5700E29333 /* View.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,

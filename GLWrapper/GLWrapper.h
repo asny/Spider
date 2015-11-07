@@ -8,17 +8,7 @@
 
 #pragma once
 
-#include <OpenGL/gl3.h>
-
-#include <memory>
-#include <iostream>
-#include <vector>
-#include <map>
-
-#include "vec3.hpp"
-#include "vec4.hpp"
-#include "mat4x4.hpp"
-#include "gtc/matrix_transform.hpp"
+#include "GLShader.hpp"
 
 namespace oogl {
     
@@ -27,36 +17,6 @@ namespace oogl {
         glm::vec4 ambient;
         glm::vec4 diffuse;
         glm::vec4 specular;
-    };
-    
-    /**
-     Represents a shader used to draw a GLObject.
-     */
-    class GLShader {
-        GLuint shader_id;
-        
-        GLuint get_uniform_location(std::string variable_name);
-        GLuint get_uniform_location_with_warning(std::string variable_name);
-        
-        void set_uniform_variable_if_defined(std::string name, const glm::mat4& value);
-        
-    public:
-        static glm::mat4 viewMatrix;
-        static glm::mat4 projectionMatrix;
-        
-        GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
-        
-        void use();
-        
-        GLuint get_attribute_location(std::string variable_name);
-        
-        void set_uniform_variable(std::string name, const glm::vec3& value);
-        
-        void set_uniform_variable(std::string name, const glm::vec4& value);
-        
-        void set_uniform_variable(std::string name, const glm::mat4& value);
-        
-        void update_draw_matrices(const glm::mat4& modelMatrix);
     };
     
     /**
