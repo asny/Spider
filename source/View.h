@@ -9,6 +9,7 @@
 #pragma once
 
 #include "GLWrapper.h"
+#include "GLObject.hpp"
 #include "model.hpp"
 
 class View

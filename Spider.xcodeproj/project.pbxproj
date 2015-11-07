@@ -12,6 +12,7 @@
 		7A383A301BBFBB3300E29333 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2F1BBFBB3300E29333 /* GLUT.framework */; };
 		7A383A331BBFCE5700E29333 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A311BBFCE5700E29333 /* View.cpp */; };
 		7A38959E1BEE447B00D6E095 /* GLShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A38959C1BEE447B00D6E095 /* GLShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		7A3895A21BEE471A00D6E095 /* GLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A01BEE471A00D6E095 /* GLObject.cpp */; settings = {ASSET_TAGS = (); }; };
 		7A70D0F91BC68BAA003E859B /* GLWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0F71BC68BAA003E859B /* GLWrapper.cpp */; settings = {ASSET_TAGS = (); }; };
 		7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */; settings = {ASSET_TAGS = (); }; };
 		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -48,6 +49,8 @@
 		7A38959C1BEE447B00D6E095 /* GLShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLShader.cpp; path = GLWrapper/GLShader.cpp; sourceTree = SOURCE_ROOT; };
 		7A38959D1BEE447B00D6E095 /* GLShader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLShader.hpp; path = GLWrapper/GLShader.hpp; sourceTree = SOURCE_ROOT; };
 		7A38959F1BEE45F200D6E095 /* GLUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLUtility.h; path = GLWrapper/GLUtility.h; sourceTree = SOURCE_ROOT; };
+		7A3895A01BEE471A00D6E095 /* GLObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLObject.cpp; path = GLWrapper/GLObject.cpp; sourceTree = SOURCE_ROOT; };
+		7A3895A11BEE471A00D6E095 /* GLObject.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLObject.hpp; path = GLWrapper/GLObject.hpp; sourceTree = SOURCE_ROOT; };
 		7A70D0F11BC5BF19003E859B /* fastphong.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fastphong.geom; path = shaders/fastphong.geom; sourceTree = "<group>"; };
 		7A70D0F21BC5BF19003E859B /* fastphong.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fastphong.vert; path = shaders/fastphong.vert; sourceTree = "<group>"; };
 		7A70D0F71BC68BAA003E859B /* GLWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLWrapper.cpp; path = GLWrapper/GLWrapper.cpp; sourceTree = SOURCE_ROOT; };
@@ -146,6 +149,8 @@
 				7AF9C41F1BED491F008AE5F5 /* GLTexture.hpp */,
 				7A38959C1BEE447B00D6E095 /* GLShader.cpp */,
 				7A38959D1BEE447B00D6E095 /* GLShader.hpp */,
+				7A3895A01BEE471A00D6E095 /* GLObject.cpp */,
+				7A3895A11BEE471A00D6E095 /* GLObject.hpp */,
 				7A38959F1BEE45F200D6E095 /* GLUtility.h */,
 			);
 			name = GLWrapper;
@@ -248,6 +253,7 @@
 				7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */,
 				7A70D0F91BC68BAA003E859B /* GLWrapper.cpp in Sources */,
 				7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */,
+				7A3895A21BEE471A00D6E095 /* GLObject.cpp in Sources */,
 				7AF9C42C1BED62F8008AE5F5 /* Bitmap.cpp in Sources */,
 				7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */,
 				7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */,
