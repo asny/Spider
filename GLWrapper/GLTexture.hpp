@@ -22,13 +22,14 @@ namespace oogl
         GLuint texture_id;
         GLfloat width;
         GLfloat height;
-        GLenum format = GL_RGB; // GL_RGB or GL_RGBA
         GLenum minMagFilter = GL_LINEAR; // GL_NEAREST or GL_LINEAR
         GLenum wrapMode = GL_CLAMP_TO_EDGE; // GL_REPEAT, GL_MIRRORED_REPEAT, GL_CLAMP_TO_EDGE, or GL_CLAMP_TO_BORDER
         
         const std::shared_ptr<GLShader> shader;
         
     public:
+        const std::vector<glm::vec2>& uv_coordinates;
+        
         /**
          Creates a texture from a bitmap.
          */

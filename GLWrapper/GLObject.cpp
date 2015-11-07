@@ -27,6 +27,12 @@ GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _materia
 
 void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_names, std::vector<int> attribute_sizes)
 {
+    if(texture)
+    {
+        attribute_names.push_back("uv_coordinates");
+        attribute_sizes.push_back(2);
+    }
+    
     int start_index = 0;
     int stride_index = 0;
     for (auto size : attribute_sizes) {
@@ -55,6 +61,11 @@ void GLObject::set_vertex_attribute(std::string attribute_name, const std::vecto
 
 void GLObject::finalize_vertex_attributes()
 {
+    if(texture)
+    {
+        set_vertex_attribute("uv_coordinates", texture->uv_coordinates);
+    }
+    
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     glBufferData(GL_ARRAY_BUFFER, data.size() * VertexAttribute::size_of_type(), &data[0], GL_STATIC_DRAW);
     
@@ -70,9 +81,11 @@ void GLObject::draw()
         {
             texture->use();
         }
-        shader->set_uniform_variable("ambientMat", material.ambient);
-        shader->set_uniform_variable("diffuseMat", material.diffuse);
-        shader->set_uniform_variable("specMat", material.specular);
+        else {
+            shader->set_uniform_variable("ambientMat", material.ambient);
+            shader->set_uniform_variable("diffuseMat", material.diffuse);
+            shader->set_uniform_variable("specMat", material.specular);
+        }
         shader->update_draw_matrices(modelMatrix);
         
         glBindVertexArray(array_id);
