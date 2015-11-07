@@ -98,7 +98,6 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     create_shaders_and_objects();
     
     cube->set_uniform_variable("lightPos", light_pos);
-    spider->set_uniform_variable("lightPos", light_pos);
     grass->set_uniform_variable("lightPos", light_pos);
     terrain->set_uniform_variable("lightPos", light_pos);
     
@@ -220,6 +219,7 @@ void View::visible(int v)
 void View::create_shaders_and_objects()
 {
     // Create shaders
+    auto texture_shader = std::shared_ptr<GLShader>(new GLShader("shaders/texture.vert",  "shaders/texture.frag"));
     auto phong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/phong.vert",  "shaders/phong.frag"));
     auto grass_shader = std::shared_ptr<GLShader>(new GLShader("shaders/grass.vert",  "shaders/phong.frag", "shaders/grass.geom"));
     auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
@@ -250,10 +250,10 @@ void View::create_shaders_and_objects()
     {
         tdogl::Bitmap bmp = tdogl::Bitmap::bitmapFromFile("models/spider/TRANTULA.PNG");
         bmp.flipVertically();
-        auto texture = std::shared_ptr<GLTexture>(new GLTexture(fastphong_shader, bmp, spider_uvs));
+        auto texture = std::shared_ptr<GLTexture>(new GLTexture(texture_shader, bmp, spider_uvs));
         
         material = GLMaterial {{0.5f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-        spider = std::unique_ptr<GLObject>(new GLObject(fastphong_shader, material, GL_TRIANGLES, texture));
+        spider = std::unique_ptr<GLObject>(new GLObject(texture_shader, material, GL_TRIANGLES, texture));
         
         spider->initialize_vertex_attributes({"position"}, {3});
         spider->set_vertex_attribute("position", spider_vertices);
