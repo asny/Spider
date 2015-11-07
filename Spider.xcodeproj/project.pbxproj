@@ -51,6 +51,8 @@
 		7A38959F1BEE45F200D6E095 /* GLUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLUtility.h; path = GLWrapper/GLUtility.h; sourceTree = SOURCE_ROOT; };
 		7A3895A01BEE471A00D6E095 /* GLObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLObject.cpp; path = GLWrapper/GLObject.cpp; sourceTree = SOURCE_ROOT; };
 		7A3895A11BEE471A00D6E095 /* GLObject.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLObject.hpp; path = GLWrapper/GLObject.hpp; sourceTree = SOURCE_ROOT; };
+		7A3895A31BEE659100D6E095 /* texture.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = texture.frag; path = shaders/texture.frag; sourceTree = "<group>"; };
+		7A3895A41BEE65DB00D6E095 /* texture.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = texture.vert; path = shaders/texture.vert; sourceTree = "<group>"; };
 		7A70D0F11BC5BF19003E859B /* fastphong.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fastphong.geom; path = shaders/fastphong.geom; sourceTree = "<group>"; };
 		7A70D0F21BC5BF19003E859B /* fastphong.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fastphong.vert; path = shaders/fastphong.vert; sourceTree = "<group>"; };
 		7A70D0F71BC68BAA003E859B /* GLWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLWrapper.cpp; path = GLWrapper/GLWrapper.cpp; sourceTree = SOURCE_ROOT; };
@@ -126,6 +128,8 @@
 		7A383A341BBFD93A00E29333 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				7A3895A41BEE65DB00D6E095 /* texture.vert */,
+				7A3895A31BEE659100D6E095 /* texture.frag */,
 				7A370D901BD964E2000783CA /* grass.geom */,
 				7A370D911BD964E2000783CA /* grass.vert */,
 				7A70D0F11BC5BF19003E859B /* fastphong.geom */,
