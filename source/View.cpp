@@ -228,19 +228,19 @@ void View::create_shaders_and_objects()
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
     cube = std::unique_ptr<GLObject>(new GLObject(fastphong_shader, material));
     
-    cube->initialize_vertex_attributes({"position"});
+    cube->initialize_vertex_attributes({"position"}, {3});
     cube->set_vertex_attribute("position", cube_data);
     cube->finalize_vertex_attributes();
     
     // terrain
     material = GLMaterial {{0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
     terrain = std::unique_ptr<GLObject>(new GLObject(phong_shader, material, GL_TRIANGLE_STRIP));
-    terrain->initialize_vertex_attributes({"position", "normal"});
+    terrain->initialize_vertex_attributes({"position", "normal"}, {3, 3});
     
     // Grass
     material = GLMaterial {{0.2f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
     grass = std::unique_ptr<GLObject>(new GLObject(grass_shader, material, GL_LINES));
-    grass->initialize_vertex_attributes({"end_point"});
+    grass->initialize_vertex_attributes({"end_point"}, {3});
     
     // Spider
     std::vector<glm::vec3> spider_vertices;
@@ -255,7 +255,7 @@ void View::create_shaders_and_objects()
         material = GLMaterial {{0.5f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
         spider = std::unique_ptr<GLObject>(new GLObject(fastphong_shader, material, GL_TRIANGLES, texture));
         
-        spider->initialize_vertex_attributes({"position"});
+        spider->initialize_vertex_attributes({"position"}, {3});
         spider->set_vertex_attribute("position", spider_vertices);
         spider->finalize_vertex_attributes();
     }

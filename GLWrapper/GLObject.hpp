@@ -30,15 +30,15 @@ namespace oogl {
             static const GLenum PRECISION = GL_FLOAT;
             
             int location;
-            int l;
+            int size;
             
             int start_index;
             int stride_index;
             
         public:
             
-            VertexAttribute(std::shared_ptr<GLShader> shader, std::string _name, int _start_index, int _stride_index, int _length)
-            : start_index(_start_index), stride_index(_stride_index), l(_length)
+            VertexAttribute(std::shared_ptr<GLShader> shader, std::string _name, int _start_index, int _stride_index, int _size)
+            : start_index(_start_index), stride_index(_stride_index), size(_size)
             {
                 location = shader->get_attribute_location(_name);
                 glEnableVertexAttribArray(location);
@@ -59,12 +59,7 @@ namespace oogl {
             
             void use()
             {
-                glVertexAttribPointer(location, l, PRECISION, GL_FALSE, stride_index * size_of_type(), (const GLvoid *)(start_index * size_of_type()));
-            }
-            
-            int length()
-            {
-                return l;
+                glVertexAttribPointer(location, size, PRECISION, GL_FALSE, stride_index * size_of_type(), (const GLvoid *)(start_index * size_of_type()));
             }
             
             static int size_of_type()
@@ -103,7 +98,7 @@ namespace oogl {
         
         GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES, std::shared_ptr<GLTexture> _texture = nullptr);
         
-        void initialize_vertex_attributes(std::vector<std::string> attribute_names);
+        void initialize_vertex_attributes(std::vector<std::string> attribute_names, std::vector<int> attribute_sizes);
         
         void set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data);
         

@@ -25,15 +25,19 @@ GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _materia
     check_gl_error();
 }
 
-void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_names)
+void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_names, std::vector<int> attribute_sizes)
 {
     int start_index = 0;
-    int stride_index = static_cast<int>(attribute_names.size()) * 3;
-    for (std::string attribute_name : attribute_names)
+    int stride_index = 0;
+    for (auto size : attribute_sizes) {
+        stride_index += size;
+    }
+    
+    for (int i = 0; i < attribute_names.size(); i++)
     {
-        auto attribute = VertexAttribute(shader, attribute_name, start_index, stride_index, 3);
-        attributes.insert( {attribute_name, attribute} );
-        start_index += attribute.length();
+        auto attribute = VertexAttribute(shader, attribute_names[i], start_index, stride_index, attribute_sizes[i]);
+        attributes.insert( {attribute_names[i], attribute} );
+        start_index += attribute_sizes[i];
     }
 }
 
