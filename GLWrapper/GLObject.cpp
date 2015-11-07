@@ -41,6 +41,12 @@ void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_n
     }
 }
 
+void GLObject::set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec2>& _data)
+{
+    no_vertices = static_cast<int>(_data.size());
+    attributes.at(attribute_name).set_data(_data, data);
+}
+
 void GLObject::set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data)
 {
     no_vertices = static_cast<int>(_data.size());

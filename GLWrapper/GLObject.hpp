@@ -44,6 +44,18 @@ namespace oogl {
                 glEnableVertexAttribArray(location);
             }
             
+            void set_data(std::vector<glm::vec2> _data, std::vector<float>& data)
+            {
+                data.resize(stride_index * static_cast<int>(_data.size())); // Make sure that data has the correct size.
+                
+                for (int i = 0; i < _data.size(); i++)
+                {
+                    glm::vec2 vec = _data[i];
+                    data[start_index + i*stride_index] = vec.x;
+                    data[start_index + i*stride_index + 1] = vec.y;
+                }
+            }
+            
             void set_data(std::vector<glm::vec3> _data, std::vector<float>& data)
             {
                 data.resize(stride_index * static_cast<int>(_data.size())); // Make sure that data has the correct size.
@@ -100,6 +112,7 @@ namespace oogl {
         
         void initialize_vertex_attributes(std::vector<std::string> attribute_names, std::vector<int> attribute_sizes);
         
+        void set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec2>& _data);
         void set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data);
         
         void finalize_vertex_attributes();
