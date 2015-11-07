@@ -10,7 +10,6 @@
 
 #include <OpenGL/gl3.h>
 
-#include <memory>
 #include <iostream>
 #include <vector>
 #include <map>

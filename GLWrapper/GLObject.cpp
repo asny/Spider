@@ -12,8 +12,8 @@ using namespace oogl;
 using namespace std;
 using namespace glm;
 
-GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode)
-: shader(_shader), material(_material), drawmode(_drawmode)
+GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode, std::shared_ptr<GLTexture> _texture)
+: shader(_shader), material(_material), texture(_texture), drawmode(_drawmode)
 {
     // Generate arrays and buffers
     glGenVertexArrays(1, &array_id);
@@ -66,6 +66,10 @@ void GLObject::draw()
     if(no_vertices != 0)
     {
         shader->use();
+        if(texture)
+        {
+            texture->use();
+        }
         shader->set_uniform_variable("ambientMat", material.ambient);
         shader->set_uniform_variable("diffuseMat", material.diffuse);
         shader->set_uniform_variable("specMat", material.specular);

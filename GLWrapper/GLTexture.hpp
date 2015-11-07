@@ -9,6 +9,7 @@
 #pragma once
 
 #include "GLUtility.h"
+#include "GLShader.hpp"
 #include "Bitmap.h"
 
 namespace oogl
@@ -25,31 +26,23 @@ namespace oogl
         GLenum minMagFilter = GL_LINEAR; // GL_NEAREST or GL_LINEAR
         GLenum wrapMode = GL_CLAMP_TO_EDGE; // GL_REPEAT, GL_MIRRORED_REPEAT, GL_CLAMP_TO_EDGE, or GL_CLAMP_TO_BORDER
         
+        const std::shared_ptr<GLShader> shader;
+        
     public:
         /**
          Creates a texture from a bitmap.
          */
-        GLTexture(const tdogl::Bitmap& bitmap);
+        GLTexture(const std::shared_ptr<GLShader> _shader, const tdogl::Bitmap& bitmap, const std::vector<glm::vec2>& uv_coordinates);
         
         /**
-         Deletes the texture
+         Bind the texture and set the "tex" uniform in the fragment shader
+         */
+        void use();
+        
+        /**
+         Deletes the texture.
          */
         ~GLTexture();
-        
-        /**
-         Returns the texture id.
-         */
-        GLuint get_id() const;
-        
-        /**
-         Returns the width
-         */
-        GLfloat get_width() const;
-        
-        /**
-         Returns the height
-         */
-        GLfloat get_height() const;
     };
 
 }

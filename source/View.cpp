@@ -9,7 +9,6 @@
 #include "View.h"
 #include "OBJLoader.hpp"
 #include "gtx/rotate_vector.hpp"
-#include "GLTexture.hpp"
 
 #include <GLUT/glut.h>
 
@@ -249,17 +248,17 @@ void View::create_shaders_and_objects()
     bool load_success = OBJLoader::load("models/spider/TRANTULA.OBJ", spider_vertices, spider_uvs);
     if(load_success)
     {
+        tdogl::Bitmap bmp = tdogl::Bitmap::bitmapFromFile("models/spider/TRANTULA.PNG");
+        bmp.flipVertically();
+        auto texture = std::shared_ptr<GLTexture>(new GLTexture(fastphong_shader, bmp, spider_uvs));
+        
         material = GLMaterial {{0.5f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-        spider = std::unique_ptr<GLObject>(new GLObject(fastphong_shader, material));
+        spider = std::unique_ptr<GLObject>(new GLObject(fastphong_shader, material, GL_TRIANGLES, texture));
         
         spider->initialize_vertex_attributes({"position"});
         spider->set_vertex_attribute("position", spider_vertices);
         spider->finalize_vertex_attributes();
     }
-    
-    tdogl::Bitmap bmp = tdogl::Bitmap::bitmapFromFile("models/spider/TRANTULA.PNG");
-    bmp.flipVertically();
-    auto gTexture = new GLTexture(bmp);
 }
 
 

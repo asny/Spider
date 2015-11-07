@@ -10,7 +10,7 @@
 
 using namespace oogl;
 
-GLTexture::GLTexture(const tdogl::Bitmap& bitmap) : width((GLfloat)bitmap.width()), height((GLfloat)bitmap.height())
+GLTexture::GLTexture(const std::shared_ptr<GLShader> _shader, const tdogl::Bitmap& bitmap, const std::vector<glm::vec2>& uv_coordinates) : shader(_shader)
 {
     glGenTextures(1, &texture_id);
     glBindTexture(GL_TEXTURE_2D, texture_id);
@@ -30,22 +30,14 @@ GLTexture::GLTexture(const tdogl::Bitmap& bitmap) : width((GLfloat)bitmap.width(
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void GLTexture::use()
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture_id);
+    shader->set_uniform_variable("tex", 0); //set to 0 because the texture is bound to GL_TEXTURE0
+}
+
 GLTexture::~GLTexture()
 {
     glDeleteTextures(1, &texture_id);
-}
-
-GLuint GLTexture::get_id() const
-{
-    return texture_id;
-}
-
-GLfloat GLTexture::get_width() const
-{
-    return width;
-}
-
-GLfloat GLTexture::get_height() const
-{
-    return height;
 }

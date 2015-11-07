@@ -10,6 +10,7 @@
 
 #include "GLUtility.h"
 #include "GLShader.hpp"
+#include "GLTexture.hpp"
 
 namespace oogl {
     struct GLMaterial
@@ -92,13 +93,15 @@ namespace oogl {
         
         GLMaterial material;
         
+        std::shared_ptr<GLTexture> texture;
+        
         GLenum drawmode;
         
         int no_vertices = 0;
         
     public:
         
-        GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES);
+        GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES, std::shared_ptr<GLTexture> _texture = nullptr);
         
         void initialize_vertex_attributes(std::vector<std::string> attribute_names);
         
