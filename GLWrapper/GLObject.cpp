@@ -27,30 +27,20 @@ GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _materia
 
 void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_names)
 {
+    int start_index = 0;
+    int stride_index = static_cast<int>(attribute_names.size()) * 3;
     for (std::string attribute_name : attribute_names)
     {
-        auto attribute = VertexAttribute(shader, attribute_name, 3);
+        auto attribute = VertexAttribute(shader, attribute_name, start_index, stride_index, 3);
         attributes.insert( {attribute_name, attribute} );
+        start_index += attribute.length();
     }
 }
 
 void GLObject::set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
-    
-    int start_index = 0;
-    int stride_index = 0;
-    for (auto attribute : attributes)
-    {
-        if(attribute.first == attribute_name)
-        {
-            start_index = stride_index;
-        }
-        stride_index += attribute.second.length();
-    }
-    data.resize(stride_index * no_vertices);
-    
-    attributes.at(attribute_name).set_data(start_index, stride_index, _data, data);
+    attributes.at(attribute_name).set_data(_data, data);
 }
 
 void GLObject::finalize_vertex_attributes()

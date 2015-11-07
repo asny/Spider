@@ -30,23 +30,23 @@ namespace oogl {
             static const GLenum PRECISION = GL_FLOAT;
             
             int location;
-            int start;
-            int stride;
             int l;
+            
+            int start_index;
+            int stride_index;
             
         public:
             
-            VertexAttribute(std::shared_ptr<GLShader> shader, std::string _name, int _length)
-            : l(_length)
+            VertexAttribute(std::shared_ptr<GLShader> shader, std::string _name, int _start_index, int _stride_index, int _length)
+            : start_index(_start_index), stride_index(_stride_index), l(_length)
             {
                 location = shader->get_attribute_location(_name);
                 glEnableVertexAttribArray(location);
             }
             
-            void set_data(int start_index, int stride_index, std::vector<glm::vec3> _data, std::vector<float>& data)
+            void set_data(std::vector<glm::vec3> _data, std::vector<float>& data)
             {
-                start = start_index * size_of_type();
-                stride = stride_index * size_of_type();
+                data.resize(stride_index * static_cast<int>(_data.size())); // Make sure that data has the correct size.
                 
                 for (int i = 0; i < _data.size(); i++)
                 {
@@ -59,7 +59,7 @@ namespace oogl {
             
             void use()
             {
-                glVertexAttribPointer(location, l, PRECISION, GL_FALSE, stride, (const GLvoid *)start);
+                glVertexAttribPointer(location, l, PRECISION, GL_FALSE, stride_index * size_of_type(), (const GLvoid *)(start_index * size_of_type()));
             }
             
             int length()
