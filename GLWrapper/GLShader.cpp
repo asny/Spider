@@ -9,44 +9,20 @@
 #include <vector>
 
 #include "GLShader.hpp"
+#include "Reader.hpp"
 
 using namespace oogl;
 using namespace std;
 using namespace glm;
 
-// Create a NULL-terminated string by reading the provided file
-char* readShaderSource(const char* shaderFile)
-{
-    FILE *filePointer;
-    char *content = NULL;
-    
-    int count=0;
-    
-    if (shaderFile != NULL) {
-        filePointer = fopen(shaderFile,"rt");
-        
-        if (filePointer != NULL) {
-            
-            fseek(filePointer, 0, SEEK_END);
-            count = static_cast<int>(ftell(filePointer));
-            rewind(filePointer);
-            
-            if (count > 0) {
-                content = (char *)malloc(sizeof(char) * (count+1));
-                count = static_cast<int>(fread(content,sizeof(char),count,filePointer));
-                content[count] = '\0';
-            }
-            fclose(filePointer);
-        }
-    }
-    return content;
-}
+mat4 GLShader::viewMatrix = mat4(1.);
+mat4 GLShader::projectionMatrix = mat4(1.);
 
 // Create a GLSL program object from vertex and fragment shader files
 GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName, const char* gShaderFile)
 {
     struct Shader {
-        const char*  filename;
+        string  filename;
         GLenum       type;
         GLchar*      source;
     };
@@ -60,7 +36,7 @@ GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char*
     
     for ( int i = 0; i < shaders.size(); ++i ) {
         Shader& s = shaders[i];
-        s.source = readShaderSource( s.filename );
+        s.source = Reader::read_shader_source( s.filename );
         if ( shaders[i].source == NULL ) {
             std::cerr << "Failed to read " << s.filename << std::endl;
             exit( EXIT_FAILURE );
@@ -110,9 +86,6 @@ GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char*
     
     return program;
 }
-
-mat4 GLShader::viewMatrix = mat4(1.);
-mat4 GLShader::projectionMatrix = mat4(1.);
 
 GLShader::GLShader(string vertexShaderFilename, string fragmentShaderFilename, string geometryShaderFilename)
 {
