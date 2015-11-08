@@ -27,8 +27,6 @@ namespace oogl {
         
         class VertexAttribute
         {
-            static const GLenum PRECISION = GL_FLOAT;
-            
             int location;
             int size;
             
@@ -71,20 +69,7 @@ namespace oogl {
             
             void use()
             {
-                glVertexAttribPointer(location, size, PRECISION, GL_FALSE, stride_index * size_of_type(), (const GLvoid *)(start_index * size_of_type()));
-            }
-            
-            static int size_of_type()
-            {
-                if(PRECISION == GL_FLOAT)
-                {
-                    return sizeof(float);
-                }
-                if(PRECISION == GL_DOUBLE)
-                {
-                    return sizeof(double);
-                }
-                assert(false);
+                glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, stride_index * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
             }
         };
         
