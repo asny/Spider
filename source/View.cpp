@@ -38,51 +38,6 @@ void animate_(){
 
 View* View::instance = NULL;
 
-static const std::vector<glm::vec3> cube_data = {
-    // front
-    vec3(-1.0, -1.0,  1.0),
-    vec3(1.0, -1.0,  1.0),
-    vec3(1.0,  1.0,  1.0),
-    vec3(1.0,  1.0,  1.0),
-    vec3(-1.0,  1.0,  1.0),
-    vec3(-1.0, -1.0,  1.0),
-    // top
-    vec3(-1.0,  1.0,  1.0),
-    vec3(1.0,  1.0,  1.0),
-    vec3(1.0,  1.0, -1.0),
-    vec3(1.0,  1.0, -1.0),
-    vec3(-1.0,  1.0, -1.0),
-    vec3(-1.0,  1.0,  1.0),
-    // back
-    vec3(1.0, -1.0, -1.0),
-    vec3(-1.0, -1.0, -1.0),
-    vec3(-1.0,  1.0, -1.0),
-    vec3(-1.0,  1.0, -1.0),
-    vec3(1.0,  1.0, -1.0),
-    vec3(1.0, -1.0, -1.0),
-    // bottom
-    vec3(-1.0, -1.0, -1.0),
-    vec3(1.0, -1.0, -1.0),
-    vec3(1.0, -1.0,  1.0),
-    vec3(1.0, -1.0,  1.0),
-    vec3(-1.0, -1.0,  1.0),
-    vec3(-1.0, -1.0, -1.0),
-    // left
-    vec3(-1.0, -1.0, -1.0),
-    vec3(-1.0, -1.0,  1.0),
-    vec3(-1.0,  1.0,  1.0),
-    vec3(-1.0,  1.0,  1.0),
-    vec3(-1.0,  1.0, -1.0),
-    vec3(-1.0, -1.0, -1.0),
-    // right
-    vec3(1.0, -1.0,  1.0),
-    vec3(1.0, -1.0, -1.0),
-    vec3(1.0,  1.0, -1.0),
-    vec3(1.0,  1.0, -1.0),
-    vec3(1.0,  1.0,  1.0),
-    vec3(1.0, -1.0,  1.0)
-};
-
 View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
 {
     instance = this;
@@ -229,11 +184,98 @@ void View::create_shaders_and_objects()
     auto grass_shader = std::shared_ptr<GLShader>(new GLShader("shaders/grass.vert",  "shaders/phong.frag", "shaders/grass.geom"));
     auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
     
-    // cube
+    // Create objects
+    create_cube(texture_shader);
+    create_spider(texture_shader);
+    create_terrain(phong_shader);
+    create_grass(grass_shader);
+}
+
+void View::create_grass(shared_ptr<GLShader> shader)
+{
+    auto material = GLMaterial {{0.2f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
+    grass = std::unique_ptr<GLObject>(new GLObject(shader, material, GL_LINES));
+    grass->initialize_vertex_attributes({"end_point"}, {3});
+}
+
+void View::create_terrain(shared_ptr<GLShader> shader)
+{
+    auto material = GLMaterial {{0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
+    terrain = std::unique_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLE_STRIP));
+    terrain->initialize_vertex_attributes({"position", "normal"}, {3, 3});
+}
+
+void View::create_spider(shared_ptr<GLShader> shader)
+{
+    std::vector<glm::vec3> spider_vertices;
+    std::vector<glm::vec2> spider_uvs;
+    bool load_success = OBJLoader::load("models/spider/TRANTULA.OBJ", spider_vertices, spider_uvs);
+    if(load_success)
+    {
+        tdogl::Bitmap bmp = tdogl::Bitmap::bitmapFromFile("models/spider/TRANTULA.PNG");
+        bmp.flipVertically();
+        auto texture = std::shared_ptr<GLTexture>(new GLTexture(shader, bmp, spider_uvs));
+        
+        auto material = GLMaterial {{0.5f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
+        spider = std::unique_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, texture));
+        
+        spider->initialize_vertex_attributes({"position"}, {3});
+        spider->set_vertex_attribute("position", spider_vertices);
+        spider->finalize_vertex_attributes();
+    }
+}
+
+void View::create_cube(shared_ptr<GLShader> shader)
+{
+    static const vector<vec3> cube_data = {
+        // front
+        vec3(-1.0, -1.0,  1.0),
+        vec3(1.0, -1.0,  1.0),
+        vec3(1.0,  1.0,  1.0),
+        vec3(1.0,  1.0,  1.0),
+        vec3(-1.0,  1.0,  1.0),
+        vec3(-1.0, -1.0,  1.0),
+        // top
+        vec3(-1.0,  1.0,  1.0),
+        vec3(1.0,  1.0,  1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(-1.0,  1.0, -1.0),
+        vec3(-1.0,  1.0,  1.0),
+        // back
+        vec3(1.0, -1.0, -1.0),
+        vec3(-1.0, -1.0, -1.0),
+        vec3(-1.0,  1.0, -1.0),
+        vec3(-1.0,  1.0, -1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(1.0, -1.0, -1.0),
+        // bottom
+        vec3(-1.0, -1.0, -1.0),
+        vec3(1.0, -1.0, -1.0),
+        vec3(1.0, -1.0,  1.0),
+        vec3(1.0, -1.0,  1.0),
+        vec3(-1.0, -1.0,  1.0),
+        vec3(-1.0, -1.0, -1.0),
+        // left
+        vec3(-1.0, -1.0, -1.0),
+        vec3(-1.0, -1.0,  1.0),
+        vec3(-1.0,  1.0,  1.0),
+        vec3(-1.0,  1.0,  1.0),
+        vec3(-1.0,  1.0, -1.0),
+        vec3(-1.0, -1.0, -1.0),
+        // right
+        vec3(1.0, -1.0,  1.0),
+        vec3(1.0, -1.0, -1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(1.0,  1.0,  1.0),
+        vec3(1.0, -1.0,  1.0)
+    };
+    
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
     tdogl::Bitmap cubeTextureBmp = tdogl::Bitmap::bitmapFromFile("models/test_texture.jpg");
     cubeTextureBmp.flipVertically();
-    std::vector<vec2> cube_uvs;
+    vector<vec2> cube_uvs;
     for (int i = 0; i < 6; i++){
         cube_uvs.push_back(vec2(0.));
         cube_uvs.push_back(vec2(1., 0.));
@@ -242,41 +284,11 @@ void View::create_shaders_and_objects()
         cube_uvs.push_back(vec2(0., 1.));
         cube_uvs.push_back(vec2(0.));
     }
-    auto cubeTexture = std::shared_ptr<GLTexture>(new GLTexture(texture_shader, cubeTextureBmp, cube_uvs));
-    cube = std::unique_ptr<GLObject>(new GLObject(texture_shader, material, GL_TRIANGLES, cubeTexture));
+    auto cubeTexture = shared_ptr<GLTexture>(new GLTexture(shader, cubeTextureBmp, cube_uvs));
+    cube = unique_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, cubeTexture));
     
     cube->initialize_vertex_attributes({"position"}, {3});
     cube->set_vertex_attribute("position", cube_data);
     cube->finalize_vertex_attributes();
-    
-    // terrain
-    material = GLMaterial {{0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-    terrain = std::unique_ptr<GLObject>(new GLObject(phong_shader, material, GL_TRIANGLE_STRIP));
-    terrain->initialize_vertex_attributes({"position", "normal"}, {3, 3});
-    
-    // Grass
-    material = GLMaterial {{0.2f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-    grass = std::unique_ptr<GLObject>(new GLObject(grass_shader, material, GL_LINES));
-    grass->initialize_vertex_attributes({"end_point"}, {3});
-    
-    // Spider
-    std::vector<glm::vec3> spider_vertices;
-    std::vector<glm::vec2> spider_uvs;
-    bool load_success = OBJLoader::load("models/spider/TRANTULA.OBJ", spider_vertices, spider_uvs);
-    if(load_success)
-    {
-        tdogl::Bitmap bmp = tdogl::Bitmap::bitmapFromFile("models/spider/TRANTULA.PNG");
-        bmp.flipVertically();
-        auto texture = std::shared_ptr<GLTexture>(new GLTexture(texture_shader, bmp, spider_uvs));
-        
-        material = GLMaterial {{0.5f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-        spider = std::unique_ptr<GLObject>(new GLObject(texture_shader, material, GL_TRIANGLES, texture));
-        
-        spider->initialize_vertex_attributes({"position"}, {3});
-        spider->set_vertex_attribute("position", spider_vertices);
-        spider->finalize_vertex_attributes();
-    }
 }
-
-
 

@@ -29,6 +29,11 @@ class View
     
     static View* instance;
     
+    void create_cube(std::shared_ptr<oogl::GLShader> shader);
+    void create_spider(std::shared_ptr<oogl::GLShader> shader);
+    void create_grass(std::shared_ptr<oogl::GLShader> shader);
+    void create_terrain(std::shared_ptr<oogl::GLShader> shader);
+    
 public:
     
     View(std::shared_ptr<Model> _model, int &argc, char** argv);
