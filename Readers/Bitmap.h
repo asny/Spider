@@ -53,11 +53,6 @@ namespace tdogl {
                Format format,
                const unsigned char* pixels = NULL);
         ~Bitmap();
-        
-        /**
-         Tries to load the given file into a tdogl::Bitmap.
-         */
-        static Bitmap bitmapFromFile(std::string filePath);
                 
         /** width in pixels */
         unsigned width() const;

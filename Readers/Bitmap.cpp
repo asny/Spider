@@ -20,11 +20,6 @@
 #include <stdexcept>
 #include <cstdlib>
 
-//uses stb_image to try load files
-#define STBI_FAILURE_USERMSG
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 using namespace tdogl;
 
 
@@ -188,16 +183,6 @@ Bitmap::Bitmap(unsigned width,
 
 Bitmap::~Bitmap() {
     if(_pixels) free(_pixels);
-}
-
-Bitmap Bitmap::bitmapFromFile(std::string filePath) {    
-    int width, height, channels;
-    unsigned char* pixels = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
-    if(!pixels) throw std::runtime_error(stbi_failure_reason());
-    
-    Bitmap bmp(width, height, (Format)channels, pixels);
-    stbi_image_free(pixels);
-    return bmp;
 }
 
 Bitmap::Bitmap(const Bitmap& other) :

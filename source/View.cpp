@@ -7,7 +7,7 @@
 //
 
 #include "View.h"
-#include "OBJLoader.hpp"
+#include "Reader.hpp"
 #include "gtx/rotate_vector.hpp"
 
 #include <GLUT/glut.h>
@@ -205,10 +205,10 @@ void View::create_spider(shared_ptr<GLShader> shader)
 {
     std::vector<glm::vec3> spider_vertices;
     std::vector<glm::vec2> spider_uvs;
-    bool load_success = OBJLoader::load("models/spider/TRANTULA.OBJ", spider_vertices, spider_uvs);
+    bool load_success = Reader::load_obj("models/spider/TRANTULA.OBJ", spider_vertices, spider_uvs);
     if(load_success)
     {
-        tdogl::Bitmap bmp = tdogl::Bitmap::bitmapFromFile("models/spider/TRANTULA.PNG");
+        auto bmp = Reader::load_bitmap("models/spider/TRANTULA.PNG");
         bmp.flipVertically();
         auto texture = std::shared_ptr<GLTexture>(new GLTexture(shader, bmp, spider_uvs));
         
@@ -269,7 +269,7 @@ void View::create_cube(shared_ptr<GLShader> shader)
     };
     
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
-    tdogl::Bitmap cubeTextureBmp = tdogl::Bitmap::bitmapFromFile("models/test_texture.jpg");
+    auto cubeTextureBmp = Reader::load_bitmap("models/test_texture.jpg");
     cubeTextureBmp.flipVertically();
     vector<vec2> cube_uvs;
     for (int i = 0; i < 6; i++){
