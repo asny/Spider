@@ -34,32 +34,28 @@ void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_n
     }
     
     int start_index = 0;
-    int stride_index = 0;
-    for (auto size : attribute_sizes) {
-        stride_index += size;
-    }
-    
     for (int i = 0; i < attribute_names.size(); i++)
     {
         GLuint location = shader->get_attribute_location(attribute_names[i]);
         glEnableVertexAttribArray(location);
-        auto attribute = VertexAttribute{location, attribute_sizes[i], start_index, stride_index};
+        auto attribute = VertexAttribute{location, attribute_sizes[i], start_index};
         attributes.insert( {attribute_names[i], attribute} );
         start_index += attribute_sizes[i];
     }
+    stride = start_index;
 }
 
 void GLObject::set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec2>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
     auto attribute = attributes.at(attribute_name);
-    data.resize(attribute.stride_index * static_cast<int>(_data.size())); // Make sure that data has the correct size.
+    data.resize(stride * static_cast<int>(_data.size())); // Make sure that data has the correct size.
     
     for (int i = 0; i < _data.size(); i++)
     {
         glm::vec2 vec = _data[i];
-        data[attribute.start_index + i*attribute.stride_index] = vec.x;
-        data[attribute.start_index + i*attribute.stride_index + 1] = vec.y;
+        data[attribute.start_index + i*stride] = vec.x;
+        data[attribute.start_index + i*stride + 1] = vec.y;
     }
 }
 
@@ -67,14 +63,14 @@ void GLObject::set_vertex_attribute(std::string attribute_name, const std::vecto
 {
     no_vertices = static_cast<int>(_data.size());
     auto attribute = attributes.at(attribute_name);
-    data.resize(attribute.stride_index * static_cast<int>(_data.size())); // Make sure that data has the correct size.
+    data.resize(stride * static_cast<int>(_data.size())); // Make sure that data has the correct size.
     
     for (int i = 0; i < _data.size(); i++)
     {
         glm::vec3 vec = _data[i];
-        data[attribute.start_index + i*attribute.stride_index] = vec.x;
-        data[attribute.start_index + i*attribute.stride_index + 1] = vec.y;
-        data[attribute.start_index + i*attribute.stride_index + 2] = vec.z;
+        data[attribute.start_index + i*stride] = vec.x;
+        data[attribute.start_index + i*stride + 1] = vec.y;
+        data[attribute.start_index + i*stride + 2] = vec.z;
     }
 }
 
@@ -88,6 +84,7 @@ void GLObject::finalize_vertex_attributes()
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
     
+    data.clear();
     check_gl_error();
 }
 
@@ -113,7 +110,7 @@ void GLObject::draw()
         for (auto attribute_name_value_pair : attributes)
         {
             auto attribute = attribute_name_value_pair.second;
-            glVertexAttribPointer(attribute.location, attribute.size, GL_FLOAT, GL_FALSE, attribute.stride_index * sizeof(float), (const GLvoid *)(attribute.start_index * sizeof(float)));
+            glVertexAttribPointer(attribute.location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(attribute.start_index * sizeof(float)));
         }
         
         glDrawArrays(drawmode, 0, no_vertices);

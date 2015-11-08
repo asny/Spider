@@ -31,26 +31,23 @@ namespace oogl {
             int size;
             
             int start_index;
-            int stride_index;
         };
         
         std::shared_ptr<GLShader> shader;
+        std::shared_ptr<GLTexture> texture;
+        GLMaterial material;
         
         glm::mat4 modelMatrix = glm::mat4(1.);
         
+        // Vertex attribute data
+        int stride;
+        std::map<std::string, VertexAttribute> attributes = std::map<std::string, VertexAttribute>();
         std::vector<float> data;
         
+        // Needed for drawing
+        GLuint no_vertices = 0;
         GLuint buffer_id, array_id;
-        
-        std::map<std::string, VertexAttribute> attributes = std::map<std::string, VertexAttribute>();
-        
-        GLMaterial material;
-        
-        std::shared_ptr<GLTexture> texture;
-        
         GLenum drawmode;
-        
-        int no_vertices = 0;
         
     public:
         
