@@ -38,7 +38,7 @@ void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_n
     {
         GLuint location = shader->get_attribute_location(attribute_names[i]);
         glEnableVertexAttribArray(location);
-        auto attribute = VertexAttribute{location, attribute_sizes[i], start_index};
+        auto attribute = VertexAttribute{attribute_sizes[i], start_index};
         attributes.insert( {attribute_names[i], attribute} );
         start_index += attribute_sizes[i];
     }
@@ -110,7 +110,8 @@ void GLObject::draw()
         for (auto attribute_name_value_pair : attributes)
         {
             auto attribute = attribute_name_value_pair.second;
-            glVertexAttribPointer(attribute.location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(attribute.start_index * sizeof(float)));
+            GLuint location = shader->get_attribute_location(attribute_name_value_pair.first);
+            glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(attribute.start_index * sizeof(float)));
         }
         
         glDrawArrays(drawmode, 0, no_vertices);

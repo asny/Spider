@@ -27,9 +27,7 @@ namespace oogl {
         
         struct VertexAttribute
         {
-            GLuint location;
             int size;
-            
             int start_index;
         };
         
