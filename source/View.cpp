@@ -56,7 +56,18 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     glutIdleFunc(animate_);
     
     GLWrapper::initialize();
-    create_shaders_and_objects();
+    
+    // Create shaders
+    auto texture_shader = std::shared_ptr<GLShader>(new GLShader("shaders/texture.vert",  "shaders/texture.frag"));
+    auto phong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/phong.vert",  "shaders/phong.frag"));
+    auto grass_shader = std::shared_ptr<GLShader>(new GLShader("shaders/grass.vert",  "shaders/phong.frag", "shaders/grass.geom"));
+    auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
+    
+    // Create objects
+    create_cube(texture_shader);
+    create_spider(texture_shader);
+    create_terrain(phong_shader);
+    create_grass(grass_shader);
     
     grass->set_uniform_variable("lightPos", light_pos);
     terrain->set_uniform_variable("lightPos", light_pos);
@@ -174,21 +185,6 @@ void View::visible(int v)
         glutIdleFunc(animate_);
     else
         glutIdleFunc(0);
-}
-
-void View::create_shaders_and_objects()
-{
-    // Create shaders
-    auto texture_shader = std::shared_ptr<GLShader>(new GLShader("shaders/texture.vert",  "shaders/texture.frag"));
-    auto phong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/phong.vert",  "shaders/phong.frag"));
-    auto grass_shader = std::shared_ptr<GLShader>(new GLShader("shaders/grass.vert",  "shaders/phong.frag", "shaders/grass.geom"));
-    auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
-    
-    // Create objects
-    create_cube(texture_shader);
-    create_spider(texture_shader);
-    create_terrain(phong_shader);
-    create_grass(grass_shader);
 }
 
 void View::create_grass(shared_ptr<GLShader> shader)
