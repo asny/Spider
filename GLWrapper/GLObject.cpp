@@ -41,10 +41,10 @@ void GLObject::create_vertex_attribute(string name, int size)
     stride += size;
 }
 
-void GLObject::set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec2>& _data)
+void GLObject::set_vertex_attribute(std::string name, const std::vector<glm::vec2>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
-    int start_index = attributes.at(attribute_name).start_index;
+    int start_index = attributes.at(name).start_index;
     data.resize(stride * static_cast<int>(_data.size())); // Make sure that data has the correct size.
     
     for (int i = 0; i < _data.size(); i++)
@@ -55,10 +55,10 @@ void GLObject::set_vertex_attribute(std::string attribute_name, const std::vecto
     }
 }
 
-void GLObject::set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data)
+void GLObject::set_vertex_attribute(std::string name, const std::vector<glm::vec3>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
-    int start_index = attributes.at(attribute_name).start_index;
+    int start_index = attributes.at(name).start_index;
     data.resize(stride * static_cast<int>(_data.size())); // Make sure that data has the correct size.
     
     for (int i = 0; i < _data.size(); i++)

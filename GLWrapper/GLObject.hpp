@@ -54,8 +54,8 @@ namespace oogl {
         
         void create_vertex_attribute(std::string name, int size);
         
-        void set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec2>& _data);
-        void set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data);
+        void set_vertex_attribute(std::string name, const std::vector<glm::vec2>& _data);
+        void set_vertex_attribute(std::string name, const std::vector<glm::vec3>& _data);
         
         void finalize_vertex_attributes();
         
