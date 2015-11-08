@@ -38,8 +38,7 @@ void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_n
     {
         GLuint location = shader->get_attribute_location(attribute_names[i]);
         glEnableVertexAttribArray(location);
-        auto attribute = VertexAttribute{attribute_sizes[i], start_index};
-        attributes.insert( {attribute_names[i], attribute} );
+        attributes.insert( {attribute_names[i], VertexAttribute{ attribute_sizes[i], start_index }} );
         start_index += attribute_sizes[i];
     }
     stride = start_index;
@@ -48,29 +47,29 @@ void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_n
 void GLObject::set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec2>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
-    auto attribute = attributes.at(attribute_name);
+    int start_index = attributes.at(attribute_name).start_index;
     data.resize(stride * static_cast<int>(_data.size())); // Make sure that data has the correct size.
     
     for (int i = 0; i < _data.size(); i++)
     {
         glm::vec2 vec = _data[i];
-        data[attribute.start_index + i*stride] = vec.x;
-        data[attribute.start_index + i*stride + 1] = vec.y;
+        data[start_index + i*stride] = vec.x;
+        data[start_index + i*stride + 1] = vec.y;
     }
 }
 
 void GLObject::set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
-    auto attribute = attributes.at(attribute_name);
+    int start_index = attributes.at(attribute_name).start_index;
     data.resize(stride * static_cast<int>(_data.size())); // Make sure that data has the correct size.
     
     for (int i = 0; i < _data.size(); i++)
     {
         glm::vec3 vec = _data[i];
-        data[attribute.start_index + i*stride] = vec.x;
-        data[attribute.start_index + i*stride + 1] = vec.y;
-        data[attribute.start_index + i*stride + 2] = vec.z;
+        data[start_index + i*stride] = vec.x;
+        data[start_index + i*stride + 1] = vec.y;
+        data[start_index + i*stride + 2] = vec.z;
     }
 }
 
