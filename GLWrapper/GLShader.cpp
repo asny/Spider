@@ -163,6 +163,11 @@ void GLShader::set_uniform_variable(std::string name, int value)
     glUniform1i(get_uniform_location(name), value);
 }
 
+void GLShader::set_uniform_variable(std::string name, const vec2& value)
+{
+    glUniform2fv(get_uniform_location(name), 1, &value[0]);
+}
+
 void GLShader::set_uniform_variable(std::string name, const vec3& value)
 {
     glUniform3fv(get_uniform_location(name), 1, &value[0]);

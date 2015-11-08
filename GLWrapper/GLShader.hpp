@@ -33,6 +33,7 @@ namespace oogl {
         GLuint get_attribute_location(std::string variable_name);
         
         void set_uniform_variable(std::string name, int value);
+        void set_uniform_variable(std::string name, const glm::vec2& value);
         void set_uniform_variable(std::string name, const glm::vec3& value);
         void set_uniform_variable(std::string name, const glm::vec4& value);
         void set_uniform_variable(std::string name, const glm::mat4& value);
