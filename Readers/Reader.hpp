@@ -17,8 +17,8 @@
 class Reader {
     
 public:
-    bool static load_obj(const char * path, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_uvs, std::vector<glm::vec3> & out_normals);
-    bool static load_obj(const char * path, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_uvs);
+    bool static load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_uvs, std::vector<glm::vec3> & out_normals);
+    bool static load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_uvs);
     
     
     /**
