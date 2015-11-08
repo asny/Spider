@@ -27,18 +27,11 @@ namespace oogl {
         
         struct VertexAttribute
         {
-            int location;
+            GLuint location;
             int size;
             
             int start_index;
             int stride_index;
-            
-            VertexAttribute(std::shared_ptr<GLShader> shader, std::string _name, int _start_index, int _stride_index, int _size)
-            : start_index(_start_index), stride_index(_stride_index), size(_size)
-            {
-                location = shader->get_attribute_location(_name);
-                glEnableVertexAttribArray(location);
-            }
         };
         
         std::shared_ptr<GLShader> shader;

@@ -41,7 +41,9 @@ void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_n
     
     for (int i = 0; i < attribute_names.size(); i++)
     {
-        auto attribute = VertexAttribute(shader, attribute_names[i], start_index, stride_index, attribute_sizes[i]);
+        GLuint location = shader->get_attribute_location(attribute_names[i]);
+        glEnableVertexAttribArray(location);
+        auto attribute = VertexAttribute{location, attribute_sizes[i], start_index, stride_index};
         attributes.insert( {attribute_names[i], attribute} );
         start_index += attribute_sizes[i];
     }
