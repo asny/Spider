@@ -25,7 +25,7 @@ namespace oogl {
      */
     class GLObject {
         
-        class VertexAttribute
+        struct VertexAttribute
         {
             int location;
             int size;
@@ -33,38 +33,11 @@ namespace oogl {
             int start_index;
             int stride_index;
             
-        public:
-            
             VertexAttribute(std::shared_ptr<GLShader> shader, std::string _name, int _start_index, int _stride_index, int _size)
             : start_index(_start_index), stride_index(_stride_index), size(_size)
             {
                 location = shader->get_attribute_location(_name);
                 glEnableVertexAttribArray(location);
-            }
-            
-            void set_data(std::vector<glm::vec2> _data, std::vector<float>& data)
-            {
-                data.resize(stride_index * static_cast<int>(_data.size())); // Make sure that data has the correct size.
-                
-                for (int i = 0; i < _data.size(); i++)
-                {
-                    glm::vec2 vec = _data[i];
-                    data[start_index + i*stride_index] = vec.x;
-                    data[start_index + i*stride_index + 1] = vec.y;
-                }
-            }
-            
-            void set_data(std::vector<glm::vec3> _data, std::vector<float>& data)
-            {
-                data.resize(stride_index * static_cast<int>(_data.size())); // Make sure that data has the correct size.
-                
-                for (int i = 0; i < _data.size(); i++)
-                {
-                    glm::vec3 vec = _data[i];
-                    data[start_index + i*stride_index] = vec.x;
-                    data[start_index + i*stride_index + 1] = vec.y;
-                    data[start_index + i*stride_index + 2] = vec.z;
-                }
             }
             
             void use()

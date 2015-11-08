@@ -50,13 +50,30 @@ void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_n
 void GLObject::set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec2>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
-    attributes.at(attribute_name).set_data(_data, data);
+    auto attribute = attributes.at(attribute_name);
+    data.resize(attribute.stride_index * static_cast<int>(_data.size())); // Make sure that data has the correct size.
+    
+    for (int i = 0; i < _data.size(); i++)
+    {
+        glm::vec2 vec = _data[i];
+        data[attribute.start_index + i*attribute.stride_index] = vec.x;
+        data[attribute.start_index + i*attribute.stride_index + 1] = vec.y;
+    }
 }
 
 void GLObject::set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec3>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
-    attributes.at(attribute_name).set_data(_data, data);
+    auto attribute = attributes.at(attribute_name);
+    data.resize(attribute.stride_index * static_cast<int>(_data.size())); // Make sure that data has the correct size.
+    
+    for (int i = 0; i < _data.size(); i++)
+    {
+        glm::vec3 vec = _data[i];
+        data[attribute.start_index + i*attribute.stride_index] = vec.x;
+        data[attribute.start_index + i*attribute.stride_index + 1] = vec.y;
+        data[attribute.start_index + i*attribute.stride_index + 2] = vec.z;
+    }
 }
 
 void GLObject::finalize_vertex_attributes()
