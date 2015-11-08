@@ -191,14 +191,15 @@ void View::create_grass(shared_ptr<GLShader> shader)
 {
     auto material = GLMaterial {{0.2f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
     grass = std::unique_ptr<GLObject>(new GLObject(shader, material, GL_LINES));
-    grass->initialize_vertex_attributes({"end_point"}, {3});
+    grass->create_vertex_attribute("end_point", 3);
 }
 
 void View::create_terrain(shared_ptr<GLShader> shader)
 {
     auto material = GLMaterial {{0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
     terrain = std::unique_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLE_STRIP));
-    terrain->initialize_vertex_attributes({"position", "normal"}, {3, 3});
+    terrain->create_vertex_attribute("position", 3);
+    terrain->create_vertex_attribute("normal", 3);
 }
 
 void View::create_spider(shared_ptr<GLShader> shader)
@@ -215,7 +216,7 @@ void View::create_spider(shared_ptr<GLShader> shader)
         auto material = GLMaterial {{0.5f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
         spider = std::unique_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, texture));
         
-        spider->initialize_vertex_attributes({"position"}, {3});
+        spider->create_vertex_attribute("position", 3);
         spider->set_vertex_attribute("position", spider_vertices);
         spider->finalize_vertex_attributes();
     }
@@ -283,7 +284,7 @@ void View::create_cube(shared_ptr<GLShader> shader)
     auto cubeTexture = shared_ptr<GLTexture>(new GLTexture(shader, cubeTextureBmp, cube_uvs));
     cube = unique_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, cubeTexture));
     
-    cube->initialize_vertex_attributes({"position"}, {3});
+    cube->create_vertex_attribute("position", 3);
     cube->set_vertex_attribute("position", cube_data);
     cube->finalize_vertex_attributes();
 }

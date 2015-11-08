@@ -22,26 +22,23 @@ GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _materia
     glGenBuffers(1, &buffer_id);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     
+    if(texture)
+    {
+        create_vertex_attribute("uv_coordinates", 2);
+    }
+    
     check_gl_error();
 }
 
-void GLObject::initialize_vertex_attributes(std::vector<std::string> attribute_names, std::vector<int> attribute_sizes)
+void GLObject::create_vertex_attribute(string name, int size)
 {
-    if(texture)
-    {
-        attribute_names.push_back("uv_coordinates");
-        attribute_sizes.push_back(2);
-    }
+    GLuint location = shader->get_attribute_location(name);
+    glEnableVertexAttribArray(location);
     
-    int start_index = 0;
-    for (int i = 0; i < attribute_names.size(); i++)
-    {
-        GLuint location = shader->get_attribute_location(attribute_names[i]);
-        glEnableVertexAttribArray(location);
-        attributes.insert( {attribute_names[i], VertexAttribute{ attribute_sizes[i], start_index }} );
-        start_index += attribute_sizes[i];
-    }
-    stride = start_index;
+    attributes.insert( {name, VertexAttribute{ size, current_start_index }} );
+    current_start_index += size;
+    
+    stride += size;
 }
 
 void GLObject::set_vertex_attribute(std::string attribute_name, const std::vector<glm::vec2>& _data)
