@@ -108,9 +108,10 @@ void GLObject::draw()
         glBindVertexArray(array_id);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
-        for (auto attribute : attributes)
+        for (auto attribute_name_value_pair : attributes)
         {
-            attribute.second.use();
+            auto attribute = attribute_name_value_pair.second;
+            glVertexAttribPointer(attribute.location, attribute.size, GL_FLOAT, GL_FALSE, attribute.stride_index * sizeof(float), (const GLvoid *)(attribute.start_index * sizeof(float)));
         }
         
         glDrawArrays(drawmode, 0, no_vertices);

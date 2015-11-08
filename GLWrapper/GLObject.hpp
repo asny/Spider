@@ -39,11 +39,6 @@ namespace oogl {
                 location = shader->get_attribute_location(_name);
                 glEnableVertexAttribArray(location);
             }
-            
-            void use()
-            {
-                glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, stride_index * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
-            }
         };
         
         std::shared_ptr<GLShader> shader;
