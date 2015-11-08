@@ -20,7 +20,7 @@ static GLenum TextureFormatForBitmapFormat(tdogl::Bitmap::Format format)
 }
 
 GLTexture::GLTexture(const std::shared_ptr<GLShader> _shader, const tdogl::Bitmap& bitmap, const std::vector<glm::vec2>& _uv_coordinates) :
-    shader(_shader), uv_coordinates(_uv_coordinates)
+    shader(_shader), uv_coordinates(_uv_coordinates), width(bitmap.width()), height(bitmap.height())
 {
     glGenTextures(1, &texture_id);
     glBindTexture(GL_TEXTURE_2D, texture_id);

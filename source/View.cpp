@@ -39,42 +39,48 @@ void animate_(){
 View* View::instance = NULL;
 
 static const std::vector<glm::vec3> cube_data = {
-    glm::vec3(-1.0f,-1.0f,-1.0f), // triangle 1 : begin
-    glm::vec3(-1.0f,-1.0f, 1.0f),
-    glm::vec3(-1.0f, 1.0f, 1.0f), // triangle 1 : end
-    glm::vec3(1.0f, 1.0f,-1.0f), // triangle 2 : begin
-    glm::vec3(-1.0f,-1.0f,-1.0f),
-    glm::vec3(-1.0f, 1.0f,-1.0f), // triangle 2 : end
-    glm::vec3(1.0f,-1.0f, 1.0f),
-    glm::vec3(-1.0f,-1.0f,-1.0f),
-    glm::vec3(1.0f,-1.0f,-1.0f),
-    glm::vec3(1.0f, 1.0f,-1.0f),
-    glm::vec3(1.0f,-1.0f,-1.0f),
-    glm::vec3(-1.0f,-1.0f,-1.0f),
-    glm::vec3(-1.0f,-1.0f,-1.0f),
-    glm::vec3(-1.0f, 1.0f, 1.0f),
-    glm::vec3(-1.0f, 1.0f,-1.0f),
-    glm::vec3(1.0f,-1.0f, 1.0f),
-    glm::vec3(-1.0f,-1.0f, 1.0f),
-    glm::vec3(-1.0f,-1.0f,-1.0f),
-    glm::vec3(-1.0f, 1.0f, 1.0f),
-    glm::vec3(-1.0f,-1.0f, 1.0f),
-    glm::vec3(1.0f,-1.0f, 1.0f),
-    glm::vec3(1.0f, 1.0f, 1.0f),
-    glm::vec3(1.0f,-1.0f,-1.0f),
-    glm::vec3(1.0f, 1.0f,-1.0f),
-    glm::vec3(1.0f,-1.0f,-1.0f),
-    glm::vec3(1.0f, 1.0f, 1.0f),
-    glm::vec3(1.0f,-1.0f, 1.0f),
-    glm::vec3(1.0f, 1.0f, 1.0f),
-    glm::vec3(1.0f, 1.0f,-1.0f),
-    glm::vec3(-1.0f, 1.0f,-1.0f),
-    glm::vec3(1.0f, 1.0f, 1.0f),
-    glm::vec3(-1.0f, 1.0f,-1.0f),
-    glm::vec3(-1.0f, 1.0f, 1.0f),
-    glm::vec3(1.0f, 1.0f, 1.0f),
-    glm::vec3(-1.0f, 1.0f, 1.0f),
-    glm::vec3(1.0f,-1.0f, 1.0f)
+    // front
+    vec3(-1.0, -1.0,  1.0),
+    vec3(1.0, -1.0,  1.0),
+    vec3(1.0,  1.0,  1.0),
+    vec3(1.0,  1.0,  1.0),
+    vec3(-1.0,  1.0,  1.0),
+    vec3(-1.0, -1.0,  1.0),
+    // top
+    vec3(-1.0,  1.0,  1.0),
+    vec3(1.0,  1.0,  1.0),
+    vec3(1.0,  1.0, -1.0),
+    vec3(1.0,  1.0, -1.0),
+    vec3(-1.0,  1.0, -1.0),
+    vec3(-1.0,  1.0,  1.0),
+    // back
+    vec3(1.0, -1.0, -1.0),
+    vec3(-1.0, -1.0, -1.0),
+    vec3(-1.0,  1.0, -1.0),
+    vec3(-1.0,  1.0, -1.0),
+    vec3(1.0,  1.0, -1.0),
+    vec3(1.0, -1.0, -1.0),
+    // bottom
+    vec3(-1.0, -1.0, -1.0),
+    vec3(1.0, -1.0, -1.0),
+    vec3(1.0, -1.0,  1.0),
+    vec3(1.0, -1.0,  1.0),
+    vec3(-1.0, -1.0,  1.0),
+    vec3(-1.0, -1.0, -1.0),
+    // left
+    vec3(-1.0, -1.0, -1.0),
+    vec3(-1.0, -1.0,  1.0),
+    vec3(-1.0,  1.0,  1.0),
+    vec3(-1.0,  1.0,  1.0),
+    vec3(-1.0,  1.0, -1.0),
+    vec3(-1.0, -1.0, -1.0),
+    // right
+    vec3(1.0, -1.0,  1.0),
+    vec3(1.0, -1.0, -1.0),
+    vec3(1.0,  1.0, -1.0),
+    vec3(1.0,  1.0, -1.0),
+    vec3(1.0,  1.0,  1.0),
+    vec3(1.0, -1.0,  1.0)
 };
 
 View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
@@ -97,7 +103,6 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     GLWrapper::initialize();
     create_shaders_and_objects();
     
-    cube->set_uniform_variable("lightPos", light_pos);
     grass->set_uniform_variable("lightPos", light_pos);
     terrain->set_uniform_variable("lightPos", light_pos);
     
@@ -226,7 +231,19 @@ void View::create_shaders_and_objects()
     
     // cube
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
-    cube = std::unique_ptr<GLObject>(new GLObject(fastphong_shader, material));
+    tdogl::Bitmap cubeTextureBmp = tdogl::Bitmap::bitmapFromFile("models/test_texture.jpg");
+    cubeTextureBmp.flipVertically();
+    std::vector<vec2> cube_uvs;
+    for (int i = 0; i < 6; i++){
+        cube_uvs.push_back(vec2(0.));
+        cube_uvs.push_back(vec2(1., 0.));
+        cube_uvs.push_back(vec2(1., 1.));
+        cube_uvs.push_back(vec2(1., 1.));
+        cube_uvs.push_back(vec2(0., 1.));
+        cube_uvs.push_back(vec2(0.));
+    }
+    auto cubeTexture = std::shared_ptr<GLTexture>(new GLTexture(texture_shader, cubeTextureBmp, cube_uvs));
+    cube = std::unique_ptr<GLObject>(new GLObject(texture_shader, material, GL_TRIANGLES, cubeTexture));
     
     cube->initialize_vertex_attributes({"position"}, {3});
     cube->set_vertex_attribute("position", cube_data);
