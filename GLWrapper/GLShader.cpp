@@ -114,11 +114,31 @@ GLuint GLShader::get_attribute_location(std::string variable_name)
     return attributeLocation;
 }
 
-void GLShader::create_vertex_attribute(string name, int size)
+void GLShader::add_vertex_attribute(string name, int size)
 {
+    static int current_start_index = 0;
     attributes.insert( {name, VertexAttribute{ size, current_start_index }} );
     current_start_index += size;
     stride += size;
+}
+
+void GLShader::initialize_vertex_attributes()
+{
+    for (auto attribute_name_value_pair : attributes)
+    {
+        GLuint location = get_attribute_location(attribute_name_value_pair.first);
+        glEnableVertexAttribArray(location);
+    }
+}
+
+void GLShader::use_vertex_attributes()
+{
+    for (auto attribute_name_value_pair : attributes)
+    {
+        auto attribute = attribute_name_value_pair.second;
+        GLuint location = get_attribute_location(attribute_name_value_pair.first);
+        glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(attribute.start_index * sizeof(float)));
+    }
 }
 
 GLuint GLShader::get_uniform_location(std::string variable_name)

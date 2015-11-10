@@ -60,11 +60,6 @@ void GLObject::set_vertex_attribute(std::string name, const std::vector<glm::vec
 
 void GLObject::finalize_vertex_attributes()
 {
-    if(texture)
-    {
-        set_vertex_attribute("uv_coordinates", texture->uv_coordinates);
-    }
-    
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
     

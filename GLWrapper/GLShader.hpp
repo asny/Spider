@@ -25,7 +25,6 @@ namespace oogl {
         };
         
         int stride = 0;
-        int current_start_index = 0;
         std::map<std::string, VertexAttribute> attributes = std::map<std::string, VertexAttribute>();
         
         GLuint get_uniform_location(std::string variable_name);
@@ -42,6 +41,10 @@ namespace oogl {
         void use();
         
         // Vertex attribute functionality
+        void add_vertex_attribute(std::string name, int size);
+        
+        void initialize_vertex_attributes();
+        
         int get_attributes_stride()
         {
             return stride;
@@ -52,26 +55,7 @@ namespace oogl {
             return attributes.find(name)->second.start_index;
         }
         
-        void initialize_vertex_attributes()
-        {
-            for (auto attribute_names : attributes)
-            {
-                GLuint location = get_attribute_location(attribute_names.first);
-                glEnableVertexAttribArray(location);
-            }
-        }
-        
-        void create_vertex_attribute(std::string name, int size);
-        
-        void use_vertex_attributes()
-        {
-            for (auto attribute_name_value_pair : attributes)
-            {
-                auto attribute = attribute_name_value_pair.second;
-                GLuint location = get_attribute_location(attribute_name_value_pair.first);
-                glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(attribute.start_index * sizeof(float)));
-            }
-        }
+        void use_vertex_attributes();
         
         // Uniform variable functionality
         GLuint get_attribute_location(std::string variable_name);

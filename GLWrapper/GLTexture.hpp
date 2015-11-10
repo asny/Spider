@@ -28,12 +28,10 @@ namespace oogl
         const std::shared_ptr<GLShader> shader;
         
     public:
-        const std::vector<glm::vec2>& uv_coordinates;
-        
         /**
          Creates a texture from a bitmap.
          */
-        GLTexture(const std::shared_ptr<GLShader> _shader, const tdogl::Bitmap& bitmap, const std::vector<glm::vec2>& uv_coordinates);
+        GLTexture(const std::shared_ptr<GLShader> _shader, const tdogl::Bitmap& bitmap);
         
         /**
          Bind the texture and set the "tex" uniform in the fragment shader
