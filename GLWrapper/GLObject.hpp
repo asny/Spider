@@ -40,6 +40,8 @@ namespace oogl {
         GLenum drawmode;
         
     public:
+        static glm::mat4 viewMatrix;
+        static glm::mat4 projectionMatrix;
         
         GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES, std::shared_ptr<GLTexture> _texture = nullptr);
         

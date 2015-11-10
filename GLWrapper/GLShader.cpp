@@ -15,9 +15,6 @@ using namespace oogl;
 using namespace std;
 using namespace glm;
 
-mat4 GLShader::viewMatrix = mat4(1.);
-mat4 GLShader::projectionMatrix = mat4(1.);
-
 // Create a GLSL program object from vertex and fragment shader files
 GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName, const char* gShaderFile)
 {
@@ -181,13 +178,4 @@ void GLShader::set_uniform_variable(std::string name, const vec4& value)
 void GLShader::set_uniform_variable(std::string name, const mat4& value)
 {
     glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, &value[0][0]);
-}
-
-void GLShader::update_draw_matrices(const mat4& modelMatrix)
-{
-    mat4 modelViewMatrix = GLShader::viewMatrix * modelMatrix;
-    set_uniform_variable_if_defined("MVMatrix", modelViewMatrix);
-    set_uniform_variable_if_defined("NMatrix", inverseTranspose(modelViewMatrix));
-    set_uniform_variable_if_defined("PMatrix", projectionMatrix);
-    set_uniform_variable_if_defined("MVPMatrix", projectionMatrix * modelViewMatrix);
 }

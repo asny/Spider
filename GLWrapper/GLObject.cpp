@@ -12,6 +12,9 @@ using namespace oogl;
 using namespace std;
 using namespace glm;
 
+mat4 GLObject::viewMatrix = mat4(1.);
+mat4 GLObject::projectionMatrix = mat4(1.);
+
 GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode, std::shared_ptr<GLTexture> _texture)
 : shader(_shader), material(_material), texture(_texture), drawmode(_drawmode)
 {
@@ -82,7 +85,12 @@ void GLObject::draw()
             shader->set_uniform_variable("diffuseMat", material.diffuse);
             shader->set_uniform_variable("specMat", material.specular);
         }
-        shader->update_draw_matrices(modelMatrix);
+        
+        mat4 modelViewMatrix = GLObject::viewMatrix * modelMatrix;
+        shader->set_uniform_variable_if_defined("MVMatrix", modelViewMatrix);
+        shader->set_uniform_variable_if_defined("NMatrix", inverseTranspose(modelViewMatrix));
+        shader->set_uniform_variable_if_defined("PMatrix", GLObject::projectionMatrix);
+        shader->set_uniform_variable_if_defined("MVPMatrix", GLObject::projectionMatrix * modelViewMatrix);
         
         glBindVertexArray(array_id);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);

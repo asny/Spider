@@ -7,7 +7,7 @@
 //
 
 #include "GLWrapper.h"
-#include "GLShader.hpp"
+#include "GLObject.hpp"
 
 using namespace oogl;
 using namespace std;
@@ -28,13 +28,13 @@ void GLWrapper::initialize()
 void GLWrapper::set_screen_size(int width, int height)
 {
     glViewport(0, 0, width, height);
-    GLShader::projectionMatrix = perspective(45.f, width/float(height), 0.01f, 100.f);
+    GLObject::projectionMatrix = perspective(45.f, width/float(height), 0.01f, 100.f);
     check_gl_error();
 }
 
 void GLWrapper::set_view(const vec3& eyePosition, const vec3& eyeDirection)
 {
-    GLShader::viewMatrix = lookAt(eyePosition, eyePosition + eyeDirection, vec3(0., 1., 0.));
+    GLObject::viewMatrix = lookAt(eyePosition, eyePosition + eyeDirection, vec3(0., 1., 0.));
     check_gl_error();
 }
 
