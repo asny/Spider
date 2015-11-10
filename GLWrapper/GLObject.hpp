@@ -29,8 +29,6 @@ namespace oogl {
         std::shared_ptr<GLTexture> texture;
         GLMaterial material;
         
-        glm::mat4 modelMatrix = glm::mat4(1.);
-        
         // Vertex attribute data
         std::vector<float> data;
         
@@ -39,9 +37,12 @@ namespace oogl {
         GLuint buffer_id, array_id;
         GLenum drawmode;
         
-    public:
+        // Transformations
+        glm::mat4 modelMatrix = glm::mat4(1.);
         static glm::mat4 viewMatrix;
         static glm::mat4 projectionMatrix;
+        
+    public:
         
         GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES, std::shared_ptr<GLTexture> _texture = nullptr);
         
@@ -59,9 +60,20 @@ namespace oogl {
         
         void draw();
         
+        // Setters for the transformations
         void set_model_matrix(glm::mat4 _modelMatrix)
         {
             modelMatrix = _modelMatrix;
+        }
+        
+        static void set_view_matrix(glm::mat4 _viewMatrix)
+        {
+            viewMatrix = _viewMatrix;
+        }
+        
+        static void set_projection_matrix(glm::mat4 _projectionMatrix)
+        {
+            projectionMatrix = _projectionMatrix;
         }
     };
 }
