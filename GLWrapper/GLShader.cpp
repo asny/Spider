@@ -105,15 +105,6 @@ void GLShader::use()
     glUseProgram(shader_id);
 }
 
-GLuint GLShader::get_uniform_location(std::string variable_name)
-{
-    GLuint uniformLocation = glGetUniformLocation(shader_id, &variable_name[0]);
-    if (uniformLocation == NULL_LOCATION) {
-        std::cerr << "Shader did not contain the '" << variable_name << "' uniform variable."<<std::endl;
-    }
-    return uniformLocation;
-}
-
 GLuint GLShader::get_attribute_location(std::string variable_name)
 {
     GLuint attributeLocation = glGetAttribLocation(shader_id, &variable_name[0]);
@@ -121,6 +112,22 @@ GLuint GLShader::get_attribute_location(std::string variable_name)
         std::cerr << "Shader did not contain the '" << variable_name << "' attribute variable."<<std::endl;
     }
     return attributeLocation;
+}
+
+void GLShader::create_vertex_attribute(string name, int size)
+{
+    attributes.insert( {name, VertexAttribute{ size, current_start_index }} );
+    current_start_index += size;
+    stride += size;
+}
+
+GLuint GLShader::get_uniform_location(std::string variable_name)
+{
+    GLuint uniformLocation = glGetUniformLocation(shader_id, &variable_name[0]);
+    if (uniformLocation == NULL_LOCATION) {
+        std::cerr << "Shader did not contain the '" << variable_name << "' uniform variable."<<std::endl;
+    }
+    return uniformLocation;
 }
 
 void GLShader::set_uniform_variable_if_defined(std::string name, const mat4& value)

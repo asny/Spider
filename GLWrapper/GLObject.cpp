@@ -22,29 +22,16 @@ GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _materia
     glGenBuffers(1, &buffer_id);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     
-    if(texture)
-    {
-        create_vertex_attribute("uv_coordinates", 2);
-    }
+    shader->initialize_vertex_attributes();
     
     check_gl_error();
-}
-
-void GLObject::create_vertex_attribute(string name, int size)
-{
-    GLuint location = shader->get_attribute_location(name);
-    glEnableVertexAttribArray(location);
-    
-    attributes.insert( {name, VertexAttribute{ size, current_start_index }} );
-    current_start_index += size;
-    
-    stride += size;
 }
 
 void GLObject::set_vertex_attribute(std::string name, const std::vector<glm::vec2>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
-    int start_index = attributes.at(name).start_index;
+    int start_index = shader->get_attribute_start_index(name);
+    int stride = shader->get_attributes_stride();
     data.resize(stride * static_cast<int>(_data.size())); // Make sure that data has the correct size.
     
     for (int i = 0; i < _data.size(); i++)
@@ -58,7 +45,8 @@ void GLObject::set_vertex_attribute(std::string name, const std::vector<glm::vec
 void GLObject::set_vertex_attribute(std::string name, const std::vector<glm::vec3>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
-    int start_index = attributes.at(name).start_index;
+    int start_index = shader->get_attribute_start_index(name);
+    int stride = shader->get_attributes_stride();
     data.resize(stride * static_cast<int>(_data.size())); // Make sure that data has the correct size.
     
     for (int i = 0; i < _data.size(); i++)
@@ -103,12 +91,7 @@ void GLObject::draw()
         glBindVertexArray(array_id);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
-        for (auto attribute_name_value_pair : attributes)
-        {
-            auto attribute = attribute_name_value_pair.second;
-            GLuint location = shader->get_attribute_location(attribute_name_value_pair.first);
-            glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(attribute.start_index * sizeof(float)));
-        }
+        shader->use_vertex_attributes();
         
         glDrawArrays(drawmode, 0, no_vertices);
         

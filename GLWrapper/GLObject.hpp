@@ -23,14 +23,8 @@ namespace oogl {
     /**
      Represents an object to draw.
      */
-    class GLObject {
-        
-        struct VertexAttribute
-        {
-            int size;
-            int start_index;
-        };
-        
+    class GLObject
+    {
         std::shared_ptr<GLShader> shader;
         std::shared_ptr<GLTexture> texture;
         GLMaterial material;
@@ -38,9 +32,6 @@ namespace oogl {
         glm::mat4 modelMatrix = glm::mat4(1.);
         
         // Vertex attribute data
-        int stride = 0;
-        int current_start_index = 0;
-        std::map<std::string, VertexAttribute> attributes = std::map<std::string, VertexAttribute>();
         std::vector<float> data;
         
         // Needed for drawing
@@ -51,8 +42,6 @@ namespace oogl {
     public:
         
         GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES, std::shared_ptr<GLTexture> _texture = nullptr);
-        
-        void create_vertex_attribute(std::string name, int size);
         
         void set_vertex_attribute(std::string name, const std::vector<glm::vec2>& _data);
         void set_vertex_attribute(std::string name, const std::vector<glm::vec3>& _data);
