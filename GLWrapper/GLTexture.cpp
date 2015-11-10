@@ -19,8 +19,7 @@ static GLenum TextureFormatForBitmapFormat(tdogl::Bitmap::Format format)
     }
 }
 
-GLTexture::GLTexture(const std::shared_ptr<GLShader> _shader, const tdogl::Bitmap& bitmap) :
-    shader(_shader), width(bitmap.width()), height(bitmap.height())
+GLTexture::GLTexture(const tdogl::Bitmap& bitmap) : width(bitmap.width()), height(bitmap.height())
 {
     glGenTextures(1, &texture_id);
     glBindTexture(GL_TEXTURE_2D, texture_id);
@@ -38,16 +37,19 @@ GLTexture::GLTexture(const std::shared_ptr<GLShader> _shader, const tdogl::Bitma
                  GL_UNSIGNED_BYTE,
                  bitmap.pixelBuffer());
     glBindTexture(GL_TEXTURE_2D, 0);
+    check_gl_error();
 }
 
-void GLTexture::use()
+int GLTexture::use()
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_id);
-    shader->set_uniform_variable("texture0", 0); //set to 0 because the texture is bound to GL_TEXTURE0
+    check_gl_error();
+    return 0; //return 0 because the texture is bound to GL_TEXTURE0
 }
 
 GLTexture::~GLTexture()
 {
     glDeleteTextures(1, &texture_id);
+    check_gl_error();
 }

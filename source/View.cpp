@@ -216,7 +216,7 @@ void View::create_spider(shared_ptr<GLShader> shader)
     {
         auto bmp = Reader::load_bitmap("models/spider/TRANTULA.PNG");
         bmp.flipVertically();
-        auto texture = std::shared_ptr<GLTexture>(new GLTexture(shader, bmp));
+        auto texture = std::shared_ptr<GLTexture>(new GLTexture(bmp));
         
         auto material = GLMaterial {{0.5f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
         spider = std::unique_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, texture));
@@ -286,7 +286,7 @@ void View::create_cube(shared_ptr<GLShader> shader)
         cube_uvs.push_back(vec2(0., 1.));
         cube_uvs.push_back(vec2(0.));
     }
-    auto cubeTexture = shared_ptr<GLTexture>(new GLTexture(shader, cubeTextureBmp));
+    auto cubeTexture = shared_ptr<GLTexture>(new GLTexture(cubeTextureBmp));
     cube = unique_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, cubeTexture));
     
     cube->set_vertex_attribute("position", cube_data);

@@ -74,7 +74,8 @@ void GLObject::draw()
         shader->use();
         if(texture)
         {
-            texture->use();
+            int texture_id = texture->use();
+            shader->set_uniform_variable("texture0", texture_id);
         }
         else {
             shader->set_uniform_variable("ambientMat", material.ambient);
