@@ -22,19 +22,16 @@ namespace oogl {
 
         struct VertexAttribute
         {
+            std::string name;
             int size;
-            int start_index;
         };
         
         int stride = 0;
-        std::map<std::string, VertexAttribute> attributes = std::map<std::string, VertexAttribute>();
-        
+        std::vector<VertexAttribute> attributes;
         
     public:
         
-        GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
-        
-        void add_vertex_attribute(std::string name, int size);
+        GLShader(std::vector<VertexAttribute> _attributes, std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
         
     private:
         void use();
@@ -52,7 +49,16 @@ namespace oogl {
         
         int get_attribute_start_index(std::string name)
         {
-            return attributes.find(name)->second.start_index;
+            int start_index = 0;
+            for (auto attribute : attributes)
+            {
+                if(attribute.name == name)
+                {
+                    return start_index;
+                }
+                start_index += attribute.size;
+            }
+            return -1;
         }
         
         void use_vertex_attributes();

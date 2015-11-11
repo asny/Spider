@@ -58,18 +58,10 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     GLWrapper::initialize();
     
     // Create shaders
-    auto texture_shader = std::shared_ptr<GLShader>(new GLShader("shaders/texture.vert",  "shaders/texture.frag"));
-    auto phong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/phong.vert",  "shaders/phong.frag"));
-    auto grass_shader = std::shared_ptr<GLShader>(new GLShader("shaders/grass.vert",  "shaders/phong.frag", "shaders/grass.geom"));
-    auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
-    
-    // Initialize vertex attributes
-    texture_shader->add_vertex_attribute("position", 3);
-    texture_shader->add_vertex_attribute("uv_coordinates", 2);
-    phong_shader->add_vertex_attribute("position", 3);
-    phong_shader->add_vertex_attribute("normal", 3);
-    grass_shader->add_vertex_attribute("end_point", 3);
-    fastphong_shader->add_vertex_attribute("position", 3);
+    auto texture_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"uv_coordinates", 2}}, "shaders/texture.vert",  "shaders/texture.frag"));
+    auto phong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"normal", 3}}, "shaders/phong.vert",  "shaders/phong.frag"));
+    auto grass_shader = std::shared_ptr<GLShader>(new GLShader({{"end_point", 3}}, "shaders/grass.vert",  "shaders/phong.frag", "shaders/grass.geom"));
+    auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
     
     // Create objects
     create_cube(texture_shader);

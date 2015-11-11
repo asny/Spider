@@ -84,7 +84,8 @@ GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char*
     return program;
 }
 
-GLShader::GLShader(string vertexShaderFilename, string fragmentShaderFilename, string geometryShaderFilename)
+GLShader::GLShader(std::vector<VertexAttribute> _attributes, string vertexShaderFilename, string fragmentShaderFilename, string geometryShaderFilename)
+    : attributes(_attributes)
 {
     if(geometryShaderFilename.length() != 0)
     {
@@ -92,6 +93,11 @@ GLShader::GLShader(string vertexShaderFilename, string fragmentShaderFilename, s
     }
     else {
         shader_id = init_shader(&vertexShaderFilename[0], &fragmentShaderFilename[0], "fragColour", nullptr);
+    }
+    
+    for (auto attribute : attributes)
+    {
+        stride += attribute.size;
     }
     
     check_gl_error();
@@ -111,30 +117,23 @@ GLuint GLShader::get_attribute_location(std::string variable_name)
     return attributeLocation;
 }
 
-void GLShader::add_vertex_attribute(string name, int size)
-{
-    static int current_start_index = 0;
-    attributes.insert( {name, VertexAttribute{ size, current_start_index }} );
-    current_start_index += size;
-    stride += size;
-}
-
 void GLShader::initialize_vertex_attributes()
 {
-    for (auto attribute_name_value_pair : attributes)
+    for (auto attribute : attributes)
     {
-        GLuint location = get_attribute_location(attribute_name_value_pair.first);
+        GLuint location = get_attribute_location(attribute.name);
         glEnableVertexAttribArray(location);
     }
 }
 
 void GLShader::use_vertex_attributes()
 {
-    for (auto attribute_name_value_pair : attributes)
+    int start_index = 0;
+    for (auto attribute : attributes)
     {
-        auto attribute = attribute_name_value_pair.second;
-        GLuint location = get_attribute_location(attribute_name_value_pair.first);
-        glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(attribute.start_index * sizeof(float)));
+        GLuint location = get_attribute_location(attribute.name);
+        glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
+        start_index += attribute.size;
     }
 }
 
