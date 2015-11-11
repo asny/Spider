@@ -135,7 +135,7 @@ void View::animate()
     else if(view_type == THIRD_PERSON)
     {
         vec3 camera_view = normalize(vec3(0., -0.5, 0.) + spider_view_direction);
-        GLWrapper::set_view(spider_position - 3.f * camera_view, camera_view);
+        GLWrapper::set_view(spider_position - 2.f * camera_view, camera_view);
     }
     
     grass->set_uniform_variable("spiderPosition", spider_position);
@@ -197,7 +197,7 @@ void View::visible(int v)
 
 void View::create_grass(shared_ptr<GLShader> shader)
 {
-    auto material = GLMaterial {{0.2f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
+    auto material = GLMaterial {{0.1f,0.3f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
     grass = std::unique_ptr<GLObject>(new GLObject(shader, material, GL_LINES));
 }
 

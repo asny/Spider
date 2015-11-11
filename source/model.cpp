@@ -62,6 +62,11 @@ bool Model::terrain_needs_update()
     return false;
 }
 
+double random(double min, double max)
+{
+    return (max - min) * (double)rand()/(double)RAND_MAX + min;
+}
+
 void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals, vector<vec3>& grass_end_points)
 {
     vec3 spider_position = spider.get_position();
@@ -103,7 +108,7 @@ void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals, vector<v
             vec3 grass_vector = terrain.get_grass_vector_at(p);
             if(dot(grass_vector, grass_vector) > 0)
             {
-                grass_end_points.push_back(position);
+                grass_end_points.push_back(position + vec3(random(-0.5 * step_size, 0.5 * step_size), 0., random(-0.5 * step_size, 0.5 * step_size)));
                 grass_end_points.push_back(position + grass_vector);
             }
         }

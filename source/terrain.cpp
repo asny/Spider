@@ -71,15 +71,9 @@ void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> ne
     {
         heightmap[r][c] = average(neighbour_heights) + 0.3 * scale * static_cast<double>(octave_noise_2d(3.f, 0.25f, scale, r, c));
         
-        if(rand() % 3 == 0)
-        {
-            grass[r][c] = vec3(static_cast<double>(scaled_octave_noise_2d(3.f, 0.25f, scale, -0.5, 0.5, r, c)),
-                               static_cast<double>(scaled_octave_noise_2d(3.f, 0.25f, scale, 0.25, 1.5, r, c)),
-                               static_cast<double>(scaled_octave_noise_2d(3.f, 0.25f, scale, -0.5, 0.5, r, c)));
-        }
-        else {
-            grass[r][c] = vec3(0.);
-        }
+        grass[r][c] = vec3(static_cast<double>(scaled_octave_noise_2d(3.f, 0.25f, scale, -0.5, 0.5, r+1, c-1)),
+                           static_cast<double>(scaled_octave_noise_2d(3.f, 0.25f, scale, 0.25, 1.5, r, c)),
+                           static_cast<double>(scaled_octave_noise_2d(3.f, 0.25f, scale, -0.5, 0.5, r-1, c+1)));
     }
 }
 

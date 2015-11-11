@@ -13,7 +13,7 @@ uniform vec3 wind;
 out vec3 pos;
 out vec3 nor;
 
-const float half_width = 0.025f;
+const float half_width = 0.015f;
 
 vec3 up_direction;
 
@@ -88,7 +88,7 @@ void main()
     // Bend straw for wind and spider
     vec3 w = (NMatrix * vec4(wind, 1.)).xyz;
     float wind_power = dot(straw, w);
-    float spider_power = 20.f * l * max(0.5f - distance_to_spider, 0.f);
+    float spider_power = 15.f * l * max(0.6f - distance_to_spider, 0.f);
     vec3 away_direction = vec3(origin.x - spiderP.x, 0., origin.z - spiderP.z);
     if (length(away_direction) < 0.0001)
     {
@@ -99,8 +99,8 @@ void main()
     
     // Compute corners
     vec3 bend_direction_xz = normalize(vec3(bend_direction.x, 0.f, bend_direction.z));
-    vec3 corner1 = origin + half_width * leave_direction - half_width * bend_direction_xz;
-    vec3 corner2 = origin - half_width * leave_direction - half_width * bend_direction_xz;
+    vec3 corner1 = origin + half_width * leave_direction - 0.5 * half_width * bend_direction_xz;
+    vec3 corner2 = origin - half_width * leave_direction - 0.5 * half_width * bend_direction_xz;
     
     // Emit vertices
     float step_size = 1.f / max(ceil(30.f - 3.f * distance_to_spider), 4);
