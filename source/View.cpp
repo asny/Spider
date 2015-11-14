@@ -97,10 +97,11 @@ void View::reshape(int width, int height)
 
 mat4 compute_spider_model_matrix(vec3 spider_position, vec3 spider_view_direction)
 {
-    mat4 spider_scale = scale(mat4(), vec3(10.f));
-    mat4 spider_rotation = orientation(vec3(spider_view_direction.x, 0.f, spider_view_direction.z), vec3(0., 0., 1.));
+    mat4 spider_scale = scale(mat4(), vec3(10.));
+    mat4 spider_rotation_yaw = orientation(normalize(vec3(spider_view_direction.x, 0., spider_view_direction.z)), vec3(0., 0., 1.));
+    mat4 spider_rotation_pitch = orientation(normalize(vec3(0., spider_view_direction.y, 1.)), vec3(0., 0., 1.));
     mat4 spider_translation = translate(mat4(), spider_position);
-    return spider_translation * spider_rotation * spider_scale;
+    return spider_translation * spider_rotation_yaw * spider_rotation_pitch * spider_scale;
 }
 
 void View::animate()
