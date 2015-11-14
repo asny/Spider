@@ -12,8 +12,8 @@ using namespace oogl;
 using namespace std;
 using namespace glm;
 
-GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode, std::shared_ptr<GLTexture> _texture)
-: shader(_shader), material(_material), texture(_texture), drawmode(_drawmode)
+GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode, std::shared_ptr<GLTexture> _texture, bool _cull_back_faces)
+: shader(_shader), material(_material), texture(_texture), drawmode(_drawmode), cull_back_faces(_cull_back_faces)
 {
     // Generate arrays and buffers
     glGenVertexArrays(1, &array_id);
@@ -71,6 +71,15 @@ void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
 {
     if(no_vertices != 0)
     {
+        if(cull_back_faces)
+        {
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_BACK);
+        }
+        else {
+            glDisable(GL_CULL_FACE);
+        }
+        
         shader->use();
         if(texture)
         {

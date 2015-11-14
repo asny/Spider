@@ -36,13 +36,14 @@ namespace oogl {
         GLuint no_vertices = 0;
         GLuint buffer_id, array_id;
         GLenum drawmode;
+        bool cull_back_faces;
         
-        // Transformations
+        // Transformation
         glm::mat4 modelMatrix = glm::mat4(1.);
         
     public:
         
-        GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES, std::shared_ptr<GLTexture> _texture = nullptr);
+        GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES, std::shared_ptr<GLTexture> _texture = nullptr, bool cull_back_faces = true);
         
         void set_vertex_attribute(std::string name, const std::vector<glm::vec2>& _data);
         void set_vertex_attribute(std::string name, const std::vector<glm::vec3>& _data);

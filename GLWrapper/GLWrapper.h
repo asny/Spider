@@ -22,18 +22,6 @@ namespace oogl {
         
     public:
         
-        static void cull_backface(bool enable = true)
-        {
-            if(enable)
-            {
-                glEnable(GL_CULL_FACE);
-                glCullFace(GL_BACK);
-            }
-            else {
-                glDisable(GL_CULL_FACE);
-            }
-        }
-        
         static void initialize();
         
         /**

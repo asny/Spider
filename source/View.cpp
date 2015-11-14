@@ -84,14 +84,6 @@ void View::display()
     
     GLWrapper::draw({spider, terrain, cube, grass});
     
-    GLWrapper::cull_backface();
-    //spider->draw();
-    //terrain->draw();
-    //cube->draw();
-    
-    GLWrapper::cull_backface(false);
-    //grass->draw();
-    
     glutSwapBuffers();
 }
 
@@ -192,7 +184,7 @@ void View::visible(int v)
 void View::create_grass(shared_ptr<GLShader> shader)
 {
     auto material = GLMaterial {{0.1f,0.3f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-    grass = shared_ptr<GLObject>(new GLObject(shader, material, GL_LINES));
+    grass = shared_ptr<GLObject>(new GLObject(shader, material, GL_LINES, nullptr, false));
 }
 
 void View::create_terrain(shared_ptr<GLShader> shader)
