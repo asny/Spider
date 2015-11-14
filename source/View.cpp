@@ -59,7 +59,7 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     
     // Create shaders
     auto texture_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"uv_coordinates", 2}}, "shaders/texture.vert",  "shaders/texture.frag"));
-    auto skybox_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"uv_coordinates", 2}}, "shaders/texture.vert",  "shaders/texture.frag"));
+    auto skybox_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/skybox.vert",  "shaders/skybox.frag"));
     auto phong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"normal", 3}}, "shaders/phong.vert",  "shaders/phong.frag"));
     auto grass_shader = std::shared_ptr<GLShader>(new GLShader({{"end_point", 3}}, "shaders/grass.vert",  "shaders/phong.frag", "shaders/grass.geom"));
     auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
@@ -285,9 +285,9 @@ void View::create_cube(shared_ptr<GLShader> shader)
 void View::create_skybox(shared_ptr<GLShader> shader)
 {
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
-    auto bitmaps = {Reader::load_bitmap("resources/skybox/front.jpg")};
+    auto bitmaps = {Reader::load_bitmap("resources/skybox/right.jpg"), Reader::load_bitmap("resources/skybox/left.jpg"), Reader::load_bitmap("resources/skybox/top.jpg"), Reader::load_bitmap("resources/skybox/top.jpg"), Reader::load_bitmap("resources/skybox/back.jpg"), Reader::load_bitmap("resources/skybox/front.jpg")};
     auto skybox_texture = shared_ptr<GLTexture>(new GLTexture3D(bitmaps));
-    skybox = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, skybox_texture));
+    skybox = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, skybox_texture, false));
     
     skybox->update_vertex_attribute("position", cube_data);
     skybox->finalize_vertex_attributes();
