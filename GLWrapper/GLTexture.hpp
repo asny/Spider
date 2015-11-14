@@ -18,9 +18,8 @@ namespace oogl
      */
     class GLTexture
     {
+    protected:
         GLuint texture_id;
-        GLfloat width;
-        GLfloat height;
         GLenum minMagFilter = GL_LINEAR; // GL_NEAREST or GL_LINEAR
         GLenum wrapMode = GL_CLAMP_TO_EDGE; // GL_REPEAT, GL_MIRRORED_REPEAT, GL_CLAMP_TO_EDGE, or GL_CLAMP_TO_BORDER
         
@@ -28,17 +27,51 @@ namespace oogl
         /**
          Creates a texture from a bitmap.
          */
-        GLTexture(const tdogl::Bitmap& bitmap);
+        GLTexture();
         
         /**
          Bind the texture and returns the id of the active texture.
          */
-        int use();
+        virtual int use();
         
         /**
          Deletes the texture.
          */
         ~GLTexture();
+    };
+    
+    /**
+     Represents an OpenGL texture
+     */
+    class GLTexture2D : public GLTexture
+    {
+    public:
+        /**
+         Creates a texture from a bitmap.
+         */
+        GLTexture2D(const tdogl::Bitmap& bitmap);
+        
+        /**
+         Bind the texture and returns the id of the active texture.
+         */
+        int use();
+    };
+    
+    /**
+     Represents an OpenGL cubemap texture
+     */
+    class GLTexture3D : public GLTexture
+    {
+    public:
+        /**
+         Creates a texture from a bitmap.
+         */
+        GLTexture3D(const tdogl::Bitmap& bitmap);
+        
+        /**
+         Bind the texture and returns the id of the active texture.
+         */
+        int use();
     };
 
 }

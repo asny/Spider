@@ -19,10 +19,28 @@ static GLenum TextureFormatForBitmapFormat(tdogl::Bitmap::Format format)
     }
 }
 
-GLTexture::GLTexture(const tdogl::Bitmap& bitmap) : width(bitmap.width()), height(bitmap.height())
+GLTexture::GLTexture()
 {
     glGenTextures(1, &texture_id);
-    glBindTexture(GL_TEXTURE_2D, texture_id);
+    check_gl_error();
+}
+
+int GLTexture::use()
+{
+    glActiveTexture(GL_TEXTURE0);
+    check_gl_error();
+    return 0; //return 0 because the texture is bound to GL_TEXTURE0
+}
+
+GLTexture::~GLTexture()
+{
+    glDeleteTextures(1, &texture_id);
+    check_gl_error();
+}
+
+GLTexture2D::GLTexture2D(const tdogl::Bitmap& bitmap) : GLTexture::GLTexture()
+{
+    use();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minMagFilter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, minMagFilter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
@@ -40,16 +58,38 @@ GLTexture::GLTexture(const tdogl::Bitmap& bitmap) : width(bitmap.width()), heigh
     check_gl_error();
 }
 
-int GLTexture::use()
+int GLTexture2D::use()
 {
-    glActiveTexture(GL_TEXTURE0);
+    int id = GLTexture::use();
     glBindTexture(GL_TEXTURE_2D, texture_id);
     check_gl_error();
-    return 0; //return 0 because the texture is bound to GL_TEXTURE0
+    return id;
 }
 
-GLTexture::~GLTexture()
+GLTexture3D::GLTexture3D(const tdogl::Bitmap& bitmap) : GLTexture::GLTexture()
 {
-    glDeleteTextures(1, &texture_id);
+    use();
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, minMagFilter);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, minMagFilter);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, wrapMode);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, wrapMode);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP,
+                 0,
+                 TextureFormatForBitmapFormat(bitmap.format()),
+                 (GLsizei)bitmap.width(),
+                 (GLsizei)bitmap.height(),
+                 0,
+                 TextureFormatForBitmapFormat(bitmap.format()),
+                 GL_UNSIGNED_BYTE,
+                 bitmap.pixelBuffer());
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     check_gl_error();
+}
+
+int GLTexture3D::use()
+{
+    int id = GLTexture::use();
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+    check_gl_error();
+    return id;
 }
