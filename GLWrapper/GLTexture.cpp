@@ -25,6 +25,19 @@ GLTexture::GLTexture()
     check_gl_error();
 }
 
+void GLTexture::bind_image(const tdogl::Bitmap& bitmap, GLenum target)
+{
+    glTexImage2D(target,
+                 0,
+                 TextureFormatForBitmapFormat(bitmap.format()),
+                 (GLsizei)bitmap.width(),
+                 (GLsizei)bitmap.height(),
+                 0,
+                 TextureFormatForBitmapFormat(bitmap.format()),
+                 GL_UNSIGNED_BYTE,
+                 bitmap.pixelBuffer());
+}
+
 int GLTexture::use()
 {
     glActiveTexture(GL_TEXTURE0);
@@ -41,19 +54,13 @@ GLTexture::~GLTexture()
 GLTexture2D::GLTexture2D(const tdogl::Bitmap& bitmap) : GLTexture::GLTexture()
 {
     use();
+    bind_image(bitmap, GL_TEXTURE_2D);
+    
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minMagFilter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, minMagFilter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
-    glTexImage2D(GL_TEXTURE_2D,
-                 0,
-                 TextureFormatForBitmapFormat(bitmap.format()),
-                 (GLsizei)bitmap.width(),
-                 (GLsizei)bitmap.height(),
-                 0,
-                 TextureFormatForBitmapFormat(bitmap.format()),
-                 GL_UNSIGNED_BYTE,
-                 bitmap.pixelBuffer());
+    
     glBindTexture(GL_TEXTURE_2D, 0);
     check_gl_error();
 }
@@ -69,19 +76,14 @@ int GLTexture2D::use()
 GLTexture3D::GLTexture3D(const tdogl::Bitmap& bitmap) : GLTexture::GLTexture()
 {
     use();
+    bind_image(bitmap, GL_TEXTURE_CUBE_MAP_POSITIVE_X);
+    
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, minMagFilter);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, minMagFilter);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, wrapMode);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, wrapMode);
-    glTexImage2D(GL_TEXTURE_CUBE_MAP,
-                 0,
-                 TextureFormatForBitmapFormat(bitmap.format()),
-                 (GLsizei)bitmap.width(),
-                 (GLsizei)bitmap.height(),
-                 0,
-                 TextureFormatForBitmapFormat(bitmap.format()),
-                 GL_UNSIGNED_BYTE,
-                 bitmap.pixelBuffer());
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, wrapMode);
+    
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     check_gl_error();
 }

@@ -23,6 +23,8 @@ namespace oogl
         GLenum minMagFilter = GL_LINEAR; // GL_NEAREST or GL_LINEAR
         GLenum wrapMode = GL_CLAMP_TO_EDGE; // GL_REPEAT, GL_MIRRORED_REPEAT, GL_CLAMP_TO_EDGE, or GL_CLAMP_TO_BORDER
         
+        void bind_image(const tdogl::Bitmap& bitmap, GLenum target);
+        
     public:
         /**
          Creates a texture from a bitmap.
