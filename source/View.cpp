@@ -59,12 +59,14 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     
     // Create shaders
     auto texture_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"uv_coordinates", 2}}, "shaders/texture.vert",  "shaders/texture.frag"));
+    auto skybox_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"uv_coordinates", 2}}, "shaders/texture.vert",  "shaders/texture.frag"));
     auto phong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"normal", 3}}, "shaders/phong.vert",  "shaders/phong.frag"));
     auto grass_shader = std::shared_ptr<GLShader>(new GLShader({{"end_point", 3}}, "shaders/grass.vert",  "shaders/phong.frag", "shaders/grass.geom"));
     auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
     
     // Create objects
     create_cube(texture_shader);
+    create_skybox(skybox_shader);
     create_spider(texture_shader);
     create_terrain(phong_shader);
     create_grass(grass_shader);
@@ -213,53 +215,53 @@ void View::create_spider(shared_ptr<GLShader> shader)
     }
 }
 
+static const vector<vec3> cube_data = {
+    // front
+    vec3(-1.0, -1.0,  1.0),
+    vec3(1.0, -1.0,  1.0),
+    vec3(1.0,  1.0,  1.0),
+    vec3(1.0,  1.0,  1.0),
+    vec3(-1.0,  1.0,  1.0),
+    vec3(-1.0, -1.0,  1.0),
+    // top
+    vec3(-1.0,  1.0,  1.0),
+    vec3(1.0,  1.0,  1.0),
+    vec3(1.0,  1.0, -1.0),
+    vec3(1.0,  1.0, -1.0),
+    vec3(-1.0,  1.0, -1.0),
+    vec3(-1.0,  1.0,  1.0),
+    // back
+    vec3(1.0, -1.0, -1.0),
+    vec3(-1.0, -1.0, -1.0),
+    vec3(-1.0,  1.0, -1.0),
+    vec3(-1.0,  1.0, -1.0),
+    vec3(1.0,  1.0, -1.0),
+    vec3(1.0, -1.0, -1.0),
+    // bottom
+    vec3(-1.0, -1.0, -1.0),
+    vec3(1.0, -1.0, -1.0),
+    vec3(1.0, -1.0,  1.0),
+    vec3(1.0, -1.0,  1.0),
+    vec3(-1.0, -1.0,  1.0),
+    vec3(-1.0, -1.0, -1.0),
+    // left
+    vec3(-1.0, -1.0, -1.0),
+    vec3(-1.0, -1.0,  1.0),
+    vec3(-1.0,  1.0,  1.0),
+    vec3(-1.0,  1.0,  1.0),
+    vec3(-1.0,  1.0, -1.0),
+    vec3(-1.0, -1.0, -1.0),
+    // right
+    vec3(1.0, -1.0,  1.0),
+    vec3(1.0, -1.0, -1.0),
+    vec3(1.0,  1.0, -1.0),
+    vec3(1.0,  1.0, -1.0),
+    vec3(1.0,  1.0,  1.0),
+    vec3(1.0, -1.0,  1.0)
+};
+
 void View::create_cube(shared_ptr<GLShader> shader)
 {
-    static const vector<vec3> cube_data = {
-        // front
-        vec3(-1.0, -1.0,  1.0),
-        vec3(1.0, -1.0,  1.0),
-        vec3(1.0,  1.0,  1.0),
-        vec3(1.0,  1.0,  1.0),
-        vec3(-1.0,  1.0,  1.0),
-        vec3(-1.0, -1.0,  1.0),
-        // top
-        vec3(-1.0,  1.0,  1.0),
-        vec3(1.0,  1.0,  1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(-1.0,  1.0, -1.0),
-        vec3(-1.0,  1.0,  1.0),
-        // back
-        vec3(1.0, -1.0, -1.0),
-        vec3(-1.0, -1.0, -1.0),
-        vec3(-1.0,  1.0, -1.0),
-        vec3(-1.0,  1.0, -1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(1.0, -1.0, -1.0),
-        // bottom
-        vec3(-1.0, -1.0, -1.0),
-        vec3(1.0, -1.0, -1.0),
-        vec3(1.0, -1.0,  1.0),
-        vec3(1.0, -1.0,  1.0),
-        vec3(-1.0, -1.0,  1.0),
-        vec3(-1.0, -1.0, -1.0),
-        // left
-        vec3(-1.0, -1.0, -1.0),
-        vec3(-1.0, -1.0,  1.0),
-        vec3(-1.0,  1.0,  1.0),
-        vec3(-1.0,  1.0,  1.0),
-        vec3(-1.0,  1.0, -1.0),
-        vec3(-1.0, -1.0, -1.0),
-        // right
-        vec3(1.0, -1.0,  1.0),
-        vec3(1.0, -1.0, -1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(1.0,  1.0,  1.0),
-        vec3(1.0, -1.0,  1.0)
-    };
-    
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
     auto cubeTextureBmp = Reader::load_bitmap("resources/test_texture.jpg");
     cubeTextureBmp.flipVertically();
@@ -278,5 +280,16 @@ void View::create_cube(shared_ptr<GLShader> shader)
     cube->update_vertex_attribute("position", cube_data);
     cube->update_vertex_attribute("uv_coordinates", cube_uvs);
     cube->finalize_vertex_attributes();
+}
+
+void View::create_skybox(shared_ptr<GLShader> shader)
+{
+    auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
+    auto bitmaps = {Reader::load_bitmap("resources/skybox/front.jpg")};
+    auto skybox_texture = shared_ptr<GLTexture>(new GLTexture3D(bitmaps));
+    skybox = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, skybox_texture));
+    
+    skybox->update_vertex_attribute("position", cube_data);
+    skybox->finalize_vertex_attributes();
 }
 

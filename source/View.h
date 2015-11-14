@@ -21,7 +21,7 @@ class View
     
     std::unique_ptr<oogl::GLCamera> camera;
     
-    std::shared_ptr<oogl::GLObject> terrain, cube, grass, spider;
+    std::shared_ptr<oogl::GLObject> terrain, cube, grass, spider, skybox;
     
     glm::vec3 light_pos = {0., 2., 2.};
     
@@ -31,6 +31,7 @@ class View
     static View* instance;
     
     void create_cube(std::shared_ptr<oogl::GLShader> shader);
+    void create_skybox(std::shared_ptr<oogl::GLShader> shader);
     void create_spider(std::shared_ptr<oogl::GLShader> shader);
     void create_grass(std::shared_ptr<oogl::GLShader> shader);
     void create_terrain(std::shared_ptr<oogl::GLShader> shader);
