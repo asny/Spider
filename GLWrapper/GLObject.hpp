@@ -46,20 +46,38 @@ namespace oogl {
         
         GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES, std::shared_ptr<GLTexture> _texture = nullptr, bool cull_back_faces = true);
         
+        /**
+         Updates the value of the vertex attribute with the given name.
+         */
         void update_vertex_attribute(std::string name, const std::vector<glm::vec2>& _data);
+        
+        /**
+         Updates the value of the vertex attribute with the given name.
+         */
         void update_vertex_attribute(std::string name, const std::vector<glm::vec3>& _data);
         
+        /**
+         Should be called after all vertex attributes has been updated.
+         */
         void finalize_vertex_attributes();
         
+        /**
+         Updates the value of the uniform variable with the given name.
+         */
         template<typename T>
         void update_uniform_variable(std::string name, const T& value)
         {
             shader->set_uniform_variable(name, value);
         }
         
+        /**
+         Draws the object.
+         */
         void draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
         
-        // Setters for the transformations
+        /**
+         Set the model matrix.
+         */
         void set_model_matrix(glm::mat4 _modelMatrix)
         {
             modelMatrix = _modelMatrix;
