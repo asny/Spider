@@ -14,15 +14,15 @@
 namespace oogl {
     
     /**
-     A wrapper for OpenGL.
+     Represents a camera.
      */
-    class GLWrapper {
+    class GLCamera {
         static glm::mat4 viewMatrix;
         static glm::mat4 projectionMatrix;
         
     public:
         
-        static void initialize();
+        GLCamera();
         
         /**
          Reshape the window.
@@ -35,16 +35,8 @@ namespace oogl {
         static void set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
         
         /**
-         Initialize drawing the objects. Should be called before any draw calls to a GLObject.
+         Draws the objects.
          */
-        static void initialize_draw();
-        
-        static void draw(std::vector<std::shared_ptr<GLObject>> objects)
-        {
-            for (std::shared_ptr<GLObject> object : objects) {
-                object->draw(viewMatrix, projectionMatrix);
-            }
-        }
-        
+        static void draw(std::vector<std::shared_ptr<GLObject>> objects);
     };
 }

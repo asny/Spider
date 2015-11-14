@@ -55,7 +55,7 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     glutReshapeFunc(reshape_);
     glutIdleFunc(animate_);
     
-    GLWrapper::initialize();
+    camera = std::unique_ptr<GLCamera>(new GLCamera());
     
     // Create shaders
     auto texture_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"uv_coordinates", 2}}, "shaders/texture.vert",  "shaders/texture.frag"));
@@ -80,9 +80,8 @@ void View::display()
     if (glutGet(GLUT_WINDOW_WIDTH) != WIN_SIZE_X || glutGet(GLUT_WINDOW_HEIGHT) != WIN_SIZE_Y) {
         return;
     }
-    GLWrapper::initialize_draw();
     
-    GLWrapper::draw({spider, terrain, cube, grass});
+    camera->draw({spider, terrain, cube, grass});
     
     glutSwapBuffers();
 }
@@ -91,7 +90,7 @@ void View::reshape(int width, int height)
 {
     WIN_SIZE_X = width;
     WIN_SIZE_Y = height;
-    GLWrapper::set_screen_size(width, height);
+    camera->set_screen_size(width, height);
     
     glutPostRedisplay();
 }
@@ -116,12 +115,12 @@ void View::animate()
     
     if(view_type == FIRST_PERSON)
     {
-        GLWrapper::set_view(spider_position - 0.5f * spider_view_direction + vec3(0.,0.4,0.), spider_view_direction);
+        camera->set_view(spider_position - 0.5f * spider_view_direction + vec3(0.,0.4,0.), spider_view_direction);
     }
     else if(view_type == THIRD_PERSON)
     {
         vec3 camera_view = normalize(vec3(0., -0.5, 0.) + spider_view_direction);
-        GLWrapper::set_view(spider_position - 2.f * camera_view, camera_view);
+        camera->set_view(spider_position - 2.f * camera_view, camera_view);
     }
     
     grass->set_uniform_variable("spiderPosition", spider_position);
