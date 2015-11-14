@@ -81,7 +81,7 @@ void View::display()
         return;
     }
     
-    camera->draw({spider, terrain, cube, grass});
+    camera->draw({spider, cube, terrain, grass});
     
     glutSwapBuffers();
 }

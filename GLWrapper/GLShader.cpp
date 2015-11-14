@@ -15,6 +15,8 @@ using namespace oogl;
 using namespace std;
 using namespace glm;
 
+GLuint GLShader::current_shader_id = -1;
+
 // Create a GLSL program object from vertex and fragment shader files
 GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char* outputAttributeName, const char* gShaderFile)
 {
@@ -105,7 +107,11 @@ GLShader::GLShader(std::vector<VertexAttribute> _attributes, string vertexShader
 
 void GLShader::use()
 {
-    glUseProgram(shader_id);
+    if(current_shader_id != shader_id)
+    {
+        glUseProgram(shader_id);
+        current_shader_id = shader_id;
+    }
 }
 
 GLuint GLShader::get_attribute_location(std::string variable_name)

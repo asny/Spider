@@ -19,6 +19,7 @@ namespace oogl {
         friend class GLObject;
         
         GLuint shader_id;
+        static GLuint current_shader_id;
 
         struct VertexAttribute
         {
