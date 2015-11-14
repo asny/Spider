@@ -16,10 +16,9 @@ namespace oogl {
      */
     class GLShader
     {
-        friend class GLObject;
-        
         GLuint shader_id;
         static GLuint current_shader_id;
+        void use();
 
         struct VertexAttribute
         {
@@ -33,9 +32,6 @@ namespace oogl {
     public:
         
         GLShader(std::vector<VertexAttribute> _attributes, std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
-        
-    private:
-        void use();
         
         // ******* Vertex attribute functionality ********
         

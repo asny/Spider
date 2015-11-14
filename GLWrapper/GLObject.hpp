@@ -54,7 +54,6 @@ namespace oogl {
         template<typename T>
         void set_uniform_variable(std::string name, const T& value)
         {
-            shader->use();
             shader->set_uniform_variable(name, value);
         }
         

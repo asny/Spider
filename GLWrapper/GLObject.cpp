@@ -86,7 +86,6 @@ void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
             currently_cull_back_faces = cull_back_faces;
         }
         
-        shader->use();
         if(texture)
         {
             int texture_id = texture->use();

@@ -116,6 +116,7 @@ void GLShader::use()
 
 GLuint GLShader::get_attribute_location(std::string variable_name)
 {
+    use();
     GLuint attributeLocation = glGetAttribLocation(shader_id, &variable_name[0]);
     if (attributeLocation == NULL_LOCATION) {
         std::cerr << "Shader did not contain the '" << variable_name << "' attribute variable."<<std::endl;
@@ -145,6 +146,7 @@ void GLShader::use_vertex_attributes()
 
 GLuint GLShader::get_uniform_location(std::string variable_name)
 {
+    use();
     GLuint uniformLocation = glGetUniformLocation(shader_id, &variable_name[0]);
     if (uniformLocation == NULL_LOCATION) {
         std::cerr << "Shader did not contain the '" << variable_name << "' uniform variable."<<std::endl;
