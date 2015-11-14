@@ -12,6 +12,8 @@ using namespace oogl;
 using namespace std;
 using namespace glm;
 
+bool GLObject::currently_cull_back_faces = true;
+
 GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode, std::shared_ptr<GLTexture> _texture, bool _cull_back_faces)
 : shader(_shader), material(_material), texture(_texture), drawmode(_drawmode), cull_back_faces(_cull_back_faces)
 {
@@ -71,13 +73,17 @@ void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
 {
     if(no_vertices != 0)
     {
-        if(cull_back_faces)
+        if(currently_cull_back_faces != cull_back_faces)
         {
-            glEnable(GL_CULL_FACE);
-            glCullFace(GL_BACK);
-        }
-        else {
-            glDisable(GL_CULL_FACE);
+            if(cull_back_faces)
+            {
+                glEnable(GL_CULL_FACE);
+                glCullFace(GL_BACK);
+            }
+            else {
+                glDisable(GL_CULL_FACE);
+            }
+            currently_cull_back_faces = cull_back_faces;
         }
         
         shader->use();

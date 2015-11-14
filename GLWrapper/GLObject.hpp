@@ -37,6 +37,7 @@ namespace oogl {
         GLuint buffer_id, array_id;
         GLenum drawmode;
         bool cull_back_faces;
+        static bool currently_cull_back_faces;
         
         // Transformation
         glm::mat4 modelMatrix = glm::mat4(1.);
