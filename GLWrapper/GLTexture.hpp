@@ -66,9 +66,9 @@ namespace oogl
     {
     public:
         /**
-         Creates a texture from a bitmap.
+         Creates a 3D texture from a set of bitmaps.
          */
-        GLTexture3D(const tdogl::Bitmap& bitmap);
+        GLTexture3D(const std::vector<tdogl::Bitmap>& bitmaps);
         
         /**
          Bind the texture and returns the id of the active texture.

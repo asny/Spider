@@ -8,6 +8,7 @@
 
 #include "GLTexture.hpp"
 
+using namespace std;
 using namespace oogl;
 
 static GLenum TextureFormatForBitmapFormat(tdogl::Bitmap::Format format)
@@ -73,10 +74,13 @@ int GLTexture2D::use()
     return id;
 }
 
-GLTexture3D::GLTexture3D(const tdogl::Bitmap& bitmap) : GLTexture::GLTexture()
+GLTexture3D::GLTexture3D(const vector<tdogl::Bitmap>& bitmaps) : GLTexture::GLTexture()
 {
     use();
-    bind_image(bitmap, GL_TEXTURE_CUBE_MAP_POSITIVE_X);
+    for(GLuint i = 0; i < bitmaps.size(); i++)
+    {
+        bind_image(bitmaps[i], GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
+    }
     
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, minMagFilter);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, minMagFilter);
