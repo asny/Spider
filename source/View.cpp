@@ -69,8 +69,8 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     create_terrain(phong_shader);
     create_grass(grass_shader);
     
-    grass->set_uniform_variable("lightPos", light_pos);
-    terrain->set_uniform_variable("lightPos", light_pos);
+    grass->update_uniform_variable("lightPos", light_pos);
+    terrain->update_uniform_variable("lightPos", light_pos);
     
     glutMainLoop();
 }
@@ -123,19 +123,19 @@ void View::animate()
         camera->set_view(spider_position - 2.f * camera_view, camera_view);
     }
     
-    grass->set_uniform_variable("spiderPosition", spider_position);
-    grass->set_uniform_variable("wind", animation);
+    grass->update_uniform_variable("spiderPosition", spider_position);
+    grass->update_uniform_variable("wind", animation);
     
     if(model->terrain_needs_update())
     {
         std::vector<glm::vec3> terrain_positions, terrain_normals, grass_end_points;
         model->get_terrain(terrain_positions, terrain_normals, grass_end_points);
         
-        terrain->set_vertex_attribute("position", terrain_positions);
-        terrain->set_vertex_attribute("normal", terrain_normals);
+        terrain->update_vertex_attribute("position", terrain_positions);
+        terrain->update_vertex_attribute("normal", terrain_normals);
         terrain->finalize_vertex_attributes();
         
-        grass->set_vertex_attribute("end_point", grass_end_points);
+        grass->update_vertex_attribute("end_point", grass_end_points);
         grass->finalize_vertex_attributes();
     }
     
@@ -206,8 +206,8 @@ void View::create_spider(shared_ptr<GLShader> shader)
         auto material = GLMaterial {{0.5f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
         spider = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, texture));
         
-        spider->set_vertex_attribute("position", spider_vertices);
-        spider->set_vertex_attribute("uv_coordinates", spider_uvs);
+        spider->update_vertex_attribute("position", spider_vertices);
+        spider->update_vertex_attribute("uv_coordinates", spider_uvs);
         spider->finalize_vertex_attributes();
     }
 }
@@ -274,8 +274,8 @@ void View::create_cube(shared_ptr<GLShader> shader)
     auto cubeTexture = shared_ptr<GLTexture>(new GLTexture(cubeTextureBmp));
     cube = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, cubeTexture));
     
-    cube->set_vertex_attribute("position", cube_data);
-    cube->set_vertex_attribute("uv_coordinates", cube_uvs);
+    cube->update_vertex_attribute("position", cube_data);
+    cube->update_vertex_attribute("uv_coordinates", cube_uvs);
     cube->finalize_vertex_attributes();
 }
 

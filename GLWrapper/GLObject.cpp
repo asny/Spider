@@ -29,7 +29,7 @@ GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _materia
     check_gl_error();
 }
 
-void GLObject::set_vertex_attribute(std::string name, const std::vector<glm::vec2>& _data)
+void GLObject::update_vertex_attribute(std::string name, const std::vector<glm::vec2>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
     int start_index = shader->get_attribute_start_index(name);
@@ -44,7 +44,7 @@ void GLObject::set_vertex_attribute(std::string name, const std::vector<glm::vec
     }
 }
 
-void GLObject::set_vertex_attribute(std::string name, const std::vector<glm::vec3>& _data)
+void GLObject::update_vertex_attribute(std::string name, const std::vector<glm::vec3>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
     int start_index = shader->get_attribute_start_index(name);
