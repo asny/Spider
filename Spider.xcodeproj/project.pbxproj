@@ -15,7 +15,7 @@
 		7A3895A21BEE471A00D6E095 /* GLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A01BEE471A00D6E095 /* GLObject.cpp */; settings = {ASSET_TAGS = (); }; };
 		7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A51BEFB8AE00D6E095 /* Bitmap.cpp */; settings = {ASSET_TAGS = (); }; };
 		7A3895AA1BEFB8AE00D6E095 /* Reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A71BEFB8AE00D6E095 /* Reader.cpp */; settings = {ASSET_TAGS = (); }; };
-		7A70D0F91BC68BAA003E859B /* GLWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0F71BC68BAA003E859B /* GLWrapper.cpp */; settings = {ASSET_TAGS = (); }; };
+		7A70D0F91BC68BAA003E859B /* GLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0F71BC68BAA003E859B /* GLCamera.cpp */; settings = {ASSET_TAGS = (); }; };
 		7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */; settings = {ASSET_TAGS = (); }; };
 		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; settings = {ASSET_TAGS = (); }; };
 		7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* spider.cpp */; settings = {ASSET_TAGS = (); }; };
@@ -59,8 +59,8 @@
 		7A3895A81BEFB8AE00D6E095 /* Reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Reader.hpp; path = Readers/Reader.hpp; sourceTree = "<group>"; };
 		7A70D0F11BC5BF19003E859B /* fastphong.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fastphong.geom; path = shaders/fastphong.geom; sourceTree = "<group>"; };
 		7A70D0F21BC5BF19003E859B /* fastphong.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fastphong.vert; path = shaders/fastphong.vert; sourceTree = "<group>"; };
-		7A70D0F71BC68BAA003E859B /* GLWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLWrapper.cpp; path = GLWrapper/GLWrapper.cpp; sourceTree = SOURCE_ROOT; };
-		7A70D0F81BC68BAA003E859B /* GLWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLWrapper.h; path = GLWrapper/GLWrapper.h; sourceTree = SOURCE_ROOT; };
+		7A70D0F71BC68BAA003E859B /* GLCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLCamera.cpp; path = GLWrapper/GLCamera.cpp; sourceTree = SOURCE_ROOT; };
+		7A70D0F81BC68BAA003E859B /* GLCamera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLCamera.hpp; path = GLWrapper/GLCamera.hpp; sourceTree = SOURCE_ROOT; };
 		7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplexnoise.cpp; sourceTree = "<group>"; };
 		7A70D0FD1BC6BEE8003E859B /* simplexnoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexnoise.h; sourceTree = "<group>"; };
 		7AB0F2BA1BC07AA0009D85FD /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = model.cpp; path = source/model.cpp; sourceTree = "<group>"; };
@@ -147,8 +147,8 @@
 		7A70D0F31BC68B1B003E859B /* GLWrapper */ = {
 			isa = PBXGroup;
 			children = (
-				7A70D0F71BC68BAA003E859B /* GLWrapper.cpp */,
-				7A70D0F81BC68BAA003E859B /* GLWrapper.h */,
+				7A70D0F71BC68BAA003E859B /* GLCamera.cpp */,
+				7A70D0F81BC68BAA003E859B /* GLCamera.hpp */,
 				7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */,
 				7AF9C41F1BED491F008AE5F5 /* GLTexture.hpp */,
 				7A38959C1BEE447B00D6E095 /* GLShader.cpp */,
@@ -256,7 +256,7 @@
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
 				7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */,
 				7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */,
-				7A70D0F91BC68BAA003E859B /* GLWrapper.cpp in Sources */,
+				7A70D0F91BC68BAA003E859B /* GLCamera.cpp in Sources */,
 				7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */,
 				7A3895A21BEE471A00D6E095 /* GLObject.cpp in Sources */,
 				7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */,

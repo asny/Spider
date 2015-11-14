@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include "GLWrapper.h"
-#include "GLObject.hpp"
+#include "GLCamera.hpp"
 #include "model.hpp"
 
 class View

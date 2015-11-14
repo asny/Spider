@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Asger Nyman Christiansen. All rights reserved.
 //
 
-#include "GLWrapper.h"
+#include "GLCamera.hpp"
 #include "GLObject.hpp"
 
 using namespace oogl;
