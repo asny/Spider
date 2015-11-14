@@ -13,6 +13,9 @@ using namespace oogl;
 using namespace std;
 using namespace glm;
 
+mat4 GLWrapper::viewMatrix = mat4(1.);
+mat4 GLWrapper::projectionMatrix = mat4(1.);
+
 void GLWrapper::initialize()
 {
     // Enable states
@@ -28,13 +31,13 @@ void GLWrapper::initialize()
 void GLWrapper::set_screen_size(int width, int height)
 {
     glViewport(0, 0, width, height);
-    GLObject::set_projection_matrix(perspective(45.f, width/float(height), 0.01f, 100.f));
+    projectionMatrix = perspective(45.f, width/float(height), 0.01f, 100.f);
     check_gl_error();
 }
 
 void GLWrapper::set_view(const vec3& eyePosition, const vec3& eyeDirection)
 {
-    GLObject::set_view_matrix(lookAt(eyePosition, eyePosition + eyeDirection, vec3(0., 1., 0.)));
+    viewMatrix = lookAt(eyePosition, eyePosition + eyeDirection, vec3(0., 1., 0.));
     check_gl_error();
 }
 

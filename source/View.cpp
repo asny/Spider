@@ -82,13 +82,15 @@ void View::display()
     }
     GLWrapper::initialize_draw();
     
+    GLWrapper::draw({spider, terrain, cube, grass});
+    
     GLWrapper::cull_backface();
-    spider->draw();
-    terrain->draw();
-    cube->draw();
+    //spider->draw();
+    //terrain->draw();
+    //cube->draw();
     
     GLWrapper::cull_backface(false);
-    grass->draw();
+    //grass->draw();
     
     glutSwapBuffers();
 }
@@ -190,13 +192,13 @@ void View::visible(int v)
 void View::create_grass(shared_ptr<GLShader> shader)
 {
     auto material = GLMaterial {{0.1f,0.3f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-    grass = std::unique_ptr<GLObject>(new GLObject(shader, material, GL_LINES));
+    grass = shared_ptr<GLObject>(new GLObject(shader, material, GL_LINES));
 }
 
 void View::create_terrain(shared_ptr<GLShader> shader)
 {
     auto material = GLMaterial {{0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-    terrain = std::unique_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLE_STRIP));
+    terrain = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLE_STRIP));
 }
 
 void View::create_spider(shared_ptr<GLShader> shader)
@@ -208,10 +210,10 @@ void View::create_spider(shared_ptr<GLShader> shader)
     {
         auto bmp = Reader::load_bitmap("resources/spider/TRANTULA.PNG");
         bmp.flipVertically();
-        auto texture = std::shared_ptr<GLTexture>(new GLTexture(bmp));
+        auto texture = shared_ptr<GLTexture>(new GLTexture(bmp));
         
         auto material = GLMaterial {{0.5f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-        spider = std::unique_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, texture));
+        spider = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, texture));
         
         spider->set_vertex_attribute("position", spider_vertices);
         spider->set_vertex_attribute("uv_coordinates", spider_uvs);
@@ -279,7 +281,7 @@ void View::create_cube(shared_ptr<GLShader> shader)
         cube_uvs.push_back(vec2(0.));
     }
     auto cubeTexture = shared_ptr<GLTexture>(new GLTexture(cubeTextureBmp));
-    cube = unique_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, cubeTexture));
+    cube = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, cubeTexture));
     
     cube->set_vertex_attribute("position", cube_data);
     cube->set_vertex_attribute("uv_coordinates", cube_uvs);

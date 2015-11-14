@@ -9,6 +9,7 @@
 #pragma once
 
 #include "GLUtility.h"
+#include "GLObject.hpp"
 
 namespace oogl {
     
@@ -16,6 +17,8 @@ namespace oogl {
      A wrapper for OpenGL.
      */
     class GLWrapper {
+        static glm::mat4 viewMatrix;
+        static glm::mat4 projectionMatrix;
         
     public:
         
@@ -47,5 +50,13 @@ namespace oogl {
          Initialize drawing the objects. Should be called before any draw calls to a GLObject.
          */
         static void initialize_draw();
+        
+        static void draw(std::vector<std::shared_ptr<GLObject>> objects)
+        {
+            for (std::shared_ptr<GLObject> object : objects) {
+                object->draw(viewMatrix, projectionMatrix);
+            }
+        }
+        
     };
 }

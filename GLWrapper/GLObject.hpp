@@ -39,8 +39,6 @@ namespace oogl {
         
         // Transformations
         glm::mat4 modelMatrix = glm::mat4(1.);
-        static glm::mat4 viewMatrix;
-        static glm::mat4 projectionMatrix;
         
     public:
         
@@ -58,22 +56,12 @@ namespace oogl {
             shader->set_uniform_variable(name, value);
         }
         
-        void draw();
+        void draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
         
         // Setters for the transformations
         void set_model_matrix(glm::mat4 _modelMatrix)
         {
             modelMatrix = _modelMatrix;
-        }
-        
-        static void set_view_matrix(glm::mat4 _viewMatrix)
-        {
-            viewMatrix = _viewMatrix;
-        }
-        
-        static void set_projection_matrix(glm::mat4 _projectionMatrix)
-        {
-            projectionMatrix = _projectionMatrix;
         }
     };
 }
