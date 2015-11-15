@@ -285,7 +285,7 @@ void View::create_cube(shared_ptr<GLShader> shader)
 void View::create_skybox(shared_ptr<GLShader> shader)
 {
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
-    auto bitmaps = {Reader::load_bitmap("resources/skybox/right.jpg"), Reader::load_bitmap("resources/skybox/left.jpg"), Reader::load_bitmap("resources/skybox/top.jpg"), Reader::load_bitmap("resources/skybox/top.jpg"), Reader::load_bitmap("resources/skybox/back.jpg"), Reader::load_bitmap("resources/skybox/front.jpg")};
+    auto bitmaps = {Reader::load_bitmap("resources/skybox/right.jpg"), Reader::load_bitmap("resources/skybox/left.jpg"), Reader::load_bitmap("resources/skybox/top.jpg"), Reader::load_bitmap("resources/skybox/top.jpg"), Reader::load_bitmap("resources/skybox/front.jpg"), Reader::load_bitmap("resources/skybox/back.jpg")};
     auto skybox_texture = shared_ptr<GLTexture>(new GLTexture3D(bitmaps));
     skybox = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, skybox_texture, false));
     
