@@ -77,6 +77,20 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     glutMainLoop();
 }
 
+void print_fps()
+{
+    static int draws = 0;
+    draws++;
+    static float startTime = glutGet(GLUT_ELAPSED_TIME);
+    float elapsedTime = 0.001 * (glutGet(GLUT_ELAPSED_TIME) - startTime);
+    if(elapsedTime > 5)
+    {
+        std::cout << "FPS: " << (float)(draws)/elapsedTime << std::endl;
+        startTime = glutGet(GLUT_ELAPSED_TIME);
+        draws = 0;
+    }
+}
+
 void View::display()
 {
     if (glutGet(GLUT_WINDOW_WIDTH) != WIN_SIZE_X || glutGet(GLUT_WINDOW_HEIGHT) != WIN_SIZE_Y) {
@@ -84,6 +98,8 @@ void View::display()
     }
     
     camera->draw({spider, cube, terrain, grass, skybox});
+    
+    print_fps();
     
     glutSwapBuffers();
 }
