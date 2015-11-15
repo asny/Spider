@@ -25,21 +25,21 @@ namespace oogl
         
         void bind_image(const tdogl::Bitmap& bitmap, GLenum target);
         
-    public:
         /**
          Creates a texture from a bitmap.
          */
         GLTexture();
         
         /**
-         Bind the texture and returns the id of the active texture.
-         */
-        virtual int use();
-        
-        /**
          Deletes the texture.
          */
         ~GLTexture();
+        
+    public:
+        /**
+         Bind the texture and returns the id of the active texture.
+         */
+        virtual int use();
     };
     
     /**

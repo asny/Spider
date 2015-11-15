@@ -1,6 +1,6 @@
 #version 150
 
-uniform sampler3D texture0;
+uniform samplerCube texture0;
 
 in vec3 coords;
 
