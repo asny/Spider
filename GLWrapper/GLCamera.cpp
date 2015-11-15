@@ -20,6 +20,7 @@ GLCamera::GLCamera()
 {
     // Enable states
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
     glDepthMask(GL_TRUE);
     
     glEnable(GL_BLEND);
