@@ -32,7 +32,7 @@ GLCamera::GLCamera()
 void GLCamera::set_screen_size(int width, int height)
 {
     glViewport(0, 0, width, height);
-    projectionMatrix = perspective(45.f, width/float(height), 0.01f, 100.f);
+    projectionMatrix = perspective(45.f, width/float(height), 0.1f, 100.f);
     check_gl_error();
 }
 

@@ -23,7 +23,7 @@ class View
     
     std::shared_ptr<oogl::GLObject> terrain, cube, grass, spider, skybox;
     
-    glm::vec3 light_pos = {0., 2., 2.};
+    glm::vec3 light_pos = {0., 2000., 2.};
     
     int WIN_SIZE_X = 1280;
     int WIN_SIZE_Y = 720;
