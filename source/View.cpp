@@ -67,7 +67,7 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     // Create objects
     create_cube(texture_shader);
     create_skybox(skybox_shader);
-    create_spider(texture_shader);
+    create_spider(fastphong_shader);
     create_terrain(phong_shader);
     create_grass(grass_shader);
     
@@ -202,15 +202,10 @@ void View::create_spider(shared_ptr<GLShader> shader)
     bool load_success = Reader::load_obj("resources/spider/TRANTULA.OBJ", spider_vertices, spider_uvs);
     if(load_success)
     {
-        auto bmp = Reader::load_bitmap("resources/spider/TRANTULA.PNG");
-        bmp.flipVertically();
-        auto texture = shared_ptr<GLTexture>(new GLTexture2D(bmp));
-        
-        auto material = GLMaterial {{0.5f,0.2f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-        spider = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, texture));
+        auto material = GLMaterial {{0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
+        spider = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES));
         
         spider->update_vertex_attribute("position", spider_vertices);
-        spider->update_vertex_attribute("uv_coordinates", spider_uvs);
         spider->finalize_vertex_attributes();
     }
 }
