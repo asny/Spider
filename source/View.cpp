@@ -215,53 +215,53 @@ void View::create_spider(shared_ptr<GLShader> shader)
     }
 }
 
-static const vector<vec3> cube_data = {
-    // front
-    vec3(-1.0, -1.0,  1.0),
-    vec3(1.0, -1.0,  1.0),
-    vec3(1.0,  1.0,  1.0),
-    vec3(1.0,  1.0,  1.0),
-    vec3(-1.0,  1.0,  1.0),
-    vec3(-1.0, -1.0,  1.0),
-    // top
-    vec3(-1.0,  1.0,  1.0),
-    vec3(1.0,  1.0,  1.0),
-    vec3(1.0,  1.0, -1.0),
-    vec3(1.0,  1.0, -1.0),
-    vec3(-1.0,  1.0, -1.0),
-    vec3(-1.0,  1.0,  1.0),
-    // back
-    vec3(1.0, -1.0, -1.0),
-    vec3(-1.0, -1.0, -1.0),
-    vec3(-1.0,  1.0, -1.0),
-    vec3(-1.0,  1.0, -1.0),
-    vec3(1.0,  1.0, -1.0),
-    vec3(1.0, -1.0, -1.0),
-    // bottom
-    vec3(-1.0, -1.0, -1.0),
-    vec3(1.0, -1.0, -1.0),
-    vec3(1.0, -1.0,  1.0),
-    vec3(1.0, -1.0,  1.0),
-    vec3(-1.0, -1.0,  1.0),
-    vec3(-1.0, -1.0, -1.0),
-    // left
-    vec3(-1.0, -1.0, -1.0),
-    vec3(-1.0, -1.0,  1.0),
-    vec3(-1.0,  1.0,  1.0),
-    vec3(-1.0,  1.0,  1.0),
-    vec3(-1.0,  1.0, -1.0),
-    vec3(-1.0, -1.0, -1.0),
-    // right
-    vec3(1.0, -1.0,  1.0),
-    vec3(1.0, -1.0, -1.0),
-    vec3(1.0,  1.0, -1.0),
-    vec3(1.0,  1.0, -1.0),
-    vec3(1.0,  1.0,  1.0),
-    vec3(1.0, -1.0,  1.0)
-};
-
 void View::create_cube(shared_ptr<GLShader> shader)
 {
+    static const vector<vec3> cube_data = {
+        // front
+        vec3(-1.0, -1.0,  1.0),
+        vec3(1.0, -1.0,  1.0),
+        vec3(1.0,  1.0,  1.0),
+        vec3(1.0,  1.0,  1.0),
+        vec3(-1.0,  1.0,  1.0),
+        vec3(-1.0, -1.0,  1.0),
+        // top
+        vec3(-1.0,  1.0,  1.0),
+        vec3(1.0,  1.0,  1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(-1.0,  1.0, -1.0),
+        vec3(-1.0,  1.0,  1.0),
+        // back
+        vec3(1.0, -1.0, -1.0),
+        vec3(-1.0, -1.0, -1.0),
+        vec3(-1.0,  1.0, -1.0),
+        vec3(-1.0,  1.0, -1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(1.0, -1.0, -1.0),
+        // bottom
+        vec3(-1.0, -1.0, -1.0),
+        vec3(1.0, -1.0, -1.0),
+        vec3(1.0, -1.0,  1.0),
+        vec3(1.0, -1.0,  1.0),
+        vec3(-1.0, -1.0,  1.0),
+        vec3(-1.0, -1.0, -1.0),
+        // left
+        vec3(-1.0, -1.0, -1.0),
+        vec3(-1.0, -1.0,  1.0),
+        vec3(-1.0,  1.0,  1.0),
+        vec3(-1.0,  1.0,  1.0),
+        vec3(-1.0,  1.0, -1.0),
+        vec3(-1.0, -1.0, -1.0),
+        // right
+        vec3(1.0, -1.0,  1.0),
+        vec3(1.0, -1.0, -1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(1.0,  1.0,  1.0),
+        vec3(1.0, -1.0,  1.0)
+    };
+    
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
     auto cubeTextureBmp = Reader::load_bitmap("resources/test_texture.jpg");
     cubeTextureBmp.flipVertically();
@@ -284,10 +284,55 @@ void View::create_cube(shared_ptr<GLShader> shader)
 
 void View::create_skybox(shared_ptr<GLShader> shader)
 {
+    static const vector<vec3> cube_data = {
+        // front
+        vec3(-1.0, -1.0,  1.0),
+        vec3(1.0,  1.0,  1.0),
+        vec3(1.0, -1.0,  1.0),
+        vec3(1.0,  1.0,  1.0),
+        vec3(-1.0, -1.0,  1.0),
+        vec3(-1.0,  1.0,  1.0),
+        // top
+        vec3(-1.0,  1.0,  1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(1.0,  1.0,  1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(-1.0,  1.0,  1.0),
+        vec3(-1.0,  1.0, -1.0),
+        // back
+        vec3(1.0, -1.0, -1.0),
+        vec3(-1.0,  1.0, -1.0),
+        vec3(-1.0, -1.0, -1.0),
+        vec3(-1.0,  1.0, -1.0),
+        vec3(1.0, -1.0, -1.0),
+        vec3(1.0,  1.0, -1.0),
+        // bottom
+        vec3(-1.0, -1.0, -1.0),
+        vec3(1.0, -1.0,  1.0),
+        vec3(1.0, -1.0, -1.0),
+        vec3(1.0, -1.0,  1.0),
+        vec3(-1.0, -1.0, -1.0),
+        vec3(-1.0, -1.0,  1.0),
+        // left
+        vec3(-1.0, -1.0, -1.0),
+        vec3(-1.0,  1.0,  1.0),
+        vec3(-1.0, -1.0,  1.0),
+        vec3(-1.0,  1.0,  1.0),
+        vec3(-1.0, -1.0, -1.0),
+        vec3(-1.0,  1.0, -1.0),
+        // right
+        vec3(1.0, -1.0,  1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(1.0, -1.0, -1.0),
+        vec3(1.0,  1.0, -1.0),
+        vec3(1.0, -1.0,  1.0),
+        vec3(1.0,  1.0,  1.0)
+    };
+    
     auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
     auto bitmaps = {Reader::load_bitmap("resources/skybox/right.jpg"), Reader::load_bitmap("resources/skybox/left.jpg"), Reader::load_bitmap("resources/skybox/top.jpg"), Reader::load_bitmap("resources/skybox/top.jpg"), Reader::load_bitmap("resources/skybox/front.jpg"), Reader::load_bitmap("resources/skybox/back.jpg")};
     auto skybox_texture = shared_ptr<GLTexture>(new GLTexture3D(bitmaps));
-    skybox = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, skybox_texture, false));
+    skybox = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES, skybox_texture));
     
     skybox->update_vertex_attribute("position", cube_data);
     skybox->finalize_vertex_attributes();
