@@ -73,7 +73,8 @@ void emit_straw_half(vec3 origin1, vec3 origin2, vec3 top, float step_size)
 // Bend straw for wind and spider
 vec3 compute_top(vec3 origin, vec3 straw, vec3 bend_direction, vec3 spider_position, float distance_to_spider)
 {
-    if (distance_to_spider < 0.1)
+    const float spider_power_radius = 0.8f;
+    if (distance_to_spider < 0.4 * spider_power_radius)
     {
         return origin;
     }
@@ -81,22 +82,20 @@ vec3 compute_top(vec3 origin, vec3 straw, vec3 bend_direction, vec3 spider_posit
     float l = length(straw);
     
     // Apply wind or spider forces
-    const float spider_power_radius = 0.8f;
     if(distance_to_spider < spider_power_radius)
     {
-        float spider_power = 10.f * l * (spider_power_radius - distance_to_spider);
-        straw += spider_power * normalize(origin - spider_position);
+        vec3 s = (origin - spider_position) / distance_to_spider;
+        vec3 t = cross(s, up_direction);
+        s = cross(up_direction, t);
+        straw += 5.f * l * (spider_power_radius - distance_to_spider) * s;
     }
     else {
         vec3 w = (NMatrix * vec4(wind, 1.)).xyz;
-        float wind_power = dot(straw, w);
-        straw += wind_power * bend_direction;
+        straw += dot(straw, w) * bend_direction;
     }
+    straw = l * normalize(straw);
     
-    // Compute top
-    vec3 top = origin + l * normalize(straw);
-    top.y = max(origin.y, top.y);
-    return top;
+    return origin + straw;
 }
 
 void main()
