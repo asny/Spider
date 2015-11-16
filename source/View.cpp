@@ -178,6 +178,9 @@ void View::keyboard(unsigned char key, int x, int y) {
         case 's':
             model->move_backwards();
             break;
+        case ' ':
+            model->jump();
+            break;
         case 'v':
             if(view_type == FIRST_PERSON)
             {

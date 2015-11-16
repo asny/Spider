@@ -71,4 +71,9 @@ public:
     {
         spider.rotate_right();
     }
+    
+    void jump()
+    {
+        spider.jump();
+    }
 };
