@@ -70,32 +70,53 @@ void emit_straw_half(vec3 origin1, vec3 origin2, vec3 top, float step_size)
     EndPrimitive();
 }
 
+// Bend straw for wind and spider
+vec3 compute_top(vec3 origin, vec3 straw, vec3 bend_direction, vec3 spiderP, float distance_to_spider)
+{
+    vec3 away_direction = origin - spiderP;
+    if (length(away_direction) < 0.01)
+    {
+        return origin;
+    }
+    
+    float l = length(straw);
+    
+    // Apply wind and spider forces
+    const float spider_power_radius = 0.8f;
+    if(distance_to_spider < spider_power_radius)
+    {
+        float spider_power = 10.f * l * (spider_power_radius - distance_to_spider);
+        straw += spider_power * normalize(away_direction);
+    }
+    else {
+        vec3 w = (NMatrix * vec4(wind, 1.)).xyz;
+        float wind_power = dot(straw, w);
+        straw += wind_power * bend_direction;
+    }
+    
+    // Compute top
+    vec3 top = origin + l * normalize(straw);
+    top.y = max(origin.y, top.y);
+    return top;
+}
+
 void main()
 {
+    // Compute variables
     up_direction = (NMatrix * vec4(0., 1., 0., 1.)).xyz;
     
     vec3 origin = gl_in[0].gl_Position.xyz;
     vec3 straw = gl_in[1].gl_Position.xyz - origin;
-    float l = length(straw);
-    vec3 straw_direction = straw/l;
+    vec3 straw_direction = normalize(straw);
     vec3 leave_direction = normalize(cross(up_direction, straw_direction));
     vec3 bend_direction = normalize(cross(leave_direction, straw_direction));
     
     // Find distance to spider
     vec3 spiderP = (MVMatrix * vec4(spiderPosition, 1.)).xyz;
-    float distance_to_spider = distance(origin.xz, spiderP.xz);
+    float distance_to_spider = distance(origin, spiderP);
     
-    // Bend straw for wind and spider
-    vec3 w = (NMatrix * vec4(wind, 1.)).xyz;
-    float wind_power = dot(straw, w);
-    float spider_power = 15.f * l * max(0.6f - distance_to_spider, 0.f);
-    vec3 away_direction = vec3(origin.x - spiderP.x, 0., origin.z - spiderP.z);
-    if (length(away_direction) < 0.0001)
-    {
-        away_direction = vec3(1.,0.,0.);
-    }
-    vec3 top = origin + l * normalize(straw + wind_power * bend_direction + spider_power * normalize(away_direction));
-    top.y = max(origin.y, top.y);
+    // Compute top
+    vec3 top = compute_top(origin, straw, bend_direction, spiderP, distance_to_spider);
     
     // Compute corners
     vec3 bend_direction_xz = normalize(vec3(bend_direction.x, 0.f, bend_direction.z));
