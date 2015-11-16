@@ -71,22 +71,21 @@ void emit_straw_half(vec3 origin1, vec3 origin2, vec3 top, float step_size)
 }
 
 // Bend straw for wind and spider
-vec3 compute_top(vec3 origin, vec3 straw, vec3 bend_direction, vec3 spiderP, float distance_to_spider)
+vec3 compute_top(vec3 origin, vec3 straw, vec3 bend_direction, vec3 spider_position, float distance_to_spider)
 {
-    vec3 away_direction = origin - spiderP;
-    if (length(away_direction) < 0.01)
+    if (distance_to_spider < 0.1)
     {
         return origin;
     }
     
     float l = length(straw);
     
-    // Apply wind and spider forces
+    // Apply wind or spider forces
     const float spider_power_radius = 0.8f;
     if(distance_to_spider < spider_power_radius)
     {
         float spider_power = 10.f * l * (spider_power_radius - distance_to_spider);
-        straw += spider_power * normalize(away_direction);
+        straw += spider_power * normalize(origin - spider_position);
     }
     else {
         vec3 w = (NMatrix * vec4(wind, 1.)).xyz;
@@ -109,19 +108,18 @@ void main()
     vec3 straw = gl_in[1].gl_Position.xyz - origin;
     vec3 straw_direction = normalize(straw);
     vec3 leave_direction = normalize(cross(up_direction, straw_direction));
-    vec3 bend_direction = normalize(cross(leave_direction, straw_direction));
+    vec3 bend_direction = normalize(cross(leave_direction, up_direction));
     
     // Find distance to spider
-    vec3 spiderP = (MVMatrix * vec4(spiderPosition, 1.)).xyz;
-    float distance_to_spider = distance(origin, spiderP);
+    vec3 spider_position = (MVMatrix * vec4(spiderPosition, 1.)).xyz;
+    float distance_to_spider = distance(origin, spider_position);
     
     // Compute top
-    vec3 top = compute_top(origin, straw, bend_direction, spiderP, distance_to_spider);
+    vec3 top = compute_top(origin, straw, bend_direction, spider_position, distance_to_spider);
     
     // Compute corners
-    vec3 bend_direction_xz = normalize(vec3(bend_direction.x, 0.f, bend_direction.z));
-    vec3 corner1 = origin + half_width * leave_direction - 0.5 * half_width * bend_direction_xz;
-    vec3 corner2 = origin - half_width * leave_direction - 0.5 * half_width * bend_direction_xz;
+    vec3 corner1 = origin + half_width * leave_direction - 0.5 * half_width * bend_direction;
+    vec3 corner2 = origin - half_width * leave_direction - 0.5 * half_width * bend_direction;
     
     // Emit vertices
     float step_size = 1.f / max(ceil(30.f - 3.f * distance_to_spider), 4);
