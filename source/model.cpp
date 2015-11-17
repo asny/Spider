@@ -49,17 +49,57 @@ vec3 Model::approximate_normal_at(const vec3& position, double filter_size)
     return approximate_normal(position, neighbour_positions);
 }
 
-vec2 old_pos = vec2(INFINITY);
-bool Model::terrain_needs_update()
+map<int, pair<int, int>> Model::terrain_patches_to_update()
 {
     vec3 spider_pos = spider.get_position();
-    vec2 spider_xz = vec2(spider_pos.x, spider_pos.z);
-    if(distance(spider_xz, old_pos) > 4.)
-    {
-        old_pos = spider_xz;
-        return true;
+    pair<int, int> center = terrain.index_at(spider_pos);
+    
+    if (terrainIndexMap.size() == 0) {
+        for (int i = 0; i < 9; i++) {
+            terrainIndexMap[i] = {center.first - 1 + i % 3, center.second - 1 + std::floor(i/3)};
+        }
+        return terrainIndexMap;
     }
-    return false;
+    
+    map<int, pair<int, int>> to_update = map<int, pair<int, int>>();
+    for (int i = 0; i < 9; i++)
+    {
+        auto current = terrainIndexMap[i];
+        if(center.first - current.first == 2 && center.second - current.second == 2)
+        {
+            to_update[i] = {center.first + 1, center.second + 1};
+        }
+        else if(center.first - current.first == -2 && center.second - current.second == -2)
+        {
+            to_update[i] = {center.first - 1, center.second - 1};
+        }
+        else if(center.first - current.first == 2 && center.second - current.second == -2)
+        {
+            to_update[i] = {center.first + 1, center.second - 1};
+        }
+        else if(center.first - current.first == -2 && center.second - current.second == 2)
+        {
+            to_update[i] = {center.first - 1, center.second + 1};
+        }
+        else if(center.first - current.first == 2)
+        {
+            to_update[i] = {center.first + 1, current.second};
+        }
+        else if(center.first - current.first == -2)
+        {
+            to_update[i] = {center.first - 1, current.second};
+        }
+        else if(center.second - current.second == 2)
+        {
+            to_update[i] = {current.first, center.second + 1};
+        }
+        else if(center.second - current.second == -2)
+        {
+            to_update[i] = {current.first, center.second - 1};
+        }
+    }
+    
+    return to_update;
 }
 
 double random(double min, double max)
@@ -67,9 +107,10 @@ double random(double min, double max)
     return (max - min) * (double)rand()/(double)RAND_MAX + min;
 }
 
-void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals, vector<vec3>& grass_end_points)
+void Model::get_terrain_patch(pair<int, int> patch_index, vector<vec3>& positions, vector<vec3>& normals, vector<vec3>& grass_end_points)
 {
     vec3 spider_position = spider.get_position();
+    TerrainPatch* patch = terrain.get_patch_at(patch_index);
     
     const double radius = 10.;
     const double step_size = 1./Terrain::VERTICES_PER_UNIT;
@@ -106,11 +147,8 @@ void Model::get_terrain(vector<vec3>& positions, vector<vec3>& normals, vector<v
             }
             
             vec3 grass_vector = terrain.get_grass_vector_at(p);
-            if(dot(grass_vector, grass_vector) > 0)
-            {
-                grass_end_points.push_back(position + vec3(random(-0.5 * step_size, 0.5 * step_size), 0., random(-0.5 * step_size, 0.5 * step_size)));
-                grass_end_points.push_back(position + grass_vector);
-            }
+            grass_end_points.push_back(position + vec3(random(-0.5 * step_size, 0.5 * step_size), 0., random(-0.5 * step_size, 0.5 * step_size)));
+            grass_end_points.push_back(position + grass_vector);
         }
     }
 }

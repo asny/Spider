@@ -19,6 +19,8 @@ class Model {
     Spider spider = Spider(glm::vec3(0., 0.05, -5.), glm::vec3(0., 0., 1.));
     Terrain terrain = Terrain();
     
+    std::map<int, std::pair<int, int>> terrainIndexMap = std::map<int, std::pair<int, int>>();
+    
     glm::vec3 approximate_normal_at(const glm::vec3& position, double filter_size);
 public:
     Model()
@@ -46,9 +48,9 @@ public:
         return glm::normalize(glm::vec3(view_dir.x, y_view_dir, view_dir.z));
     }
     
-    bool terrain_needs_update();
+    std::map<int, std::pair<int, int>> terrain_patches_to_update();
     
-    void get_terrain(std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec3>& grass_end_points);
+    void get_terrain_patch(std::pair<int, int> patch_index, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec3>& grass_end_points);
     
     // ******** CONTROL ********
     

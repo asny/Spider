@@ -72,7 +72,9 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     create_grass(grass_shader);
     
     grass->update_uniform_variable("lightPos", light_pos);
-    terrain->update_uniform_variable("lightPos", light_pos);
+    for (auto terrain_patch : terrain_patches) {
+        terrain_patch->update_uniform_variable("lightPos", light_pos);
+    }
     
     glutMainLoop();
 }
@@ -97,7 +99,10 @@ void View::display()
         return;
     }
     
-    camera->draw({spider, cube, terrain, grass, skybox});
+    vector<shared_ptr<GLObject>> objects = {spider, cube, grass, skybox};
+    objects.insert(objects.end(), terrain_patches.begin(), terrain_patches.end());
+    
+    camera->draw(objects);
     
     print_fps();
     
@@ -145,14 +150,14 @@ void View::animate()
     grass->update_uniform_variable("spiderPosition", spider_position);
     grass->update_uniform_variable("wind", animation);
     
-    if(model->terrain_needs_update())
+    for (auto patch : model->terrain_patches_to_update())
     {
         std::vector<glm::vec3> terrain_positions, terrain_normals, grass_end_points;
-        model->get_terrain(terrain_positions, terrain_normals, grass_end_points);
+        model->get_terrain_patch(patch.second, terrain_positions, terrain_normals, grass_end_points);
         
-        terrain->update_vertex_attribute("position", terrain_positions);
-        terrain->update_vertex_attribute("normal", terrain_normals);
-        terrain->finalize_vertex_attributes();
+        terrain_patches[patch.first]->update_vertex_attribute("position", terrain_positions);
+        terrain_patches[patch.first]->update_vertex_attribute("normal", terrain_normals);
+        terrain_patches[patch.first]->finalize_vertex_attributes();
         
         grass->update_vertex_attribute("end_point", grass_end_points);
         grass->finalize_vertex_attributes();
@@ -211,7 +216,9 @@ void View::create_grass(shared_ptr<GLShader> shader)
 void View::create_terrain(shared_ptr<GLShader> shader)
 {
     auto material = GLMaterial {{0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-    terrain = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLE_STRIP));
+    for (int i = 0; i < 9; i++) {
+        terrain_patches.push_back(shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLE_STRIP)));
+    }
 }
 
 void View::create_spider(shared_ptr<GLShader> shader)
