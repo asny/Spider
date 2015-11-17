@@ -126,8 +126,9 @@ Terrain::Terrain()
     
 }
 
-pair<int, int> Terrain::index_at(vec2 parameter)
+pair<int, int> Terrain::index_at(const vec3& position)
 {
+    vec2 parameter = vec2(position.x, position.z);
     vec2 index_vector = vec2(floor(parameter.x / patch_size), floor(parameter.y / patch_size));
     return make_pair(static_cast<int>(index_vector.x), static_cast<int>(index_vector.y));
 }
@@ -153,9 +154,8 @@ TerrainPatch* Terrain::create_patch_at(pair<int, int> index)
     return &terrain_patches.insert(make_pair(index, patch)).first->second;
 }
 
-TerrainPatch* Terrain::get_patch_at(glm::vec2 parameter)
+TerrainPatch* Terrain::get_patch_at(std::pair<int, int> index)
 {
-    auto index = index_at(parameter);
     auto index_patch_pair = terrain_patches.find(index);
     
     // If the patch hasn't been created, then we create it.
@@ -168,15 +168,15 @@ TerrainPatch* Terrain::get_patch_at(glm::vec2 parameter)
 
 vec3 Terrain::get_terrain_position_at(const glm::vec3& position)
 {
-    vec2 parameter = vec2(position.x, position.z);
-    TerrainPatch* patch = get_patch_at(parameter);
-    double height = patch->get_surface_height_at(parameter);
+    auto index = index_at(position);
+    TerrainPatch* patch = get_patch_at(index);
+    double height = patch->get_surface_height_at(vec2(position.x, position.z));
     return vec3(position.x, height, position.z);
 }
 
 vec3 Terrain::get_grass_vector_at(const glm::vec3& position)
 {
-    vec2 parameter = vec2(position.x, position.z);
-    TerrainPatch* patch = get_patch_at(parameter);
-    return patch->get_grass_vector_at(parameter);
+    auto index = index_at(position);
+    TerrainPatch* patch = get_patch_at(index);
+    return patch->get_grass_vector_at(vec2(position.x, position.z));
 }

@@ -49,18 +49,17 @@ class Terrain {
     
     std::map<std::pair<int, int>, TerrainPatch> terrain_patches = std::map<std::pair<int, int>, TerrainPatch>();
     
-    
-    std::pair<int, int> index_at(glm::vec2 parameter);
-    
     TerrainPatch* create_patch_at(std::pair<int, int> index);
-    
-    TerrainPatch* get_patch_at(glm::vec2 parameter);
     
 public:
     
     const static int VERTICES_PER_UNIT = 16;
     
     Terrain();
+    
+    std::pair<int, int> index_at(const glm::vec3& position);
+    
+    TerrainPatch* get_patch_at(std::pair<int, int> index);
     
     glm::vec3 get_terrain_position_at(const glm::vec3& position);
     
