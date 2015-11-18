@@ -46,26 +46,26 @@ double average(std::vector<double> heights)
 
 void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
 {
-    vec2 parameter = origo + vec2(r/static_cast<double>(Terrain::VERTICES_PER_UNIT),c/static_cast<double>(Terrain::VERTICES_PER_UNIT));
+    vec3 position = vec3(origo.x + r/static_cast<double>(Terrain::VERTICES_PER_UNIT), 0., origo.y + c/static_cast<double>(Terrain::VERTICES_PER_UNIT));
     if(r == 0 && neighbour_patches[NORTH])
     {
-        heightmap[r][c] = neighbour_patches[NORTH]->get_surface_height_at(parameter);
-        grass[r][c] = neighbour_patches[NORTH]->get_grass_vector_at(parameter);
+        heightmap[r][c] = neighbour_patches[NORTH]->get_surface_height_at(position);
+        grass[r][c] = neighbour_patches[NORTH]->get_grass_vector_at(position);
     }
     else if(c == 0 && neighbour_patches[WEST])
     {
-        heightmap[r][c] = neighbour_patches[WEST]->get_surface_height_at(parameter);
-        grass[r][c] = neighbour_patches[WEST]->get_grass_vector_at(parameter);
+        heightmap[r][c] = neighbour_patches[WEST]->get_surface_height_at(position);
+        grass[r][c] = neighbour_patches[WEST]->get_grass_vector_at(position);
     }
     else if(r == heightmap.size() && neighbour_patches[SOUTH])
     {
-        heightmap[r][c] = neighbour_patches[SOUTH]->get_surface_height_at(parameter);
-        grass[r][c] = neighbour_patches[SOUTH]->get_grass_vector_at(parameter);
+        heightmap[r][c] = neighbour_patches[SOUTH]->get_surface_height_at(position);
+        grass[r][c] = neighbour_patches[SOUTH]->get_grass_vector_at(position);
     }
     else if(c == heightmap[0].size() && neighbour_patches[EAST])
     {
-        heightmap[r][c] = neighbour_patches[EAST]->get_surface_height_at(parameter);
-        grass[r][c] = neighbour_patches[EAST]->get_grass_vector_at(parameter);
+        heightmap[r][c] = neighbour_patches[EAST]->get_surface_height_at(position);
+        grass[r][c] = neighbour_patches[EAST]->get_grass_vector_at(position);
     }
     else
     {
@@ -98,8 +98,9 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
     }
 }
 
-vec2 TerrainPatch::index_at(glm::vec2 parameter) const
+vec2 TerrainPatch::index_at(const vec3& position) const
 {
+    vec2 parameter = vec2(position.x, position.z);
     double vertices_per_unit = static_cast<double>(Terrain::VERTICES_PER_UNIT);
     vec2 index = vec2((int)floor((parameter.x - origo.x) * vertices_per_unit), (int)floor((parameter.y - origo.y) * vertices_per_unit));
     
@@ -108,15 +109,15 @@ vec2 TerrainPatch::index_at(glm::vec2 parameter) const
     return index;
 }
 
-double TerrainPatch::get_surface_height_at(glm::vec2 parameter) const
+double TerrainPatch::get_surface_height_at(const vec3& position) const
 {
-    vec2 index = index_at(parameter);
+    vec2 index = index_at(position);
     return heightmap[index.x][index.y];
 }
 
-vec3 TerrainPatch::get_grass_vector_at(vec2 parameter) const
+vec3 TerrainPatch::get_grass_vector_at(const vec3& position) const
 {
-    vec2 index = index_at(parameter);
+    vec2 index = index_at(position);
     return grass[index.x][index.y];
 }
 
@@ -170,7 +171,7 @@ vec3 Terrain::get_terrain_position_at(const glm::vec3& position)
 {
     auto index = index_at(position);
     TerrainPatch* patch = get_patch_at(index);
-    double height = patch->get_surface_height_at(vec2(position.x, position.z));
+    double height = patch->get_surface_height_at(position);
     return vec3(position.x, height, position.z);
 }
 
@@ -178,5 +179,5 @@ vec3 Terrain::get_grass_vector_at(const glm::vec3& position)
 {
     auto index = index_at(position);
     TerrainPatch* patch = get_patch_at(index);
-    return patch->get_grass_vector_at(vec2(position.x, position.z));
+    return patch->get_grass_vector_at(position);
 }

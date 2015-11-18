@@ -26,7 +26,7 @@ class TerrainPatch
     
     void subdivide(int origo_x, int origo_y, int size);
     
-    glm::vec2 index_at(glm::vec2 parameter) const;
+    glm::vec2 index_at(const glm::vec3& position) const;
     
 public:
     enum DIRECTION {
@@ -38,9 +38,9 @@ public:
     
     TerrainPatch(glm::vec2 _origo, double _size, std::vector<const TerrainPatch*> _neighbour_patches);
     
-    double get_surface_height_at(glm::vec2 parameter) const;
+    double get_surface_height_at(const glm::vec3& position) const;
     
-    glm::vec3 get_grass_vector_at(glm::vec2 parameter) const;
+    glm::vec3 get_grass_vector_at(const glm::vec3& position) const;
 };
 
 class Terrain {
