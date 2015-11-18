@@ -13,7 +13,7 @@
 
 class View
 {
-    enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON };
+    enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD };
     
     VIEW_TYPE view_type = FIRST_PERSON;
     

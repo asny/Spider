@@ -136,14 +136,22 @@ void View::animate()
     vec3 spider_view_direction = model->get_spider_view_direction();
     spider->set_model_matrix(compute_spider_model_matrix(spider_position, spider_view_direction));
     
-    if(view_type == FIRST_PERSON)
-    {
-        camera->set_view(spider_position - 0.5f * spider_view_direction + vec3(0.,0.4,0.), spider_view_direction);
-    }
-    else if(view_type == THIRD_PERSON)
-    {
-        vec3 camera_view = normalize(vec3(0., -0.5, 0.) + spider_view_direction);
-        camera->set_view(spider_position - 2.f * camera_view, camera_view);
+    switch (view_type) {
+        case FIRST_PERSON:
+            camera->set_view(spider_position - 0.5f * spider_view_direction + vec3(0.,0.4,0.), spider_view_direction);
+            break;
+        case THIRD_PERSON:
+        {
+            vec3 camera_view = normalize(vec3(0., -0.5, 0.) + spider_view_direction);
+            camera->set_view(spider_position - 2.f * camera_view, camera_view);
+        }
+            break;
+        case BIRD:
+        {
+            vec3 camera_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
+            camera->set_view(spider_position - 4.f * camera_view, camera_view);
+        }
+            break;
     }
     
     grass_patches.front()->update_uniform_variable("spiderPosition", spider_position);
@@ -191,6 +199,10 @@ void View::keyboard(unsigned char key, int x, int y) {
                 view_type = THIRD_PERSON;
             }
             else if(view_type == THIRD_PERSON)
+            {
+                view_type = BIRD;
+            }
+            else if(view_type == BIRD)
             {
                 view_type = FIRST_PERSON;
             }
