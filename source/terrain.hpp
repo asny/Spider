@@ -43,11 +43,21 @@ public:
     double get_surface_height_at(const glm::vec3& position) const;
     
     glm::vec3 get_grass_vector_at(const glm::vec3& position) const;
+    
+    glm::vec2 get_origo()
+    {
+        return origo;
+    }
+    
+    glm::vec2 get_size()
+    {
+        return glm::vec2(static_cast<double>(heightmap.size() / VERTICES_PER_UNIT), static_cast<double>(heightmap[0].size() / VERTICES_PER_UNIT));
+    }
 };
 
 class Terrain {
     
-    const double patch_size = 8.;
+    const double patch_size = 4.;
     
     std::map<std::pair<int, int>, TerrainPatch> terrain_patches = std::map<std::pair<int, int>, TerrainPatch>();
     

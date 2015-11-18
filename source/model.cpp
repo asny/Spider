@@ -109,16 +109,16 @@ double random(double min, double max)
 
 void Model::get_terrain_patch(pair<int, int> patch_index, vector<vec3>& positions, vector<vec3>& normals, vector<vec3>& grass_end_points)
 {
-    vec3 spider_position = spider.get_position();
     TerrainPatch* patch = terrain.get_patch_at(patch_index);
+    auto origo = patch->get_origo();
+    auto size = patch->get_size();
+    const double step_size = 1./TerrainPatch::VERTICES_PER_UNIT;
     
-    const double radius = 10.;
-    const double step_size = 1./Terrain::VERTICES_PER_UNIT;
-    for(double x = -radius; x <= radius; x += step_size)
+    for (double x = origo.x; x <= origo.x + size.x; x += step_size)
     {
-        for(double z = -radius; z <= radius; z += step_size)
+        for (double z = origo.y; z <= origo.y + size.y; z += step_size)
         {
-            vec3 p = spider_position + vec3(x, 0., z);
+            vec3 p = vec3(x, 0., z);
             
             vec3 position = terrain.get_terrain_position_at(p);
             positions.push_back(position);
@@ -126,7 +126,7 @@ void Model::get_terrain_patch(pair<int, int> patch_index, vector<vec3>& position
             vec3 normal = approximate_normal_at(position, step_size);
             normals.push_back(normal);
             
-            if (z == -radius)
+            if (z == origo.y)
             {
                 positions.push_back(position);
                 normals.push_back(normal);
@@ -140,7 +140,7 @@ void Model::get_terrain_patch(pair<int, int> patch_index, vector<vec3>& position
             normal = approximate_normal_at(position, step_size);
             normals.push_back(normal);
             
-            if (z == radius)
+            if (z == origo.y + size.y)
             {
                 positions.push_back(position);
                 normals.push_back(normal);
