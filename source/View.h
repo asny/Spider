@@ -21,9 +21,10 @@ class View
     
     std::unique_ptr<oogl::GLCamera> camera;
     
-    std::shared_ptr<oogl::GLObject> cube, grass, spider, skybox;
+    std::shared_ptr<oogl::GLObject> cube, spider, skybox;
     
     std::vector<std::shared_ptr<oogl::GLObject>> terrain_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
+    std::vector<std::shared_ptr<oogl::GLObject>> grass_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
     
     glm::vec3 light_pos = {0., 2000., 2.};
     

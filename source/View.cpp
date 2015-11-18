@@ -71,10 +71,8 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     create_terrain(phong_shader);
     create_grass(grass_shader);
     
-    grass->update_uniform_variable("lightPos", light_pos);
-    for (auto terrain_patch : terrain_patches) {
-        terrain_patch->update_uniform_variable("lightPos", light_pos);
-    }
+    terrain_patches.front()->update_uniform_variable("lightPos", light_pos);
+    grass_patches.front()->update_uniform_variable("lightPos", light_pos);
     
     glutMainLoop();
 }
@@ -99,8 +97,9 @@ void View::display()
         return;
     }
     
-    vector<shared_ptr<GLObject>> objects = {spider, cube, grass, skybox};
+    vector<shared_ptr<GLObject>> objects = {spider, cube, skybox};
     objects.insert(objects.end(), terrain_patches.begin(), terrain_patches.end());
+    objects.insert(objects.end(), grass_patches.begin(), grass_patches.end());
     
     camera->draw(objects);
     
@@ -147,20 +146,20 @@ void View::animate()
         camera->set_view(spider_position - 2.f * camera_view, camera_view);
     }
     
-    grass->update_uniform_variable("spiderPosition", spider_position);
-    grass->update_uniform_variable("wind", animation);
+    grass_patches.front()->update_uniform_variable("spiderPosition", spider_position);
+    grass_patches.front()->update_uniform_variable("wind", animation);
     
-    for (auto patch : model->terrain_patches_to_update())
+    for (auto patch_index : model->terrain_patches_to_update())
     {
         std::vector<glm::vec3> terrain_positions, terrain_normals, grass_end_points;
-        model->get_terrain_patch(patch.second, terrain_positions, terrain_normals, grass_end_points);
+        model->get_terrain_patch(patch_index.second, terrain_positions, terrain_normals, grass_end_points);
         
-        terrain_patches[patch.first]->update_vertex_attribute("position", terrain_positions);
-        terrain_patches[patch.first]->update_vertex_attribute("normal", terrain_normals);
-        terrain_patches[patch.first]->finalize_vertex_attributes();
+        terrain_patches[patch_index.first]->update_vertex_attribute("position", terrain_positions);
+        terrain_patches[patch_index.first]->update_vertex_attribute("normal", terrain_normals);
+        terrain_patches[patch_index.first]->finalize_vertex_attributes();
         
-        grass->update_vertex_attribute("end_point", grass_end_points);
-        grass->finalize_vertex_attributes();
+        grass_patches[patch_index.first]->update_vertex_attribute("end_point", grass_end_points);
+        grass_patches[patch_index.first]->finalize_vertex_attributes();
     }
     
     glutPostRedisplay();
@@ -210,7 +209,9 @@ void View::visible(int v)
 void View::create_grass(shared_ptr<GLShader> shader)
 {
     auto material = GLMaterial {{0.1f,0.3f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-    grass = shared_ptr<GLObject>(new GLObject(shader, material, GL_LINES, nullptr, false));
+    for (int i = 0; i < 9; i++) {
+        grass_patches.push_back(shared_ptr<GLObject>(new GLObject(shader, material, GL_LINES, nullptr, false)));
+    }
 }
 
 void View::create_terrain(shared_ptr<GLShader> shader)
