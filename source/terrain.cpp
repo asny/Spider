@@ -14,7 +14,7 @@ using namespace glm;
 
 TerrainPatch::TerrainPatch(vec2 _origo, double size, vector<const TerrainPatch*> _neighbour_patches) : origo(_origo), neighbour_patches(_neighbour_patches)
 {
-    int map_size = static_cast<int>(size) * Terrain::VERTICES_PER_UNIT + 1;
+    int map_size = static_cast<int>(size) * VERTICES_PER_UNIT + 1;
     heightmap = vector<vector<double>>(map_size);
     grass = vector<vector<vec3>>(map_size);
     for ( auto r = 0; r < map_size; r++ )
@@ -46,7 +46,7 @@ double average(std::vector<double> heights)
 
 void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
 {
-    vec3 position = vec3(origo.x + r/static_cast<double>(Terrain::VERTICES_PER_UNIT), 0., origo.y + c/static_cast<double>(Terrain::VERTICES_PER_UNIT));
+    vec3 position = vec3(origo.x + r/static_cast<double>(VERTICES_PER_UNIT), 0., origo.y + c/static_cast<double>(VERTICES_PER_UNIT));
     if(r == 0 && neighbour_patches[NORTH])
     {
         heightmap[r][c] = neighbour_patches[NORTH]->get_surface_height_at(position);
@@ -82,7 +82,7 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
     int half_size = size/2;
     if(half_size >= 1)
     {
-        double scale = size / static_cast<double>(Terrain::VERTICES_PER_UNIT);
+        double scale = size / static_cast<double>(VERTICES_PER_UNIT);
         
         set_height(scale, origo_r + half_size, origo_c, {heightmap[origo_r][origo_c], heightmap[origo_r + size][origo_c]});
         set_height(scale, origo_r, origo_c + half_size, {heightmap[origo_r][origo_c], heightmap[origo_r][origo_c + size]});
@@ -101,7 +101,7 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
 vec2 TerrainPatch::index_at(const vec3& position) const
 {
     vec2 parameter = vec2(position.x, position.z);
-    double vertices_per_unit = static_cast<double>(Terrain::VERTICES_PER_UNIT);
+    double vertices_per_unit = static_cast<double>(VERTICES_PER_UNIT);
     vec2 index = vec2((int)floor((parameter.x - origo.x) * vertices_per_unit), (int)floor((parameter.y - origo.y) * vertices_per_unit));
     
     assert(0 <= index.x < heightmap.size());

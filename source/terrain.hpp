@@ -36,6 +36,8 @@ public:
         EAST = 3
     };
     
+    const static int VERTICES_PER_UNIT = 16;
+    
     TerrainPatch(glm::vec2 _origo, double _size, std::vector<const TerrainPatch*> _neighbour_patches);
     
     double get_surface_height_at(const glm::vec3& position) const;
@@ -52,8 +54,6 @@ class Terrain {
     TerrainPatch* create_patch_at(std::pair<int, int> index);
     
 public:
-    
-    const static int VERTICES_PER_UNIT = 16;
     
     Terrain();
     
