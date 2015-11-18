@@ -68,38 +68,41 @@ map<int, pair<int, int>> Model::terrain_patches_to_update()
         if(center.first - current.first == 2 && center.second - current.second == 2)
         {
             to_update[i] = {center.first + 1, center.second + 1};
+            terrainIndexMap[i] = to_update[i];
         }
         else if(center.first - current.first == -2 && center.second - current.second == -2)
         {
             to_update[i] = {center.first - 1, center.second - 1};
+            terrainIndexMap[i] = to_update[i];
         }
         else if(center.first - current.first == 2 && center.second - current.second == -2)
         {
             to_update[i] = {center.first + 1, center.second - 1};
+            terrainIndexMap[i] = to_update[i];
         }
         else if(center.first - current.first == -2 && center.second - current.second == 2)
         {
             to_update[i] = {center.first - 1, center.second + 1};
+            terrainIndexMap[i] = to_update[i];
         }
         else if(center.first - current.first == 2)
         {
             to_update[i] = {center.first + 1, current.second};
+            terrainIndexMap[i] = to_update[i];
         }
         else if(center.first - current.first == -2)
         {
             to_update[i] = {center.first - 1, current.second};
+            terrainIndexMap[i] = to_update[i];
         }
         else if(center.second - current.second == 2)
         {
             to_update[i] = {current.first, center.second + 1};
+            terrainIndexMap[i] = to_update[i];
         }
         else if(center.second - current.second == -2)
         {
             to_update[i] = {current.first, center.second - 1};
-        }
-        
-        if(to_update[i] != current)
-        {
             terrainIndexMap[i] = to_update[i];
         }
     }
