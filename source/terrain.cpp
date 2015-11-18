@@ -12,7 +12,7 @@
 using namespace std;
 using namespace glm;
 
-TerrainPatch::TerrainPatch(vec2 _origo, double size, vector<const TerrainPatch*> _neighbour_patches) : origo(_origo), neighbour_patches(_neighbour_patches)
+TerrainPatch::TerrainPatch(const vec3& _origo, double size, vector<const TerrainPatch*> _neighbour_patches) : origo(_origo), neighbour_patches(_neighbour_patches)
 {
     int map_size = static_cast<int>(size) * VERTICES_PER_UNIT + 1;
     heightmap = vector<vector<double>>(map_size);
@@ -46,7 +46,7 @@ double average(std::vector<double> heights)
 
 void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
 {
-    vec3 position = vec3(origo.x + r/static_cast<double>(VERTICES_PER_UNIT), 0., origo.y + c/static_cast<double>(VERTICES_PER_UNIT));
+    vec3 position = vec3(origo.x + r/static_cast<double>(VERTICES_PER_UNIT), 0., origo.z + c/static_cast<double>(VERTICES_PER_UNIT));
     if(r == 0 && neighbour_patches[NORTH])
     {
         heightmap[r][c] = neighbour_patches[NORTH]->get_surface_height_at(position);
@@ -100,9 +100,8 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
 
 vec2 TerrainPatch::index_at(const vec3& position) const
 {
-    vec2 parameter = vec2(position.x, position.z);
     double vertices_per_unit = static_cast<double>(VERTICES_PER_UNIT);
-    vec2 index = vec2((int)floor((parameter.x - origo.x) * vertices_per_unit), (int)floor((parameter.y - origo.y) * vertices_per_unit));
+    vec2 index = vec2((int)floor((position.x - origo.x) * vertices_per_unit), (int)floor((position.z - origo.z) * vertices_per_unit));
     
     assert(0 <= index.x < heightmap.size());
     assert(0 <= index.y < heightmap[0].size());
@@ -136,7 +135,7 @@ pair<int, int> Terrain::index_at(const vec3& position)
 
 TerrainPatch* Terrain::create_patch_at(pair<int, int> index)
 {
-    vec2 origo = vec2(patch_size * static_cast<double>(index.first), patch_size * static_cast<double>(index.second));
+    vec3 origo = vec3(patch_size * static_cast<double>(index.first), 0., patch_size * static_cast<double>(index.second));
     
     vector<const TerrainPatch*> neighbour_patches(4);
     auto index_patch_pair = terrain_patches.find(make_pair(index.first - 1, index.second));

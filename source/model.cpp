@@ -97,6 +97,11 @@ map<int, pair<int, int>> Model::terrain_patches_to_update()
         {
             to_update[i] = {current.first, center.second - 1};
         }
+        
+        if(to_update[i] != current)
+        {
+            terrainIndexMap[i] = to_update[i];
+        }
     }
     
     return to_update;
@@ -116,7 +121,7 @@ void Model::get_terrain_patch(pair<int, int> patch_index, vector<vec3>& position
     
     for (double x = origo.x; x <= origo.x + size.x; x += step_size)
     {
-        for (double z = origo.y; z <= origo.y + size.y; z += step_size)
+        for (double z = origo.z; z <= origo.z + size.z; z += step_size)
         {
             vec3 p = vec3(x, 0., z);
             
@@ -126,7 +131,7 @@ void Model::get_terrain_patch(pair<int, int> patch_index, vector<vec3>& position
             vec3 normal = approximate_normal_at(position, step_size);
             normals.push_back(normal);
             
-            if (z == origo.y)
+            if (z == origo.z)
             {
                 positions.push_back(position);
                 normals.push_back(normal);
@@ -140,7 +145,7 @@ void Model::get_terrain_patch(pair<int, int> patch_index, vector<vec3>& position
             normal = approximate_normal_at(position, step_size);
             normals.push_back(normal);
             
-            if (z == origo.y + size.y)
+            if (z == origo.z + size.z)
             {
                 positions.push_back(position);
                 normals.push_back(normal);
