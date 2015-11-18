@@ -120,6 +120,16 @@ vec3 TerrainPatch::get_grass_vector_at(const vec3& position) const
     return grass[index.x][index.y];
 }
 
+vec3 TerrainPatch::get_origo()
+{
+    return origo;
+}
+
+vec3 TerrainPatch::get_size()
+{
+    return vec3(static_cast<double>(heightmap.size() / VERTICES_PER_UNIT), 0., static_cast<double>(heightmap[0].size() / VERTICES_PER_UNIT));
+}
+
 Terrain::Terrain()
 {
     

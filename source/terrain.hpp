@@ -44,15 +44,9 @@ public:
     
     glm::vec3 get_grass_vector_at(const glm::vec3& position) const;
     
-    glm::vec3 get_origo()
-    {
-        return origo;
-    }
+    glm::vec3 get_origo();
     
-    glm::vec3 get_size()
-    {
-        return glm::vec3(static_cast<double>(heightmap.size() / VERTICES_PER_UNIT), 0., static_cast<double>(heightmap[0].size() / VERTICES_PER_UNIT));
-    }
+    glm::vec3 get_size();
 };
 
 class Terrain {
