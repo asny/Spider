@@ -128,8 +128,8 @@ mat4 compute_spider_model_matrix(vec3 spider_position, vec3 spider_view_directio
 
 void View::animate()
 {
-    GLfloat timeValue = glutGet(GLUT_ELAPSED_TIME)*0.002;
-    glm::vec3 animation(0.5 * sin(timeValue) + 0.5, 0., 0.);
+    double time = glutGet(GLUT_ELAPSED_TIME)*0.002;
+    glm::vec3 animation(0.5 * sin(time) + 0.5, 0., 0.5 * cos(time + 0.5) + 0.5);
     cube->set_model_matrix(translate(mat4(), animation));
     
     vec3 spider_position = model->get_spider_position();
