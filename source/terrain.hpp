@@ -20,7 +20,6 @@ class TerrainPatch
     glm::vec3 origo;
     std::vector<std::vector<double>> heightmap;
     std::vector<std::vector<glm::vec3>> grass;
-    std::vector<const TerrainPatch*> neighbour_patches;
     
     void set_height(double scale, int r, int c, std::vector<double> neighbour_heights);
     
@@ -29,16 +28,10 @@ class TerrainPatch
     glm::vec2 index_at(const glm::vec3& position) const;
     
 public:
-    enum DIRECTION {
-        NORTH = 0,
-        SOUTH = 1,
-        WEST = 2,
-        EAST = 3
-    };
     
     const static int VERTICES_PER_UNIT = 16;
     
-    TerrainPatch(const glm::vec3& _origo, double _size, std::vector<const TerrainPatch*> _neighbour_patches);
+    TerrainPatch(const glm::vec3& _origo, double _size);
     
     double get_surface_height_at(const glm::vec3& position) const;
     

@@ -12,7 +12,7 @@
 using namespace std;
 using namespace glm;
 
-TerrainPatch::TerrainPatch(const vec3& _origo, double size, vector<const TerrainPatch*> _neighbour_patches) : origo(_origo), neighbour_patches(_neighbour_patches)
+TerrainPatch::TerrainPatch(const vec3& _origo, double size) : origo(_origo)
 {
     int map_size = static_cast<int>(size) * VERTICES_PER_UNIT + 1;
     heightmap = vector<vector<double>>(map_size);
@@ -47,34 +47,11 @@ double average(std::vector<double> heights)
 void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
 {
     vec3 position = vec3(origo.x + r/static_cast<double>(VERTICES_PER_UNIT), 0., origo.z + c/static_cast<double>(VERTICES_PER_UNIT));
-    if(r == 0 && neighbour_patches[NORTH])
-    {
-        heightmap[r][c] = neighbour_patches[NORTH]->get_surface_height_at(position);
-        grass[r][c] = neighbour_patches[NORTH]->get_grass_vector_at(position);
-    }
-    else if(c == 0 && neighbour_patches[WEST])
-    {
-        heightmap[r][c] = neighbour_patches[WEST]->get_surface_height_at(position);
-        grass[r][c] = neighbour_patches[WEST]->get_grass_vector_at(position);
-    }
-    else if(r == heightmap.size() && neighbour_patches[SOUTH])
-    {
-        heightmap[r][c] = neighbour_patches[SOUTH]->get_surface_height_at(position);
-        grass[r][c] = neighbour_patches[SOUTH]->get_grass_vector_at(position);
-    }
-    else if(c == heightmap[0].size() && neighbour_patches[EAST])
-    {
-        heightmap[r][c] = neighbour_patches[EAST]->get_surface_height_at(position);
-        grass[r][c] = neighbour_patches[EAST]->get_grass_vector_at(position);
-    }
-    else
-    {
-        heightmap[r][c] = average(neighbour_heights) + 0.3 * scale * static_cast<double>(octave_noise_2d(3.f, 0.25f, scale, r, c));
-        
-        grass[r][c] = vec3(static_cast<double>(scaled_octave_noise_2d(3.f, 0.25f, scale, -0.5, 0.5, r+1, c-1)),
-                           static_cast<double>(scaled_octave_noise_2d(3.f, 0.25f, scale, 0.25, 1.5, r, c)),
-                           static_cast<double>(scaled_octave_noise_2d(3.f, 0.25f, scale, -0.5, 0.5, r-1, c+1)));
-    }
+    heightmap[r][c] = average(neighbour_heights) + 0.1 * scale * static_cast<double>(raw_noise_2d(position.x, position.z));
+    
+    grass[r][c] = vec3(static_cast<double>(0.5 * raw_noise_3d(position.x+1, position.z-1, clock())),
+                       static_cast<double>(0.5 * raw_noise_3d(position.x, position.z, clock()) + 1.),
+                       static_cast<double>(0.5 * raw_noise_3d(position.x-1, position.z+1, clock())));
 }
 
 void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
@@ -146,21 +123,7 @@ pair<int, int> Terrain::index_at(const vec3& position)
 TerrainPatch* Terrain::create_patch_at(pair<int, int> index)
 {
     vec3 origo = vec3(patch_size * static_cast<double>(index.first), 0., patch_size * static_cast<double>(index.second));
-    
-    vector<const TerrainPatch*> neighbour_patches(4);
-    auto index_patch_pair = terrain_patches.find(make_pair(index.first - 1, index.second));
-    neighbour_patches[TerrainPatch::NORTH] = index_patch_pair != terrain_patches.end() ? &index_patch_pair->second : nullptr;
-    
-    index_patch_pair = terrain_patches.find(make_pair(index.first + 1, index.second));
-    neighbour_patches[TerrainPatch::SOUTH] = index_patch_pair != terrain_patches.end() ? &index_patch_pair->second : nullptr;
-    
-    index_patch_pair = terrain_patches.find(make_pair(index.first, index.second - 1));
-    neighbour_patches[TerrainPatch::WEST] = index_patch_pair != terrain_patches.end() ? &index_patch_pair->second : nullptr;
-    
-    index_patch_pair = terrain_patches.find(make_pair(index.first, index.second + 1));
-    neighbour_patches[TerrainPatch::EAST] = index_patch_pair != terrain_patches.end() ? &index_patch_pair->second : nullptr;
-    
-    TerrainPatch patch = TerrainPatch(origo, patch_size, neighbour_patches);
+    TerrainPatch patch = TerrainPatch(origo, patch_size);
     return &terrain_patches.insert(make_pair(index, patch)).first->second;
 }
 
