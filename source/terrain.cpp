@@ -22,10 +22,12 @@ TerrainPatch::TerrainPatch(const vec3& _origo, double size) : origo(_origo)
         heightmap[r] = vector<double>(map_size);
         grass[r] = vector<vec3>(map_size);
     }
-    heightmap.front().front() = 0.;
-    heightmap.front().back() = 0.;
-    heightmap.back().front() = 0.;
-    heightmap.back().back() = 0.;
+    
+    double scale = (map_size - 1) / static_cast<double>(VERTICES_PER_UNIT);
+    set_height(scale, 0, 0, {});
+    set_height(scale, 0, map_size - 1, {});
+    set_height(scale, map_size - 1, 0, {});
+    set_height(scale, map_size - 1, map_size - 1, {});
     
     subdivide(0, 0, map_size-1);
 }
@@ -47,11 +49,10 @@ double average(std::vector<double> heights)
 void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
 {
     vec3 position = vec3(origo.x + r/static_cast<double>(VERTICES_PER_UNIT), 0., origo.z + c/static_cast<double>(VERTICES_PER_UNIT));
-    heightmap[r][c] = average(neighbour_heights) + 0.1 * scale * static_cast<double>(raw_noise_2d(position.x, position.z));
-    
-    grass[r][c] = vec3(static_cast<double>(0.5 * raw_noise_3d(position.x+1, position.z-1, clock())),
+    heightmap[r][c] = average(neighbour_heights) + 0.15 * scale * static_cast<double>(raw_noise_2d(position.x, position.z));
+    grass[r][c] = vec3(static_cast<double>(0.5 * raw_noise_3d(position.x + 10., position.z + 10., clock())),
                        static_cast<double>(0.5 * raw_noise_3d(position.x, position.z, clock()) + 1.),
-                       static_cast<double>(0.5 * raw_noise_3d(position.x-1, position.z+1, clock())));
+                       static_cast<double>(0.5 * raw_noise_3d(position.x - 10., position.z - 10., clock())));
 }
 
 void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
