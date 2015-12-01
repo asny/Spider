@@ -74,8 +74,19 @@ View::View(int &argc, char** argv)
     grass_patches.front()->update_uniform_variable("lightPos", light_pos);
     
     // Create model
-    model = std::unique_ptr<Model>(new Model([](){View::update_terrain();}));
+    model = std::unique_ptr<Model>(new Model([]()
+    {
+        update_terrain();
+        update_spider();
+        update_grass();
+        update_camera();
+    }));
+    
+    // Update
     update_terrain();
+    update_spider();
+    update_grass();
+    update_camera();
     
     glutMainLoop();
 }
@@ -120,44 +131,12 @@ void View::reshape(int width, int height)
     glutPostRedisplay();
 }
 
-mat4 compute_spider_model_matrix(vec3 spider_position, vec3 spider_view_direction)
-{
-    mat4 spider_scale = scale(mat4(), vec3(10.));
-    mat4 spider_rotation_yaw = orientation(normalize(vec3(spider_view_direction.x, 0., spider_view_direction.z)), vec3(0., 0., 1.));
-    mat4 spider_rotation_pitch = orientation(normalize(vec3(0., spider_view_direction.y, 1.)), vec3(0., 0., 1.));
-    mat4 spider_translation = translate(mat4(), spider_position);
-    return spider_translation * spider_rotation_yaw * spider_rotation_pitch * spider_scale;
-}
-
 void View::animate()
 {
     double time = glutGet(GLUT_ELAPSED_TIME)*0.002;
     glm::vec3 animation(0.5 * sin(time) + 0.5, 0., 0.5 * cos(time + 0.5) + 0.5);
     cube->set_model_matrix(translate(mat4(), animation));
     
-    vec3 spider_position = model->get_spider_position();
-    vec3 spider_view_direction = model->get_spider_view_direction();
-    spider->set_model_matrix(compute_spider_model_matrix(spider_position, spider_view_direction));
-    
-    switch (view_type) {
-        case FIRST_PERSON:
-            camera->set_view(spider_position - 0.5f * spider_view_direction + vec3(0.,0.4,0.), spider_view_direction);
-            break;
-        case THIRD_PERSON:
-        {
-            vec3 camera_view = normalize(vec3(0., -0.5, 0.) + spider_view_direction);
-            camera->set_view(spider_position - 2.f * camera_view, camera_view);
-        }
-            break;
-        case BIRD:
-        {
-            vec3 camera_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
-            camera->set_view(spider_position - 4.f * camera_view, camera_view);
-        }
-            break;
-    }
-    
-    grass_patches.front()->update_uniform_variable("spiderPosition", spider_position);
     grass_patches.front()->update_uniform_variable("wind", animation);
     
     glutPostRedisplay();
@@ -196,6 +175,7 @@ void View::keyboard(unsigned char key, int x, int y) {
             {
                 view_type = FIRST_PERSON;
             }
+            update_camera();
             break;
     }
 }
@@ -206,6 +186,63 @@ void View::visible(int v)
         glutIdleFunc(animate_);
     else
         glutIdleFunc(0);
+}
+
+void View::update_camera()
+{
+    vec3 spider_position = instance->model->get_spider_position();
+    vec3 spider_view_direction = instance->model->get_spider_view_direction();
+    
+    switch (instance->view_type) {
+        case FIRST_PERSON:
+            instance->camera->set_view(spider_position - 0.5f * spider_view_direction + vec3(0.,0.4,0.), spider_view_direction);
+            break;
+        case THIRD_PERSON:
+        {
+            vec3 camera_view = normalize(vec3(0., -0.5, 0.) + spider_view_direction);
+            instance->camera->set_view(spider_position - 2.f * camera_view, camera_view);
+        }
+            break;
+        case BIRD:
+        {
+            vec3 camera_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
+            instance->camera->set_view(spider_position - 4.f * camera_view, camera_view);
+        }
+            break;
+    }
+}
+
+void View::update_spider()
+{
+    vec3 spider_position = instance->model->get_spider_position();
+    vec3 spider_view_direction = instance->model->get_spider_view_direction();
+    
+    mat4 spider_scale = scale(mat4(), vec3(10.));
+    mat4 spider_rotation_yaw = orientation(normalize(vec3(spider_view_direction.x, 0., spider_view_direction.z)), vec3(0., 0., 1.));
+    mat4 spider_rotation_pitch = orientation(normalize(vec3(0., spider_view_direction.y, 1.)), vec3(0., 0., 1.));
+    mat4 spider_translation = translate(mat4(), spider_position);
+    
+    instance->spider->set_model_matrix(spider_translation * spider_rotation_yaw * spider_rotation_pitch * spider_scale);
+}
+
+void View::update_terrain()
+{
+    for (auto patch_index : instance->model->terrain_patches_to_update())
+    {
+        vector<vec3> terrain_positions, terrain_normals, grass_end_points;
+        instance->model->get_terrain_patch(patch_index.second, terrain_positions, terrain_normals, grass_end_points);
+        
+        instance->terrain_patches[patch_index.first]->update_vertex_attribute("position", terrain_positions);
+        instance->terrain_patches[patch_index.first]->update_vertex_attribute("normal", terrain_normals);
+        instance->terrain_patches[patch_index.first]->finalize_vertex_attributes();
+        instance->grass_patches[patch_index.first]->update_vertex_attribute("end_point", grass_end_points);
+        instance->grass_patches[patch_index.first]->finalize_vertex_attributes();
+    }
+}
+
+void View::update_grass()
+{
+    instance->grass_patches.front()->update_uniform_variable("spiderPosition", instance->model->get_spider_position());
 }
 
 void View::create_grass(shared_ptr<GLShader> shader)

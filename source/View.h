@@ -38,6 +38,12 @@ class View
     void create_grass(std::shared_ptr<oogl::GLShader> shader);
     void create_terrain(std::shared_ptr<oogl::GLShader> shader);
     
+    static void update_terrain();
+    static void update_spider();
+    static void update_grass();
+    
+    static void update_camera();
+    
 public:
     
     View(int &argc, char** argv);
@@ -45,21 +51,6 @@ public:
     static View* get_instance()
     {
         return instance;
-    }
-    
-    static void update_terrain()
-    {
-        for (auto patch_index : View::get_instance()->model->terrain_patches_to_update())
-        {
-            std::vector<glm::vec3> terrain_positions, terrain_normals, grass_end_points;
-            View::get_instance()->model->get_terrain_patch(patch_index.second, terrain_positions, terrain_normals, grass_end_points);
-            
-            View::get_instance()->terrain_patches[patch_index.first]->update_vertex_attribute("position", terrain_positions);
-            View::get_instance()->terrain_patches[patch_index.first]->update_vertex_attribute("normal", terrain_normals);
-            View::get_instance()->terrain_patches[patch_index.first]->finalize_vertex_attributes();
-            View::get_instance()->grass_patches[patch_index.first]->update_vertex_attribute("end_point", grass_end_points);
-            View::get_instance()->grass_patches[patch_index.first]->finalize_vertex_attributes();
-        }
     }
     
     void display();
