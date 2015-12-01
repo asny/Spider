@@ -16,26 +16,6 @@ using namespace std;
 using namespace glm;
 using namespace oogl;
 
-void display_(){
-    View::get_instance()->display();
-}
-
-void keyboard_(unsigned char key, int x, int y){
-    View::get_instance()->keyboard(key, x, y);
-}
-
-void reshape_(int width, int height){
-    View::get_instance()->reshape(width, height);
-}
-
-void visible_(int v){
-    View::get_instance()->visible(v);
-}
-
-void animate_(){
-    View::get_instance()->animate();
-}
-
 View* View::instance = NULL;
 
 View::View(int &argc, char** argv)
@@ -48,11 +28,10 @@ View::View(int &argc, char** argv)
     glutCreateWindow("Spider");
     glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
     
-    glutDisplayFunc(display_);
-    glutKeyboardFunc(keyboard_);
-    glutVisibilityFunc(visible_);
-    glutReshapeFunc(reshape_);
-    glutIdleFunc(animate_);
+    glutDisplayFunc([](){instance->display();});
+    glutKeyboardFunc([](unsigned char key, int x, int y){instance->keyboard(key, x, y);});
+    glutVisibilityFunc([](int v){instance->visible(v);});
+    glutReshapeFunc([](int width, int height){instance->reshape(width, height);});
     
     camera = std::unique_ptr<GLCamera>(new GLCamera());
     
@@ -187,7 +166,7 @@ void View::keyboard(unsigned char key, int x, int y) {
 void View::visible(int v)
 {
     if(v==GLUT_VISIBLE)
-        glutIdleFunc(animate_);
+        glutIdleFunc([](){instance->animate();});
     else
         glutIdleFunc(0);
 }

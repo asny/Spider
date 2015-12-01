@@ -32,6 +32,12 @@ class View
     
     static View* instance;
     
+public:
+    
+    View(int &argc, char** argv);
+    
+private:
+    
     void create_cube(std::shared_ptr<oogl::GLShader> shader);
     void create_skybox(std::shared_ptr<oogl::GLShader> shader);
     void create_spider(std::shared_ptr<oogl::GLShader> shader);
@@ -43,15 +49,6 @@ class View
     static void update_grass();
     
     static void update_camera();
-    
-public:
-    
-    View(int &argc, char** argv);
-    
-    static View* get_instance()
-    {
-        return instance;
-    }
     
     void display();
     
