@@ -20,27 +20,14 @@ class Model {
     Terrain terrain = Terrain();
     
     std::map<int, std::pair<int, int>> terrainIndexMap = std::map<int, std::pair<int, int>>();
+    std::function<void()> on_spider_position_changed;
     
     glm::vec3 approximate_normal_at(const glm::vec3& position, double filter_size);
     
-    std::function<void(int, const std::vector<glm::vec3>&, const std::vector<glm::vec3>&, const std::vector<glm::vec3>&)> on_update_terrain;
-    std::map<int, std::pair<int, int>> terrain_patches_to_update();
-    void get_terrain_patch(std::pair<int, int> patch_index, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec3>& grass_end_points);
-    void update_terrain()
-    {
-        for (auto patch_index : terrain_patches_to_update())
-        {
-            std::vector<glm::vec3> terrain_positions, terrain_normals, grass_end_points;
-            get_terrain_patch(patch_index.second, terrain_positions, terrain_normals, grass_end_points);
-            on_update_terrain(patch_index.first, terrain_positions, terrain_normals, grass_end_points);
-        }
-    }
-    
-    
 public:
-    Model(std::function<void(int, const std::vector<glm::vec3>&, const std::vector<glm::vec3>&, const std::vector<glm::vec3>&)> _on_update_terrain) : on_update_terrain(_on_update_terrain)
+    Model(std::function<void()> _on_spider_position_changed) : on_spider_position_changed(_on_spider_position_changed)
     {
-        update_terrain();
+        
     }
     
     // ******** VIEW ********
@@ -63,18 +50,22 @@ public:
         return glm::normalize(glm::vec3(view_dir.x, y_view_dir, view_dir.z));
     }
     
+    std::map<int, std::pair<int, int>> terrain_patches_to_update();
+    
+    void get_terrain_patch(std::pair<int, int> patch_index, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec3>& grass_end_points);
+    
     // ******** CONTROL ********
     
     void move_forward()
     {
         spider.move_forward();
-        update_terrain();
+        on_spider_position_changed();
     }
     
     void move_backwards()
     {
         spider.move_backwards();
-        update_terrain();
+        on_spider_position_changed();
     }
     
     void rotate_left()

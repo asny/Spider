@@ -74,14 +74,8 @@ View::View(int &argc, char** argv)
     grass_patches.front()->update_uniform_variable("lightPos", light_pos);
     
     // Create model
-    model = std::unique_ptr<Model>(new Model([](int patch_index, const std::vector<glm::vec3>& terrain_positions, const std::vector<glm::vec3>& terrain_normals, const std::vector<glm::vec3>& grass_end_points)
-    {
-        View::get_instance()->terrain_patches[patch_index]->update_vertex_attribute("position", terrain_positions);
-        View::get_instance()->terrain_patches[patch_index]->update_vertex_attribute("normal", terrain_normals);
-        View::get_instance()->terrain_patches[patch_index]->finalize_vertex_attributes();
-        View::get_instance()->grass_patches[patch_index]->update_vertex_attribute("end_point", grass_end_points);
-        View::get_instance()->grass_patches[patch_index]->finalize_vertex_attributes();
-    }));
+    model = std::unique_ptr<Model>(new Model([](){View::update_terrain();}));
+    update_terrain();
     
     glutMainLoop();
 }

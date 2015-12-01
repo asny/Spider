@@ -22,6 +22,8 @@ class View
     std::unique_ptr<oogl::GLCamera> camera;
     
     std::shared_ptr<oogl::GLObject> cube, spider, skybox;
+    std::vector<std::shared_ptr<oogl::GLObject>> terrain_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
+    std::vector<std::shared_ptr<oogl::GLObject>> grass_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
     
     glm::vec3 light_pos = {0., 2000., 2.};
     
@@ -38,14 +40,26 @@ class View
     
 public:
     
-    std::vector<std::shared_ptr<oogl::GLObject>> terrain_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
-    std::vector<std::shared_ptr<oogl::GLObject>> grass_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
-    
     View(int &argc, char** argv);
     
     static View* get_instance()
     {
         return instance;
+    }
+    
+    static void update_terrain()
+    {
+        for (auto patch_index : View::get_instance()->model->terrain_patches_to_update())
+        {
+            std::vector<glm::vec3> terrain_positions, terrain_normals, grass_end_points;
+            View::get_instance()->model->get_terrain_patch(patch_index.second, terrain_positions, terrain_normals, grass_end_points);
+            
+            View::get_instance()->terrain_patches[patch_index.first]->update_vertex_attribute("position", terrain_positions);
+            View::get_instance()->terrain_patches[patch_index.first]->update_vertex_attribute("normal", terrain_normals);
+            View::get_instance()->terrain_patches[patch_index.first]->finalize_vertex_attributes();
+            View::get_instance()->grass_patches[patch_index.first]->update_vertex_attribute("end_point", grass_end_points);
+            View::get_instance()->grass_patches[patch_index.first]->finalize_vertex_attributes();
+        }
     }
     
     void display();
