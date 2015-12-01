@@ -55,9 +55,8 @@ View::View(int &argc, char** argv)
     // Create model
     model = std::unique_ptr<Model>(new Model(
     [](){
-        update_terrain();
         update_spider();
-        update_grass();
+        update_terrain_and_grass();
         update_camera();
     },
     [](){
@@ -66,9 +65,8 @@ View::View(int &argc, char** argv)
     }));
     
     // Update
-    update_terrain();
+    update_terrain_and_grass();
     update_spider();
-    update_grass();
     update_camera();
     
     glutMainLoop();
@@ -208,8 +206,9 @@ void View::update_spider()
     instance->spider->set_model_matrix(spider_translation * spider_rotation_yaw * spider_rotation_pitch * spider_scale);
 }
 
-void View::update_terrain()
+void View::update_terrain_and_grass()
 {
+    instance->grass_patches.front()->update_uniform_variable("spiderPosition", instance->model->get_spider_position());
     for (auto patch_index : instance->model->terrain_patches_to_update())
     {
         vector<vec3> terrain_positions, terrain_normals, grass_end_points;
@@ -218,14 +217,10 @@ void View::update_terrain()
         instance->terrain_patches[patch_index.first]->update_vertex_attribute("position", terrain_positions);
         instance->terrain_patches[patch_index.first]->update_vertex_attribute("normal", terrain_normals);
         instance->terrain_patches[patch_index.first]->finalize_vertex_attributes();
+        
         instance->grass_patches[patch_index.first]->update_vertex_attribute("end_point", grass_end_points);
         instance->grass_patches[patch_index.first]->finalize_vertex_attributes();
     }
-}
-
-void View::update_grass()
-{
-    instance->grass_patches.front()->update_uniform_variable("spiderPosition", instance->model->get_spider_position());
 }
 
 void View::create_grass(shared_ptr<GLShader> shader)

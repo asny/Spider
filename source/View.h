@@ -44,9 +44,8 @@ private:
     void create_grass(std::shared_ptr<oogl::GLShader> shader);
     void create_terrain(std::shared_ptr<oogl::GLShader> shader);
     
-    static void update_terrain();
+    static void update_terrain_and_grass();
     static void update_spider();
-    static void update_grass();
     
     static void update_camera();
     
