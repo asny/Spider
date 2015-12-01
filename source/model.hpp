@@ -21,11 +21,13 @@ class Model {
     
     std::map<int, std::pair<int, int>> terrainIndexMap = std::map<int, std::pair<int, int>>();
     std::function<void()> on_spider_position_changed;
+    std::function<void()> on_spider_view_direction_changed;
     
     glm::vec3 approximate_normal_at(const glm::vec3& position, double filter_size);
     
 public:
-    Model(std::function<void()> _on_spider_position_changed) : on_spider_position_changed(_on_spider_position_changed)
+    Model(std::function<void()> _on_spider_position_changed, std::function<void()> _on_spider_view_direction_changed)
+        : on_spider_position_changed(_on_spider_position_changed), on_spider_view_direction_changed(_on_spider_view_direction_changed)
     {
         
     }
@@ -71,11 +73,13 @@ public:
     void rotate_left()
     {
         spider.rotate_left();
+        on_spider_view_direction_changed();
     }
     
     void rotate_right()
     {
         spider.rotate_right();
+        on_spider_view_direction_changed();
     }
     
     void jump()

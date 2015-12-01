@@ -74,11 +74,15 @@ View::View(int &argc, char** argv)
     grass_patches.front()->update_uniform_variable("lightPos", light_pos);
     
     // Create model
-    model = std::unique_ptr<Model>(new Model([]()
-    {
+    model = std::unique_ptr<Model>(new Model(
+    [](){
         update_terrain();
         update_spider();
         update_grass();
+        update_camera();
+    },
+    [](){
+        update_spider();
         update_camera();
     }));
     
