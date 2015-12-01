@@ -17,14 +17,11 @@ class View
     
     VIEW_TYPE view_type = FIRST_PERSON;
     
-    std::shared_ptr<Model> model;
+    std::unique_ptr<Model> model;
     
     std::unique_ptr<oogl::GLCamera> camera;
     
     std::shared_ptr<oogl::GLObject> cube, spider, skybox;
-    
-    std::vector<std::shared_ptr<oogl::GLObject>> terrain_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
-    std::vector<std::shared_ptr<oogl::GLObject>> grass_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
     
     glm::vec3 light_pos = {0., 2000., 2.};
     
@@ -41,7 +38,10 @@ class View
     
 public:
     
-    View(std::shared_ptr<Model> _model, int &argc, char** argv);
+    std::vector<std::shared_ptr<oogl::GLObject>> terrain_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
+    std::vector<std::shared_ptr<oogl::GLObject>> grass_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
+    
+    View(int &argc, char** argv);
     
     static View* get_instance()
     {

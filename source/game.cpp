@@ -13,7 +13,6 @@
 
 int main(int argc, char** argv)
 {
-    auto model = std::shared_ptr<Model>(new Model());
-    View view(model, argc, argv);
+    View view(argc, argv);
     return 0;
 }

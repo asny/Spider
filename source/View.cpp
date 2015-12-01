@@ -38,10 +38,9 @@ void animate_(){
 
 View* View::instance = NULL;
 
-View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
+View::View(int &argc, char** argv)
 {
     instance = this;
-    model = _model;
     
     // Initialize glut
     glutInit(&argc, argv);
@@ -73,6 +72,16 @@ View::View(std::shared_ptr<Model> _model, int &argc, char** argv)
     
     terrain_patches.front()->update_uniform_variable("lightPos", light_pos);
     grass_patches.front()->update_uniform_variable("lightPos", light_pos);
+    
+    // Create model
+    model = std::unique_ptr<Model>(new Model([](int patch_index, const std::vector<glm::vec3>& terrain_positions, const std::vector<glm::vec3>& terrain_normals, const std::vector<glm::vec3>& grass_end_points)
+    {
+        View::get_instance()->terrain_patches[patch_index]->update_vertex_attribute("position", terrain_positions);
+        View::get_instance()->terrain_patches[patch_index]->update_vertex_attribute("normal", terrain_normals);
+        View::get_instance()->terrain_patches[patch_index]->finalize_vertex_attributes();
+        View::get_instance()->grass_patches[patch_index]->update_vertex_attribute("end_point", grass_end_points);
+        View::get_instance()->grass_patches[patch_index]->finalize_vertex_attributes();
+    }));
     
     glutMainLoop();
 }
@@ -156,19 +165,6 @@ void View::animate()
     
     grass_patches.front()->update_uniform_variable("spiderPosition", spider_position);
     grass_patches.front()->update_uniform_variable("wind", animation);
-    
-    for (auto patch_index : model->terrain_patches_to_update())
-    {
-        std::vector<glm::vec3> terrain_positions, terrain_normals, grass_end_points;
-        model->get_terrain_patch(patch_index.second, terrain_positions, terrain_normals, grass_end_points);
-        
-        terrain_patches[patch_index.first]->update_vertex_attribute("position", terrain_positions);
-        terrain_patches[patch_index.first]->update_vertex_attribute("normal", terrain_normals);
-        terrain_patches[patch_index.first]->finalize_vertex_attributes();
-        
-        grass_patches[patch_index.first]->update_vertex_attribute("end_point", grass_end_points);
-        grass_patches[patch_index.first]->finalize_vertex_attributes();
-    }
     
     glutPostRedisplay();
 }
