@@ -49,61 +49,62 @@ vec3 Model::approximate_normal_at(const vec3& position, double filter_size)
     return approximate_normal(position, neighbour_positions);
 }
 
-map<int, pair<int, int>> Model::terrain_patches_to_update()
+vector<int> Model::terrain_patches_to_update()
 {
     vec3 spider_pos = spider.get_position();
     pair<int, int> center = terrain.index_at(spider_pos);
+    auto to_update = vector<int>();
     
     if (terrainIndexMap.size() == 0) {
         for (int i = 0; i < 9; i++) {
             terrainIndexMap[i] = {center.first - 1 + i % 3, center.second - 1 + std::floor(i/3)};
+            to_update.push_back(i);
         }
-        return terrainIndexMap;
+        return to_update;
     }
     
-    map<int, pair<int, int>> to_update = map<int, pair<int, int>>();
     for (int i = 0; i < 9; i++)
     {
         auto current = terrainIndexMap[i];
         if(center.first - current.first == 2 && center.second - current.second == 2)
         {
-            to_update[i] = {center.first + 1, center.second + 1};
-            terrainIndexMap[i] = to_update[i];
+            terrainIndexMap[i] = {center.first + 1, center.second + 1};
+            to_update.push_back(i);
         }
         else if(center.first - current.first == -2 && center.second - current.second == -2)
         {
-            to_update[i] = {center.first - 1, center.second - 1};
-            terrainIndexMap[i] = to_update[i];
+            terrainIndexMap[i] = {center.first - 1, center.second - 1};
+            to_update.push_back(i);
         }
         else if(center.first - current.first == 2 && center.second - current.second == -2)
         {
-            to_update[i] = {center.first + 1, center.second - 1};
-            terrainIndexMap[i] = to_update[i];
+            terrainIndexMap[i] = {center.first + 1, center.second - 1};
+            to_update.push_back(i);
         }
         else if(center.first - current.first == -2 && center.second - current.second == 2)
         {
-            to_update[i] = {center.first - 1, center.second + 1};
-            terrainIndexMap[i] = to_update[i];
+            terrainIndexMap[i] = {center.first - 1, center.second + 1};
+            to_update.push_back(i);
         }
         else if(center.first - current.first == 2)
         {
-            to_update[i] = {center.first + 1, current.second};
-            terrainIndexMap[i] = to_update[i];
+            terrainIndexMap[i] = {center.first + 1, current.second};
+            to_update.push_back(i);
         }
         else if(center.first - current.first == -2)
         {
-            to_update[i] = {center.first - 1, current.second};
-            terrainIndexMap[i] = to_update[i];
+            terrainIndexMap[i] = {center.first - 1, current.second};
+            to_update.push_back(i);
         }
         else if(center.second - current.second == 2)
         {
-            to_update[i] = {current.first, center.second + 1};
-            terrainIndexMap[i] = to_update[i];
+            terrainIndexMap[i] = {current.first, center.second + 1};
+            to_update.push_back(i);
         }
         else if(center.second - current.second == -2)
         {
-            to_update[i] = {current.first, center.second - 1};
-            terrainIndexMap[i] = to_update[i];
+            terrainIndexMap[i] = {current.first, center.second - 1};
+            to_update.push_back(i);
         }
     }
     
@@ -115,9 +116,9 @@ double random(double min, double max)
     return (max - min) * (double)rand()/(double)RAND_MAX + min;
 }
 
-void Model::get_terrain_patch(pair<int, int> patch_index, vector<vec3>& positions, vector<vec3>& normals, vector<vec3>& grass_end_points)
+void Model::get_terrain_patch(int patch_index, vector<vec3>& positions, vector<vec3>& normals, vector<vec3>& grass_end_points)
 {
-    TerrainPatch* patch = terrain.get_patch_at(patch_index);
+    TerrainPatch* patch = terrain.get_patch_at(terrainIndexMap[patch_index]);
     auto origo = patch->get_origo();
     auto size = patch->get_size();
     const double step_size = 1./TerrainPatch::VERTICES_PER_UNIT;

@@ -212,14 +212,14 @@ void View::update_terrain_and_grass()
     for (auto patch_index : instance->model->terrain_patches_to_update())
     {
         vector<vec3> terrain_positions, terrain_normals, grass_end_points;
-        instance->model->get_terrain_patch(patch_index.second, terrain_positions, terrain_normals, grass_end_points);
+        instance->model->get_terrain_patch(patch_index, terrain_positions, terrain_normals, grass_end_points);
         
-        instance->terrain_patches[patch_index.first]->update_vertex_attribute("position", terrain_positions);
-        instance->terrain_patches[patch_index.first]->update_vertex_attribute("normal", terrain_normals);
-        instance->terrain_patches[patch_index.first]->finalize_vertex_attributes();
+        instance->terrain_patches[patch_index]->update_vertex_attribute("position", terrain_positions);
+        instance->terrain_patches[patch_index]->update_vertex_attribute("normal", terrain_normals);
+        instance->terrain_patches[patch_index]->finalize_vertex_attributes();
         
-        instance->grass_patches[patch_index.first]->update_vertex_attribute("end_point", grass_end_points);
-        instance->grass_patches[patch_index.first]->finalize_vertex_attributes();
+        instance->grass_patches[patch_index]->update_vertex_attribute("end_point", grass_end_points);
+        instance->grass_patches[patch_index]->finalize_vertex_attributes();
     }
 }
 

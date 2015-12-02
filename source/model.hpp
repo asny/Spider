@@ -52,9 +52,9 @@ public:
         return glm::normalize(glm::vec3(view_dir.x, y_view_dir, view_dir.z));
     }
     
-    std::map<int, std::pair<int, int>> terrain_patches_to_update();
+    std::vector<int> terrain_patches_to_update();
     
-    void get_terrain_patch(std::pair<int, int> patch_index, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec3>& grass_end_points);
+    void get_terrain_patch(int patch_index, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec3>& grass_end_points);
     
     // ******** CONTROL ********
     
