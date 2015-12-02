@@ -14,8 +14,8 @@ class Spider {
     glm::vec3 position;
     glm::vec3 view_direction;
     
-    const float stepsize = 0.1;
-    const float stepangle = 0.08;
+    const float speed = 2.;
+    const float angular_speed = 1.;
     float velocity = 100.f;
     
 public:
@@ -27,9 +27,7 @@ public:
     glm::vec3 get_position();
     glm::vec3 get_view_direction();
     
-    void move_forward();
-    void move_backwards();
-    void rotate_left();
-    void rotate_right();
+    void move(float time);
+    void rotate(float time);
     void jump();
 };

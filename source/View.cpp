@@ -10,30 +10,46 @@
 #include "Reader.hpp"
 #include "gtx/rotate_vector.hpp"
 
-#include <GLUT/glut.h>
+#include "../include/GLFW/glfw3.h"
 
 using namespace std;
 using namespace glm;
 using namespace oogl;
 
 View* View::instance = NULL;
+GLFWwindow* gWindow = NULL;
+
+void OnError(int errorCode, const char* msg) {
+    throw std::runtime_error(msg);
+}
 
 View::View(int &argc, char** argv)
 {
     instance = this;
     
-    // Initialize glut
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-    glutCreateWindow("Spider");
-    glutReshapeWindow(WIN_SIZE_X, WIN_SIZE_Y);
+    // initialise GLFW
+    glfwSetErrorCallback(OnError);
+    if(!glfwInit())
+        throw std::runtime_error("glfwInit failed");
     
-    glutDisplayFunc([](){instance->display();});
-    glutKeyboardFunc([](unsigned char key, int x, int y){instance->keyboard(key, x, y);});
-    glutVisibilityFunc([](int v){instance->visible(v);});
-    glutReshapeFunc([](int width, int height){instance->reshape(width, height);});
+    // Open a window with GLFW
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    gWindow = glfwCreateWindow(WIN_SIZE_X, WIN_SIZE_Y, "Spider game", NULL, NULL);
+    if(!gWindow)
+        throw std::runtime_error("glfwCreateWindow failed. Can your hardware handle OpenGL 3.2?");
     
+    // GLFW settings
+    glfwSetInputMode(gWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPos(gWindow, 0, 0);
+    glfwMakeContextCurrent(gWindow);
+    
+    // Create camera
     camera = std::unique_ptr<GLCamera>(new GLCamera());
+    camera->set_screen_size(WIN_SIZE_X, WIN_SIZE_Y);
     
     // Create shaders
     auto texture_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"uv_coordinates", 2}}, "shaders/texture.vert",  "shaders/texture.frag"));
@@ -69,104 +85,96 @@ View::View(int &argc, char** argv)
     update_spider();
     update_camera();
     
-    glutMainLoop();
-}
-
-void print_fps()
-{
-    static int draws = 0;
-    draws++;
-    static float startTime = glutGet(GLUT_ELAPSED_TIME);
-    float elapsedTime = 0.001 * (glutGet(GLUT_ELAPSED_TIME) - startTime);
-    if(elapsedTime > 5)
+    // run while the window is open
+    double lastTime = glfwGetTime();
+    while(!glfwWindowShouldClose(gWindow))
     {
-        std::cout << "FPS: " << (float)(draws)/elapsedTime << std::endl;
-        startTime = glutGet(GLUT_ELAPSED_TIME);
-        draws = 0;
+        // process pending events
+        glfwPollEvents();
+        
+        // update the scene based on the time elapsed since last update
+        double thisTime = glfwGetTime();
+        
+        update(thisTime - lastTime);
+        
+        glm::vec3 wind(0.5 * sin(thisTime) + 0.5, 0., 0.5 * cos(thisTime + 0.5) + 0.5);
+        grass_patches.front()->update_uniform_variable("wind", wind);
+        
+        lastTime = thisTime;
+        
+        // draw one frame
+        display();
+        
+        //exit program if escape key is pressed
+        if(glfwGetKey(gWindow, GLFW_KEY_ESCAPE))
+            glfwSetWindowShouldClose(gWindow, GL_TRUE);
     }
+    
+    // clean up and exit
+    glfwTerminate();
 }
 
 void View::display()
 {
-    if (glutGet(GLUT_WINDOW_WIDTH) != WIN_SIZE_X || glutGet(GLUT_WINDOW_HEIGHT) != WIN_SIZE_Y) {
-        return;
-    }
-    
     vector<shared_ptr<GLObject>> objects = {spider, cube, skybox};
     objects.insert(objects.end(), terrain_patches.begin(), terrain_patches.end());
     objects.insert(objects.end(), grass_patches.begin(), grass_patches.end());
     
     camera->draw(objects);
     
-    print_fps();
-    
-    glutSwapBuffers();
+    glfwSwapBuffers(gWindow);
 }
 
-void View::reshape(int width, int height)
+void print_fps(double elapsedTime)
 {
-    WIN_SIZE_X = width;
-    WIN_SIZE_Y = height;
-    camera->set_screen_size(width, height);
-    
-    glutPostRedisplay();
-}
-
-void View::animate()
-{
-    double time = glutGet(GLUT_ELAPSED_TIME)*0.002;
-    glm::vec3 animation(0.5 * sin(time) + 0.5, 0., 0.5 * cos(time + 0.5) + 0.5);
-    cube->set_model_matrix(translate(mat4(), animation));
-    
-    grass_patches.front()->update_uniform_variable("wind", animation);
-    
-    glutPostRedisplay();
-}
-
-void View::keyboard(unsigned char key, int x, int y) {
-    switch(key) {
-        case '\033':
-            exit(0);
-            break;
-        case 'w':
-            model->move_forward();
-            break;
-        case 'a':
-            model->rotate_left();
-            break;
-        case 'd':
-            model->rotate_right();
-            break;
-        case 's':
-            model->move_backwards();
-            break;
-        case ' ':
-            model->jump();
-            break;
-        case 'v':
-            if(view_type == FIRST_PERSON)
-            {
-                view_type = THIRD_PERSON;
-            }
-            else if(view_type == THIRD_PERSON)
-            {
-                view_type = BIRD;
-            }
-            else if(view_type == BIRD)
-            {
-                view_type = FIRST_PERSON;
-            }
-            update_camera();
-            break;
+    static int draws = 0;
+    draws++;
+    static float seconds = 0.;
+    seconds += elapsedTime;
+    if(seconds > 5)
+    {
+        std::cout << "FPS: " << (float)(draws)/elapsedTime << std::endl;
+        seconds = 0.;
+        draws = 0;
     }
 }
 
-void View::visible(int v)
+void View::update(double elapsedTime)
 {
-    if(v==GLUT_VISIBLE)
-        glutIdleFunc([](){instance->animate();});
-    else
-        glutIdleFunc(0);
+    print_fps(elapsedTime);
+    
+    if(glfwGetKey(gWindow, 'S'))
+    {
+        model->move(-elapsedTime);
+    }
+    else if(glfwGetKey(gWindow, 'W'))
+    {
+        model->move(elapsedTime);
+    }
+    if(glfwGetKey(gWindow, 'A'))
+    {
+        model->rotate(elapsedTime);
+    }
+    else if(glfwGetKey(gWindow, 'D'))
+    {
+        model->rotate(-elapsedTime);
+    }
+    
+    if(glfwGetKey(gWindow, '1'))
+    {
+        view_type = FIRST_PERSON;
+        update_camera();
+    }
+    else if(glfwGetKey(gWindow, '2'))
+    {
+        view_type = THIRD_PERSON;
+        update_camera();
+    }
+    else if(glfwGetKey(gWindow, '3'))
+    {
+        view_type = BIRD;
+        update_camera();
+    }
 }
 
 void View::update_camera()

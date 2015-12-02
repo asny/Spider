@@ -33,24 +33,14 @@ glm::vec3 Spider::get_view_direction()
     return view_direction;
 }
 
-void Spider::move_forward()
+void Spider::move(float time)
 {
-    position += stepsize * view_direction;
+    position += time * speed * view_direction;
 }
 
-void Spider::move_backwards()
+void Spider::rotate(float time)
 {
-    position -= stepsize * view_direction;
-}
-
-void Spider::rotate_left()
-{
-    view_direction = vec3(rotate(mat4(), stepangle, vec3(0.,1.,0.)) * vec4(view_direction, 1.));
-}
-
-void Spider::rotate_right()
-{
-    view_direction = vec3(rotate(mat4(), -stepangle, vec3(0.,1.,0.)) * vec4(view_direction, 1.));
+    view_direction = vec3(glm::rotate(mat4(), time * angular_speed, vec3(0.,1.,0.)) * vec4(view_direction, 1.));
 }
 
 void Spider::jump()

@@ -51,13 +51,5 @@ private:
     
     void display();
     
-    void animate();
-    
-    void reshape(int width, int height);
-    
-    void visible(int v);
-    
-    void mouse(int button, int state, int x, int y);
-    
-    void keyboard(unsigned char key, int x, int y);
+    void update(double elapsedTime);
 };

@@ -58,27 +58,15 @@ public:
     
     // ******** CONTROL ********
     
-    void move_forward()
+    void move(double time)
     {
-        spider.move_forward();
+        spider.move(time);
         on_spider_position_changed();
     }
     
-    void move_backwards()
+    void rotate(double time)
     {
-        spider.move_backwards();
-        on_spider_position_changed();
-    }
-    
-    void rotate_left()
-    {
-        spider.rotate_left();
-        on_spider_view_direction_changed();
-    }
-    
-    void rotate_right()
-    {
-        spider.rotate_right();
+        spider.rotate(time);
         on_spider_view_direction_changed();
     }
     
