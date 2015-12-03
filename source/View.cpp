@@ -164,6 +164,12 @@ void View::update(double elapsedTime)
         model->rotate(-elapsedTime);
     }
     
+    if(glfwGetKey(gWindow, ' '))
+    {
+        model->jump();
+    }
+    model->update_jump(elapsedTime);
+    
     if(glfwGetKey(gWindow, '1'))
     {
         view_type = FIRST_PERSON;

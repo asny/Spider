@@ -16,7 +16,7 @@ class Spider {
     
     const float speed = 2.;
     const float angular_speed = 1.;
-    float velocity = 100.f;
+    float jump_speed = 100.f;
     
 public:
     Spider(glm::vec3 _position, glm::vec3 _view_direction) : position(_position), view_direction(_view_direction)
@@ -28,6 +28,21 @@ public:
     glm::vec3 get_view_direction();
     
     void move(float time);
+    
     void rotate(float time);
+    
     void jump();
+    
+    void update_jump(float time)
+    {
+        if(jump_speed < 100.f)
+        {
+            position.y += time * jump_speed;
+            jump_speed -= 5.*time;
+            if(jump_speed < -3.f)
+            {
+                jump_speed = 100.f;
+            }
+        }
+    }
 };

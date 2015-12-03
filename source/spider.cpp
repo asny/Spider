@@ -16,15 +16,6 @@ using namespace glm;
 
 glm::vec3 Spider::get_position()
 {
-    if(velocity < 100.f)
-    {
-        position.y += velocity;
-        velocity -= 0.001;
-        if(velocity < -0.03)
-        {
-            velocity = 100.f;
-        }
-    }
     return position;
 }
 
@@ -45,8 +36,8 @@ void Spider::rotate(float time)
 
 void Spider::jump()
 {
-    if(velocity >= 100.f)
+    if(jump_speed >= 100.f)
     {
-        velocity = 0.03f;
+        jump_speed = 3.f;
     }
 }

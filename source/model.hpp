@@ -74,4 +74,10 @@ public:
     {
         spider.jump();
     }
+    
+    void update_jump(double time)
+    {
+        spider.update_jump(time);
+        on_spider_position_changed();
+    }
 };
