@@ -10,6 +10,7 @@
 #include "Reader.hpp"
 #include "gtx/rotate_vector.hpp"
 
+#define GLFW_INCLUDE_NONE
 #include <glfw3.h>
 
 using namespace std;

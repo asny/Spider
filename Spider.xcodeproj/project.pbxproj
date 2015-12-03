@@ -372,7 +372,7 @@
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = ../glm/glm;
+				USER_HEADER_SEARCH_PATHS = /usr/local/include/glm;
 			};
 			name = Debug;
 		};
@@ -382,7 +382,7 @@
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = ../glm/glm;
+				USER_HEADER_SEARCH_PATHS = /usr/local/include/glm;
 			};
 			name = Release;
 		};
