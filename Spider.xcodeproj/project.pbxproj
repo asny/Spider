@@ -11,16 +11,20 @@
 		7A383A2E1BBFBB1700E29333 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2D1BBFBB1700E29333 /* OpenGL.framework */; };
 		7A383A301BBFBB3300E29333 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2F1BBFBB3300E29333 /* GLUT.framework */; };
 		7A383A331BBFCE5700E29333 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A311BBFCE5700E29333 /* View.cpp */; };
-		7A38959E1BEE447B00D6E095 /* GLShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A38959C1BEE447B00D6E095 /* GLShader.cpp */; settings = {ASSET_TAGS = (); }; };
-		7A3895A21BEE471A00D6E095 /* GLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A01BEE471A00D6E095 /* GLObject.cpp */; settings = {ASSET_TAGS = (); }; };
-		7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A51BEFB8AE00D6E095 /* Bitmap.cpp */; settings = {ASSET_TAGS = (); }; };
-		7A3895AA1BEFB8AE00D6E095 /* Reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A71BEFB8AE00D6E095 /* Reader.cpp */; settings = {ASSET_TAGS = (); }; };
-		7A70D0F91BC68BAA003E859B /* GLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0F71BC68BAA003E859B /* GLCamera.cpp */; settings = {ASSET_TAGS = (); }; };
-		7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */; settings = {ASSET_TAGS = (); }; };
-		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; settings = {ASSET_TAGS = (); }; };
-		7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* spider.cpp */; settings = {ASSET_TAGS = (); }; };
-		7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2C31BC25326009D85FD /* terrain.cpp */; settings = {ASSET_TAGS = (); }; };
-		7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */; settings = {ASSET_TAGS = (); }; };
+		7A38959E1BEE447B00D6E095 /* GLShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A38959C1BEE447B00D6E095 /* GLShader.cpp */; };
+		7A3895A21BEE471A00D6E095 /* GLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A01BEE471A00D6E095 /* GLObject.cpp */; };
+		7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A51BEFB8AE00D6E095 /* Bitmap.cpp */; };
+		7A3895AA1BEFB8AE00D6E095 /* Reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A71BEFB8AE00D6E095 /* Reader.cpp */; };
+		7A70D0F91BC68BAA003E859B /* GLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0F71BC68BAA003E859B /* GLCamera.cpp */; };
+		7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */; };
+		7A8D543F1C0F83390029EEE2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8D543E1C0F83390029EEE2 /* Cocoa.framework */; };
+		7A8D54431C0F846B0029EEE2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8D54421C0F846B0029EEE2 /* IOKit.framework */; };
+		7A8D54441C0F84920029EEE2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8D54401C0F83790029EEE2 /* QuartzCore.framework */; };
+		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; };
+		7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* spider.cpp */; };
+		7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2C31BC25326009D85FD /* terrain.cpp */; };
+		7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */; };
+		7AFB37CE1C10E5EA003BD638 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AFB37CD1C10E5EA003BD638 /* libglfw3.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -65,6 +69,9 @@
 		7A70D0F81BC68BAA003E859B /* GLCamera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLCamera.hpp; path = GLWrapper/GLCamera.hpp; sourceTree = SOURCE_ROOT; };
 		7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplexnoise.cpp; sourceTree = "<group>"; };
 		7A70D0FD1BC6BEE8003E859B /* simplexnoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexnoise.h; sourceTree = "<group>"; };
+		7A8D543E1C0F83390029EEE2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		7A8D54401C0F83790029EEE2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		7A8D54421C0F846B0029EEE2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		7AB0F2BA1BC07AA0009D85FD /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = model.cpp; path = source/model.cpp; sourceTree = "<group>"; };
 		7AB0F2BB1BC07AA0009D85FD /* model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = model.hpp; path = source/model.hpp; sourceTree = "<group>"; };
 		7AB0F2BE1BC07B52009D85FD /* spider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = spider.cpp; path = source/spider.cpp; sourceTree = "<group>"; };
@@ -78,6 +85,7 @@
 		7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLTexture.cpp; path = GLWrapper/GLTexture.cpp; sourceTree = SOURCE_ROOT; };
 		7AF9C41F1BED491F008AE5F5 /* GLTexture.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLTexture.hpp; path = GLWrapper/GLTexture.hpp; sourceTree = SOURCE_ROOT; };
 		7AF9C4281BED51FB008AE5F5 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		7AFB37CD1C10E5EA003BD638 /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = ../../../../../usr/local/lib/libglfw3.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,8 +93,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A8D54441C0F84920029EEE2 /* QuartzCore.framework in Frameworks */,
+				7A8D54431C0F846B0029EEE2 /* IOKit.framework in Frameworks */,
 				7A383A301BBFBB3300E29333 /* GLUT.framework in Frameworks */,
 				7A383A2E1BBFBB1700E29333 /* OpenGL.framework in Frameworks */,
+				7A8D543F1C0F83390029EEE2 /* Cocoa.framework in Frameworks */,
+				7AFB37CE1C10E5EA003BD638 /* libglfw3.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +108,10 @@
 		7A383A131BBFB6AC00E29333 = {
 			isa = PBXGroup;
 			children = (
+				7AFB37CD1C10E5EA003BD638 /* libglfw3.a */,
+				7A8D54421C0F846B0029EEE2 /* IOKit.framework */,
+				7A8D54401C0F83790029EEE2 /* QuartzCore.framework */,
+				7A8D543E1C0F83390029EEE2 /* Cocoa.framework */,
 				7AF9C4281BED51FB008AE5F5 /* ImageIO.framework */,
 				7A383A2F1BBFBB3300E29333 /* GLUT.framework */,
 				7A383A2D1BBFBB1700E29333 /* OpenGL.framework */,
@@ -353,6 +369,8 @@
 		7A383A241BBFB6AC00E29333 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = ../glm/glm;
 			};
@@ -361,6 +379,8 @@
 		7A383A251BBFB6AC00E29333 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = ../glm/glm;
 			};

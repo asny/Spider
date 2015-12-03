@@ -10,7 +10,7 @@
 #include "Reader.hpp"
 #include "gtx/rotate_vector.hpp"
 
-#include "../include/GLFW/glfw3.h"
+#include <glfw3.h>
 
 using namespace std;
 using namespace glm;
