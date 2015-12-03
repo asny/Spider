@@ -27,9 +27,6 @@ class View
     
     glm::vec3 light_pos = {0., 2000., 2.};
     
-    int WIN_SIZE_X = 1280;
-    int WIN_SIZE_Y = 720;
-    
     static View* instance;
     
 public:

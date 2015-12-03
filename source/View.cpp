@@ -26,6 +26,9 @@ void OnError(int errorCode, const char* msg) {
 
 View::View(int &argc, char** argv)
 {
+    const int WIN_SIZE_X = 1440;
+    const int WIN_SIZE_Y = 900;
+    
     instance = this;
     
     // initialise GLFW
@@ -39,7 +42,7 @@ View::View(int &argc, char** argv)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    gWindow = glfwCreateWindow(WIN_SIZE_X, WIN_SIZE_Y, "Spider game", NULL, NULL);
+    gWindow = glfwCreateWindow(WIN_SIZE_X, WIN_SIZE_Y, "Spider game", glfwGetPrimaryMonitor(), NULL);
     if(!gWindow)
         throw std::runtime_error("glfwCreateWindow failed. Can your hardware handle OpenGL 3.2?");
     
