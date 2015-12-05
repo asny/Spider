@@ -137,7 +137,7 @@ void print_fps(double elapsedTime)
     seconds += elapsedTime;
     if(seconds > 5)
     {
-        std::cout << "FPS: " << (float)(draws)/elapsedTime << std::endl;
+        std::cout << "FPS: " << ((float)draws)/seconds << std::endl;
         seconds = 0.;
         draws = 0;
     }
