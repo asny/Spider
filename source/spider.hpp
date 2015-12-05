@@ -16,12 +16,15 @@ class Spider {
     
     const float speed = 2.;
     const float angular_speed = 1.;
-    float jump_speed = 100.f;
+    const float gravity = -9.82;
+    float height;
+    float jump_speed;
+    bool is_jumping = false;
     
 public:
     Spider(glm::vec3 _position, glm::vec3 _view_direction) : position(_position), view_direction(_view_direction)
     {
-        
+        height = position.y;
     }
     
     glm::vec3 get_position();
@@ -33,16 +36,5 @@ public:
     
     void jump();
     
-    void update_jump(float time)
-    {
-        if(jump_speed < 100.f)
-        {
-            position.y += time * jump_speed;
-            jump_speed -= 5.*time;
-            if(jump_speed < -3.f)
-            {
-                jump_speed = 100.f;
-            }
-        }
-    }
+    void update_jump(float time);
 };
