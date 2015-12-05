@@ -26,7 +26,10 @@ glm::vec3 Spider::get_view_direction()
 
 void Spider::move(float time)
 {
-    position += time * speed * view_direction;
+    if(!is_jumping)
+    {
+        position += time * speed * view_direction;
+    }
 }
 
 void Spider::rotate(float time)
@@ -37,12 +40,15 @@ void Spider::rotate(float time)
     }
 }
 
-void Spider::jump()
+void Spider::jump(bool move_forward)
 {
     if(!is_jumping)
     {
         is_jumping = true;
-        jump_speed = 3.f;
+        jump_vector = vec3(0.f, 4.f, 0.f);
+        if (move_forward) {
+            jump_vector += speed * view_direction;
+        }
     }
 }
 
@@ -50,8 +56,8 @@ void Spider::update_jump(float time)
 {
     if(is_jumping)
     {
-        position.y += time * jump_speed;
-        jump_speed += time * gravity;
+        position += time * jump_vector;
+        jump_vector.y += time * gravity;
         if(position.y < height)
         {
             position.y = height;

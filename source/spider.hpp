@@ -18,7 +18,7 @@ class Spider {
     const float angular_speed = 1.;
     const float gravity = -9.82;
     float height;
-    float jump_speed;
+    glm::vec3 jump_vector;
     bool is_jumping = false;
     
 public:
@@ -34,7 +34,7 @@ public:
     
     void rotate(float time);
     
-    void jump();
+    void jump(bool move_forward);
     
     void update_jump(float time);
 };

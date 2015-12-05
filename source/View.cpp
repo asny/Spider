@@ -147,6 +147,12 @@ void View::update(double elapsedTime)
 {
     print_fps(elapsedTime);
     
+    if(glfwGetKey(gWindow, ' '))
+    {
+        model->jump(glfwGetKey(gWindow, 'W'));
+    }
+    model->update_jump(elapsedTime);
+    
     if(glfwGetKey(gWindow, 'S'))
     {
         model->move(-elapsedTime);
@@ -163,12 +169,6 @@ void View::update(double elapsedTime)
     {
         model->rotate(-elapsedTime);
     }
-    
-    if(glfwGetKey(gWindow, ' '))
-    {
-        model->jump();
-    }
-    model->update_jump(elapsedTime);
     
     if(glfwGetKey(gWindow, '1'))
     {

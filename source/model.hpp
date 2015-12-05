@@ -70,9 +70,9 @@ public:
         on_spider_view_direction_changed();
     }
     
-    void jump()
+    void jump(bool move_forward)
     {
-        spider.jump();
+        spider.jump(move_forward);
     }
     
     void update_jump(double time)
