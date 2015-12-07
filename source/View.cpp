@@ -263,6 +263,16 @@ void View::create_spider(shared_ptr<GLShader> shader)
     bool load_success = Reader::load_obj("resources/spider/spider.obj", spider_vertices, spider_normals);
     if(load_success)
     {
+        vec3 center;
+        for (vec3 vertex : spider_vertices) {
+            center += vertex;
+        }
+        center /= spider_vertices.size();
+        
+        for (vec3& vertex : spider_vertices) {
+            vertex -= center;
+        }
+        
         auto material = GLMaterial {{0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
         spider = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES));
         
