@@ -65,7 +65,7 @@ View::View(int &argc, char** argv)
     // Create objects
     create_cube(texture_shader);
     create_skybox(skybox_shader);
-    create_spider(fastphong_shader);
+    create_spider(phong_shader);
     create_terrain(phong_shader);
     create_grass(grass_shader);
     
@@ -216,12 +216,11 @@ void View::update_spider()
     vec3 spider_position = instance->model->get_spider_position();
     vec3 spider_view_direction = instance->model->get_spider_view_direction();
     
-    mat4 spider_scale = scale(mat4(), vec3(10.));
     mat4 spider_rotation_yaw = orientation(normalize(vec3(spider_view_direction.x, 0., spider_view_direction.z)), vec3(0., 0., 1.));
     mat4 spider_rotation_pitch = orientation(normalize(vec3(0., spider_view_direction.y, 1.)), vec3(0., 0., 1.));
     mat4 spider_translation = translate(mat4(), spider_position);
     
-    instance->spider->set_model_matrix(spider_translation * spider_rotation_yaw * spider_rotation_pitch * spider_scale);
+    instance->spider->set_model_matrix(spider_translation * spider_rotation_yaw * spider_rotation_pitch);
 }
 
 void View::update_terrain_and_grass()
@@ -260,14 +259,15 @@ void View::create_terrain(shared_ptr<GLShader> shader)
 void View::create_spider(shared_ptr<GLShader> shader)
 {
     std::vector<glm::vec3> spider_vertices;
-    std::vector<glm::vec2> spider_uvs;
-    bool load_success = Reader::load_obj("resources/spider/TRANTULA.OBJ", spider_vertices, spider_uvs);
+    std::vector<glm::vec3> spider_normals;
+    bool load_success = Reader::load_obj("resources/spider/spider.obj", spider_vertices, spider_normals);
     if(load_success)
     {
         auto material = GLMaterial {{0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
         spider = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES));
         
         spider->update_vertex_attribute("position", spider_vertices);
+        spider->update_vertex_attribute("normal", spider_normals);
         spider->finalize_vertex_attributes();
     }
 }

@@ -16,7 +16,7 @@
 
 class Model {
     
-    Spider spider = Spider(glm::vec3(0., 0.05, -5.), glm::vec3(0., 0., 1.));
+    Spider spider = Spider(glm::vec3(0., 0.3, -5.), glm::vec3(0., 0., 1.));
     Terrain terrain = Terrain();
     
     std::map<int, std::pair<int, int>> terrainIndexMap = std::map<int, std::pair<int, int>>();
