@@ -21,6 +21,8 @@ public:
     
     static bool load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_uvs);
     
+    static bool load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec3> & out_normals);
+    
     /**
      Tries to load the given file into a tdogl::Bitmap.
      */
