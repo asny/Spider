@@ -59,8 +59,8 @@ View::View(int &argc, char** argv)
     auto texture_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"uv_coordinates", 2}}, "shaders/texture.vert",  "shaders/texture.frag"));
     auto skybox_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/skybox.vert",  "shaders/skybox.frag"));
     auto phong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"normal", 3}}, "shaders/phong.vert",  "shaders/phong.frag"));
-    auto grass_shader = std::shared_ptr<GLShader>(new GLShader({{"end_point", 3}}, "shaders/grass.vert",  "shaders/phong.frag", "shaders/grass.geom"));
-    auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/fastphong.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
+    auto grass_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/grass.geom"));
+    auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
     
     // Create objects
     create_cube(texture_shader);
@@ -235,7 +235,7 @@ void View::update_terrain_and_grass()
         instance->terrain_patches[patch_index]->update_vertex_attribute("normal", terrain_normals);
         instance->terrain_patches[patch_index]->finalize_vertex_attributes();
         
-        instance->grass_patches[patch_index]->update_vertex_attribute("end_point", grass_end_points);
+        instance->grass_patches[patch_index]->update_vertex_attribute("position", grass_end_points);
         instance->grass_patches[patch_index]->finalize_vertex_attributes();
     }
 }

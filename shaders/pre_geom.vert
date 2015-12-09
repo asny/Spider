@@ -2,10 +2,10 @@
 
 uniform mat4 MVMatrix;
 
-in vec3 end_point;
+in vec3 position;
 
 void main()
 {
     // Calculate position
-    gl_Position = MVMatrix * vec4(end_point, 1.);
+    gl_Position = MVMatrix * vec4(position, 1.);
 }
