@@ -21,7 +21,7 @@ class View
     
     std::unique_ptr<oogl::GLCamera> camera;
     
-    std::shared_ptr<oogl::GLObject> cube, spider, skybox;
+    std::shared_ptr<oogl::GLObject> cube, spider_body, spider_legs, skybox;
     std::vector<std::shared_ptr<oogl::GLObject>> terrain_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
     std::vector<std::shared_ptr<oogl::GLObject>> grass_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
     
@@ -37,7 +37,8 @@ private:
     
     void create_cube(std::shared_ptr<oogl::GLShader> shader);
     void create_skybox(std::shared_ptr<oogl::GLShader> shader);
-    void create_spider(std::shared_ptr<oogl::GLShader> shader);
+    void create_spider_body(std::shared_ptr<oogl::GLShader> shader);
+    void create_spider_legs(std::shared_ptr<oogl::GLShader> shader);
     void create_grass(std::shared_ptr<oogl::GLShader> shader);
     void create_terrain(std::shared_ptr<oogl::GLShader> shader);
     

@@ -60,12 +60,14 @@ View::View(int &argc, char** argv)
     auto skybox_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/skybox.vert",  "shaders/skybox.frag"));
     auto phong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"normal", 3}}, "shaders/phong.vert",  "shaders/phong.frag"));
     auto grass_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/grass.geom"));
+    auto spider_legs_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/spider_legs.geom"));
     auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
     
     // Create objects
     create_cube(texture_shader);
     create_skybox(skybox_shader);
-    create_spider(phong_shader);
+    create_spider_body(phong_shader);
+    create_spider_legs(spider_legs_shader);
     create_terrain(phong_shader);
     create_grass(grass_shader);
     
@@ -120,7 +122,7 @@ View::View(int &argc, char** argv)
 
 void View::display()
 {
-    vector<shared_ptr<GLObject>> objects = {spider, cube, skybox};
+    vector<shared_ptr<GLObject>> objects = {spider_body, spider_legs, cube, skybox};
     objects.insert(objects.end(), terrain_patches.begin(), terrain_patches.end());
     objects.insert(objects.end(), grass_patches.begin(), grass_patches.end());
     
@@ -216,11 +218,22 @@ void View::update_spider()
     vec3 spider_position = instance->model->get_spider_position();
     vec3 spider_view_direction = instance->model->get_spider_view_direction();
     
+    // Compute spider model matrix
     mat4 spider_rotation_yaw = orientation(normalize(vec3(spider_view_direction.x, 0., spider_view_direction.z)), vec3(0., 0., 1.));
     mat4 spider_rotation_pitch = orientation(normalize(vec3(0., spider_view_direction.y, 1.)), vec3(0., 0., 1.));
     mat4 spider_translation = translate(mat4(), spider_position);
+    mat4 model_matrix = spider_translation * spider_rotation_yaw * spider_rotation_pitch;
     
-    instance->spider->set_model_matrix(spider_translation * spider_rotation_yaw * spider_rotation_pitch);
+    // Update uniform variables
+    instance->spider_body->set_model_matrix(model_matrix);
+    instance->spider_legs->set_model_matrix(model_matrix);
+    
+    instance->spider_legs->update_uniform_variable("spiderPosition", spider_position);
+    
+    // Update vertex attributes
+    vector<vec3> feet_positions = {spider_position + vec3(10,0,0)};
+    instance->spider_legs->update_vertex_attribute("position", feet_positions);
+    instance->spider_legs->finalize_vertex_attributes();
 }
 
 void View::update_terrain_and_grass()
@@ -256,7 +269,7 @@ void View::create_terrain(shared_ptr<GLShader> shader)
     }
 }
 
-void View::create_spider(shared_ptr<GLShader> shader)
+void View::create_spider_body(shared_ptr<GLShader> shader)
 {
     std::vector<glm::vec3> spider_vertices;
     std::vector<glm::vec3> spider_normals;
@@ -274,12 +287,18 @@ void View::create_spider(shared_ptr<GLShader> shader)
         }
         
         auto material = GLMaterial {{0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-        spider = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES));
+        spider_body = shared_ptr<GLObject>(new GLObject(shader, material, GL_TRIANGLES));
         
-        spider->update_vertex_attribute("position", spider_vertices);
-        spider->update_vertex_attribute("normal", spider_normals);
-        spider->finalize_vertex_attributes();
+        spider_body->update_vertex_attribute("position", spider_vertices);
+        spider_body->update_vertex_attribute("normal", spider_normals);
+        spider_body->finalize_vertex_attributes();
     }
+}
+
+void View::create_spider_legs(shared_ptr<GLShader> shader)
+{
+    auto material = GLMaterial {{0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
+    spider_legs = shared_ptr<GLObject>(new GLObject(shader, material, GL_POINTS));
 }
 
 void View::create_cube(shared_ptr<GLShader> shader)
