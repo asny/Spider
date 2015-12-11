@@ -17,6 +17,8 @@ class View
     
     VIEW_TYPE view_type = FIRST_PERSON;
     
+    bool display_grass = true;
+    
     std::unique_ptr<Model> model;
     
     std::unique_ptr<oogl::GLCamera> camera;

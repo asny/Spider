@@ -126,7 +126,10 @@ void View::display()
 {
     vector<shared_ptr<GLObject>> objects = {spider_body, spider_legs, cube, skybox};
     objects.insert(objects.end(), terrain_patches.begin(), terrain_patches.end());
-    objects.insert(objects.end(), grass_patches.begin(), grass_patches.end());
+    if(display_grass)
+    {
+        objects.insert(objects.end(), grass_patches.begin(), grass_patches.end());
+    }
     
     camera->draw(objects);
     
@@ -188,6 +191,15 @@ void View::update(double elapsedTime)
     {
         view_type = BIRD;
         update_camera();
+    }
+    
+    if(glfwGetKey(gWindow, 'G'))
+    {
+        display_grass = true;
+    }
+    else if(glfwGetKey(gWindow, 'F'))
+    {
+        display_grass = false;
     }
 }
 
