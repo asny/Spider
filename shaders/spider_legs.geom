@@ -7,12 +7,11 @@ uniform mat4 NMatrix;
 uniform mat4 MVMatrix;
 uniform mat4 PMatrix;
 
-uniform vec3 spiderPosition;
-
 out vec3 pos;
 out vec3 nor;
 
 const float step_size = 0.1f;
+const float radius = 0.05f;
 
 vec3 up_direction;
 
@@ -49,11 +48,11 @@ void emit_leg(vec3 origin, vec3 foot)
         
         vec3 axis = normalize(next_center - center);
         vec3 v = cross(axis, up_direction);
-        for (float angle = 0.f; angle < 360.f; angle += 90.f)
+        for (float angle = 0.f; angle < 360.f; angle += 45.f)
         {
             vec3 n = v * cos(angle) + cross(axis, v) * sin(angle) + axis * dot(axis,v) * (1.f-cos(angle));
-            emit_vertex(center + n, n);
-            emit_vertex(next_center + n, n);
+            emit_vertex(next_center + radius * n, n);
+            emit_vertex(center + radius * n, n);
         }
         EndPrimitive();
     }
@@ -61,8 +60,8 @@ void emit_leg(vec3 origin, vec3 foot)
 
 void main()
 {
-    up_direction = (NMatrix * vec4(0., 1., 0., 1.)).xyz;
-    vec3 spider_position = (MVMatrix * vec4(spiderPosition, 1.)).xyz;
+    up_direction = normalize((NMatrix * vec4(0., 1., 0., 1.)).xyz);
+    vec3 spider_position = (MVMatrix * vec4(0., 0., 0., 1.)).xyz;
     vec3 foot = gl_in[0].gl_Position.xyz;
     
     emit_leg(spider_position, foot);

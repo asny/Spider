@@ -71,6 +71,8 @@ View::View(int &argc, char** argv)
     create_terrain(phong_shader);
     create_grass(grass_shader);
     
+    spider_body->update_uniform_variable("lightPos", light_pos);
+    spider_legs->update_uniform_variable("lightPos", light_pos);
     terrain_patches.front()->update_uniform_variable("lightPos", light_pos);
     grass_patches.front()->update_uniform_variable("lightPos", light_pos);
     
@@ -228,11 +230,8 @@ void View::update_spider()
     instance->spider_body->set_model_matrix(model_matrix);
     instance->spider_legs->set_model_matrix(model_matrix);
     
-    instance->spider_legs->update_uniform_variable("spiderPosition", spider_position);
-    
     // Update vertex attributes
-    vector<vec3> feet_positions = {spider_position + vec3(10,0,0)};
-    instance->spider_legs->update_vertex_attribute("position", feet_positions);
+    instance->spider_legs->update_vertex_attribute("position", instance->model->get_spider_feet_positions());
     instance->spider_legs->finalize_vertex_attributes();
 }
 

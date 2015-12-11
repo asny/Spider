@@ -52,6 +52,13 @@ public:
         return glm::normalize(glm::vec3(view_dir.x, y_view_dir, view_dir.z));
     }
     
+    std::vector<glm::vec3> get_spider_feet_positions()
+    {
+        glm::vec3 position = get_spider_position();
+        glm::vec3 foot1 = terrain.get_terrain_position_at(position + glm::vec3(1.,0.,0.)) - position;
+        return {foot1};
+    }
+    
     std::vector<int> terrain_patches_to_update();
     
     void get_terrain_patch(int patch_index, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec3>& grass_end_points);
