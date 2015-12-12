@@ -55,10 +55,17 @@ public:
     
     std::vector<glm::vec3> get_spider_feet_positions(const glm::mat4& modelMatrix)
     {
-        glm::vec4 foot = modelMatrix * glm::vec4(1.,0.,0.,1.);
-        glm::vec4 foot1 = glm::inverse(modelMatrix) * glm::vec4(foot.x, terrain.get_terrain_position_at(glm::vec3(foot.x,foot.y,foot.z)).y, foot.z, 1.);
+        glm::mat4 inverseModelMatrix = glm::inverse(modelMatrix);
         
-        return {glm::vec3(foot1.x, foot1.y, foot1.z)};
+        auto feet = std::vector<glm::vec3>();
+        for (auto vec : {glm::vec3(0.75, 0., 2.), glm::vec3(1.,0.,1.), glm::vec3(1.,0.,-0.5), glm::vec3(0.75,0.,-2.),
+            glm::vec3(-0.75, 0., 2.), glm::vec3(-1.,0.,1.), glm::vec3(-1.,0.,-0.5), glm::vec3(-0.75,0.,-2.)})
+        {
+            glm::vec4 foot = modelMatrix * glm::vec4(vec.x, vec.y, vec.z, 1.);
+            glm::vec4 relative_foot = inverseModelMatrix * glm::vec4(foot.x, terrain.get_terrain_position_at(glm::vec3(foot.x,foot.y,foot.z)).y, foot.z, 1.);
+            feet.push_back(glm::vec3(relative_foot.x, relative_foot.y, relative_foot.z));
+        }
+        return feet;
     }
     
     std::vector<int> terrain_patches_to_update();
