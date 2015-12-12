@@ -10,7 +10,7 @@ uniform mat4 PMatrix;
 out vec3 pos;
 out vec3 nor;
 
-const float step_size = 0.1f;
+const float step_size = 0.33f;
 const float radius = 0.05f;
 
 vec3 up_direction;
@@ -25,18 +25,21 @@ void emit_vertex(vec3 position, vec3 normal)
 
 float func(float x)
 {
-    return x;
-}
-
-float dfunc(float x)
-{
-    return 1.f;
+    if(x < 0.33f)
+    {
+        return x;
+    }
+    if(x < 0.66f)
+    {
+        return 0.33f;
+    }
+    return 1.f - x;
 }
 
 vec3 compute_position(vec3 origin, vec3 foot, float parameter)
 {
     vec3 vec = foot - origin;
-    return origin + vec3(parameter * vec.x, func(parameter) * vec.y, parameter * vec.z);
+    return origin + parameter * vec + func(parameter) * up_direction;
 }
 
 void emit_leg(vec3 origin, vec3 foot)
@@ -66,5 +69,5 @@ void main()
     vec3 spider_position = (MVMatrix * vec4(0., 0., 0., 1.)).xyz;
     vec3 foot = gl_in[0].gl_Position.xyz;
     
-    emit_leg(spider_position, foot);
+    emit_leg(spider_position + 0.07 * (foot - spider_position), foot);
 }
