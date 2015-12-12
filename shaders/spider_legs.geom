@@ -33,9 +33,9 @@ float dfunc(float x)
     return 1.f;
 }
 
-vec3 compute_position(vec3 origin, vec3 top, float parameter)
+vec3 compute_position(vec3 origin, vec3 foot, float parameter)
 {
-    vec3 vec = top - origin;
+    vec3 vec = foot - origin;
     return origin + vec3(parameter * vec.x, func(parameter) * vec.y, parameter * vec.z);
 }
 
@@ -43,6 +43,8 @@ void emit_leg(vec3 origin, vec3 foot)
 {
     for (float parameter = 0.f; parameter < 1.f-step_size; parameter += step_size)
     {
+        float r = radius * (1.f - parameter);
+        float next_r = radius * (1.f - parameter - step_size);
         vec3 center = compute_position(origin, foot, parameter);
         vec3 next_center = compute_position(origin, foot, parameter + step_size);
         
@@ -51,8 +53,8 @@ void emit_leg(vec3 origin, vec3 foot)
         for (float angle = 0.f; angle < 360.f; angle += 45.f)
         {
             vec3 n = v * cos(angle) + cross(axis, v) * sin(angle) + axis * dot(axis,v) * (1.f-cos(angle));
-            emit_vertex(next_center + radius * n, n);
-            emit_vertex(center + radius * n, n);
+            emit_vertex(next_center + next_r * n, n);
+            emit_vertex(center + r * n, n);
         }
         EndPrimitive();
     }
