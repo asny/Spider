@@ -25,12 +25,12 @@ void emit_vertex(vec3 position, vec3 normal)
 
 float func(float x)
 {
-    return sqrt(x);
+    return x;
 }
 
 float dfunc(float x)
 {
-    return 0.5f / sqrt(x);
+    return 1.f;
 }
 
 vec3 compute_position(vec3 origin, vec3 top, float parameter)

@@ -10,6 +10,7 @@
 
 #include "vec3.hpp"
 #include "glm.hpp"
+#include "gtc/matrix_inverse.hpp"
 
 #include "spider.hpp"
 #include "terrain.hpp"
@@ -52,11 +53,12 @@ public:
         return glm::normalize(glm::vec3(view_dir.x, y_view_dir, view_dir.z));
     }
     
-    std::vector<glm::vec3> get_spider_feet_positions()
+    std::vector<glm::vec3> get_spider_feet_positions(const glm::mat4& modelMatrix)
     {
-        glm::vec3 position = get_spider_position();
-        glm::vec3 foot1 = terrain.get_terrain_position_at(position + glm::vec3(1.,0.,0.)) - position;
-        return {foot1};
+        glm::vec4 foot = modelMatrix * glm::vec4(1.,0.,0.,1.);
+        glm::vec4 foot1 = glm::inverse(modelMatrix) * glm::vec4(foot.x, terrain.get_terrain_position_at(glm::vec3(foot.x,foot.y,foot.z)).y, foot.z, 1.);
+        
+        return {glm::vec3(foot1.x, foot1.y, foot1.z)};
     }
     
     std::vector<int> terrain_patches_to_update();

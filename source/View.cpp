@@ -243,7 +243,7 @@ void View::update_spider()
     instance->spider_legs->set_model_matrix(model_matrix);
     
     // Update vertex attributes
-    instance->spider_legs->update_vertex_attribute("position", instance->model->get_spider_feet_positions());
+    instance->spider_legs->update_vertex_attribute("position", instance->model->get_spider_feet_positions(model_matrix));
     instance->spider_legs->finalize_vertex_attributes();
 }
 
