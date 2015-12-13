@@ -9,10 +9,13 @@
 #pragma once
 
 #include "vec3.hpp"
+#include <vector>
 
 class Spider {
     glm::vec3 position;
     glm::vec3 view_direction;
+    std::vector<glm::vec3> feet = {glm::vec3(0.75, 0., 2.), glm::vec3(1.,0.,1.), glm::vec3(1.,0.,-0.5), glm::vec3(0.75,0.,-2.),
+        glm::vec3(-0.75, 0., 2.), glm::vec3(-1.,0.,1.), glm::vec3(-1.,0.,-0.5), glm::vec3(-0.75,0.,-2.)};
     
     const float speed = 2.;
     const float angular_speed = 1.;
@@ -29,6 +32,11 @@ public:
     
     glm::vec3 get_position();
     glm::vec3 get_view_direction();
+    
+    std::vector<glm::vec3> get_feet()
+    {
+        return feet;
+    }
     
     void move(float time);
     

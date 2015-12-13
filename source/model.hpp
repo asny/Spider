@@ -58,12 +58,12 @@ public:
         glm::mat4 inverseModelMatrix = glm::inverse(modelMatrix);
         
         auto feet = std::vector<glm::vec3>();
-        for (auto vec : {glm::vec3(0.75, 0., 2.), glm::vec3(1.,0.,1.), glm::vec3(1.,0.,-0.5), glm::vec3(0.75,0.,-2.),
-            glm::vec3(-0.75, 0., 2.), glm::vec3(-1.,0.,1.), glm::vec3(-1.,0.,-0.5), glm::vec3(-0.75,0.,-2.)})
+        for (auto vec : spider.get_feet())
         {
-            glm::vec4 foot = modelMatrix * glm::vec4(vec.x, vec.y, vec.z, 1.);
-            glm::vec4 relative_foot = inverseModelMatrix * glm::vec4(foot.x, terrain.get_terrain_position_at(glm::vec3(foot.x,foot.y,foot.z)).y, foot.z, 1.);
-            feet.push_back(glm::vec3(relative_foot.x, relative_foot.y, relative_foot.z));
+            glm::vec4 foot_world = modelMatrix * glm::vec4(vec.x, vec.y, vec.z, 1.);
+            double terrain_height_world = terrain.get_terrain_position_at(glm::vec3(foot_world.x, foot_world.y, foot_world.z)).y;
+            double terrain_height = (inverseModelMatrix * glm::vec4(foot_world.x, terrain_height_world, foot_world.z, 1.)).y;
+            feet.push_back(glm::vec3(vec.x, terrain_height + vec.y, vec.z));
         }
         return feet;
     }
