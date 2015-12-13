@@ -23,6 +23,20 @@ void emit_vertex(vec3 position, vec3 normal)
     EmitVertex();
 }
 
+void emit_tube(vec3 start, vec3 end, float start_radius, float end_radius)
+{
+    vec3 axis_direction = normalize(end - start);
+    vec3 out_direction = cross(axis_direction, up_direction);
+    
+    for (float angle = 0.f; angle < 360.f; angle += 45.f)
+    {
+        vec3 n = out_direction * cos(angle) + cross(axis_direction, out_direction) * sin(angle) + axis_direction * dot(axis_direction, out_direction) * (1.f-cos(angle));
+        emit_vertex(end + end_radius * n, n);
+        emit_vertex(start + start_radius * n, n);
+    }
+    EndPrimitive();
+}
+
 float func(float x)
 {
     if(x < 0.33f)
@@ -46,20 +60,13 @@ void emit_leg(vec3 origin, vec3 foot)
 {
     for (float parameter = 0.f; parameter < 1.f-step_size; parameter += step_size)
     {
-        float r = radius * (1.f - parameter);
-        float next_r = radius * (1.f - parameter - step_size);
-        vec3 center = compute_position(origin, foot, parameter);
-        vec3 next_center = compute_position(origin, foot, parameter + step_size);
+        float start_radius = radius * (1.f - parameter);
+        float end_radius = radius * (1.f - parameter - step_size);
         
-        vec3 axis = normalize(next_center - center);
-        vec3 v = cross(axis, up_direction);
-        for (float angle = 0.f; angle < 360.f; angle += 45.f)
-        {
-            vec3 n = v * cos(angle) + cross(axis, v) * sin(angle) + axis * dot(axis,v) * (1.f-cos(angle));
-            emit_vertex(next_center + next_r * n, n);
-            emit_vertex(center + r * n, n);
-        }
-        EndPrimitive();
+        vec3 start = compute_position(origin, foot, parameter);
+        vec3 end = compute_position(origin, foot, parameter + step_size);
+        
+        emit_tube(start, end, start_radius, end_radius);
     }
 }
 
