@@ -56,6 +56,14 @@ vec3 compute_position(vec3 origin, vec3 foot, float parameter)
     return origin + parameter * vec + func(parameter) * up_direction;
 }
 
+void emit_joint(vec3 start, vec3 joint, vec3 end, float radius)
+{
+    for (float t = -0.1f; t < 0.1f; t += 0.1f)
+    {
+        emit_tube(joint + t * (start - joint), joint + t * (end - joint), radius, radius);
+    }
+}
+
 void emit_leg(vec3 origin, vec3 foot)
 {
     for (float parameter = 0.f; parameter < 1.f-step_size; parameter += step_size)
@@ -67,6 +75,9 @@ void emit_leg(vec3 origin, vec3 foot)
         vec3 end = compute_position(origin, foot, parameter + step_size);
         
         emit_tube(start, end, start_radius, end_radius);
+        
+        vec3 next_end = compute_position(origin, foot, parameter + 2.f * step_size);
+        emit_joint(start, end, next_end, end_radius);
     }
 }
 
