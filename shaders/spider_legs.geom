@@ -56,15 +56,17 @@ vec3 compute_position(vec3 origin, vec3 foot, float parameter)
 void emit_joint(vec3 start, vec3 joint, vec3 end, float radius, float size)
 {
     const float step_size = 0.2f;
+    const float overlap = 0.075f;
     
     vec3 dir1 = joint - start;
     vec3 dir2 = end - joint;
     vec3 current_point = start;
     for (float t = 0.f; t <= 1.f; t += step_size)
     {
-        vec3 dir = (1.f - t) * dir1 + t * dir2;
+        float f = t + 0.5f * step_size;
+        vec3 dir = (1.f - f) * dir1 + f * dir2;
         vec3 next_point = current_point + 2.f * step_size * dir;
-        emit_tube(current_point, next_point, radius, radius);
+        emit_tube(current_point - overlap * dir, next_point + overlap * dir, radius, radius);
         current_point = next_point;
     }
 }
