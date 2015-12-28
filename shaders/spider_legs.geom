@@ -10,9 +10,6 @@ uniform mat4 PMatrix;
 out vec3 pos;
 out vec3 nor;
 
-const float step_size = 0.33f;
-const float radius = 0.05f;
-
 vec3 up_direction;
 
 void emit_vertex(vec3 position, vec3 normal)
@@ -66,19 +63,25 @@ void emit_joint(vec3 start, vec3 joint, vec3 end, float radius)
 
 void emit_leg(vec3 origin, vec3 foot)
 {
-    for (float parameter = 0.f; parameter < 1.f-step_size; parameter += step_size)
-    {
-        float start_radius = radius * (1.f - parameter);
-        float end_radius = radius * (1.f - parameter - step_size);
-        
-        vec3 start = compute_position(origin, foot, parameter);
-        vec3 end = compute_position(origin, foot, parameter + step_size);
-        
-        emit_tube(start, end, start_radius, end_radius);
-        
-        vec3 next_end = compute_position(origin, foot, parameter + 2.f * step_size);
-        emit_joint(start, end, next_end, end_radius);
-    }
+    const float origin_radius = 0.05f;
+    vec3 vec = foot - origin;
+    
+    const float joint1_factor = 0.33f;
+    const float joint1_radius = (1.f - joint1_factor) * origin_radius;
+    vec3 joint1 = origin + joint1_factor * vec + func(joint1_factor) * up_direction;
+    
+    const float joint2_factor = 0.66f;
+    const float joint2_radius = (1.f - joint2_factor) * origin_radius;
+    vec3 joint2 = origin + joint2_factor * vec + func(joint2_factor) * up_direction;
+    
+    // Emit legs
+    emit_tube(origin, joint1, origin_radius, joint1_radius);
+    emit_tube(joint1, joint2, joint1_radius, joint2_radius);
+    emit_tube(joint2, foot, joint2_radius, 0.f);
+    
+    // Emit joints
+    emit_joint(origin, joint1, joint2, joint1_radius);
+    emit_joint(joint1, joint2, foot, joint2_radius);
 }
 
 void main()
