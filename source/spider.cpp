@@ -29,6 +29,7 @@ void Spider::move(float time)
     if(!is_jumping)
     {
         position += time * speed * view_direction;
+        forward_move_time += time;
     }
 }
 
@@ -37,6 +38,7 @@ void Spider::rotate(float time)
     if(!is_jumping)
     {
         view_direction = vec3(glm::rotate(mat4(), time * angular_speed, vec3(0.,1.,0.)) * vec4(view_direction, 1.));
+        rotate_move_time += time;
     }
 }
 
