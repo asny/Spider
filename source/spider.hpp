@@ -15,10 +15,8 @@
 class Spider {
     glm::vec3 position;
     glm::vec3 view_direction;
-    std::vector<glm::vec3> static_feet = {glm::vec3(0.75, 0., 2.), glm::vec3(1.,0.,1.), glm::vec3(1.,0.,-0.5), glm::vec3(0.75,0.,-2.),
+    std::vector<glm::vec3> feet = {glm::vec3(0.75, 0., 2.), glm::vec3(1.,0.,1.), glm::vec3(1.,0.,-0.5), glm::vec3(0.75,0.,-2.),
         glm::vec3(-0.75, 0., 2.), glm::vec3(-1.,0.,1.), glm::vec3(-1.,0.,-0.5), glm::vec3(-0.75,0.,-2.)};
-    float forward_move_time = 0.f;
-    float rotate_move_time = 0.f;
     
     const float speed = 2.;
     const float angular_speed = 1.;
@@ -38,15 +36,6 @@ public:
     
     std::vector<glm::vec3> get_feet()
     {
-        std::vector<glm::vec3> feet = static_feet;
-        double offset = 0.;
-        for(glm::vec3& f : feet)
-        {
-            float forward = 0.3 * cos(5. * (forward_move_time + offset));
-            float up = 0.3 * std::max(0., cos(5. * (forward_move_time + rotate_move_time + offset)));
-            f += glm::vec3(0., up, forward);
-            offset += 0.5;
-        }
         return feet;
     }
     
