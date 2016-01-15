@@ -30,25 +30,32 @@ void Spider::move(float time)
     {
         position += time * speed * view_direction;
         
-        static double t = 0.;
-        t = fmod(t + 5. * time, 2. * M_PI);
-        
-        double offset = 0.;
-        for(glm::vec3& f : feet)
+        for(double& t : feet_cycle)
         {
-            double distance_foot_to_ground = 0.3 * cos(t + offset);
-            
-            if(distance_foot_to_ground > 0.)
-            {
-                f.y = distance_foot_to_ground;
-                f.z += time * speed;
-            }
-            else {
-                f.z -= time * speed;
-            }
-            offset += 0.5 * M_PI;
+            t = fmod(t + speed * time, 2.);
         }
     }
+}
+
+std::vector<glm::vec3> Spider::get_feet()
+{
+    std::vector<glm::vec3> feet;
+    for(int i = 0; i < initial_feet.size(); i++)
+    {
+        glm::vec3 foot = initial_feet[i];
+        double foot_cycle = feet_cycle[i];
+        
+        if(foot_cycle < 1.)
+        {
+            foot.y = 0.3 * sin(foot_cycle * M_PI);
+            foot.z += foot_cycle;
+        }
+        else {
+            foot.z += (2. - foot_cycle);
+        }
+        feet.push_back(foot);
+    }
+    return feet;
 }
 
 void Spider::rotate(float time)
