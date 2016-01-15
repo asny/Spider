@@ -55,15 +55,14 @@ public:
     
     std::vector<glm::vec3> get_spider_feet_positions(const glm::mat4& modelMatrix)
     {
-        glm::mat4 inverseModelMatrix = glm::inverse(modelMatrix);
-        
+        glm::vec3 spider_position = glm::vec3(modelMatrix[3]);
         auto feet = std::vector<glm::vec3>();
-        for (auto vec : spider.get_feet())
+        for (auto foot_local : spider.get_feet())
         {
-            glm::vec4 foot_world = modelMatrix * glm::vec4(vec.x, vec.y, vec.z, 1.);
-            double terrain_height_world = terrain.get_terrain_position_at(glm::vec3(foot_world.x, foot_world.y, foot_world.z)).y;
-            double terrain_height = (inverseModelMatrix * glm::vec4(foot_world.x, terrain_height_world, foot_world.z, 1.)).y;
-            feet.push_back(glm::vec3(vec.x, terrain_height + vec.y, vec.z));
+            glm::vec3 foot = glm::vec3(modelMatrix * glm::vec4(foot_local, 1.));
+            
+            feet.push_back(spider_position + 0.07f * (foot - spider_position));
+            feet.push_back(glm::vec3(0., foot_local.y, 0.) + terrain.get_terrain_position_at(foot));
         }
         return feet;
     }

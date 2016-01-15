@@ -240,7 +240,6 @@ void View::update_spider()
     
     // Update uniform variables
     instance->spider_body->set_model_matrix(model_matrix);
-    instance->spider_legs->set_model_matrix(model_matrix);
     
     // Update vertex attributes
     instance->spider_legs->update_vertex_attribute("position", instance->model->get_spider_feet_positions(model_matrix));
@@ -309,7 +308,7 @@ void View::create_spider_body(shared_ptr<GLShader> shader)
 void View::create_spider_legs(shared_ptr<GLShader> shader)
 {
     auto material = GLMaterial {{0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-    spider_legs = shared_ptr<GLObject>(new GLObject(shader, material, GL_POINTS));
+    spider_legs = shared_ptr<GLObject>(new GLObject(shader, material, GL_LINES));
 }
 
 void View::create_cube(shared_ptr<GLShader> shader)

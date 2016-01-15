@@ -1,6 +1,6 @@
 #version 150
 
-layout (points) in;
+layout (lines) in;
 layout (triangle_strip, max_vertices = 264) out;
 
 uniform mat4 NMatrix;
@@ -103,8 +103,8 @@ void emit_leg(vec3 origin, vec3 foot)
 void main()
 {
     up_direction = normalize((NMatrix * vec4(0., 1., 0., 1.)).xyz);
-    vec3 spider_position = (MVMatrix * vec4(0., 0., 0., 1.)).xyz;
-    vec3 foot = gl_in[0].gl_Position.xyz;
+    vec3 origin = gl_in[0].gl_Position.xyz;
+    vec3 foot = gl_in[1].gl_Position.xyz;
     
-    emit_leg(spider_position + 0.07 * (foot - spider_position), foot);
+    emit_leg(origin, foot);
 }

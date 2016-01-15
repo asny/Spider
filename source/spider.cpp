@@ -33,6 +33,8 @@ void Spider::move(float time)
         for(double& t : feet_cycle)
         {
             t = fmod(t + speed * time, 2.);
+            if(t < 0.)
+                t += 2.;
         }
     }
 }
