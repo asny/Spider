@@ -18,14 +18,6 @@ const float half_width = 0.015f;
 
 vec3 up_direction;
 
-void emit_vertex(vec3 position, vec3 normal)
-{
-    pos = position;
-    nor = normal;
-    gl_Position = PMatrix * vec4(pos, 1.);
-    EmitVertex();
-}
-
 float func(float x)
 {
     return sqrt(x);
@@ -60,15 +52,17 @@ void emit_straw_half(vec3 origin, vec3 corner, vec3 top, float step_size)
 {
     for (float parameter = 0.f; parameter < 1.f; parameter += step_size)
     {
-        vec3 p1 = compute_position(origin, top, parameter);
-        vec3 p2 = compute_position(corner, top, parameter);
+        nor = compute_normal(origin, corner, top, parameter);
         
-        vec3 n = compute_normal(origin, corner, top, parameter);
-        
+        pos = compute_position(origin, top, parameter);
         ambientFactor = 0.6;
-        emit_vertex(p1, n);
+        gl_Position = PMatrix * vec4(pos, 1.);
+        EmitVertex();
+        
+        pos = compute_position(corner, top, parameter);
         ambientFactor = 1.;
-        emit_vertex(p2, n);
+        gl_Position = PMatrix * vec4(pos, 1.);
+        EmitVertex();
     }
     EndPrimitive();
 }
