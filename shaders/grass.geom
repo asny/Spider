@@ -20,32 +20,23 @@ vec3 up_direction;
 
 float func(float x)
 {
-    return sqrt(x);
+    return -x*x + x;
 }
 
 float dfunc(float x)
 {
-    return 0.5f / sqrt(x);
+    return -2.f*x + 1.f;
 }
 
 vec3 compute_position(vec3 origin, vec3 top, float parameter)
 {
-    vec3 vec = top - origin;
-    return origin + vec3(parameter * vec.x, func(parameter) * vec.y, parameter * vec.z);
+    return origin + parameter * (top - origin) + func(parameter) * up_direction;
 }
 
-vec3 compute_normal(vec3 origin1, vec3 origin2, vec3 top, float parameter)
+vec3 compute_normal(vec3 origin, vec3 corner, vec3 top, float parameter)
 {
-    vec3 tangent_t;
-    if ( parameter < 0.0001f)
-    {
-        tangent_t = up_direction;
-    }
-    else {
-        vec3 vec = top - origin1;
-        tangent_t = normalize(vec3(vec.x, dfunc(parameter) * vec.y, vec.z));
-    }
-    return normalize(cross(normalize(origin2 - origin1), tangent_t));
+    vec3 tangent = top - origin + dfunc(parameter) * up_direction;
+    return normalize(cross(corner - origin, tangent));
 }
 
 void emit_straw_half(vec3 origin, vec3 corner, vec3 top, float step_size)
