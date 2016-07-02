@@ -12,6 +12,7 @@ uniform vec3 wind;
 
 out vec3 pos;
 out vec3 nor;
+out float ambientFactor;
 
 const float half_width = 0.015f;
 
@@ -55,16 +56,18 @@ vec3 compute_normal(vec3 origin1, vec3 origin2, vec3 top, float parameter)
     return normalize(cross(normalize(origin2 - origin1), tangent_t));
 }
 
-void emit_straw_half(vec3 origin1, vec3 origin2, vec3 top, float step_size)
+void emit_straw_half(vec3 origin, vec3 corner, vec3 top, float step_size)
 {
     for (float parameter = 0.f; parameter < 1.f; parameter += step_size)
     {
-        vec3 p1 = compute_position(origin1, top, parameter);
-        vec3 p2 = compute_position(origin2, top, parameter);
+        vec3 p1 = compute_position(origin, top, parameter);
+        vec3 p2 = compute_position(corner, top, parameter);
         
-        vec3 n = compute_normal(origin1, origin2, top, parameter);
+        vec3 n = compute_normal(origin, corner, top, parameter);
         
+        ambientFactor = 0.6;
         emit_vertex(p1, n);
+        ambientFactor = 1.;
         emit_vertex(p2, n);
     }
     EndPrimitive();
@@ -125,6 +128,6 @@ void main()
     
     // Emit vertices
     float step_size = 1.f / max(ceil(30.f - 3.f * distance_to_spider), 4);
-    emit_straw_half(corner1, origin, top, step_size);
+    emit_straw_half(origin, corner1, top, step_size);
     emit_straw_half(origin, corner2, top, step_size);
 }

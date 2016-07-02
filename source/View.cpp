@@ -59,7 +59,7 @@ View::View(int &argc, char** argv)
     auto texture_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"uv_coordinates", 2}}, "shaders/texture.vert",  "shaders/texture.frag"));
     auto skybox_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/skybox.vert",  "shaders/skybox.frag"));
     auto phong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}, {"normal", 3}}, "shaders/phong.vert",  "shaders/phong.frag"));
-    auto grass_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/grass.geom"));
+    auto grass_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom"));
     auto spider_legs_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/spider_legs.geom"));
     auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader({{"position", 3}}, "shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
     
@@ -265,7 +265,7 @@ void View::update_terrain_and_grass()
 
 void View::create_grass(shared_ptr<GLShader> shader)
 {
-    auto material = GLMaterial {{0.1f,0.3f,0.f, 1.f}, {0.2f, 0.4f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
+    auto material = GLMaterial {{0.2f,0.5f,0.f, 1.f}, {0.1f, 0.2f, 0.f, 1.f}, {0.f, 0.f, 0.f, 0.f}};
     for (int i = 0; i < 9; i++) {
         grass_patches.push_back(shared_ptr<GLObject>(new GLObject(shader, material, GL_LINES, nullptr, false)));
     }

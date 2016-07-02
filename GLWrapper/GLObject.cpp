@@ -94,7 +94,8 @@ void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
         else {
             shader->set_uniform_variable("ambientMat", material.ambient);
             shader->set_uniform_variable("diffuseMat", material.diffuse);
-            shader->set_uniform_variable("specMat", material.specular);
+            if(material.specular.w != 0)
+                shader->set_uniform_variable("specMat", material.specular);
         }
         
         mat4 modelViewMatrix = viewMatrix * modelMatrix;

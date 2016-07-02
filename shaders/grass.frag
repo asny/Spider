@@ -1,0 +1,30 @@
+#version 150
+
+uniform mat4 MVMatrix;
+
+uniform vec3 lightPos;
+
+uniform vec4 ambientMat;
+uniform vec4 diffuseMat;
+
+in vec3 pos;
+in vec3 nor;
+in float ambientFactor;
+
+out vec4 fragColour;
+
+void main(void)
+{
+    // Compute vectors
+    vec3 N = normalize(nor);
+    if(!gl_FrontFacing)
+    {
+        N = -N;
+    }
+    vec3 L = normalize((MVMatrix * vec4(lightPos, 1.f)).xyz - pos);
+    
+    // Calculate colour
+    vec4 ambient = vec4(ambientFactor * ambientMat.rgb, ambientMat.w);
+    vec4 diffuse = clamp( diffuseMat * max(dot(N,L), 0.0) , 0.0, 1.0 ) ;
+    fragColour = ambient + diffuse;
+}

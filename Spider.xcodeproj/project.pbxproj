@@ -81,6 +81,7 @@
 		7AB0F2C61BC28EEB009D85FD /* terrain.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = terrain.geom; path = shaders/terrain.geom; sourceTree = "<group>"; };
 		7AB0F2C71BC28EEB009D85FD /* pre_geom.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = pre_geom.vert; path = shaders/pre_geom.vert; sourceTree = "<group>"; };
 		7AE74B671C18B00800466559 /* spider_legs.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = spider_legs.geom; path = shaders/spider_legs.geom; sourceTree = "<group>"; };
+		7AF4B53F1D27B3D0008A5074 /* grass.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grass.frag; path = shaders/grass.frag; sourceTree = "<group>"; };
 		7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLTexture.cpp; path = GLWrapper/GLTexture.cpp; sourceTree = SOURCE_ROOT; };
 		7AF9C41F1BED491F008AE5F5 /* GLTexture.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLTexture.hpp; path = GLWrapper/GLTexture.hpp; sourceTree = SOURCE_ROOT; };
 		7AF9C4281BED51FB008AE5F5 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
@@ -150,6 +151,7 @@
 				7A2A093B1BF7EC04006285D0 /* skybox.vert */,
 				7A3895A41BEE65DB00D6E095 /* texture.vert */,
 				7A3895A31BEE659100D6E095 /* texture.frag */,
+				7AF4B53F1D27B3D0008A5074 /* grass.frag */,
 				7A370D901BD964E2000783CA /* grass.geom */,
 				7A70D0F11BC5BF19003E859B /* fastphong.geom */,
 				7AB0F2C61BC28EEB009D85FD /* terrain.geom */,
