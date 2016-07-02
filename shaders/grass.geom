@@ -100,11 +100,14 @@ vec3 compute_top(vec3 origin, vec3 straw, vec3 bend_direction, vec3 spider_posit
 
 void main()
 {
-    // Compute variables
-    up_direction = (NMatrix * vec4(0., 1., 0., 1.)).xyz;
-    
     vec3 origin = gl_in[0].gl_Position.xyz;
+    // Check if the straw is behind the camera
+    if(origin.z > 0.)
+        return;
     vec3 straw = gl_in[1].gl_Position.xyz - origin;
+    
+    // Compute directions
+    up_direction = (NMatrix * vec4(0., 1., 0., 1.)).xyz;
     vec3 straw_direction = normalize(straw);
     vec3 leave_direction = normalize(cross(up_direction, straw_direction));
     vec3 bend_direction = normalize(cross(leave_direction, up_direction));
