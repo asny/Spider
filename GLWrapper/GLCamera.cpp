@@ -13,9 +13,6 @@ using namespace oogl;
 using namespace std;
 using namespace glm;
 
-mat4 GLCamera::viewMatrix = mat4(1.);
-mat4 GLCamera::projectionMatrix = mat4(1.);
-
 GLCamera::GLCamera()
 {
     // Enable states
