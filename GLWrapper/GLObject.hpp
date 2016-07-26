@@ -25,8 +25,10 @@ namespace oogl {
      */
     class GLObject
     {
-        struct VertexAttribute
+        class VertexAttribute
         {
+        public:
+            
             std::string name;
             int size;
         };
@@ -49,8 +51,6 @@ namespace oogl {
         
         // Transformation
         glm::mat4 modelMatrix = glm::mat4(1.);
-        
-        void use_vertex_attributes();
         
         int get_attribute_start_index(std::string name)
         {

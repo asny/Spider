@@ -72,17 +72,6 @@ void GLObject::finalize_vertex_attributes()
     check_gl_error();
 }
 
-void GLObject::use_vertex_attributes()
-{
-    int start_index = 0;
-    for (auto attribute : attributes)
-    {
-        GLuint location = shader->get_attribute_location(attribute.name);
-        glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
-        start_index += attribute.size;
-    }
-}
-
 void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
 {
     if(no_vertices != 0)
@@ -121,7 +110,13 @@ void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
         glBindVertexArray(array_id);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
-        use_vertex_attributes();
+        int start_index = 0;
+        for (auto attribute : attributes)
+        {
+            GLuint location = shader->get_attribute_location(attribute.name);
+            glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
+            start_index += attribute.size;
+        }
         
         glDrawArrays(drawmode, 0, no_vertices);
         
