@@ -86,8 +86,7 @@ GLuint init_shader(const char* vShaderFile, const char* fShaderFile, const char*
     return program;
 }
 
-GLShader::GLShader(std::vector<VertexAttribute> _attributes, string vertexShaderFilename, string fragmentShaderFilename, string geometryShaderFilename)
-    : attributes(_attributes)
+GLShader::GLShader(string vertexShaderFilename, string fragmentShaderFilename, string geometryShaderFilename)
 {
     if(geometryShaderFilename.length() != 0)
     {
@@ -95,11 +94,6 @@ GLShader::GLShader(std::vector<VertexAttribute> _attributes, string vertexShader
     }
     else {
         shader_id = init_shader(&vertexShaderFilename[0], &fragmentShaderFilename[0], "fragColour", nullptr);
-    }
-    
-    for (auto attribute : attributes)
-    {
-        stride += attribute.size;
     }
     
     check_gl_error();
@@ -122,26 +116,6 @@ GLuint GLShader::get_attribute_location(std::string variable_name)
         std::cerr << "Shader did not contain the '" << variable_name << "' attribute variable."<<std::endl;
     }
     return attributeLocation;
-}
-
-void GLShader::initialize_vertex_attributes()
-{
-    for (auto attribute : attributes)
-    {
-        GLuint location = get_attribute_location(attribute.name);
-        glEnableVertexAttribArray(location);
-    }
-}
-
-void GLShader::use_vertex_attributes()
-{
-    int start_index = 0;
-    for (auto attribute : attributes)
-    {
-        GLuint location = get_attribute_location(attribute.name);
-        glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
-        start_index += attribute.size;
-    }
 }
 
 GLuint GLShader::get_uniform_location(std::string variable_name)

@@ -25,12 +25,20 @@ namespace oogl {
      */
     class GLObject
     {
+        struct VertexAttribute
+        {
+            std::string name;
+            int size;
+        };
+        
         std::shared_ptr<GLShader> shader;
         std::shared_ptr<GLTexture> texture;
         GLMaterial material;
         
         // Vertex attribute data
         std::vector<float> data;
+        int stride = 0;
+        std::vector<VertexAttribute> attributes;
         
         // Needed for drawing
         GLuint no_vertices = 0;
@@ -42,9 +50,25 @@ namespace oogl {
         // Transformation
         glm::mat4 modelMatrix = glm::mat4(1.);
         
+        void use_vertex_attributes();
+        
+        int get_attribute_start_index(std::string name)
+        {
+            int start_index = 0;
+            for (auto attribute : attributes)
+            {
+                if(attribute.name == name)
+                {
+                    return start_index;
+                }
+                start_index += attribute.size;
+            }
+            return -1;
+        }
+        
     public:
         
-        GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES, std::shared_ptr<GLTexture> _texture = nullptr, bool cull_back_faces = true);
+        GLObject(std::vector<VertexAttribute> _attributes, std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES, std::shared_ptr<GLTexture> _texture = nullptr, bool cull_back_faces = true);
         
         /**
          Updates the value of the vertex attribute with the given name.

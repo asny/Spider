@@ -19,46 +19,14 @@ namespace oogl {
         GLuint shader_id;
         static GLuint current_shader_id;
         void use();
-
-        struct VertexAttribute
-        {
-            std::string name;
-            int size;
-        };
-        
-        int stride = 0;
-        std::vector<VertexAttribute> attributes;
         
     public:
         
-        GLShader(std::vector<VertexAttribute> _attributes, std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
+        GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
         
         // ******* Vertex attribute functionality ********
         
         GLuint get_attribute_location(std::string variable_name);
-        
-        void initialize_vertex_attributes();
-        
-        int get_attributes_stride()
-        {
-            return stride;
-        }
-        
-        int get_attribute_start_index(std::string name)
-        {
-            int start_index = 0;
-            for (auto attribute : attributes)
-            {
-                if(attribute.name == name)
-                {
-                    return start_index;
-                }
-                start_index += attribute.size;
-            }
-            return -1;
-        }
-        
-        void use_vertex_attributes();
         
         // ****** Uniform variable functionality ********
         

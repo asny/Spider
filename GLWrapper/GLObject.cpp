@@ -14,8 +14,8 @@ using namespace glm;
 
 bool GLObject::currently_cull_back_faces = true;
 
-GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode, std::shared_ptr<GLTexture> _texture, bool _cull_back_faces)
-: shader(_shader), material(_material), texture(_texture), drawmode(_drawmode), cull_back_faces(_cull_back_faces)
+GLObject::GLObject(vector<VertexAttribute> _attributes, shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode, std::shared_ptr<GLTexture> _texture, bool _cull_back_faces)
+: attributes(_attributes), shader(_shader), material(_material), texture(_texture), drawmode(_drawmode), cull_back_faces(_cull_back_faces)
 {
     // Generate arrays and buffers
     glGenVertexArrays(1, &array_id);
@@ -24,7 +24,12 @@ GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _materia
     glGenBuffers(1, &buffer_id);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     
-    shader->initialize_vertex_attributes();
+    for (auto attribute : attributes)
+    {
+        stride += attribute.size;
+        GLuint location = shader->get_attribute_location(attribute.name);
+        glEnableVertexAttribArray(location);
+    }
     
     check_gl_error();
 }
@@ -32,8 +37,7 @@ GLObject::GLObject(std::shared_ptr<GLShader> _shader, const GLMaterial& _materia
 void GLObject::update_vertex_attribute(std::string name, const std::vector<glm::vec2>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
-    int start_index = shader->get_attribute_start_index(name);
-    int stride = shader->get_attributes_stride();
+    int start_index = get_attribute_start_index(name);
     data.resize(stride * static_cast<int>(_data.size())); // Make sure that data has the correct size.
     
     for (int i = 0; i < _data.size(); i++)
@@ -47,8 +51,7 @@ void GLObject::update_vertex_attribute(std::string name, const std::vector<glm::
 void GLObject::update_vertex_attribute(std::string name, const std::vector<glm::vec3>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
-    int start_index = shader->get_attribute_start_index(name);
-    int stride = shader->get_attributes_stride();
+    int start_index = get_attribute_start_index(name);
     data.resize(stride * static_cast<int>(_data.size())); // Make sure that data has the correct size.
     
     for (int i = 0; i < _data.size(); i++)
@@ -67,6 +70,17 @@ void GLObject::finalize_vertex_attributes()
     
     data.clear();
     check_gl_error();
+}
+
+void GLObject::use_vertex_attributes()
+{
+    int start_index = 0;
+    for (auto attribute : attributes)
+    {
+        GLuint location = shader->get_attribute_location(attribute.name);
+        glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
+        start_index += attribute.size;
+    }
 }
 
 void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
@@ -107,7 +121,7 @@ void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
         glBindVertexArray(array_id);
         glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
         
-        shader->use_vertex_attributes();
+        use_vertex_attributes();
         
         glDrawArrays(drawmode, 0, no_vertices);
         
