@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A30A0211D47FA530078C90A /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A30A01F1D47FA530078C90A /* Geometry.cpp */; };
 		7A383A271BBFB6F700E29333 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A261BBFB6F700E29333 /* game.cpp */; };
 		7A383A2E1BBFBB1700E29333 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2D1BBFBB1700E29333 /* OpenGL.framework */; };
 		7A383A301BBFBB3300E29333 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A383A2F1BBFBB3300E29333 /* GLUT.framework */; };
@@ -42,6 +43,8 @@
 /* Begin PBXFileReference section */
 		7A2A093A1BF7EC04006285D0 /* skybox.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = skybox.frag; path = shaders/skybox.frag; sourceTree = "<group>"; };
 		7A2A093B1BF7EC04006285D0 /* skybox.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = skybox.vert; path = shaders/skybox.vert; sourceTree = "<group>"; };
+		7A30A01F1D47FA530078C90A /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Geometry.cpp; path = GLWrapper/Geometry.cpp; sourceTree = SOURCE_ROOT; };
+		7A30A0201D47FA530078C90A /* Geometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Geometry.hpp; path = GLWrapper/Geometry.hpp; sourceTree = SOURCE_ROOT; };
 		7A370D901BD964E2000783CA /* grass.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grass.geom; path = shaders/grass.geom; sourceTree = "<group>"; };
 		7A383A1C1BBFB6AC00E29333 /* Spider */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Spider; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A383A261BBFB6F700E29333 /* game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = game.cpp; path = source/game.cpp; sourceTree = "<group>"; };
@@ -176,6 +179,8 @@
 				7A3895A01BEE471A00D6E095 /* GLObject.cpp */,
 				7A3895A11BEE471A00D6E095 /* GLObject.hpp */,
 				7A38959F1BEE45F200D6E095 /* GLUtility.h */,
+				7A30A01F1D47FA530078C90A /* Geometry.cpp */,
+				7A30A0201D47FA530078C90A /* Geometry.hpp */,
 			);
 			name = GLWrapper;
 			path = ../GLWrapper;
@@ -275,6 +280,7 @@
 				7A383A331BBFCE5700E29333 /* View.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
 				7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */,
+				7A30A0211D47FA530078C90A /* Geometry.cpp in Sources */,
 				7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */,
 				7A70D0F91BC68BAA003E859B /* GLCamera.cpp in Sources */,
 				7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */,
