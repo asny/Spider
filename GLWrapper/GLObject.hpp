@@ -8,18 +8,10 @@
 
 #pragma once
 
-#include "GLUtility.h"
-#include "GLShader.hpp"
-#include "GLTexture.hpp"
+#include "GLMaterial.hpp"
 
-namespace oogl {
-    struct GLMaterial
-    {
-        glm::vec4 ambient;
-        glm::vec4 diffuse;
-        glm::vec4 specular;
-    };
-    
+namespace oogl
+{
     /**
      Represents an object to draw.
      */
