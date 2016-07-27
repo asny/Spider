@@ -17,18 +17,28 @@ bool GLObject::currently_cull_back_faces = true;
 GLObject::GLObject(vector<VertexAttribute> _attributes, shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode, std::shared_ptr<GLTexture> _texture, bool _cull_back_faces)
 : attributes(_attributes), shader(_shader), material(_material), texture(_texture), drawmode(_drawmode), cull_back_faces(_cull_back_faces)
 {
-    // Generate arrays and buffers
+    // Generate array and buffer
     glGenVertexArrays(1, &array_id);
-    glBindVertexArray(array_id);
-    
     glGenBuffers(1, &buffer_id);
+    
+    // Bind array and buffer
+    glBindVertexArray(array_id);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     
+    // Compute the stride
     for (auto attribute : attributes)
     {
         stride += attribute.size;
+    }
+    
+    // Initialize vertex attributes
+    int start_index = 0;
+    for (auto attribute : attributes)
+    {
         GLuint location = shader->get_attribute_location(attribute.name);
         glEnableVertexAttribArray(location);
+        glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
+        start_index += attribute.size;
     }
     
     check_gl_error();
@@ -108,16 +118,6 @@ void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
         shader->set_uniform_variable_if_defined("MVPMatrix", projectionMatrix * modelViewMatrix);
         
         glBindVertexArray(array_id);
-        glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-        
-        int start_index = 0;
-        for (auto attribute : attributes)
-        {
-            GLuint location = shader->get_attribute_location(attribute.name);
-            glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
-            start_index += attribute.size;
-        }
-        
         glDrawArrays(drawmode, 0, no_vertices);
         
         check_gl_error();
