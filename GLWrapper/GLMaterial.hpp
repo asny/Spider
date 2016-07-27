@@ -24,6 +24,8 @@ namespace oogl
         std::shared_ptr<GLShader> shader;
         
     public:
+        // TODO: Add view and projection matrices as static variables?
+        
         virtual void PreDrawing();
         
         /**

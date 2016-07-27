@@ -63,6 +63,7 @@ View::View(int &argc, char** argv)
     create_terrain();
     create_grass();
     
+    // TODO: Should be moved to GLMaterial.
     spider_body->update_uniform_variable("lightPos", light_pos);
     spider_legs->update_uniform_variable("lightPos", light_pos);
     terrain_patches.front()->update_uniform_variable("lightPos", light_pos);

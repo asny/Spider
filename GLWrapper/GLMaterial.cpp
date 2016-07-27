@@ -30,6 +30,7 @@ void GLMaterial::PreDrawing()
     }
 }
 
+// TODO: Also send standard matrices in the PreDrawing functions
 void GLStandardMaterial::PreDrawing()
 {
     GLMaterial::PreDrawing();
