@@ -37,12 +37,12 @@ public:
     
 private:
     
-    void create_cube(std::shared_ptr<oogl::GLShader> shader);
-    void create_skybox(std::shared_ptr<oogl::GLShader> shader);
-    void create_spider_body(std::shared_ptr<oogl::GLShader> shader);
-    void create_spider_legs(std::shared_ptr<oogl::GLShader> shader);
-    void create_grass(std::shared_ptr<oogl::GLShader> shader);
-    void create_terrain(std::shared_ptr<oogl::GLShader> shader);
+    void create_cube();
+    void create_skybox();
+    void create_spider_body();
+    void create_spider_legs();
+    void create_grass();
+    void create_terrain();
     
     static void update_terrain_and_grass();
     static void update_spider();

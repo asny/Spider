@@ -12,10 +12,8 @@ using namespace oogl;
 using namespace std;
 using namespace glm;
 
-bool GLObject::currently_cull_back_faces = true;
-
-GLObject::GLObject(vector<VertexAttribute> _attributes, shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode, std::shared_ptr<GLTexture> _texture, bool _cull_back_faces)
-: attributes(_attributes), shader(_shader), material(_material), texture(_texture), drawmode(_drawmode), cull_back_faces(_cull_back_faces)
+GLObject::GLObject(vector<VertexAttribute> _attributes, shared_ptr<GLMaterial> _material, GLenum _drawmode)
+: attributes(_attributes), material(_material), drawmode(_drawmode)
 {
     // Generate array and buffer
     glGenVertexArrays(1, &array_id);
@@ -35,7 +33,7 @@ GLObject::GLObject(vector<VertexAttribute> _attributes, shared_ptr<GLShader> _sh
     int start_index = 0;
     for (auto attribute : attributes)
     {
-        GLuint location = shader->get_attribute_location(attribute.name);
+        GLuint location = material->get_attribute_location(attribute.name);
         glEnableVertexAttribArray(location);
         glVertexAttribPointer(location, attribute.size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
         start_index += attribute.size;
@@ -85,37 +83,15 @@ void GLObject::finalize_vertex_attributes()
 void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
 {
     if(no_vertices != 0)
-    {
-        if(currently_cull_back_faces != cull_back_faces)
-        {
-            if(cull_back_faces)
-            {
-                glEnable(GL_CULL_FACE);
-                glCullFace(GL_BACK);
-            }
-            else {
-                glDisable(GL_CULL_FACE);
-            }
-            currently_cull_back_faces = cull_back_faces;
-        }
+    {   
+        material->PreDrawing();
         
-        if(texture)
-        {
-            int texture_id = texture->use();
-            shader->set_uniform_variable("texture0", texture_id);
-        }
-        else {
-            shader->set_uniform_variable("ambientMat", material.ambient);
-            shader->set_uniform_variable("diffuseMat", material.diffuse);
-            if(material.specular.w != 0)
-                shader->set_uniform_variable("specMat", material.specular);
-        }
-        
+        // TODO: Should be moved to material?
         mat4 modelViewMatrix = viewMatrix * modelMatrix;
-        shader->set_uniform_variable_if_defined("MVMatrix", modelViewMatrix);
-        shader->set_uniform_variable_if_defined("NMatrix", inverseTranspose(modelViewMatrix));
-        shader->set_uniform_variable_if_defined("PMatrix", projectionMatrix);
-        shader->set_uniform_variable_if_defined("MVPMatrix", projectionMatrix * modelViewMatrix);
+        material->set_uniform_variable("MVMatrix", modelViewMatrix);
+        material->set_uniform_variable("NMatrix", inverseTranspose(modelViewMatrix));
+        material->set_uniform_variable("PMatrix", projectionMatrix);
+        material->set_uniform_variable("MVPMatrix", projectionMatrix * modelViewMatrix);
         
         glBindVertexArray(array_id);
         glDrawArrays(drawmode, 0, no_vertices);

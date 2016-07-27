@@ -25,9 +25,7 @@ namespace oogl
             int size;
         };
         
-        std::shared_ptr<GLShader> shader;
-        std::shared_ptr<GLTexture> texture;
-        GLMaterial material;
+        std::shared_ptr<GLMaterial> material;
         
         // Vertex attribute data
         std::vector<float> data;
@@ -38,8 +36,6 @@ namespace oogl
         GLuint no_vertices = 0;
         GLuint buffer_id, array_id;
         GLenum drawmode;
-        bool cull_back_faces;
-        static bool currently_cull_back_faces;
         
         // Transformation
         glm::mat4 modelMatrix = glm::mat4(1.);
@@ -60,7 +56,7 @@ namespace oogl
         
     public:
         
-        GLObject(std::vector<VertexAttribute> _attributes, std::shared_ptr<GLShader> _shader, const GLMaterial& _material, GLenum _drawmode = GL_TRIANGLES, std::shared_ptr<GLTexture> _texture = nullptr, bool cull_back_faces = true);
+        GLObject(std::vector<VertexAttribute> _attributes, std::shared_ptr<GLMaterial> _material, GLenum _drawmode = GL_TRIANGLES);
         
         /**
          Updates the value of the vertex attribute with the given name.
@@ -83,7 +79,7 @@ namespace oogl
         template<typename T>
         void update_uniform_variable(std::string name, const T& value)
         {
-            shader->set_uniform_variable(name, value);
+            material->set_uniform_variable(name, value);
         }
         
         /**

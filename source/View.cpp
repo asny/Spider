@@ -55,21 +55,13 @@ View::View(int &argc, char** argv)
     camera = std::unique_ptr<GLCamera>(new GLCamera());
     camera->set_screen_size(WIN_SIZE_X, WIN_SIZE_Y);
     
-    // Create shaders
-    auto texture_shader = std::shared_ptr<GLShader>(new GLShader("shaders/texture.vert",  "shaders/texture.frag"));
-    auto skybox_shader = std::shared_ptr<GLShader>(new GLShader("shaders/skybox.vert",  "shaders/skybox.frag"));
-    auto phong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/phong.vert",  "shaders/phong.frag"));
-    auto grass_shader = std::shared_ptr<GLShader>(new GLShader("shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom"));
-    auto spider_legs_shader = std::shared_ptr<GLShader>(new GLShader("shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/spider_legs.geom"));
-    auto fastphong_shader = std::shared_ptr<GLShader>(new GLShader("shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/fastphong.geom"));
-    
     // Create objects
-    create_cube(texture_shader);
-    create_skybox(skybox_shader);
-    create_spider_body(phong_shader);
-    create_spider_legs(spider_legs_shader);
-    create_terrain(phong_shader);
-    create_grass(grass_shader);
+    create_cube();
+    create_skybox();
+    create_spider_body();
+    create_spider_legs();
+    create_terrain();
+    create_grass();
     
     spider_body->update_uniform_variable("lightPos", light_pos);
     spider_legs->update_uniform_variable("lightPos", light_pos);
@@ -263,23 +255,23 @@ void View::update_terrain_and_grass()
     }
 }
 
-void View::create_grass(shared_ptr<GLShader> shader)
+void View::create_grass()
 {
-    auto material = GLMaterial {{0.2f,0.5f,0.f, 1.f}, {0.1f, 0.2f, 0.f, 1.f}, {0.f, 0.f, 0.f, 0.f}};
+    auto material = shared_ptr<GLMaterial>(new GLGrassMaterial({0.2f,0.5f,0.f, 1.f}, {0.1f, 0.2f, 0.f, 1.f}));
     for (int i = 0; i < 9; i++) {
-        grass_patches.push_back(shared_ptr<GLObject>(new GLObject({{"position", 3}}, shader, material, GL_LINES, nullptr, false)));
+        grass_patches.push_back(shared_ptr<GLObject>(new GLObject({{"position", 3}}, material, GL_LINES)));
     }
 }
 
-void View::create_terrain(shared_ptr<GLShader> shader)
+void View::create_terrain()
 {
-    auto material = GLMaterial {{0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
+    auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     for (int i = 0; i < 9; i++) {
-        terrain_patches.push_back(shared_ptr<GLObject>(new GLObject({{"position", 3}, {"normal", 3}}, shader, material, GL_TRIANGLE_STRIP)));
+        terrain_patches.push_back(shared_ptr<GLObject>(new GLObject({{"position", 3}, {"normal", 3}}, material, GL_TRIANGLE_STRIP)));
     }
 }
 
-void View::create_spider_body(shared_ptr<GLShader> shader)
+void View::create_spider_body()
 {
     std::vector<glm::vec3> spider_vertices;
     std::vector<glm::vec3> spider_normals;
@@ -296,8 +288,8 @@ void View::create_spider_body(shared_ptr<GLShader> shader)
             vertex -= center;
         }
         
-        auto material = GLMaterial {{0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-        spider_body = shared_ptr<GLObject>(new GLObject({{"position", 3}, {"normal", 3}}, shader, material, GL_TRIANGLES));
+        auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
+        spider_body = shared_ptr<GLObject>(new GLObject({{"position", 3}, {"normal", 3}}, material, GL_TRIANGLES));
         
         spider_body->update_vertex_attribute("position", spider_vertices);
         spider_body->update_vertex_attribute("normal", spider_normals);
@@ -305,13 +297,13 @@ void View::create_spider_body(shared_ptr<GLShader> shader)
     }
 }
 
-void View::create_spider_legs(shared_ptr<GLShader> shader)
+void View::create_spider_legs()
 {
-    auto material = GLMaterial {{0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}};
-    spider_legs = shared_ptr<GLObject>(new GLObject({{"position", 3}}, shader, material, GL_LINES));
+    auto material = shared_ptr<GLMaterial>(new GLSpiderLegsMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
+    spider_legs = shared_ptr<GLObject>(new GLObject({{"position", 3}}, material, GL_LINES));
 }
 
-void View::create_cube(shared_ptr<GLShader> shader)
+void View::create_cube()
 {
     static const vector<vec3> cube_data = {
         // front
@@ -358,7 +350,6 @@ void View::create_cube(shared_ptr<GLShader> shader)
         vec3(1.0, -1.0,  1.0)
     };
     
-    auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
     auto cubeTextureBmp = Reader::load_bitmap("resources/test_texture.jpg");
     cubeTextureBmp.flipVertically();
     vector<vec2> cube_uvs;
@@ -371,14 +362,15 @@ void View::create_cube(shared_ptr<GLShader> shader)
         cube_uvs.push_back(vec2(0.));
     }
     auto cubeTexture = shared_ptr<GLTexture>(new GLTexture2D(cubeTextureBmp));
-    cube = shared_ptr<GLObject>(new GLObject({{"position", 3}, {"uv_coordinates", 2}}, shader, material, GL_TRIANGLES, cubeTexture));
+    auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(cubeTexture));
+    cube = shared_ptr<GLObject>(new GLObject({{"position", 3}, {"uv_coordinates", 2}}, material, GL_TRIANGLES));
     
     cube->update_vertex_attribute("position", cube_data);
     cube->update_vertex_attribute("uv_coordinates", cube_uvs);
     cube->finalize_vertex_attributes();
 }
 
-void View::create_skybox(shared_ptr<GLShader> shader)
+void View::create_skybox()
 {
     static const vector<vec3> cube_data = {
         // front
@@ -425,12 +417,12 @@ void View::create_skybox(shared_ptr<GLShader> shader)
         vec3(1.0,  1.0,  1.0)
     };
     
-    auto material = GLMaterial {{0.15f,0.15f,0.15f, 1.f}, {0.4f, 0.2f, 0.6f, 1.f}, {0.2f, 0.2f, 0.8f, 1.f}};
     const string path = "resources/skybox_evening/";
     
     auto bitmaps = {Reader::load_bitmap(path + "right.jpg"), Reader::load_bitmap(path + "left.jpg"), Reader::load_bitmap(path + "top.jpg"), Reader::load_bitmap(path + "top.jpg"), Reader::load_bitmap(path + "front.jpg"), Reader::load_bitmap(path + "back.jpg")};
-    auto skybox_texture = shared_ptr<GLTexture>(new GLTexture3D(bitmaps));
-    skybox = shared_ptr<GLObject>(new GLObject({{"position", 3}}, shader, material, GL_TRIANGLES, skybox_texture));
+    auto skybox_texture = shared_ptr<GLTexture3D>(new GLTexture3D(bitmaps));
+    auto material = shared_ptr<GLSkyboxMaterial>(new GLSkyboxMaterial(skybox_texture));
+    skybox = shared_ptr<GLObject>(new GLObject({{"position", 3}}, material, GL_TRIANGLES));
     
     skybox->update_vertex_attribute("position", cube_data);
     skybox->finalize_vertex_attributes();
