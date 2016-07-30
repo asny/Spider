@@ -56,7 +56,7 @@ namespace oogl
         
     public:
         
-        GLObject(std::vector<VertexAttribute> _attributes, std::shared_ptr<GLMaterial> _material, GLenum _drawmode = GL_TRIANGLES);
+        GLObject(std::vector<VertexAttribute> attributes, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
         
         /**
          Updates the value of the vertex attribute with the given name.

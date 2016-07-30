@@ -85,13 +85,7 @@ void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
     if(no_vertices != 0)
     {   
         material->PreDrawing();
-        
-        // TODO: Should be moved to material?
-        mat4 modelViewMatrix = viewMatrix * modelMatrix;
-        material->set_uniform_variable("MVMatrix", modelViewMatrix);
-        material->set_uniform_variable("NMatrix", inverseTranspose(modelViewMatrix));
-        material->set_uniform_variable("PMatrix", projectionMatrix);
-        material->set_uniform_variable("MVPMatrix", projectionMatrix * modelViewMatrix);
+        material->set(modelMatrix, viewMatrix, projectionMatrix);
         
         glBindVertexArray(array_id);
         glDrawArrays(drawmode, 0, no_vertices);
