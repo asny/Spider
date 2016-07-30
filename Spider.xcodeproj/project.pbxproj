@@ -16,6 +16,7 @@
 		7A3895A21BEE471A00D6E095 /* GLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A01BEE471A00D6E095 /* GLObject.cpp */; };
 		7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A51BEFB8AE00D6E095 /* Bitmap.cpp */; };
 		7A3895AA1BEFB8AE00D6E095 /* Reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A71BEFB8AE00D6E095 /* Reader.cpp */; };
+		7A5A4F8F1D4D309000189B8C /* GLScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A5A4F8D1D4D308F00189B8C /* GLScene.cpp */; };
 		7A70D0F91BC68BAA003E859B /* GLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0F71BC68BAA003E859B /* GLCamera.cpp */; };
 		7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */; };
 		7A8D543F1C0F83390029EEE2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8D543E1C0F83390029EEE2 /* Cocoa.framework */; };
@@ -66,6 +67,8 @@
 		7A3895A61BEFB8AE00D6E095 /* Bitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bitmap.h; path = Readers/Bitmap.h; sourceTree = "<group>"; };
 		7A3895A71BEFB8AE00D6E095 /* Reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Reader.cpp; path = Readers/Reader.cpp; sourceTree = "<group>"; };
 		7A3895A81BEFB8AE00D6E095 /* Reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Reader.hpp; path = Readers/Reader.hpp; sourceTree = "<group>"; };
+		7A5A4F8D1D4D308F00189B8C /* GLScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLScene.cpp; path = GLWrapper/GLScene.cpp; sourceTree = SOURCE_ROOT; };
+		7A5A4F8E1D4D309000189B8C /* GLScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLScene.hpp; path = GLWrapper/GLScene.hpp; sourceTree = SOURCE_ROOT; };
 		7A70D0F11BC5BF19003E859B /* fastphong.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fastphong.geom; path = shaders/fastphong.geom; sourceTree = "<group>"; };
 		7A70D0F71BC68BAA003E859B /* GLCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLCamera.cpp; path = GLWrapper/GLCamera.cpp; sourceTree = SOURCE_ROOT; };
 		7A70D0F81BC68BAA003E859B /* GLCamera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLCamera.hpp; path = GLWrapper/GLCamera.hpp; sourceTree = SOURCE_ROOT; };
@@ -186,6 +189,8 @@
 				7A38959F1BEE45F200D6E095 /* GLUtility.h */,
 				7A30A01F1D47FA530078C90A /* Geometry.cpp */,
 				7A30A0201D47FA530078C90A /* Geometry.hpp */,
+				7A5A4F8D1D4D308F00189B8C /* GLScene.cpp */,
+				7A5A4F8E1D4D309000189B8C /* GLScene.hpp */,
 			);
 			name = GLWrapper;
 			path = ../GLWrapper;
@@ -288,6 +293,7 @@
 				7A30A0211D47FA530078C90A /* Geometry.cpp in Sources */,
 				7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */,
 				7AB664EA1D49434C00C71CEE /* GLMaterial.cpp in Sources */,
+				7A5A4F8F1D4D309000189B8C /* GLScene.cpp in Sources */,
 				7A70D0F91BC68BAA003E859B /* GLCamera.cpp in Sources */,
 				7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */,
 				7A3895A21BEE471A00D6E095 /* GLObject.cpp in Sources */,
