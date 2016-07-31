@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Geometry.hpp"
 #include "GLMaterial.hpp"
 
 namespace oogl
@@ -25,6 +26,7 @@ namespace oogl
             int size;
         };
         
+        std::shared_ptr<Geometry> geometry;
         std::shared_ptr<GLMaterial> material;
         
         // Vertex attribute data
@@ -54,7 +56,12 @@ namespace oogl
             return -1;
         }
         
+        void update_vertex_attributes();
+        std::vector<std::shared_ptr<Attribute<int, glm::vec3>>> get_used_attributes(const std::vector<std::shared_ptr<Attribute<int, glm::vec3>>>& vec3_attributes);
+        
     public:
+        
+        GLObject(std::shared_ptr<GLMaterial> material, std::shared_ptr<Geometry> geometry);
         
         GLObject(std::vector<VertexAttribute> attributes, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
         

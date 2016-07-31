@@ -24,7 +24,6 @@ namespace oogl
         std::shared_ptr<GLShader> shader;
         
     public:
-        // TODO: Add view and projection matrices as static variables?
         
         virtual void PreDrawing();
         
@@ -38,6 +37,11 @@ namespace oogl
             shader->set_uniform_variable("NMatrix", inverseTranspose(modelViewMatrix));
             shader->set_uniform_variable("PMatrix", projectionMatrix);
             shader->set_uniform_variable("MVPMatrix", projectionMatrix * modelViewMatrix);
+        }
+        
+        virtual std::vector<std::string> get_attribute_ids()
+        {
+            return {{"position"}};
         }
         
         /**

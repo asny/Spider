@@ -42,6 +42,77 @@ GLObject::GLObject(vector<VertexAttribute> _attributes, shared_ptr<GLMaterial> _
     check_gl_error();
 }
 
+GLObject::GLObject(std::shared_ptr<GLMaterial> _material, std::shared_ptr<Geometry> _geometry) : material(_material), geometry(_geometry)
+{
+    // TODO: infer from geometry type
+    drawmode = GL_TRIANGLES;
+    
+    // Generate array and buffer
+    glGenVertexArrays(1, &array_id);
+    glGenBuffers(1, &buffer_id);
+    
+    // Bind array and buffer
+    glBindVertexArray(array_id);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+    
+    auto used_attributes = get_used_attributes(geometry->get_vec3_vertex_attributes());
+    stride = static_cast<int>(used_attributes.size()) * 3;
+    
+    // Initialize vertex attributes
+    int start_index = 0;
+    for (auto attribute : used_attributes)
+    {
+        GLuint location = material->get_attribute_location(attribute->get_id());
+        glEnableVertexAttribArray(location);
+        glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
+        start_index += 3;
+    }
+    
+    update_vertex_attributes();
+    
+    check_gl_error();
+}
+
+std::vector<std::shared_ptr<Attribute<int, glm::vec3>>> GLObject::get_used_attributes(const std::vector<std::shared_ptr<Attribute<int, glm::vec3>>>& vec3_attributes)
+{
+    auto attributeIds = material->get_attribute_ids();
+    auto used_attributes = vector<shared_ptr<Attribute<int, vec3>>>();
+    for(auto attribute : vec3_attributes)
+    {
+        if(std::find(attributeIds.begin(), attributeIds.end(), attribute->get_id()) != attributeIds.end())
+        {
+            used_attributes.push_back(attribute);
+        }
+    }
+    return used_attributes;
+}
+
+
+void GLObject::update_vertex_attributes()
+{
+    auto used_attributes = get_used_attributes(geometry->get_vec3_vertex_attributes());
+    
+    // Fill data
+    no_vertices = used_attributes.front()->get_size();
+    auto data = std::vector<float>(stride * no_vertices);
+    int start_index = 0;
+    for(auto attribute : used_attributes)
+    {
+        for(auto vertexId = 0; vertexId < no_vertices; vertexId++)
+        {
+            auto vec = attribute->get_value(vertexId);
+            data[start_index + vertexId*stride] = vec.x;
+            data[start_index + vertexId*stride + 1] = vec.y;
+            data[start_index + vertexId*stride + 2] = vec.z;
+        }
+        start_index += 3;
+    }
+    
+    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+    check_gl_error();
+}
+
 void GLObject::update_vertex_attribute(std::string name, const std::vector<glm::vec2>& _data)
 {
     no_vertices = static_cast<int>(_data.size());
