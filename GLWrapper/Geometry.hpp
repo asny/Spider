@@ -13,32 +13,45 @@
 
 class Geometry
 {
-    std::vector<std::shared_ptr<Attribute<int, glm::vec3>>> vertexAttributes = std::vector<std::shared_ptr<Attribute<int, glm::vec3>>>();
+    std::vector<std::shared_ptr<Attribute<int, glm::vec2>>> vec2VertexAttributes = std::vector<std::shared_ptr<Attribute<int, glm::vec2>>>();
+    std::vector<std::shared_ptr<Attribute<int, glm::vec3>>> vec3VertexAttributes = std::vector<std::shared_ptr<Attribute<int, glm::vec3>>>();
     
 public:
-    Geometry(std::shared_ptr<Attribute<int, glm::vec3>> _vertexPositions)
+    Geometry()
     {
-        vertexAttributes.push_back(_vertexPositions);
+        
     }
     
-    Geometry(const std::vector<glm::vec3>& positions)
+    std::shared_ptr<Attribute<int, glm::vec2>> add_vertex_attribute(std::string name, const std::vector<glm::vec2>& values)
     {
-        auto attribute = std::shared_ptr<Attribute<int, glm::vec3>>(new Attribute<int, glm::vec3>("position"));
-        for(int i = 0; i < positions.size(); i++)
+        auto attribute = std::shared_ptr<Attribute<int, glm::vec2>>(new Attribute<int, glm::vec2>(name));
+        for(int i = 0; i < values.size(); i++)
         {
-            attribute->add(i, positions.at(i));
+            attribute->add(i, values.at(i));
         }
-        vertexAttributes.push_back(attribute);
+        vec2VertexAttributes.push_back(attribute);
+        return attribute;
     }
     
-    glm::vec3 get_vertex_position(int vertexId)
+    std::shared_ptr<Attribute<int, glm::vec3>> add_vertex_attribute(std::string name, const std::vector<glm::vec3>& values)
     {
-        return vertexAttributes.front()->get_value(vertexId);
+        auto attribute = std::shared_ptr<Attribute<int, glm::vec3>>(new Attribute<int, glm::vec3>(name));
+        for(int i = 0; i < values.size(); i++)
+        {
+            attribute->add(i, values.at(i));
+        }
+        vec3VertexAttributes.push_back(attribute);
+        return attribute;
+    }
+    
+    std::vector<std::shared_ptr<Attribute<int, glm::vec2>>> get_vec2_vertex_attributes()
+    {
+        return vec2VertexAttributes;
     }
     
     std::vector<std::shared_ptr<Attribute<int, glm::vec3>>> get_vec3_vertex_attributes()
     {
-        return vertexAttributes;
+        return vec3VertexAttributes;
     }
     
     // TODO: Implement iterator

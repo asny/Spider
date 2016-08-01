@@ -96,6 +96,11 @@ namespace oogl
             shader = std::shared_ptr<GLShader>(new GLShader("shaders/texture.vert",  "shaders/texture.frag"));
         }
         
+        virtual std::vector<std::string> get_attribute_ids()
+        {
+            return {{"position"}, {"uv_coordinates"}};
+        }
+        
         void PreDrawing();
     };
     

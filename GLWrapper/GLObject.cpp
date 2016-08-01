@@ -55,11 +55,20 @@ GLObject::GLObject(std::shared_ptr<GLMaterial> _material, std::shared_ptr<Geomet
     glBindVertexArray(array_id);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     
+    auto used_vec2_attributes = get_used_attributes(geometry->get_vec2_vertex_attributes());
     auto used_vec3_attributes = get_used_attributes(geometry->get_vec3_vertex_attributes());
-    stride = static_cast<int>(used_vec3_attributes.size()) * 3;
     
-    // Initialize vertex attributes
+    stride = static_cast<int>(used_vec2_attributes.size() * 2 + used_vec3_attributes.size()) * 3;
     int start_index = 0;
+    
+    // Initialize vec2 vertex attributes
+    for (auto attribute : used_vec2_attributes)
+    {
+        material->initialize_vertex_attribute(attribute->get_id(), start_index, 2, stride);
+        start_index += 2;
+    }
+    
+    // Initialize vec3 vertex attributes
     for (auto attribute : used_vec3_attributes)
     {
         material->initialize_vertex_attribute(attribute->get_id(), start_index, 3, stride);
@@ -73,13 +82,25 @@ GLObject::GLObject(std::shared_ptr<GLMaterial> _material, std::shared_ptr<Geomet
 
 void GLObject::update_vertex_attributes()
 {
-    auto used_attributes = get_used_attributes(geometry->get_vec3_vertex_attributes());
+    auto used_vec2_attributes = get_used_attributes(geometry->get_vec2_vertex_attributes());
+    auto used_vec3_attributes = get_used_attributes(geometry->get_vec3_vertex_attributes());
     
     // Fill data
-    no_vertices = used_attributes.front()->get_size();
+    no_vertices = used_vec3_attributes.front()->get_size();
     auto data = std::vector<float>(stride * no_vertices);
     int start_index = 0;
-    for(auto attribute : used_attributes)
+    for(auto attribute : used_vec2_attributes)
+    {
+        for(auto vertexId = 0; vertexId < no_vertices; vertexId++)
+        {
+            auto vec = attribute->get_value(vertexId);
+            data[start_index + vertexId*stride] = vec.x;
+            data[start_index + vertexId*stride + 1] = vec.y;
+        }
+        start_index += 2;
+    }
+    
+    for(auto attribute : used_vec3_attributes)
     {
         for(auto vertexId = 0; vertexId < no_vertices; vertexId++)
         {
