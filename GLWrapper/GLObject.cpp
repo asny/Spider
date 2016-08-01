@@ -91,23 +91,27 @@ void GLObject::update_vertex_attributes()
     int start_index = 0;
     for(auto attribute : used_vec2_attributes)
     {
-        for(auto vertexId = 0; vertexId < no_vertices; vertexId++)
+        int i = 0;
+        for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId++)
         {
             auto vec = attribute->get_value(vertexId);
-            data[start_index + vertexId*stride] = vec.x;
-            data[start_index + vertexId*stride + 1] = vec.y;
+            data[start_index + i*stride] = vec.x;
+            data[start_index + i*stride + 1] = vec.y;
+            i++;
         }
         start_index += 2;
     }
     
     for(auto attribute : used_vec3_attributes)
     {
-        for(auto vertexId = 0; vertexId < no_vertices; vertexId++)
+        int i = 0;
+        for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId++)
         {
             auto vec = attribute->get_value(vertexId);
-            data[start_index + vertexId*stride] = vec.x;
-            data[start_index + vertexId*stride + 1] = vec.y;
-            data[start_index + vertexId*stride + 2] = vec.z;
+            data[start_index + i*stride] = vec.x;
+            data[start_index + i*stride + 1] = vec.y;
+            data[start_index + i*stride + 2] = vec.z;
+            i++;
         }
         start_index += 3;
     }
