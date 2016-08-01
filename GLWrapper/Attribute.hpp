@@ -11,8 +11,6 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include "vec2.hpp"
-#include "vec3.hpp"
 
 template <class IDType, class ValueType>
 class Attribute
