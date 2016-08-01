@@ -55,16 +55,14 @@ GLObject::GLObject(std::shared_ptr<GLMaterial> _material, std::shared_ptr<Geomet
     glBindVertexArray(array_id);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     
-    auto used_attributes = get_used_attributes(geometry->get_vec3_vertex_attributes());
-    stride = static_cast<int>(used_attributes.size()) * 3;
+    auto used_vec3_attributes = get_used_attributes(geometry->get_vec3_vertex_attributes());
+    stride = static_cast<int>(used_vec3_attributes.size()) * 3;
     
     // Initialize vertex attributes
     int start_index = 0;
-    for (auto attribute : used_attributes)
+    for (auto attribute : used_vec3_attributes)
     {
-        GLuint location = material->get_attribute_location(attribute->get_id());
-        glEnableVertexAttribArray(location);
-        glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
+        material->initialize_vertex_attribute(attribute->get_id(), start_index, 3, stride);
         start_index += 3;
     }
     

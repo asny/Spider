@@ -44,6 +44,13 @@ namespace oogl
             return {{"position"}};
         }
         
+        void initialize_vertex_attribute(const std::string& name, int start_index, int size, int stride)
+        {
+            GLuint location = shader->get_attribute_location(name);
+            glEnableVertexAttribArray(location);
+            glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
+        }
+        
         /**
          TODO: Should be deleted!
          Updates the value of the uniform variable with the given name.
