@@ -57,7 +57,21 @@ namespace oogl
         }
         
         void update_vertex_attributes();
-        std::vector<std::shared_ptr<Attribute<int, glm::vec3>>> get_used_attributes(const std::vector<std::shared_ptr<Attribute<int, glm::vec3>>>& vec3_attributes);
+        
+        template<class IDType, class ValueType>
+        std::vector<std::shared_ptr<Attribute<IDType, ValueType>>> get_used_attributes(const std::vector<std::shared_ptr<Attribute<IDType, ValueType>>>& attributes)
+        {
+            auto attributeIds = material->get_attribute_ids();
+            auto used_attributes = std::vector<std::shared_ptr<Attribute<IDType, ValueType>>>();
+            for(auto attribute : attributes)
+            {
+                if(std::find(attributeIds.begin(), attributeIds.end(), attribute->get_id()) != attributeIds.end())
+                {
+                    used_attributes.push_back(attribute);
+                }
+            }
+            return used_attributes;
+        }
         
     public:
         
