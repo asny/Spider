@@ -17,9 +17,19 @@ class Geometry
     std::vector<std::shared_ptr<Attribute<int, glm::vec3>>> vec3VertexAttributes = std::vector<std::shared_ptr<Attribute<int, glm::vec3>>>();
     
 public:
-    Geometry()
+    Geometry(const std::vector<glm::vec3>& positions)
     {
-        
+        auto attribute = std::shared_ptr<Attribute<int, glm::vec3>>(new Attribute<int, glm::vec3>("position"));
+        for(int i = 0; i < positions.size(); i++)
+        {
+            attribute->add(i, positions.at(i));
+        }
+        vec3VertexAttributes.push_back(attribute);
+    }
+    
+    glm::vec3 get_position(int vertexId)
+    {
+        return vec3VertexAttributes.front()->get_value(vertexId);
     }
     
     std::shared_ptr<Attribute<int, glm::vec2>> add_vertex_attribute(std::string name, const std::vector<glm::vec2>& values)
