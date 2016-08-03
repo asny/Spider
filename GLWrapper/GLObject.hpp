@@ -76,7 +76,7 @@ namespace oogl
         
     public:
         
-        GLObject(std::shared_ptr<GLMaterial> material, std::shared_ptr<Geometry> geometry, GLenum drawmode = GL_TRIANGLES);
+        GLObject(std::shared_ptr<Geometry> geometry, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
         
         GLObject(std::vector<VertexAttribute> attributes, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
         
