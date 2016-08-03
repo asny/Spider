@@ -47,34 +47,37 @@ GLObject::GLObject(std::shared_ptr<GLMaterial> _material, std::shared_ptr<Geomet
     // TODO: infer from geometry type
     drawmode = GL_TRIANGLES;
     
-    // Generate array and buffer
+    // Generate and bind array
     glGenVertexArrays(1, &array_id);
-    glGenBuffers(1, &buffer_id);
-    
-    // Bind array and buffer
     glBindVertexArray(array_id);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
     
     auto used_vec2_attributes = get_used_attributes(geometry->get_vec2_vertex_attributes());
     auto used_vec3_attributes = get_used_attributes(geometry->get_vec3_vertex_attributes());
     
-    stride = static_cast<int>(used_vec2_attributes.size() * 2 + used_vec3_attributes.size()) * 3;
-    int start_index = 0;
+    no_vertices = used_vec3_attributes.front()->get_size();
+    int buffer_index = 0;
+    // Generate buffers
+    glGenBuffers(static_cast<int>(used_vec2_attributes.size() + used_vec3_attributes.size()), buffer_ids);
     
     // Initialize vec2 vertex attributes
     for (auto attribute : used_vec2_attributes)
     {
-        material->initialize_vertex_attribute(attribute->get_id(), start_index, 2, stride);
-        start_index += 2;
+        // Bind buffer
+        glBindBuffer(GL_ARRAY_BUFFER, buffer_ids[buffer_index]);
+        buffer_index++;
+        
+        material->initialize_vertex_attribute(attribute->get_id(), 2);
     }
     
     // Initialize vec3 vertex attributes
     for (auto attribute : used_vec3_attributes)
     {
-        material->initialize_vertex_attribute(attribute->get_id(), start_index, 3, stride);
-        start_index += 3;
+        // Bind buffer
+        glBindBuffer(GL_ARRAY_BUFFER, buffer_ids[buffer_index]);
+        buffer_index++;
+        
+        material->initialize_vertex_attribute(attribute->get_id(), 3);
     }
-    
     update_vertex_attributes();
     
     check_gl_error();
@@ -85,39 +88,45 @@ void GLObject::update_vertex_attributes()
     auto used_vec2_attributes = get_used_attributes(geometry->get_vec2_vertex_attributes());
     auto used_vec3_attributes = get_used_attributes(geometry->get_vec3_vertex_attributes());
     
-    // Fill data
-    no_vertices = used_vec3_attributes.front()->get_size();
-    auto data = std::vector<float>(stride * no_vertices);
-    int start_index = 0;
-    for(auto attribute : used_vec2_attributes)
+    int buffer_index = 0;
+    // Send vec2 vertex attributes
+    for (auto attribute : used_vec2_attributes)
     {
+        auto data = std::vector<float>(2 * attribute->get_size());
         int i = 0;
         for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId++)
         {
             auto vec = attribute->get_value(vertexId);
-            data[start_index + i*stride] = vec.x;
-            data[start_index + i*stride + 1] = vec.y;
+            data[i * 2] = vec.x;
+            data[i * 2 + 1] = vec.y;
             i++;
         }
-        start_index += 2;
+        
+        // Bind buffer and send data
+        glBindBuffer(GL_ARRAY_BUFFER, buffer_ids[buffer_index]);
+        glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+        buffer_index++;
     }
     
-    for(auto attribute : used_vec3_attributes)
+    // Send vec3 vertex attributes
+    for (auto attribute : used_vec3_attributes)
     {
+        auto data = std::vector<float>(3 * attribute->get_size());
         int i = 0;
         for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId++)
         {
             auto vec = attribute->get_value(vertexId);
-            data[start_index + i*stride] = vec.x;
-            data[start_index + i*stride + 1] = vec.y;
-            data[start_index + i*stride + 2] = vec.z;
+            data[i * 3] = vec.x;
+            data[i * 3 + 1] = vec.y;
+            data[i * 3 + 2] = vec.z;
             i++;
         }
-        start_index += 3;
+        
+        // Bind buffer and send data
+        glBindBuffer(GL_ARRAY_BUFFER, buffer_ids[buffer_index]);
+        glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+        buffer_index++;
     }
-    
-    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
     check_gl_error();
 }
 

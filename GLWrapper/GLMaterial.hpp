@@ -44,11 +44,11 @@ namespace oogl
             return {{"position"}};
         }
         
-        void initialize_vertex_attribute(const std::string& name, int start_index, int size, int stride)
+        void initialize_vertex_attribute(const std::string& name, int size)
         {
             GLuint location = shader->get_attribute_location(name);
             glEnableVertexAttribArray(location);
-            glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (const GLvoid *)(start_index * sizeof(float)));
+            glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, size * sizeof(float), (const GLvoid *)(0));
         }
         
         /**

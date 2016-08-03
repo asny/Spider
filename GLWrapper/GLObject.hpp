@@ -37,6 +37,7 @@ namespace oogl
         // Needed for drawing
         GLuint no_vertices = 0;
         GLuint buffer_id, array_id;
+        GLuint buffer_ids[5];
         GLenum drawmode;
         
         // Transformation
