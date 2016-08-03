@@ -42,11 +42,8 @@ GLObject::GLObject(vector<VertexAttribute> _attributes, shared_ptr<GLMaterial> _
     check_gl_error();
 }
 
-GLObject::GLObject(std::shared_ptr<GLMaterial> _material, std::shared_ptr<Geometry> _geometry) : material(_material), geometry(_geometry)
+GLObject::GLObject(std::shared_ptr<GLMaterial> _material, std::shared_ptr<Geometry> _geometry, GLenum _drawmode) : material(_material), geometry(_geometry), drawmode(_drawmode)
 {
-    // TODO: infer from geometry type
-    drawmode = GL_TRIANGLES;
-    
     // Generate and bind array
     glGenVertexArrays(1, &array_id);
     glBindVertexArray(array_id);
