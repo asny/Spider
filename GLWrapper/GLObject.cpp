@@ -66,32 +66,24 @@ void GLObject::update_vertex_attributes()
         auto vec2Attribute = geometry->get_vec2_vertex_attribute(attribute.get_name());
         if(vec2Attribute)
         {
-            data = std::vector<float>(2 * vec2Attribute->get_size());
-            int i = 0;
+            auto data = std::vector<vec2>();
             for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId++)
             {
-                auto vec = vec2Attribute->get_value(vertexId);
-                data[i * 2] = vec.x;
-                data[i * 2 + 1] = vec.y;
-                i++;
+                data.push_back(vec2Attribute->get_value(vertexId));
             }
+            attribute.update_data(data);
         }
         
         auto vec3Attribute = geometry->get_vec3_vertex_attribute(attribute.get_name());
         if(vec3Attribute)
         {
-            data = std::vector<float>(3 * vec3Attribute->get_size());
-            int i = 0;
+            auto data = std::vector<vec3>();
             for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId++)
             {
-                auto vec = vec3Attribute->get_value(vertexId);
-                data[i * 3] = vec.x;
-                data[i * 3 + 1] = vec.y;
-                data[i * 3 + 2] = vec.z;
-                i++;
+                data.push_back(vec3Attribute->get_value(vertexId));
             }
+            attribute.update_data(data);
         }
-        attribute.update_data(data);
     }
     check_gl_error();
 }

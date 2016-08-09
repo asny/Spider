@@ -29,11 +29,21 @@ namespace oogl
             glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, size * sizeof(float), (const GLvoid *)(0));
         }
         
-        void update_data(const std::vector<float>& data)
+        template<class T>
+        void update_data(const std::vector<T>& data)
         {
+            auto floats = std::vector<float>(size * data.size());
+            for(int i = 0; i < data.size(); i++)
+            {
+                const T& vec = data.at(i);
+                for(int j = 0; j < size; j++)
+                {
+                    floats[i * size + j] = vec[j];
+                }
+            }
             // Bind buffer and send data
             glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-            glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, floats.size() * sizeof(float), &floats[0], GL_STATIC_DRAW);
         }
         
         const std::string& get_name()
