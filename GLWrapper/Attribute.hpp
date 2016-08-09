@@ -16,10 +16,9 @@ template <class IDType, class ValueType>
 class Attribute
 {
     std::map<IDType, ValueType> mapping;
-    std::string id;
     
 public:
-    Attribute(std::string _id) : id(_id)
+    Attribute()
     {
         
     }
@@ -27,11 +26,6 @@ public:
     void add(IDType id, ValueType value)
     {
         mapping[id] = value;
-    }
-    
-    std::string get_id()
-    {
-        return id;
     }
     
     int get_size()

@@ -57,8 +57,6 @@ namespace oogl
             return -1;
         }
         
-        void update_vertex_attributes();
-        
         template<class IDType, class ValueType>
         std::vector<std::shared_ptr<Attribute<IDType, ValueType>>> get_used_attributes(const std::vector<std::shared_ptr<Attribute<IDType, ValueType>>>& attributes)
         {
@@ -79,6 +77,8 @@ namespace oogl
         GLObject(std::shared_ptr<Geometry> geometry, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
         
         GLObject(std::vector<VertexAttribute> attributes, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
+        
+        void update_vertex_attributes();
         
         /**
          Updates the value of the vertex attribute with the given name.

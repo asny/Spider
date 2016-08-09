@@ -41,57 +41,97 @@ public:
 
 class Geometry
 {
-    std::vector<std::shared_ptr<Attribute<VertexID, glm::vec2>>> vec2VertexAttributes = std::vector<std::shared_ptr<Attribute<VertexID, glm::vec2>>>();
-    std::vector<std::shared_ptr<Attribute<VertexID, glm::vec3>>> vec3VertexAttributes = std::vector<std::shared_ptr<Attribute<VertexID, glm::vec3>>>();
+    std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec2>>> vec2VertexAttributes =
+        std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec2>>>();
+    std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec3>>> vec3VertexAttributes =
+        std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec3>>>();
     
-    int no_vertices;
+    int no_vertices = 0;
     
 public:
-    Geometry(const std::vector<glm::vec3>& positions) : no_vertices(static_cast<int>(positions.size()))
+    Geometry() : Geometry(std::vector<glm::vec3>())
     {
-        auto attribute = std::shared_ptr<Attribute<VertexID, glm::vec3>>(new Attribute<VertexID, glm::vec3>("position"));
-        for(int i = 0; i < positions.size(); i++)
-        {
-            attribute->add(i, positions.at(i));
-        }
-        vec3VertexAttributes.push_back(attribute);
+        
+    }
+    
+    Geometry(const std::vector<glm::vec3>& positions)
+    {
+        add_vertex_attribute("position", positions);
     }
     
     glm::vec3 get_position(int vertexId)
     {
-        return vec3VertexAttributes.front()->get_value(vertexId);
+        return vec3VertexAttributes.at("position")->get_value(vertexId);
     }
     
     std::shared_ptr<Attribute<VertexID, glm::vec2>> add_vertex_attribute(std::string name, const std::vector<glm::vec2>& values)
     {
-        auto attribute = std::shared_ptr<Attribute<VertexID, glm::vec2>>(new Attribute<VertexID, glm::vec2>(name));
-        for(int i = 0; i < values.size(); i++)
+        auto attribute = get_vec2_vertex_attribute(name);
+        if(!attribute)
         {
-            attribute->add(VertexID(i), values.at(i));
+            // Lazy construction
+            attribute = std::shared_ptr<Attribute<VertexID, glm::vec2>>(new Attribute<VertexID, glm::vec2>());
+            for(int i = 0; i < values.size(); i++)
+            {
+                attribute->add(i, values.at(i));
+            }
+            vec2VertexAttributes.insert(std::pair<std::string, std::shared_ptr<Attribute<VertexID, glm::vec2>>>(name, attribute));
         }
-        vec2VertexAttributes.push_back(attribute);
+        else
+        {
+            for(int i = 0; i < values.size(); i++)
+            {
+                attribute->add(i, values.at(i));
+            }
+        }
         return attribute;
     }
     
     std::shared_ptr<Attribute<VertexID, glm::vec3>> add_vertex_attribute(std::string name, const std::vector<glm::vec3>& values)
     {
-        auto attribute = std::shared_ptr<Attribute<VertexID, glm::vec3>>(new Attribute<VertexID, glm::vec3>(name));
-        for(int i = 0; i < values.size(); i++)
+        if(name == "position")
         {
-            attribute->add(i, values.at(i));
+            no_vertices = static_cast<int>(values.size());
         }
-        vec3VertexAttributes.push_back(attribute);
+        auto attribute = get_vec3_vertex_attribute(name);
+        if(!attribute)
+        {
+            // Lazy construction
+            attribute = std::shared_ptr<Attribute<VertexID, glm::vec3>>(new Attribute<VertexID, glm::vec3>());
+            for(int i = 0; i < values.size(); i++)
+            {
+                attribute->add(i, values.at(i));
+            }
+            vec3VertexAttributes.insert(std::pair<std::string, std::shared_ptr<Attribute<VertexID, glm::vec3>>>(name, attribute));
+        }
+        else
+        {
+            for(int i = 0; i < values.size(); i++)
+            {
+                attribute->add(i, values.at(i));
+            }
+        }
         return attribute;
     }
     
-    std::vector<std::shared_ptr<Attribute<VertexID, glm::vec2>>> get_vec2_vertex_attributes()
+    std::shared_ptr<Attribute<VertexID, glm::vec2>> get_vec2_vertex_attribute(std::string name)
     {
-        return vec2VertexAttributes;
+        auto result = vec2VertexAttributes.find(name);
+        if(result != vec2VertexAttributes.end())
+        {
+            return result->second;
+        }
+        return nullptr;
     }
     
-    std::vector<std::shared_ptr<Attribute<VertexID, glm::vec3>>> get_vec3_vertex_attributes()
+    std::shared_ptr<Attribute<VertexID, glm::vec3>> get_vec3_vertex_attribute(std::string name)
     {
-        return vec3VertexAttributes;
+        auto result = vec3VertexAttributes.find(name);
+        if(result != vec3VertexAttributes.end())
+        {
+            return result->second;
+        }
+        return nullptr;
     }
     
     VertexID vertices_begin()
@@ -103,4 +143,19 @@ public:
     {
         return VertexID(no_vertices);
     }
+    
+    int get_no_vertices()
+    {
+        return no_vertices;
+    }
+};
+
+class Lines : Geometry
+{
+    
+};
+
+class TriangleMesh : Geometry
+{
+    
 };
