@@ -9,6 +9,7 @@
 #include "GLObject.hpp"
 
 using namespace oogl;
+using namespace geogo;
 using namespace std;
 using namespace glm;
 

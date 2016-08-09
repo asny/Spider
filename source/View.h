@@ -23,7 +23,7 @@ class View
     
     std::unique_ptr<oogl::GLCamera> camera;
     
-    std::shared_ptr<Geometry> spider_legs_geometry;
+    std::shared_ptr<geogo::Geometry> spider_legs_geometry;
     std::shared_ptr<oogl::GLObject> cube, spider_body, spider_legs, skybox;
     std::vector<std::shared_ptr<oogl::GLObject>> terrain_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
     std::vector<std::shared_ptr<oogl::GLObject>> grass_patches = std::vector<std::shared_ptr<oogl::GLObject>>();

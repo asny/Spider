@@ -18,7 +18,7 @@ namespace oogl
      */
     class GLObject
     {
-        std::shared_ptr<Geometry> geometry;
+        std::shared_ptr<geogo::Geometry> geometry;
         std::shared_ptr<GLMaterial> material;
         
         GLuint array_id;
@@ -35,9 +35,9 @@ namespace oogl
         
     public:
         
-        GLObject(std::shared_ptr<Geometry> geometry, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
+        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
         
-        std::shared_ptr<Geometry> get_geometry()
+        std::shared_ptr<geogo::Geometry> get_geometry()
         {
             return geometry;
         }

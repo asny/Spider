@@ -133,6 +133,7 @@
 				7A383A341BBFD93A00E29333 /* Shaders */,
 				7A70D0FB1BC6BEE8003E859B /* SimplexNoise */,
 				7AF9C41A1BEBEB12008AE5F5 /* Readers */,
+				7AB1391C1D5A6CF4007BD188 /* GeoGo */,
 				7A70D0F31BC68B1B003E859B /* GLWrapper */,
 				7A383A281BBFB6FC00E29333 /* View */,
 				7AB0F2BD1BC07AB1009D85FD /* Model */,
@@ -193,12 +194,8 @@
 				7A3895A01BEE471A00D6E095 /* GLObject.cpp */,
 				7A3895A11BEE471A00D6E095 /* GLObject.hpp */,
 				7A38959F1BEE45F200D6E095 /* GLUtility.h */,
-				7A30A01F1D47FA530078C90A /* Geometry.cpp */,
-				7A30A0201D47FA530078C90A /* Geometry.hpp */,
 				7A5A4F8D1D4D308F00189B8C /* GLScene.cpp */,
 				7A5A4F8E1D4D309000189B8C /* GLScene.hpp */,
-				7A5A4F901D4D37A700189B8C /* Attribute.cpp */,
-				7A5A4F911D4D37A700189B8C /* Attribute.hpp */,
 				7AB139181D5A6B0B007BD188 /* GLVertexAttribute.cpp */,
 				7AB139191D5A6B0B007BD188 /* GLVertexAttribute.hpp */,
 			);
@@ -226,6 +223,17 @@
 				7AB0F2C41BC25326009D85FD /* terrain.hpp */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		7AB1391C1D5A6CF4007BD188 /* GeoGo */ = {
+			isa = PBXGroup;
+			children = (
+				7A30A01F1D47FA530078C90A /* Geometry.cpp */,
+				7A30A0201D47FA530078C90A /* Geometry.hpp */,
+				7A5A4F901D4D37A700189B8C /* Attribute.cpp */,
+				7A5A4F911D4D37A700189B8C /* Attribute.hpp */,
+			);
+			name = GeoGo;
 			sourceTree = "<group>";
 		};
 		7AF9C41A1BEBEB12008AE5F5 /* Readers */ = {

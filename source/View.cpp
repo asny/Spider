@@ -16,6 +16,7 @@
 using namespace std;
 using namespace glm;
 using namespace oogl;
+using namespace geogo;
 
 View* View::instance = NULL;
 GLFWwindow* gWindow = NULL;

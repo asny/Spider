@@ -11,31 +11,32 @@
 #include <iostream>
 #include <map>
 
-template <class IDType, class ValueType>
-class Attribute
+namespace geogo
 {
-    std::map<IDType, ValueType> mapping;
-    
-public:
-    Attribute()
+    template <class IDType, class ValueType>
+    class Attribute
     {
+        std::map<IDType, ValueType> mapping;
         
-    }
-    
-    void add(IDType id, ValueType value)
-    {
-        mapping[id] = value;
-    }
-    
-    int get_size()
-    {
-        return static_cast<int>(mapping.size());
-    }
-    
-    ValueType get_value(IDType id)
-    {
-        return mapping.at(id);
-    }
-    
-    
-};
+    public:
+        Attribute()
+        {
+            
+        }
+        
+        void add(IDType id, ValueType value)
+        {
+            mapping[id] = value;
+        }
+        
+        int get_size()
+        {
+            return static_cast<int>(mapping.size());
+        }
+        
+        ValueType get_value(IDType id)
+        {
+            return mapping.at(id);
+        }
+    };
+}
