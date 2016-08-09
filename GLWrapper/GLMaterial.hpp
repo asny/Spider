@@ -53,14 +53,6 @@ namespace oogl
         {
             shader->set_uniform_variable(name, value);
         }
-        
-        /**
-         TODO: Should be deleted!
-         */
-        GLuint get_attribute_location(std::string variable_name)
-        {
-            return shader->get_attribute_location(variable_name);
-        }
     };
     
     class GLStandardMaterial : public GLMaterial

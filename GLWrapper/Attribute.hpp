@@ -10,7 +10,6 @@
 
 #include <iostream>
 #include <map>
-#include <vector>
 
 template <class IDType, class ValueType>
 class Attribute
