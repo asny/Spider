@@ -61,7 +61,7 @@ void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
     int no_vertices = geometry->get_no_vertices();
     if(no_vertices != 0)
     {   
-        material->PreDrawing();
+        material->pre_draw();
         material->set(modelMatrix, viewMatrix, projectionMatrix);
         
         glBindVertexArray(array_id);

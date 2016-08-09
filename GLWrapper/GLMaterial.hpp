@@ -71,7 +71,7 @@ namespace oogl
         
     public:
         
-        virtual void PreDrawing();
+        virtual void pre_draw();
         
         /**
          Updates the standard matrices.
@@ -130,7 +130,7 @@ namespace oogl
             return attributes;
         }
         
-        void PreDrawing();
+        void pre_draw();
     };
     
     class GLTextureMaterial : public GLMaterial
@@ -150,7 +150,7 @@ namespace oogl
             return attributes;
         }
         
-        void PreDrawing();
+        void pre_draw();
     };
     
     class GLSkyboxMaterial : public GLMaterial
@@ -163,7 +163,7 @@ namespace oogl
             shader = std::shared_ptr<GLShader>(new GLShader("shaders/skybox.vert",  "shaders/skybox.frag"));
         }
         
-        void PreDrawing();
+        void pre_draw();
     };
     
     class GLGrassMaterial : public GLMaterial
@@ -178,7 +178,7 @@ namespace oogl
             cull_back_faces = false;
         }
         
-        void PreDrawing();
+        void pre_draw();
     };
     
     class GLSpiderLegsMaterial : public GLStandardMaterial

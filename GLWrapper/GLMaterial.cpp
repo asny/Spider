@@ -14,7 +14,7 @@ using namespace glm;
 
 bool GLMaterial::currently_cull_back_faces = true;
 
-void GLMaterial::PreDrawing()
+void GLMaterial::pre_draw()
 {
     if(currently_cull_back_faces != cull_back_faces)
     {
@@ -30,32 +30,32 @@ void GLMaterial::PreDrawing()
     }
 }
 
-// TODO: Also send standard matrices in the PreDrawing functions
-void GLStandardMaterial::PreDrawing()
+// TODO: Also send standard matrices in the pre_draw functions
+void GLStandardMaterial::pre_draw()
 {
-    GLMaterial::PreDrawing();
+    GLMaterial::pre_draw();
     shader->set_uniform_variable("ambientMat", ambient);
     shader->set_uniform_variable("diffuseMat", diffuse);
     shader->set_uniform_variable("specMat", specular);
 }
 
-void GLTextureMaterial::PreDrawing()
+void GLTextureMaterial::pre_draw()
 {
-    GLMaterial::PreDrawing();
+    GLMaterial::pre_draw();
     int texture_id = texture->use();
     shader->set_uniform_variable("texture0", texture_id);
 }
 
-void GLSkyboxMaterial::PreDrawing()
+void GLSkyboxMaterial::pre_draw()
 {
-    GLMaterial::PreDrawing();
+    GLMaterial::pre_draw();
     int texture_id = texture->use();
     shader->set_uniform_variable("texture0", texture_id);
 }
 
-void GLGrassMaterial::PreDrawing()
+void GLGrassMaterial::pre_draw()
 {
-    GLMaterial::PreDrawing();
+    GLMaterial::pre_draw();
     shader->set_uniform_variable("ambientMat", ambient);
     shader->set_uniform_variable("diffuseMat", diffuse);
 }
