@@ -49,7 +49,7 @@ class Geometry
     int no_vertices = 0;
     
 public:
-    Geometry() : Geometry(std::vector<glm::vec3>())
+    Geometry()
     {
         
     }
@@ -89,6 +89,7 @@ public:
     
     std::shared_ptr<Attribute<VertexID, glm::vec3>> add_vertex_attribute(std::string name, const std::vector<glm::vec3>& values)
     {
+        // TODO: Do not infer the number of vertices from this.
         if(name == "position")
         {
             no_vertices = static_cast<int>(values.size());
