@@ -18,72 +18,34 @@ namespace oogl
      */
     class GLObject
     {
-        class VertexAttribute
-        {
-        public:
-            
-            std::string name;
-            int size;
-        };
-        
         std::shared_ptr<Geometry> geometry;
         std::shared_ptr<GLMaterial> material;
         
-        // Vertex attribute data
-        std::vector<float> data;
-        int stride = 0;
-        std::vector<VertexAttribute> attributes;
-        
-        // Needed for drawing
-        GLuint no_vertices = 0;
-        GLuint buffer_id, array_id;
+        GLuint array_id;
         std::vector<GLVertexAttribute> vertex_attributes;
         GLenum drawmode;
         
         // Transformation
         glm::mat4 modelMatrix = glm::mat4(1.);
         
-        int get_attribute_start_index(std::string name)
-        {
-            int start_index = 0;
-            for (auto attribute : attributes)
-            {
-                if(attribute.name == name)
-                {
-                    return start_index;
-                }
-                start_index += attribute.size;
-            }
-            return -1;
-        }
+        /**
+         Updates the data of the given vertex attribute.
+         */
+        void update_vertex_attribute(GLVertexAttribute& attribute);
         
     public:
         
         GLObject(std::shared_ptr<Geometry> geometry, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
-        
-        GLObject(std::vector<VertexAttribute> attributes, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
         
         std::shared_ptr<Geometry> get_geometry()
         {
             return geometry;
         }
         
+        /**
+         Updates the data of all the vertex attributes.
+         */
         void update_vertex_attributes();
-        
-        /**
-         Updates the value of the vertex attribute with the given name.
-         */
-        void update_vertex_attribute(std::string name, const std::vector<glm::vec2>& _data);
-        
-        /**
-         Updates the value of the vertex attribute with the given name.
-         */
-        void update_vertex_attribute(std::string name, const std::vector<glm::vec3>& _data);
-        
-        /**
-         Should be called after all vertex attributes has been updated.
-         */
-        void finalize_vertex_attributes();
         
         /**
          Updates the value of the uniform variable with the given name.
