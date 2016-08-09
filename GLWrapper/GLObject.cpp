@@ -48,45 +48,10 @@ GLObject::GLObject(std::shared_ptr<Geometry> _geometry, std::shared_ptr<GLMateri
     glGenVertexArrays(1, &array_id);
     glBindVertexArray(array_id);
     
-    auto attribute_names = material->get_attribute_ids();
-    for (auto name : attribute_names)
-    {
-        initialize_vertex_attribute(name);
-    }
+    vertex_attributes = material->get_vertex_attributes();
     
     update_vertex_attributes();
     check_gl_error();
-}
-
-void GLObject::initialize_vertex_attribute(std::string name)
-{
-    // Check if vertex attribute has already been created.
-    if(buffer_ids.find(name) != buffer_ids.end())
-    {
-        return;
-    }
-    
-    // Determine the size
-    int size = 0;
-    if(geometry->get_vec2_vertex_attribute(name))
-    {
-        size = 2;
-    }
-    else if(geometry->get_vec3_vertex_attribute(name))
-    {
-        size = 3;
-    }
-    if(size == 0)
-        return;
-    
-    // Generate and bind buffer
-    GLuint buffer_id;
-    glGenBuffers(1, &buffer_id);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-    buffer_ids[name] = buffer_id;
-    
-    // Initialize attribute
-    material->initialize_vertex_attribute(name, size);
 }
 
 void GLObject::update_vertex_attributes()
@@ -95,45 +60,38 @@ void GLObject::update_vertex_attributes()
     no_vertices = geometry->get_no_vertices();
     
     // Send vertex attributes
-    for (auto attributeId : material->get_attribute_ids())
+    for (auto attribute : vertex_attributes)
     {
-        auto buffer_id = buffer_ids.find(attributeId);
-        if(buffer_id != buffer_ids.end())
+        std::vector<float> data;
+        auto vec2Attribute = geometry->get_vec2_vertex_attribute(attribute.get_name());
+        if(vec2Attribute)
         {
-            std::vector<float> data;
-            auto vec2Attribute = geometry->get_vec2_vertex_attribute(attributeId);
-            if(vec2Attribute)
+            data = std::vector<float>(2 * vec2Attribute->get_size());
+            int i = 0;
+            for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId++)
             {
-                data = std::vector<float>(2 * vec2Attribute->get_size());
-                int i = 0;
-                for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId++)
-                {
-                    auto vec = vec2Attribute->get_value(vertexId);
-                    data[i * 2] = vec.x;
-                    data[i * 2 + 1] = vec.y;
-                    i++;
-                }
+                auto vec = vec2Attribute->get_value(vertexId);
+                data[i * 2] = vec.x;
+                data[i * 2 + 1] = vec.y;
+                i++;
             }
-            
-            auto vec3Attribute = geometry->get_vec3_vertex_attribute(attributeId);
-            if(vec3Attribute)
-            {
-                data = std::vector<float>(3 * vec3Attribute->get_size());
-                int i = 0;
-                for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId++)
-                {
-                    auto vec = vec3Attribute->get_value(vertexId);
-                    data[i * 3] = vec.x;
-                    data[i * 3 + 1] = vec.y;
-                    data[i * 3 + 2] = vec.z;
-                    i++;
-                }
-            }
-            
-            // Bind buffer and send data
-            glBindBuffer(GL_ARRAY_BUFFER, buffer_id->second);
-            glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
         }
+        
+        auto vec3Attribute = geometry->get_vec3_vertex_attribute(attribute.get_name());
+        if(vec3Attribute)
+        {
+            data = std::vector<float>(3 * vec3Attribute->get_size());
+            int i = 0;
+            for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId++)
+            {
+                auto vec = vec3Attribute->get_value(vertexId);
+                data[i * 3] = vec.x;
+                data[i * 3 + 1] = vec.y;
+                data[i * 3 + 2] = vec.z;
+                i++;
+            }
+        }
+        attribute.update_data(data);
     }
     check_gl_error();
 }

@@ -37,7 +37,7 @@ namespace oogl
         // Needed for drawing
         GLuint no_vertices = 0;
         GLuint buffer_id, array_id;
-        std::map<std::string, GLuint> buffer_ids = std::map<std::string, GLuint>();
+        std::vector<GLVertexAttribute> vertex_attributes;
         GLenum drawmode;
         
         // Transformation
@@ -56,23 +56,6 @@ namespace oogl
             }
             return -1;
         }
-        
-        template<class IDType, class ValueType>
-        std::vector<std::shared_ptr<Attribute<IDType, ValueType>>> get_used_attributes(const std::vector<std::shared_ptr<Attribute<IDType, ValueType>>>& attributes)
-        {
-            auto attributeIds = material->get_attribute_ids();
-            auto used_attributes = std::vector<std::shared_ptr<Attribute<IDType, ValueType>>>();
-            for(auto attribute : attributes)
-            {
-                if(std::find(attributeIds.begin(), attributeIds.end(), attribute->get_id()) != attributeIds.end())
-                {
-                    used_attributes.push_back(attribute);
-                }
-            }
-            return used_attributes;
-        }
-        
-        void initialize_vertex_attribute(std::string name);
         
     public:
         

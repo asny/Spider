@@ -14,6 +14,40 @@
 
 namespace oogl
 {
+    class GLVertexAttribute
+    {
+    public:
+        GLVertexAttribute(std::string _name, int _size, std::shared_ptr<GLShader> shader) : name(_name), size(_size)
+        {
+            // Generate and bind buffer
+            glGenBuffers(1, &buffer_id);
+            glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+            
+            // Initialize attribute
+            GLuint location = shader->get_attribute_location(name);
+            glEnableVertexAttribArray(location);
+            glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, size * sizeof(float), (const GLvoid *)(0));
+        }
+        
+        void update_data(const std::vector<float>& data)
+        {
+            // Bind buffer and send data
+            glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+            glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+        }
+        
+        const std::string& get_name()
+        {
+            return name;
+        }
+        
+    private:
+        GLuint buffer_id;
+        std::string name;
+        int size;
+    };
+    
+    
     class GLMaterial
     {
         static bool currently_cull_back_faces;
@@ -40,9 +74,9 @@ namespace oogl
             shader->set_uniform_variable_if_defined("MVPMatrix", projectionMatrix * modelViewMatrix);
         }
         
-        virtual std::vector<std::string> get_attribute_ids()
+        virtual std::vector<GLVertexAttribute> get_vertex_attributes()
         {
-            return {{"position"}};
+            return {GLVertexAttribute("position", 3, shader)};
         }
         
         void initialize_vertex_attribute(const std::string& name, int size)
@@ -97,9 +131,11 @@ namespace oogl
             shader = std::shared_ptr<GLShader>(new GLShader("shaders/texture.vert",  "shaders/texture.frag"));
         }
         
-        virtual std::vector<std::string> get_attribute_ids()
+        virtual std::vector<GLVertexAttribute> get_vertex_attributes()
         {
-            return {{"position"}, {"uv_coordinates"}};
+            auto attributes = GLMaterial::get_vertex_attributes();
+            attributes.push_back(GLVertexAttribute("uv_coordinates", 2, shader));
+            return attributes;
         }
         
         void PreDrawing();
