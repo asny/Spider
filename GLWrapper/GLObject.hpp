@@ -37,7 +37,7 @@ namespace oogl
         // Needed for drawing
         GLuint no_vertices = 0;
         GLuint buffer_id, array_id;
-        GLuint buffer_ids[5];
+        std::map<std::string, GLuint> buffer_ids = std::map<std::string, GLuint>();
         GLenum drawmode;
         
         // Transformation
@@ -71,6 +71,8 @@ namespace oogl
             }
             return used_attributes;
         }
+        
+        void initialize_vertex_attribute(std::string name);
         
     public:
         
