@@ -63,6 +63,11 @@ namespace oogl
         
         GLObject(std::vector<VertexAttribute> attributes, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
         
+        std::shared_ptr<Geometry> get_geometry()
+        {
+            return geometry;
+        }
+        
         void update_vertex_attributes();
         
         /**
