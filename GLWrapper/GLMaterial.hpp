@@ -27,6 +27,7 @@ namespace oogl
             GLuint location = shader->get_attribute_location(name);
             glEnableVertexAttribArray(location);
             glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, size * sizeof(float), (const GLvoid *)(0));
+            check_gl_error();
         }
         
         template<class T>
@@ -44,6 +45,7 @@ namespace oogl
             // Bind buffer and send data
             glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
             glBufferData(GL_ARRAY_BUFFER, floats.size() * sizeof(float), &floats[0], GL_STATIC_DRAW);
+            check_gl_error();
         }
         
         const std::string& get_name()
@@ -89,13 +91,6 @@ namespace oogl
             return {GLVertexAttribute("position", 3, shader)};
         }
         
-        void initialize_vertex_attribute(const std::string& name, int size)
-        {
-            GLuint location = shader->get_attribute_location(name);
-            glEnableVertexAttribArray(location);
-            glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, size * sizeof(float), (const GLvoid *)(0));
-        }
-        
         /**
          TODO: Should be deleted!
          Updates the value of the uniform variable with the given name.
@@ -126,6 +121,13 @@ namespace oogl
         ambient(_ambient), diffuse(_diffuse), specular(_specular)
         {
             shader = std::shared_ptr<GLShader>(new GLShader("shaders/phong.vert",  "shaders/phong.frag"));
+        }
+        
+        virtual std::vector<GLVertexAttribute> get_vertex_attributes()
+        {
+            auto attributes = GLMaterial::get_vertex_attributes();
+            attributes.push_back(GLVertexAttribute("normal", 3, shader));
+            return attributes;
         }
         
         void PreDrawing();
@@ -186,6 +188,11 @@ namespace oogl
         GLSpiderLegsMaterial(glm::vec4 _ambient, glm::vec4 _diffuse, glm::vec4 _specular) : GLStandardMaterial(_ambient, _diffuse, _specular)
         {
             shader = std::shared_ptr<GLShader>(new GLShader("shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/spider_legs.geom"));
+        }
+        
+        virtual std::vector<GLVertexAttribute> get_vertex_attributes()
+        {
+            return GLMaterial::get_vertex_attributes();            
         }
     };
 }
