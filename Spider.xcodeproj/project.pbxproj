@@ -27,6 +27,7 @@
 		7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* spider.cpp */; };
 		7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2C31BC25326009D85FD /* terrain.cpp */; };
 		7AB1391A1D5A6B0B007BD188 /* GLVertexAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB139181D5A6B0B007BD188 /* GLVertexAttribute.cpp */; };
+		7AB1391F1D5B3152007BD188 /* ID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB1391D1D5B3152007BD188 /* ID.cpp */; };
 		7AB664EA1D49434C00C71CEE /* GLMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB664E81D49434C00C71CEE /* GLMaterial.cpp */; };
 		7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */; };
 		7AFB37CE1C10E5EA003BD638 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AFB37CD1C10E5EA003BD638 /* libglfw3.a */; };
@@ -93,6 +94,8 @@
 		7AB0F2C71BC28EEB009D85FD /* pre_geom.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = pre_geom.vert; path = shaders/pre_geom.vert; sourceTree = "<group>"; };
 		7AB139181D5A6B0B007BD188 /* GLVertexAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLVertexAttribute.cpp; path = GLWrapper/GLVertexAttribute.cpp; sourceTree = SOURCE_ROOT; };
 		7AB139191D5A6B0B007BD188 /* GLVertexAttribute.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLVertexAttribute.hpp; path = GLWrapper/GLVertexAttribute.hpp; sourceTree = SOURCE_ROOT; };
+		7AB1391D1D5B3152007BD188 /* ID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ID.cpp; path = Geometry/ID.cpp; sourceTree = "<group>"; };
+		7AB1391E1D5B3152007BD188 /* ID.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ID.hpp; path = Geometry/ID.hpp; sourceTree = "<group>"; };
 		7AB664E81D49434C00C71CEE /* GLMaterial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLMaterial.cpp; path = GLWrapper/GLMaterial.cpp; sourceTree = SOURCE_ROOT; };
 		7AB664E91D49434C00C71CEE /* GLMaterial.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLMaterial.hpp; path = GLWrapper/GLMaterial.hpp; sourceTree = SOURCE_ROOT; };
 		7AE74B671C18B00800466559 /* spider_legs.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = spider_legs.geom; path = shaders/spider_legs.geom; sourceTree = "<group>"; };
@@ -232,6 +235,8 @@
 				7A30A0201D47FA530078C90A /* Geometry.hpp */,
 				7A5A4F901D4D37A700189B8C /* Attribute.cpp */,
 				7A5A4F911D4D37A700189B8C /* Attribute.hpp */,
+				7AB1391D1D5B3152007BD188 /* ID.cpp */,
+				7AB1391E1D5B3152007BD188 /* ID.hpp */,
 			);
 			name = GeoGo;
 			sourceTree = "<group>";
@@ -303,6 +308,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7AB1391F1D5B3152007BD188 /* ID.cpp in Sources */,
 				7A3895AA1BEFB8AE00D6E095 /* Reader.cpp in Sources */,
 				7A38959E1BEE447B00D6E095 /* GLShader.cpp in Sources */,
 				7A5A4F921D4D37A700189B8C /* Attribute.cpp in Sources */,

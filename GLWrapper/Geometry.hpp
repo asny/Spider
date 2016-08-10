@@ -12,35 +12,10 @@
 #include <vector>
 #include "vec2.hpp"
 #include "vec3.hpp"
+#include "ID.hpp"
 
 namespace geogo
 {
-    class VertexID
-    {
-        friend class Geometry;
-        
-        int id;
-        
-        VertexID(int _id) : id(_id)
-        {
-            
-        }
-    public:
-        
-        friend bool operator<(const VertexID& a, const VertexID& b) { return a.id < b.id; }
-        friend bool operator>(const VertexID& a, const VertexID& b) { return a.id > b.id; }
-        friend bool operator<=(const VertexID& a, const VertexID& b) { return a.id <= b.id; }
-        friend bool operator>=(const VertexID& a, const VertexID& b) { return a.id >= b.id; }
-        friend bool operator==(const VertexID& a, const VertexID& b) { return a.id == b.id; }
-        friend bool operator!=(const VertexID& a, const VertexID& b) { return a.id != b.id; }
-        
-        VertexID operator++(int)
-        {
-            id++;
-            return *this;
-        }
-        
-    };
     
     class Geometry
     {
