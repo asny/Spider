@@ -51,6 +51,11 @@ namespace oogl
             return name;
         }
         
+        int get_size()
+        {
+            return size;
+        }
+        
     private:
         GLuint buffer_id;
         std::string name;

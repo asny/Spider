@@ -32,28 +32,27 @@ void GLObject::update_vertex_attributes()
     check_gl_error();
 }
 
-void GLObject::update_vertex_attribute(GLVertexAttribute& attribute)
+void GLObject::update_vertex_attribute(GLVertexAttribute& glAttribute)
 {
-    auto vec2Attribute = geometry->get_vec2_vertex_attribute(attribute.get_name());
-    if(vec2Attribute)
+    if(glAttribute.get_size() == 2)
     {
+        auto attribute = geometry->get_vec2_vertex_attribute(glAttribute.get_name());
         auto data = std::vector<vec2>();
         for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
         {
-            data.push_back(vec2Attribute->get_value(*vertex));
+            data.push_back(attribute->get(*vertex));
         }
-        attribute.update_data(data);
+        glAttribute.update_data(data);
     }
-    
-    auto vec3Attribute = geometry->get_vec3_vertex_attribute(attribute.get_name());
-    if(vec3Attribute)
+    else if(glAttribute.get_size() == 3)
     {
+        auto attribute = geometry->get_vec3_vertex_attribute(glAttribute.get_name());
         auto data = std::vector<vec3>();
         for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
         {
-            data.push_back(vec3Attribute->get_value(*vertex));
+            data.push_back(attribute->get(*vertex));
         }
-        attribute.update_data(data);
+        glAttribute.update_data(data);
     }
 }
 

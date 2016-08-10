@@ -50,11 +50,12 @@ namespace geogo
         Geometry(const std::vector<glm::vec3>& positions)
         {
             // TODO: Should be created outside of Geometry.
-            for (auto position : positions) {
-                create_vertex();
-            }
+            auto attribute = get_vec3_vertex_attribute("position");
             
-            add_vertex_attribute("position", positions);
+            for (auto position : positions) {
+                auto vertex = create_vertex();
+                attribute->add(*vertex, position);
+            }
         }
         
         ~Geometry()
@@ -78,60 +79,30 @@ namespace geogo
             return end_vertex;
         }
         
-        std::shared_ptr<Attribute<VertexID, glm::vec2>> add_vertex_attribute(std::string name, const std::vector<glm::vec2>& values)
-        {
-            auto attribute = get_vec2_vertex_attribute(name);
-            if(!attribute)
-            {
-                // Lazy construction
-                attribute = std::shared_ptr<Attribute<VertexID, glm::vec2>>(new Attribute<VertexID, glm::vec2>());
-                vec2VertexAttributes.insert(std::pair<std::string, std::shared_ptr<Attribute<VertexID, glm::vec2>>>(name, attribute));
-            }
-            int i = 0;
-            for(auto vertex = vertices_begin(); vertex != vertices_end(); vertex = vertex->next())
-            {
-                attribute->add(*vertex, values.at(i));
-                i++;
-            }
-            return attribute;
-        }
-        
-        std::shared_ptr<Attribute<VertexID, glm::vec3>> add_vertex_attribute(std::string name, const std::vector<glm::vec3>& values)
-        {
-            auto attribute = get_vec3_vertex_attribute(name);
-            if(!attribute)
-            {
-                // Lazy construction
-                attribute = std::shared_ptr<Attribute<VertexID, glm::vec3>>(new Attribute<VertexID, glm::vec3>());
-                vec3VertexAttributes.insert(std::pair<std::string, std::shared_ptr<Attribute<VertexID, glm::vec3>>>(name, attribute));
-            }
-            int i = 0;
-            for(auto vertex = vertices_begin(); vertex != vertices_end(); vertex = vertex->next())
-            {
-                attribute->add(*vertex, values.at(i));
-                i++;
-            }
-            return attribute;
-        }
-        
         std::shared_ptr<Attribute<VertexID, glm::vec2>> get_vec2_vertex_attribute(std::string name)
         {
             auto result = vec2VertexAttributes.find(name);
-            if(result != vec2VertexAttributes.end())
+            if(result == vec2VertexAttributes.end())
             {
-                return result->second;
+                // Lazy construction
+                auto attribute = std::shared_ptr<Attribute<VertexID, glm::vec2>>(new Attribute<VertexID, glm::vec2>());
+                vec2VertexAttributes[name] = attribute;
+                return attribute;
             }
-            return nullptr;
+            return result->second;
         }
         
         std::shared_ptr<Attribute<VertexID, glm::vec3>> get_vec3_vertex_attribute(std::string name)
         {
             auto result = vec3VertexAttributes.find(name);
-            if(result != vec3VertexAttributes.end())
+            if(result == vec3VertexAttributes.end())
             {
-                return result->second;
+                // Lazy construction
+                auto attribute = std::shared_ptr<Attribute<VertexID, glm::vec3>>(new Attribute<VertexID, glm::vec3>());
+                vec3VertexAttributes[name] = attribute;
+                return attribute;
             }
-            return nullptr;
+            return result->second;
         }
         
         VertexID* vertices_begin()

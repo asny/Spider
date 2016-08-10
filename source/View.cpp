@@ -236,7 +236,7 @@ void View::update_spider()
     instance->spider_body->set_model_matrix(model_matrix);
     
     // Update vertex attributes
-    instance->spider_legs_geometry->add_vertex_attribute("position", instance->model->get_spider_feet_positions(model_matrix));
+    //instance->spider_legs_geometry->add_vertex_attribute("position", instance->model->get_spider_feet_positions(model_matrix));
     instance->spider_legs->update_vertex_attributes();
 }
 
@@ -248,11 +248,11 @@ void View::update_terrain_and_grass()
         vector<vec3> terrain_positions, terrain_normals, grass_end_points;
         instance->model->get_terrain_patch(patch_index, terrain_positions, terrain_normals, grass_end_points);
         
-        instance->terrain_patches[patch_index]->get_geometry()->add_vertex_attribute("position", terrain_positions);
-        instance->terrain_patches[patch_index]->get_geometry()->add_vertex_attribute("normal", terrain_normals);
+        //instance->terrain_patches[patch_index]->get_geometry()->add_vertex_attribute("position", terrain_positions);
+        //instance->terrain_patches[patch_index]->get_geometry()->add_vertex_attribute("normal", terrain_normals);
         instance->terrain_patches[patch_index]->update_vertex_attributes();
         
-        instance->grass_patches[patch_index]->get_geometry()->add_vertex_attribute("position", grass_end_points);
+        //instance->grass_patches[patch_index]->get_geometry()->add_vertex_attribute("position", grass_end_points);
         instance->grass_patches[patch_index]->update_vertex_attributes();
     }
 }
@@ -294,7 +294,13 @@ void View::create_spider_body()
         
         auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
         auto geometry = shared_ptr<Geometry>(new Geometry(spider_vertices));
-        geometry->add_vertex_attribute("normal", spider_normals);
+        
+        auto normal_attribute = geometry->get_vec3_vertex_attribute("normal");
+        int i = 0;
+        for (auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next()) {
+            normal_attribute->add(*vertex, spider_normals[i]);
+            i++;
+        }
         spider_body = shared_ptr<GLObject>(new GLObject(geometry, material, GL_TRIANGLES));
     }
 }
@@ -353,9 +359,8 @@ void View::create_cube()
         vec3(1.0,  1.0,  1.0),
         vec3(1.0, -1.0,  1.0)
     };
+    auto geometry = shared_ptr<Geometry>(new Geometry(cube_data));
     
-    auto cubeTextureBmp = Reader::load_bitmap("resources/test_texture.jpg");
-    cubeTextureBmp.flipVertically();
     vector<vec2> cube_uvs;
     for (int i = 0; i < 6; i++){
         cube_uvs.push_back(vec2(0.));
@@ -365,11 +370,18 @@ void View::create_cube()
         cube_uvs.push_back(vec2(0., 1.));
         cube_uvs.push_back(vec2(0.));
     }
+    auto uv_attribute = geometry->get_vec2_vertex_attribute("uv_coordinates");
+    int i = 0;
+    for (auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next()) {
+        uv_attribute->add(*vertex, cube_uvs[i]);
+        i++;
+    }
+    
+    auto cubeTextureBmp = Reader::load_bitmap("resources/test_texture.jpg");
+    cubeTextureBmp.flipVertically();
     auto cubeTexture = shared_ptr<GLTexture>(new GLTexture2D(cubeTextureBmp));
     auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(cubeTexture));
     
-    auto geometry = shared_ptr<Geometry>(new Geometry(cube_data));
-    geometry->add_vertex_attribute("uv_coordinates", cube_uvs);
     cube = shared_ptr<GLObject>(new GLObject(geometry, material));
 }
 

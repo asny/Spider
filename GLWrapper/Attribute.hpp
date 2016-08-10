@@ -29,12 +29,7 @@ namespace geogo
             mapping[id] = value;
         }
         
-        int get_size()
-        {
-            return static_cast<int>(mapping.size());
-        }
-        
-        ValueType get_value(IDType id)
+        ValueType get(IDType id)
         {
             return mapping.at(id);
         }
