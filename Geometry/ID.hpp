@@ -7,6 +7,7 @@
 //
 
 #pragma once
+#include <vector>
 
 namespace geogo
 {
@@ -50,7 +51,9 @@ namespace geogo
     {
         friend class Geometry;
         
-        FaceID(int id) : ID(id)
+        std::vector<VertexID> vertices;
+        
+        FaceID(int id, std::vector<VertexID> _vertices) : ID(id), vertices(_vertices)
         {
             
         }

@@ -25,6 +25,15 @@ namespace geogo
         std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec3>>>();
         
         int no_vertices = 0;
+        int no_faces = 0;
+        
+    protected:
+        FaceID create_face(std::vector<VertexID> vertices)
+        {
+            auto id = FaceID(no_faces, vertices);
+            no_faces++;
+            return id;
+        }
         
     public:
         Geometry()
@@ -35,6 +44,13 @@ namespace geogo
         Geometry(const std::vector<glm::vec3>& positions)
         {
             add_vertex_attribute("position", positions);
+        }
+        
+        VertexID create_vertex()
+        {
+            auto id = VertexID(no_vertices);
+            no_vertices++;
+            return id;
         }
         
         glm::vec3 get_position(int vertexId)
@@ -136,6 +152,11 @@ namespace geogo
     
     class TriangleMesh : Geometry
     {
+    public:
         
+        FaceID create_face(VertexID vertex1, VertexID vertex2, VertexID vertex3)
+        {
+            return Geometry::create_face({vertex1, vertex2, vertex3});
+        }
     };
 }
