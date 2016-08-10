@@ -33,14 +33,6 @@ namespace geogo
         std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec3>>> vec3VertexAttributes =
         std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec3>>>();
         
-    protected:
-        FaceID* create_face(std::vector<VertexID> vertices)
-        {
-            end_face = new FaceID(no_faces, end_face, vertices);
-            no_faces++;
-            return end_face;
-        }
-        
     public:
         Geometry()
         {
@@ -60,13 +52,17 @@ namespace geogo
         
         ~Geometry()
         {
-            for(auto vertex = vertices_begin(); vertex != vertices_end(); vertex = vertex->next())
+            for(auto vertex = vertices_begin(); vertex != vertices_end(); )
             {
+                auto temp = vertex->next();
                 delete vertex;
+                vertex = temp;
             }
-            for(auto face = faces_begin(); face != faces_end(); face = face->next())
+            for(auto face = faces_begin(); face != faces_end(); )
             {
+                auto temp = face->next();
                 delete face;
+                face = temp;
             }
         }
         
@@ -77,6 +73,15 @@ namespace geogo
             if(!start_vertex)
                 start_vertex = end_vertex;
             return end_vertex;
+        }
+        
+        FaceID* create_face(VertexID* vertex1, VertexID* vertex2, VertexID* vertex3)
+        {
+            end_face = new FaceID(no_faces, end_face, vertex1, vertex2, vertex3);
+            no_faces++;
+            if(!start_face)
+                start_face = end_face;
+            return end_face;
         }
         
         std::shared_ptr<Attribute<VertexID, glm::vec2>> get_vec2_vertex_attribute(std::string name)
@@ -115,11 +120,6 @@ namespace geogo
             return nullptr;
         }
         
-        int get_no_vertices()
-        {
-            return no_vertices;
-        }
-        
         FaceID* faces_begin()
         {
             return start_face;
@@ -127,22 +127,17 @@ namespace geogo
         
         FaceID* faces_end()
         {
-            return end_face;
+            return nullptr;
         }
-    };
-    
-    class Lines : Geometry
-    {
         
-    };
-    
-    class TriangleMesh : Geometry
-    {
-    public:
-        
-        FaceID* create_face(VertexID vertex1, VertexID vertex2, VertexID vertex3)
+        int get_no_vertices()
         {
-            return Geometry::create_face({vertex1, vertex2, vertex3});
+            return no_vertices;
+        }
+        
+        int get_no_faces()
+        {
+            return no_faces;
         }
     };
 }

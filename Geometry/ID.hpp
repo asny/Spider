@@ -55,9 +55,12 @@ namespace geogo
     {
         friend class Geometry;
         
-        std::vector<VertexID> vertices;
+        VertexID* vertex1;
+        VertexID* vertex2;
+        VertexID* vertex3;
         
-        FaceID(int id, ID* previous, std::vector<VertexID> _vertices) : ID(id, previous), vertices(_vertices)
+        FaceID(int id, FaceID* previous, VertexID* _vertex1, VertexID* _vertex2, VertexID* _vertex3)
+            : ID(id, previous), vertex1(_vertex1), vertex2(_vertex2), vertex3(_vertex3)
         {
             
         }
@@ -66,6 +69,21 @@ namespace geogo
         FaceID* next()
         {
             return static_cast<FaceID*>(ID::next);
+        }
+        
+        VertexID* v1()
+        {
+            return vertex1;
+        }
+        
+        VertexID* v2()
+        {
+            return vertex2;
+        }
+        
+        VertexID* v3()
+        {
+            return vertex3;
         }
     };
 }

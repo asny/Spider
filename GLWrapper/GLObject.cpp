@@ -38,9 +38,11 @@ void GLObject::update_vertex_attribute(GLVertexAttribute& glAttribute)
     {
         auto attribute = geometry->get_vec2_vertex_attribute(glAttribute.get_name());
         auto data = std::vector<vec2>();
-        for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
+        for(auto face = geometry->faces_begin(); face != geometry->faces_end(); face = face->next())
         {
-            data.push_back(attribute->get(*vertex));
+            data.push_back(attribute->get(*face->v1()));
+            data.push_back(attribute->get(*face->v2()));
+            data.push_back(attribute->get(*face->v3()));
         }
         glAttribute.update_data(data);
     }
@@ -48,9 +50,11 @@ void GLObject::update_vertex_attribute(GLVertexAttribute& glAttribute)
     {
         auto attribute = geometry->get_vec3_vertex_attribute(glAttribute.get_name());
         auto data = std::vector<vec3>();
-        for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
+        for(auto face = geometry->faces_begin(); face != geometry->faces_end(); face = face->next())
         {
-            data.push_back(attribute->get(*vertex));
+            data.push_back(attribute->get(*face->v1()));
+            data.push_back(attribute->get(*face->v2()));
+            data.push_back(attribute->get(*face->v3()));
         }
         glAttribute.update_data(data);
     }
@@ -58,7 +62,8 @@ void GLObject::update_vertex_attribute(GLVertexAttribute& glAttribute)
 
 void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
 {
-    int no_vertices = geometry->get_no_vertices();
+    // TODO: Depends on the drawmode
+    int no_vertices = geometry->get_no_faces() * 3;
     if(no_vertices != 0)
     {   
         material->pre_draw();

@@ -313,68 +313,98 @@ void View::create_spider_legs()
     spider_legs = shared_ptr<GLObject>(new GLObject(spider_legs_geometry, material, GL_LINES));
 }
 
+static std::shared_ptr<Geometry> create_box(bool view_from_inside)
+{
+    auto geometry = shared_ptr<Geometry>(new Geometry());
+    auto position_attribute = geometry->get_vec3_vertex_attribute("position");
+    
+    auto vertexNNP = geometry->create_vertex();
+    position_attribute->add(*vertexNNP, vec3(-1.0, -1.0,  1.0));
+    auto vertexPPP = geometry->create_vertex();
+    position_attribute->add(*vertexPPP, vec3(1.0, 1.0,  1.0));
+    auto vertexPNP = geometry->create_vertex();
+    position_attribute->add(*vertexPNP, vec3(1.0, -1.0,  1.0));
+    auto vertexNPP = geometry->create_vertex();
+    position_attribute->add(*vertexNPP, vec3(-1.0, 1.0,  1.0));
+    
+    auto vertexNNN = geometry->create_vertex();
+    position_attribute->add(*vertexNNN, vec3(-1.0, -1.0,  -1.0));
+    auto vertexPPN = geometry->create_vertex();
+    position_attribute->add(*vertexPPN, vec3(1.0, 1.0,  -1.0));
+    auto vertexPNN = geometry->create_vertex();
+    position_attribute->add(*vertexPNN, vec3(1.0, -1.0,  -1.0));
+    auto vertexNPN = geometry->create_vertex();
+    position_attribute->add(*vertexNPN, vec3(-1.0, 1.0,  -1.0));
+    
+    if(view_from_inside)
+    {
+        // Front
+        geometry->create_face(vertexNNP, vertexPPP, vertexPNP);
+        geometry->create_face(vertexPPP, vertexNNP, vertexNPP);
+        
+        // Top
+        geometry->create_face(vertexNPP, vertexPPN, vertexPPP);
+        geometry->create_face(vertexPPN, vertexNPP, vertexNPN);
+        
+        // Back
+        geometry->create_face(vertexPNN, vertexNPN, vertexNNN);
+        geometry->create_face(vertexNPN, vertexPNN, vertexPPN);
+        
+        // Bottom
+        geometry->create_face(vertexNNN, vertexPNP, vertexPNN);
+        geometry->create_face(vertexPNP, vertexNNN, vertexNNP);
+        
+        // Left
+        geometry->create_face(vertexNNN, vertexNPP, vertexNNP);
+        geometry->create_face(vertexNPP, vertexNNN, vertexNPN);
+        
+        // Right
+        geometry->create_face(vertexPNP, vertexPPN, vertexPNN);
+        geometry->create_face(vertexPPN, vertexPNP, vertexPPP);
+    }
+    else {
+        // Front
+        geometry->create_face(vertexNNP, vertexPNP, vertexPPP);
+        geometry->create_face(vertexPPP, vertexNPP, vertexNNP);
+        
+        // Top
+        geometry->create_face(vertexNPP, vertexPPP, vertexPPN);
+        geometry->create_face(vertexPPN, vertexNPN, vertexNPP);
+        
+        // Back
+        geometry->create_face(vertexPNN, vertexNNN, vertexNPN);
+        geometry->create_face(vertexNPN, vertexPPN, vertexPNN);
+        
+        // Bottom
+        geometry->create_face(vertexNNN, vertexPNN, vertexPNP);
+        geometry->create_face(vertexPNP, vertexNNP, vertexNNN);
+        
+        // Left
+        geometry->create_face(vertexNNN, vertexNNP, vertexNPP);
+        geometry->create_face(vertexNPP, vertexNPN, vertexNNN);
+        
+        // Right
+        geometry->create_face(vertexPNP, vertexPNN, vertexPPN);
+        geometry->create_face(vertexPPN, vertexPPP, vertexPNP);
+    }
+    return geometry;
+}
+
 void View::create_cube()
 {
-    static const vector<vec3> cube_data = {
-        // front
-        vec3(-1.0, -1.0,  1.0),
-        vec3(1.0, -1.0,  1.0),
-        vec3(1.0,  1.0,  1.0),
-        vec3(1.0,  1.0,  1.0),
-        vec3(-1.0,  1.0,  1.0),
-        vec3(-1.0, -1.0,  1.0),
-        // top
-        vec3(-1.0,  1.0,  1.0),
-        vec3(1.0,  1.0,  1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(-1.0,  1.0, -1.0),
-        vec3(-1.0,  1.0,  1.0),
-        // back
-        vec3(1.0, -1.0, -1.0),
-        vec3(-1.0, -1.0, -1.0),
-        vec3(-1.0,  1.0, -1.0),
-        vec3(-1.0,  1.0, -1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(1.0, -1.0, -1.0),
-        // bottom
-        vec3(-1.0, -1.0, -1.0),
-        vec3(1.0, -1.0, -1.0),
-        vec3(1.0, -1.0,  1.0),
-        vec3(1.0, -1.0,  1.0),
-        vec3(-1.0, -1.0,  1.0),
-        vec3(-1.0, -1.0, -1.0),
-        // left
-        vec3(-1.0, -1.0, -1.0),
-        vec3(-1.0, -1.0,  1.0),
-        vec3(-1.0,  1.0,  1.0),
-        vec3(-1.0,  1.0,  1.0),
-        vec3(-1.0,  1.0, -1.0),
-        vec3(-1.0, -1.0, -1.0),
-        // right
-        vec3(1.0, -1.0,  1.0),
-        vec3(1.0, -1.0, -1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(1.0,  1.0,  1.0),
-        vec3(1.0, -1.0,  1.0)
-    };
-    auto geometry = shared_ptr<Geometry>(new Geometry(cube_data));
-    
-    vector<vec2> cube_uvs;
-    for (int i = 0; i < 6; i++){
-        cube_uvs.push_back(vec2(0.));
-        cube_uvs.push_back(vec2(1., 0.));
-        cube_uvs.push_back(vec2(1., 1.));
-        cube_uvs.push_back(vec2(1., 1.));
-        cube_uvs.push_back(vec2(0., 1.));
-        cube_uvs.push_back(vec2(0.));
-    }
+    auto geometry = create_box(false);
+    auto position_attribute = geometry->get_vec3_vertex_attribute("position");
     auto uv_attribute = geometry->get_vec2_vertex_attribute("uv_coordinates");
-    int i = 0;
-    for (auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next()) {
-        uv_attribute->add(*vertex, cube_uvs[i]);
-        i++;
+    
+    for (auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
+    {
+        auto pos = position_attribute->get(*vertex);
+        auto uv = vec2(0., 0.);
+        if(pos.x < 0)
+            uv.x = 1.;
+        if(pos.y > 0)
+            uv.y = 1.;
+        uv_attribute->add(*vertex, uv);
     }
     
     auto cubeTextureBmp = Reader::load_bitmap("resources/test_texture.jpg");
@@ -387,59 +417,11 @@ void View::create_cube()
 
 void View::create_skybox()
 {
-    static const vector<vec3> cube_data = {
-        // front
-        vec3(-1.0, -1.0,  1.0),
-        vec3(1.0,  1.0,  1.0),
-        vec3(1.0, -1.0,  1.0),
-        vec3(1.0,  1.0,  1.0),
-        vec3(-1.0, -1.0,  1.0),
-        vec3(-1.0,  1.0,  1.0),
-        // top
-        vec3(-1.0,  1.0,  1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(1.0,  1.0,  1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(-1.0,  1.0,  1.0),
-        vec3(-1.0,  1.0, -1.0),
-        // back
-        vec3(1.0, -1.0, -1.0),
-        vec3(-1.0,  1.0, -1.0),
-        vec3(-1.0, -1.0, -1.0),
-        vec3(-1.0,  1.0, -1.0),
-        vec3(1.0, -1.0, -1.0),
-        vec3(1.0,  1.0, -1.0),
-        // bottom
-        vec3(-1.0, -1.0, -1.0),
-        vec3(1.0, -1.0,  1.0),
-        vec3(1.0, -1.0, -1.0),
-        vec3(1.0, -1.0,  1.0),
-        vec3(-1.0, -1.0, -1.0),
-        vec3(-1.0, -1.0,  1.0),
-        // left
-        vec3(-1.0, -1.0, -1.0),
-        vec3(-1.0,  1.0,  1.0),
-        vec3(-1.0, -1.0,  1.0),
-        vec3(-1.0,  1.0,  1.0),
-        vec3(-1.0, -1.0, -1.0),
-        vec3(-1.0,  1.0, -1.0),
-        // right
-        vec3(1.0, -1.0,  1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(1.0, -1.0, -1.0),
-        vec3(1.0,  1.0, -1.0),
-        vec3(1.0, -1.0,  1.0),
-        vec3(1.0,  1.0,  1.0)
-    };
-    
     const string path = "resources/skybox_evening/";
-    
     auto bitmaps = {Reader::load_bitmap(path + "right.jpg"), Reader::load_bitmap(path + "left.jpg"), Reader::load_bitmap(path + "top.jpg"), Reader::load_bitmap(path + "top.jpg"), Reader::load_bitmap(path + "front.jpg"), Reader::load_bitmap(path + "back.jpg")};
     auto skybox_texture = shared_ptr<GLTexture3D>(new GLTexture3D(bitmaps));
     auto material = shared_ptr<GLSkyboxMaterial>(new GLSkyboxMaterial(skybox_texture));
-    
-    auto geometry = shared_ptr<Geometry>(new Geometry(cube_data));
-    
+    auto geometry = create_box(true);
     skybox = shared_ptr<GLObject>(new GLObject(geometry, material));
 }
 
