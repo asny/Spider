@@ -38,9 +38,9 @@ void GLObject::update_vertex_attribute(GLVertexAttribute& attribute)
     if(vec2Attribute)
     {
         auto data = std::vector<vec2>();
-        for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId++)
+        for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
         {
-            data.push_back(vec2Attribute->get_value(vertexId));
+            data.push_back(vec2Attribute->get_value(*vertex));
         }
         attribute.update_data(data);
     }
@@ -49,9 +49,9 @@ void GLObject::update_vertex_attribute(GLVertexAttribute& attribute)
     if(vec3Attribute)
     {
         auto data = std::vector<vec3>();
-        for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId++)
+        for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
         {
-            data.push_back(vec3Attribute->get_value(vertexId));
+            data.push_back(vec3Attribute->get_value(*vertex));
         }
         attribute.update_data(data);
     }

@@ -19,20 +19,26 @@ namespace geogo
     
     class Geometry
     {
+        VertexID* start_vertex = nullptr;
+        VertexID* end_vertex = nullptr;
+        
+        FaceID* start_face = nullptr;
+        FaceID* end_face = nullptr;
+        
+        int no_vertices = 0;
+        int no_faces = 0;
+        
         std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec2>>> vec2VertexAttributes =
         std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec2>>>();
         std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec3>>> vec3VertexAttributes =
         std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec3>>>();
         
-        int no_vertices = 0;
-        int no_faces = 0;
-        
     protected:
-        FaceID create_face(std::vector<VertexID> vertices)
+        FaceID* create_face(std::vector<VertexID> vertices)
         {
-            auto id = FaceID(no_faces, vertices);
+            end_face = new FaceID(no_faces, end_face, vertices);
             no_faces++;
-            return id;
+            return end_face;
         }
         
     public:
@@ -43,19 +49,33 @@ namespace geogo
         
         Geometry(const std::vector<glm::vec3>& positions)
         {
+            // TODO: Should be created outside of Geometry.
+            for (auto position : positions) {
+                create_vertex();
+            }
+            
             add_vertex_attribute("position", positions);
         }
         
-        VertexID create_vertex()
+        ~Geometry()
         {
-            auto id = VertexID(no_vertices);
-            no_vertices++;
-            return id;
+            for(auto vertex = vertices_begin(); vertex != vertices_end(); vertex = vertex->next())
+            {
+                delete vertex;
+            }
+            for(auto face = faces_begin(); face != faces_end(); face = face->next())
+            {
+                delete face;
+            }
         }
         
-        glm::vec3 get_position(int vertexId)
+        VertexID* create_vertex()
         {
-            return vec3VertexAttributes.at("position")->get_value(vertexId);
+            end_vertex = new VertexID(no_vertices, end_vertex);
+            no_vertices++;
+            if(!start_vertex)
+                start_vertex = end_vertex;
+            return end_vertex;
         }
         
         std::shared_ptr<Attribute<VertexID, glm::vec2>> add_vertex_attribute(std::string name, const std::vector<glm::vec2>& values)
@@ -65,46 +85,31 @@ namespace geogo
             {
                 // Lazy construction
                 attribute = std::shared_ptr<Attribute<VertexID, glm::vec2>>(new Attribute<VertexID, glm::vec2>());
-                for(int i = 0; i < values.size(); i++)
-                {
-                    attribute->add(i, values.at(i));
-                }
                 vec2VertexAttributes.insert(std::pair<std::string, std::shared_ptr<Attribute<VertexID, glm::vec2>>>(name, attribute));
             }
-            else
+            int i = 0;
+            for(auto vertex = vertices_begin(); vertex != vertices_end(); vertex = vertex->next())
             {
-                for(int i = 0; i < values.size(); i++)
-                {
-                    attribute->add(i, values.at(i));
-                }
+                attribute->add(*vertex, values.at(i));
+                i++;
             }
             return attribute;
         }
         
         std::shared_ptr<Attribute<VertexID, glm::vec3>> add_vertex_attribute(std::string name, const std::vector<glm::vec3>& values)
         {
-            // TODO: Do not infer the number of vertices from this.
-            if(name == "position")
-            {
-                no_vertices = static_cast<int>(values.size());
-            }
             auto attribute = get_vec3_vertex_attribute(name);
             if(!attribute)
             {
                 // Lazy construction
                 attribute = std::shared_ptr<Attribute<VertexID, glm::vec3>>(new Attribute<VertexID, glm::vec3>());
-                for(int i = 0; i < values.size(); i++)
-                {
-                    attribute->add(i, values.at(i));
-                }
                 vec3VertexAttributes.insert(std::pair<std::string, std::shared_ptr<Attribute<VertexID, glm::vec3>>>(name, attribute));
             }
-            else
+            int i = 0;
+            for(auto vertex = vertices_begin(); vertex != vertices_end(); vertex = vertex->next())
             {
-                for(int i = 0; i < values.size(); i++)
-                {
-                    attribute->add(i, values.at(i));
-                }
+                attribute->add(*vertex, values.at(i));
+                i++;
             }
             return attribute;
         }
@@ -129,19 +134,29 @@ namespace geogo
             return nullptr;
         }
         
-        VertexID vertices_begin()
+        VertexID* vertices_begin()
         {
-            return VertexID(0);
+            return start_vertex;
         }
         
-        VertexID vertices_end()
+        VertexID* vertices_end()
         {
-            return VertexID(no_vertices);
+            return nullptr;
         }
         
         int get_no_vertices()
         {
             return no_vertices;
+        }
+        
+        FaceID* faces_begin()
+        {
+            return start_face;
+        }
+        
+        FaceID* faces_end()
+        {
+            return end_face;
         }
     };
     
@@ -154,7 +169,7 @@ namespace geogo
     {
     public:
         
-        FaceID create_face(VertexID vertex1, VertexID vertex2, VertexID vertex3)
+        FaceID* create_face(VertexID vertex1, VertexID vertex2, VertexID vertex3)
         {
             return Geometry::create_face({vertex1, vertex2, vertex3});
         }

@@ -16,10 +16,15 @@ namespace geogo
         int id;
         
     protected:
-        ID(int _id) : id(_id)
+        ID* previous = nullptr;
+        ID* next = nullptr;
+        
+        ID(int _id, ID* _previous) : id(_id), previous(_previous)
         {
-            
+            if(previous)
+                _previous->next = this;
         }
+        
     public:
         
         friend bool operator<(const ID& a, const ID& b) { return a.id < b.id; }
@@ -28,22 +33,21 @@ namespace geogo
         friend bool operator>=(const ID& a, const ID& b) { return a.id >= b.id; }
         friend bool operator==(const ID& a, const ID& b) { return a.id == b.id; }
         friend bool operator!=(const ID& a, const ID& b) { return a.id != b.id; }
-        
-        ID operator++(int)
-        {
-            id++;
-            return *this;
-        }
-        
     };
     
     class VertexID : public ID
     {
         friend class Geometry;
         
-        VertexID(int id) : ID(id)
+        VertexID(int id, ID* previous) : ID(id, previous)
         {
             
+        }
+        
+    public:
+        VertexID* next()
+        {
+            return static_cast<VertexID*>(ID::next);
         }
     };
     
@@ -53,9 +57,15 @@ namespace geogo
         
         std::vector<VertexID> vertices;
         
-        FaceID(int id, std::vector<VertexID> _vertices) : ID(id), vertices(_vertices)
+        FaceID(int id, ID* previous, std::vector<VertexID> _vertices) : ID(id, previous), vertices(_vertices)
         {
             
+        }
+        
+    public:
+        FaceID* next()
+        {
+            return static_cast<FaceID*>(ID::next);
         }
     };
 }
