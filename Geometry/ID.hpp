@@ -10,30 +10,49 @@
 
 namespace geogo
 {
-    class VertexID
+    class ID
     {
-        friend class Geometry;
-        
         int id;
         
-        VertexID(int _id) : id(_id)
+    protected:
+        ID(int _id) : id(_id)
         {
             
         }
     public:
         
-        friend bool operator<(const VertexID& a, const VertexID& b) { return a.id < b.id; }
-        friend bool operator>(const VertexID& a, const VertexID& b) { return a.id > b.id; }
-        friend bool operator<=(const VertexID& a, const VertexID& b) { return a.id <= b.id; }
-        friend bool operator>=(const VertexID& a, const VertexID& b) { return a.id >= b.id; }
-        friend bool operator==(const VertexID& a, const VertexID& b) { return a.id == b.id; }
-        friend bool operator!=(const VertexID& a, const VertexID& b) { return a.id != b.id; }
+        friend bool operator<(const ID& a, const ID& b) { return a.id < b.id; }
+        friend bool operator>(const ID& a, const ID& b) { return a.id > b.id; }
+        friend bool operator<=(const ID& a, const ID& b) { return a.id <= b.id; }
+        friend bool operator>=(const ID& a, const ID& b) { return a.id >= b.id; }
+        friend bool operator==(const ID& a, const ID& b) { return a.id == b.id; }
+        friend bool operator!=(const ID& a, const ID& b) { return a.id != b.id; }
         
-        VertexID operator++(int)
+        ID operator++(int)
         {
             id++;
             return *this;
         }
         
+    };
+    
+    class VertexID : public ID
+    {
+        friend class Geometry;
+        
+        VertexID(int id) : ID(id)
+        {
+            
+        }
+    };
+    
+    class FaceID : public ID
+    {
+        friend class Geometry;
+        
+        FaceID(int id) : ID(id)
+        {
+            
+        }
     };
 }
