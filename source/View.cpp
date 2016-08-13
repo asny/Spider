@@ -237,7 +237,6 @@ void View::update_spider()
     
     // Update vertex attributes
     //instance->spider_legs_geometry->add_vertex_attribute("position", instance->model->get_spider_feet_positions(model_matrix));
-    instance->spider_legs->update_vertex_attributes();
 }
 
 void View::update_terrain_and_grass()
@@ -250,10 +249,8 @@ void View::update_terrain_and_grass()
         
         //instance->terrain_patches[patch_index]->get_geometry()->add_vertex_attribute("position", terrain_positions);
         //instance->terrain_patches[patch_index]->get_geometry()->add_vertex_attribute("normal", terrain_normals);
-        instance->terrain_patches[patch_index]->update_vertex_attributes();
         
         //instance->grass_patches[patch_index]->get_geometry()->add_vertex_attribute("position", grass_end_points);
-        instance->grass_patches[patch_index]->update_vertex_attributes();
     }
 }
 

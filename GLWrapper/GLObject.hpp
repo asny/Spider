@@ -31,7 +31,18 @@ namespace oogl
         /**
          Updates the data of the given vertex attribute.
          */
-        void update_vertex_attribute(GLVertexAttribute& attribute);
+        template<class T>
+        void update_vertex_attribute(geogo::Attribute<geogo::VertexID, T>* attribute, GLVertexAttribute& glAttribute)
+        {
+            auto data = std::vector<T>();
+            for(auto face = geometry->faces_begin(); face != geometry->faces_end(); face = face->next())
+            {
+                data.push_back(attribute->get(*face->v1()));
+                data.push_back(attribute->get(*face->v2()));
+                data.push_back(attribute->get(*face->v3()));
+            }
+            glAttribute.update_data(data);
+        }
         
         void update_vertex_vec2_attribute(geogo::Attribute<geogo::VertexID, glm::vec2>* attribute, GLVertexAttribute& glAttribute);
         void update_vertex_vec3_attribute(geogo::Attribute<geogo::VertexID, glm::vec3>* attribute, GLVertexAttribute& glAttribute);
@@ -44,11 +55,6 @@ namespace oogl
         {
             return geometry;
         }
-        
-        /**
-         Updates the data of all the vertex attributes.
-         */
-        void update_vertex_attributes();
         
         /**
          Updates the value of the uniform variable with the given name.
