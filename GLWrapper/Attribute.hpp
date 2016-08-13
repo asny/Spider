@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
 
 namespace geogo
 {
@@ -17,6 +18,7 @@ namespace geogo
     class Attribute
     {
         std::map<IDType, ValueType> mapping;
+        std::vector<std::function<void(Attribute<IDType, ValueType>*)>> listeners = std::vector<std::function<void(Attribute<IDType, ValueType>*)>>();
         
     public:
         Attribute()
@@ -27,11 +29,20 @@ namespace geogo
         void add(IDType id, ValueType value)
         {
             mapping[id] = value;
+            for(auto listener : listeners)
+            {
+                listener(this);
+            }
         }
         
         ValueType get(IDType id)
         {
             return mapping.at(id);
+        }
+        
+        void subscribe(std::function<void(Attribute<IDType, ValueType>*)> callback)
+        {
+            listeners.push_back(callback);
         }
     };
 }

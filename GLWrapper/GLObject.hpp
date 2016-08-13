@@ -33,6 +33,9 @@ namespace oogl
          */
         void update_vertex_attribute(GLVertexAttribute& attribute);
         
+        void update_vertex_vec2_attribute(geogo::Attribute<geogo::VertexID, glm::vec2>* attribute, GLVertexAttribute& glAttribute);
+        void update_vertex_vec3_attribute(geogo::Attribute<geogo::VertexID, glm::vec3>* attribute, GLVertexAttribute& glAttribute);
+        
     public:
         
         GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);

@@ -21,6 +21,23 @@ GLObject::GLObject(std::shared_ptr<Geometry> _geometry, std::shared_ptr<GLMateri
     
     vertex_attributes = material->get_vertex_attributes();
     update_vertex_attributes();
+    for (auto glAttribute : vertex_attributes)
+    {
+        if(glAttribute.get_size() == 2)
+        {
+            auto attribute = geometry->get_vec2_vertex_attribute(glAttribute.get_name());
+            using namespace std::placeholders;
+            std::function<void(Attribute<VertexID, vec2>*)> callback = std::bind(&GLObject::update_vertex_vec2_attribute, this, _1, glAttribute);
+            attribute->subscribe(callback);
+        }
+        else if(glAttribute.get_size() == 3)
+        {
+            auto attribute = geometry->get_vec3_vertex_attribute(glAttribute.get_name());
+            using namespace std::placeholders;
+            std::function<void(Attribute<VertexID, vec3>*)> callback = std::bind(&GLObject::update_vertex_vec3_attribute, this, _1, glAttribute);
+            attribute->subscribe(callback);
+        }
+    }
 }
 
 void GLObject::update_vertex_attributes()
@@ -30,6 +47,30 @@ void GLObject::update_vertex_attributes()
         update_vertex_attribute(attribute);
     }
     check_gl_error();
+}
+
+void GLObject::update_vertex_vec2_attribute(Attribute<VertexID, vec2>* attribute, GLVertexAttribute& glAttribute)
+{
+    auto data = std::vector<vec2>();
+    for(auto face = geometry->faces_begin(); face != geometry->faces_end(); face = face->next())
+    {
+        data.push_back(attribute->get(*face->v1()));
+        data.push_back(attribute->get(*face->v2()));
+        data.push_back(attribute->get(*face->v3()));
+    }
+    glAttribute.update_data(data);
+}
+
+void GLObject::update_vertex_vec3_attribute(Attribute<VertexID, vec3>* attribute, GLVertexAttribute& glAttribute)
+{
+    auto data = std::vector<vec3>();
+    for(auto face = geometry->faces_begin(); face != geometry->faces_end(); face = face->next())
+    {
+        data.push_back(attribute->get(*face->v1()));
+        data.push_back(attribute->get(*face->v2()));
+        data.push_back(attribute->get(*face->v3()));
+    }
+    glAttribute.update_data(data);
 }
 
 void GLObject::update_vertex_attribute(GLVertexAttribute& glAttribute)
