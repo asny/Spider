@@ -174,9 +174,33 @@ bool Reader::load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices
 bool Reader::load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec3> & out_normals)
 {
     std::vector< unsigned int > vertexIndices, normalIndices;
-    std::vector< glm::vec3 > temp_vertices;
-    std::vector< glm::vec3 > temp_normals;
+    std::vector< glm::vec3 > temp_vertices, temp_normals;
     
+    bool success = load_obj(filePath, temp_vertices, vertexIndices, temp_normals, normalIndices);
+    if(!success)
+        return success;
+    
+    // For each vertex of each triangle
+    for( unsigned int i = 0; i < vertexIndices.size(); i++ )
+    {
+        unsigned int vertexIndex = vertexIndices[i];
+        glm::vec3 vertex = temp_vertices[ vertexIndex - 1 ];
+        out_vertices.push_back(vertex);
+    }
+    
+    // For each normal of each triangle
+    for( unsigned int i = 0; i < normalIndices.size(); i++ )
+    {
+        unsigned int normalIndex = normalIndices[i];
+        glm::vec3 normal = temp_normals[ normalIndex - 1 ];
+        out_normals.push_back(normal);
+    }
+    return true;
+}
+
+bool Reader::load_obj(std::string filePath, std::vector<glm::vec3>& vertices, std::vector<unsigned int>& vertex_indices,
+                      std::vector<glm::vec3>& normals, std::vector<unsigned int>& normal_indices)
+{
     FILE * file = fopen(filePath.c_str(), "r");
     if( file == NULL )
     {
@@ -196,13 +220,13 @@ bool Reader::load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices
         {
             glm::vec3 vertex;
             fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
-            temp_vertices.push_back(vertex);
+            vertices.push_back(vertex);
         }
         else if ( strcmp( lineHeader, "vn" ) == 0 )
         {
             glm::vec3 normal;
             fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
-            temp_normals.push_back(normal);
+            normals.push_back(normal);
         }
         else if ( strcmp( lineHeader, "f" ) == 0 )
         {
@@ -213,29 +237,13 @@ bool Reader::load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices
                 return false;
             }
             
-            vertexIndices.push_back(vertexIndex[0]);
-            vertexIndices.push_back(vertexIndex[1]);
-            vertexIndices.push_back(vertexIndex[2]);
-            normalIndices.push_back(normalIndex[0]);
-            normalIndices.push_back(normalIndex[1]);
-            normalIndices.push_back(normalIndex[2]);
+            vertex_indices.push_back(vertexIndex[0]);
+            vertex_indices.push_back(vertexIndex[1]);
+            vertex_indices.push_back(vertexIndex[2]);
+            normal_indices.push_back(normalIndex[0]);
+            normal_indices.push_back(normalIndex[1]);
+            normal_indices.push_back(normalIndex[2]);
         }
-    }
-    
-    // For each vertex of each triangle
-    for( unsigned int i = 0; i < vertexIndices.size(); i++ )
-    {
-        unsigned int vertexIndex = vertexIndices[i];
-        glm::vec3 vertex = temp_vertices[ vertexIndex - 1 ];
-        out_vertices.push_back(vertex);
-    }
-    
-    // For each normal of each triangle
-    for( unsigned int i = 0; i < normalIndices.size(); i++ )
-    {
-        unsigned int normalIndex = normalIndices[i];
-        glm::vec3 normal = temp_normals[ normalIndex - 1 ];
-        out_normals.push_back(normal);
     }
     return true;
 }
