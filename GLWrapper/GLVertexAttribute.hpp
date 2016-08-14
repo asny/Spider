@@ -17,8 +17,8 @@ namespace oogl
     class GLVertexAttribute
     {
     public:
-        GLVertexAttribute(std::string _name, int _size, GLuint location, std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>> _attribute)
-            : name(_name), size(_size), attribute(_attribute)
+        GLVertexAttribute(int _size, GLuint location, std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>> _attribute)
+            : size(_size), attribute(_attribute)
         {
             // Generate and bind buffer
             glGenBuffers(1, &buffer_id);
@@ -32,11 +32,6 @@ namespace oogl
             using namespace std::placeholders;
             std::function<void()> callback = std::bind(&GLVertexAttribute::deprecate, this);
             attribute->subscribe(callback);
-        }
-        
-        const std::string& get_name()
-        {
-            return name;
         }
         
         void update(std::shared_ptr<geogo::Geometry> geometry)
@@ -82,7 +77,7 @@ namespace oogl
         bool is_up_to_date = false;
         std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>> attribute;
         GLuint buffer_id;
-        std::string name;
+        
         int size;
     };
 }

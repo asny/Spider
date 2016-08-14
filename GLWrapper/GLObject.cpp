@@ -24,12 +24,12 @@ GLObject::GLObject(std::shared_ptr<Geometry> _geometry, std::shared_ptr<GLMateri
         if(attributeRecipe.size == 2)
         {
             auto attribute = geometry->get_vec2_vertex_attribute(attributeRecipe.name);
-            vec2_vertex_attributes.push_back(GLVertexAttribute<vec2>(attributeRecipe.name, attributeRecipe.size, attributeRecipe.location, attribute));
+            vec2_vertex_attributes.push_back(GLVertexAttribute<vec2>(attributeRecipe.size, attributeRecipe.location, attribute));
         }
         else if(attributeRecipe.size == 3)
         {
             auto attribute = geometry->get_vec3_vertex_attribute(attributeRecipe.name);
-            vec3_vertex_attributes.push_back(GLVertexAttribute<vec3>(attributeRecipe.name, attributeRecipe.size, attributeRecipe.location, attribute));
+            vec3_vertex_attributes.push_back(GLVertexAttribute<vec3>(attributeRecipe.size, attributeRecipe.location, attribute));
         }
     }
 }
