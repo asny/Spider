@@ -29,7 +29,6 @@ namespace oogl
             glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, size * sizeof(float), (const GLvoid *)(0));
             check_gl_error();
             
-            using namespace std::placeholders;
             std::function<void()> callback = std::bind(&GLVertexAttribute::deprecate, this);
             attribute->subscribe(callback);
         }
@@ -39,34 +38,31 @@ namespace oogl
             if(is_up_to_date)
                 return;
             
-            auto data = std::vector<ValueType>();
+            auto data = std::vector<float>();
             for(auto face = geometry->faces_begin(); face != geometry->faces_end(); face = face->next())
             {
-                data.push_back(attribute->get(*face->v1()));
-                data.push_back(attribute->get(*face->v2()));
-                data.push_back(attribute->get(*face->v3()));
+                add_vertex_data(*face->v1(), data);
+                add_vertex_data(*face->v2(), data);
+                add_vertex_data(*face->v3(), data);
             }
-            update_data(data);
+            
+            // Bind buffer and send data
+            glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+            glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+            check_gl_error();
+            
             is_up_to_date = true;
         }
         
     private:
         
-        void update_data(const std::vector<ValueType>& data)
+        void add_vertex_data(const geogo::VertexID& id, std::vector<float>& data)
         {
-            auto floats = std::vector<float>(size * data.size());
-            for(int i = 0; i < data.size(); i++)
+            ValueType vec = attribute->get(id);
+            for(int j = 0; j < size; j++)
             {
-                const ValueType& vec = data.at(i);
-                for(int j = 0; j < size; j++)
-                {
-                    floats[i * size + j] = vec[j];
-                }
+                data.push_back(vec[j]);
             }
-            // Bind buffer and send data
-            glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-            glBufferData(GL_ARRAY_BUFFER, floats.size() * sizeof(float), &floats[0], GL_STATIC_DRAW);
-            check_gl_error();
         }
         
         void deprecate()
@@ -77,7 +73,6 @@ namespace oogl
         bool is_up_to_date = false;
         std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>> attribute;
         GLuint buffer_id;
-        
         int size;
     };
 }
