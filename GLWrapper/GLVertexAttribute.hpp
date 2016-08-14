@@ -8,33 +8,61 @@
 
 #pragma once
 
-#include "GLShader.hpp"
+#include "GLUtility.h"
+#include "Geometry.hpp"
 
 namespace oogl
-{
+{   
+    template<class ValueType>
     class GLVertexAttribute
     {
     public:
-        GLVertexAttribute(std::string _name, int _size, std::shared_ptr<GLShader> shader) : name(_name), size(_size)
+        GLVertexAttribute(std::string _name, int _size, GLuint location, std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>> _attribute)
+            : name(_name), size(_size), attribute(_attribute)
         {
             // Generate and bind buffer
             glGenBuffers(1, &buffer_id);
             glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
             
             // Initialize attribute
-            GLuint location = shader->get_attribute_location(name);
             glEnableVertexAttribArray(location);
             glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, size * sizeof(float), (const GLvoid *)(0));
             check_gl_error();
+            
+            using namespace std::placeholders;
+            std::function<void()> callback = std::bind(&GLVertexAttribute::deprecate, this);
+            attribute->subscribe(callback);
         }
         
-        template<class T>
-        void update_data(const std::vector<T>& data)
+        const std::string& get_name()
+        {
+            return name;
+        }
+        
+        void update(std::shared_ptr<geogo::Geometry> geometry)
+        {
+            if(is_up_to_date)
+                return;
+            
+            auto data = std::vector<ValueType>();
+            for(auto face = geometry->faces_begin(); face != geometry->faces_end(); face = face->next())
+            {
+                data.push_back(attribute->get(*face->v1()));
+                data.push_back(attribute->get(*face->v2()));
+                data.push_back(attribute->get(*face->v3()));
+            }
+            update_data(data);
+            is_up_to_date = true;
+        }
+        
+    private:
+        
+        void update_data(const std::vector<ValueType>& data)
         {
             auto floats = std::vector<float>(size * data.size());
             for(int i = 0; i < data.size(); i++)
             {
-                const T& vec = data.at(i);
+                const ValueType& vec = data.at(i);
                 for(int j = 0; j < size; j++)
                 {
                     floats[i * size + j] = vec[j];
@@ -46,17 +74,13 @@ namespace oogl
             check_gl_error();
         }
         
-        const std::string& get_name()
+        void deprecate()
         {
-            return name;
+            is_up_to_date = false;
         }
         
-        int get_size()
-        {
-            return size;
-        }
-        
-    private:
+        bool is_up_to_date = false;
+        std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>> attribute;
         GLuint buffer_id;
         std::string name;
         int size;

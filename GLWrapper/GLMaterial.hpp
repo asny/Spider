@@ -9,10 +9,22 @@
 #pragma once
 
 #include "GLTexture.hpp"
-#include "GLVertexAttribute.hpp"
+#include "GLShader.hpp"
 
 namespace oogl
 {
+    struct VertexAttributeRecipe
+    {
+        std::string name;
+        int size;
+        GLuint location;
+        
+        VertexAttributeRecipe(std::string _name, int _size, std::shared_ptr<GLShader> shader) : name(_name), size(_size)
+        {
+            location = shader->get_attribute_location(name);
+        }
+    };
+    
     class GLMaterial
     {
         static bool currently_cull_back_faces;
@@ -39,9 +51,9 @@ namespace oogl
             shader->set_uniform_variable_if_defined("MVPMatrix", projectionMatrix * modelViewMatrix);
         }
         
-        virtual std::vector<GLVertexAttribute> get_vertex_attributes()
+        virtual std::vector<VertexAttributeRecipe> get_vertex_attributes()
         {
-            return {GLVertexAttribute("position", 3, shader)};
+            return {VertexAttributeRecipe("position", 3, shader)};
         }
         
         /**
@@ -68,10 +80,10 @@ namespace oogl
             shader = std::shared_ptr<GLShader>(new GLShader("shaders/phong.vert",  "shaders/phong.frag"));
         }
         
-        virtual std::vector<GLVertexAttribute> get_vertex_attributes()
+        virtual std::vector<VertexAttributeRecipe> get_vertex_attributes()
         {
             auto attributes = GLMaterial::get_vertex_attributes();
-            attributes.push_back(GLVertexAttribute("normal", 3, shader));
+            attributes.push_back(VertexAttributeRecipe("normal", 3, shader));
             return attributes;
         }
         
@@ -88,10 +100,10 @@ namespace oogl
             shader = std::shared_ptr<GLShader>(new GLShader("shaders/texture.vert",  "shaders/texture.frag"));
         }
         
-        virtual std::vector<GLVertexAttribute> get_vertex_attributes()
+        virtual std::vector<VertexAttributeRecipe> get_vertex_attributes()
         {
             auto attributes = GLMaterial::get_vertex_attributes();
-            attributes.push_back(GLVertexAttribute("uv_coordinates", 2, shader));
+            attributes.push_back(VertexAttributeRecipe("uv_coordinates", 2, shader));
             return attributes;
         }
         
@@ -135,7 +147,7 @@ namespace oogl
             shader = std::shared_ptr<GLShader>(new GLShader("shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/spider_legs.geom"));
         }
         
-        virtual std::vector<GLVertexAttribute> get_vertex_attributes()
+        virtual std::vector<VertexAttributeRecipe> get_vertex_attributes()
         {
             return GLMaterial::get_vertex_attributes();            
         }

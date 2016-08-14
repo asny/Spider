@@ -18,7 +18,7 @@ namespace geogo
     class Attribute
     {
         std::map<IDType, ValueType> mapping;
-        std::vector<std::function<void(Attribute<IDType, ValueType>*)>> listeners = std::vector<std::function<void(Attribute<IDType, ValueType>*)>>();
+        std::vector<std::function<void()>> listeners = std::vector<std::function<void()>>();
         
     public:
         Attribute()
@@ -31,7 +31,7 @@ namespace geogo
             mapping[id] = value;
             for(auto listener : listeners)
             {
-                listener(this);
+                listener();
             }
         }
         
@@ -40,7 +40,7 @@ namespace geogo
             return mapping.at(id);
         }
         
-        void subscribe(std::function<void(Attribute<IDType, ValueType>*)> callback)
+        void subscribe(std::function<void()> callback)
         {
             listeners.push_back(callback);
         }

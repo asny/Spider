@@ -10,6 +10,7 @@
 
 #include "Geometry.hpp"
 #include "GLMaterial.hpp"
+#include "GLVertexAttribute.hpp"
 
 namespace oogl
 {
@@ -22,30 +23,12 @@ namespace oogl
         std::shared_ptr<GLMaterial> material;
         
         GLuint array_id;
-        std::vector<GLVertexAttribute> vertex_attributes;
+        std::vector<GLVertexAttribute<glm::vec2>> vec2_vertex_attributes;
+        std::vector<GLVertexAttribute<glm::vec3>> vec3_vertex_attributes;
         GLenum drawmode;
         
         // Transformation
         glm::mat4 modelMatrix = glm::mat4(1.);
-        
-        /**
-         Updates the data of the given vertex attribute.
-         */
-        template<class T>
-        void update_vertex_attribute(geogo::Attribute<geogo::VertexID, T>* attribute, GLVertexAttribute& glAttribute)
-        {
-            auto data = std::vector<T>();
-            for(auto face = geometry->faces_begin(); face != geometry->faces_end(); face = face->next())
-            {
-                data.push_back(attribute->get(*face->v1()));
-                data.push_back(attribute->get(*face->v2()));
-                data.push_back(attribute->get(*face->v3()));
-            }
-            glAttribute.update_data(data);
-        }
-        
-        void update_vertex_vec2_attribute(geogo::Attribute<geogo::VertexID, glm::vec2>* attribute, GLVertexAttribute& glAttribute);
-        void update_vertex_vec3_attribute(geogo::Attribute<geogo::VertexID, glm::vec3>* attribute, GLVertexAttribute& glAttribute);
         
     public:
         
