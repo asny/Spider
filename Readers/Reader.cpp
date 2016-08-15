@@ -117,21 +117,14 @@ shared_ptr<Geometry> Reader::load_obj(string file_path)
     bool load_success = ::load_obj(file_path, positions, position_indices, uv_coordinates, uv_coordinates_indices, normals, normal_indices);
     if(load_success)
     {
-        auto position_attribute = geometry->get_vec3_vertex_attribute("position");
-        auto normal_attribute = geometry->get_vec3_vertex_attribute("normal");
-        
         // Create the vertices
+        auto position_attribute = geometry->get_vec3_vertex_attribute("position");
         auto mapping = std::map<unsigned int, VertexID*>();
         for( unsigned int i = 0; i < positions.size(); i++ )
         {
             auto vertex_id = geometry->create_vertex();
             mapping[i] = vertex_id;
-            
-            glm::vec3 position = positions[ i ];
-            position_attribute->add(*vertex_id, position);
-            
-            glm::vec3 normal = normals[ i ];
-            normal_attribute->add(*vertex_id, normal);
+            position_attribute->add(*vertex_id, positions.at(i));
         }
         
         // Create the faces
@@ -141,6 +134,30 @@ shared_ptr<Geometry> Reader::load_obj(string file_path)
             auto vertex_id2 = mapping[position_indices[i+1] - 1];
             auto vertex_id3 = mapping[position_indices[i+2] - 1];
             geometry->create_face(vertex_id1, vertex_id2, vertex_id3);
+        }
+        
+        // Add the uv coordinate attribute
+        if(uv_coordinates.size() > 0 && uv_coordinates_indices.size() > 0)
+        {
+            auto uv_coordinate_attribute = geometry->get_vec2_vertex_attribute("uv_coordinates");
+            for( unsigned int i = 0; i < normals.size(); i++ )
+            {
+                // TODO: For now, we only support per vertex attributes
+                auto vertex_id = mapping[ i ];
+                uv_coordinate_attribute->add(*vertex_id, uv_coordinates.at(i));
+            }
+        }
+        
+        // Add the normal attribute
+        if(normals.size() > 0 && normal_indices.size() > 0)
+        {
+            auto normal_attribute = geometry->get_vec3_vertex_attribute("normal");
+            for( unsigned int i = 0; i < normals.size(); i++ )
+            {
+                // TODO: For now, we only support per vertex attributes
+                auto vertex_id = mapping[ i ];
+                normal_attribute->add(*vertex_id, normals.at(i));
+            }
         }
     }
     return geometry;
