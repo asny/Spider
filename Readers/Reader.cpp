@@ -14,6 +14,9 @@
 #include "stb_image.h"
 
 using namespace tdogl;
+using namespace geogo;
+using namespace glm;
+using namespace std;
 
 bool Reader::load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_uvs, std::vector<glm::vec3> & out_normals)
 {
@@ -247,6 +250,46 @@ bool Reader::load_obj(std::string filePath, std::vector<glm::vec3>& vertices, st
     }
     return true;
 }
+
+shared_ptr<Geometry> Reader::load_obj(string file_path)
+{
+    auto geometry = shared_ptr<Geometry>(new Geometry());
+    
+    vector<vec3> positions, normals;
+    vector<unsigned int> position_indices, normal_indices;
+    
+    bool load_success = Reader::load_obj(file_path, positions, position_indices, normals, normal_indices);
+    if(load_success)
+    {
+        auto position_attribute = geometry->get_vec3_vertex_attribute("position");
+        auto normal_attribute = geometry->get_vec3_vertex_attribute("normal");
+        
+        // Create the vertices
+        auto mapping = std::map<unsigned int, VertexID*>();
+        for( unsigned int i = 0; i < positions.size(); i++ )
+        {
+            auto vertex_id = geometry->create_vertex();
+            mapping[i] = vertex_id;
+            
+            glm::vec3 position = positions[ i ];
+            position_attribute->add(*vertex_id, position);
+            
+            glm::vec3 normal = normals[ i ];
+            normal_attribute->add(*vertex_id, normal);
+        }
+        
+        // Create the faces
+        for (unsigned int i = 0; i < position_indices.size(); i += 3)
+        {
+            auto vertex_id1 = mapping[position_indices[i] - 1];
+            auto vertex_id2 = mapping[position_indices[i+1] - 1];
+            auto vertex_id3 = mapping[position_indices[i+2] - 1];
+            geometry->create_face(vertex_id1, vertex_id2, vertex_id3);
+        }
+    }
+    return geometry;
+}
+
 
 Bitmap Reader::load_bitmap(std::string filePath)
 {

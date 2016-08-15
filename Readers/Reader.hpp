@@ -12,6 +12,7 @@
 #include "vec2.hpp"
 #include "vec3.hpp"
 
+#include "Geometry.hpp"
 #include "Bitmap.h"
 
 class Reader {
@@ -26,6 +27,8 @@ public:
     
     static bool load_obj(std::string filePath, std::vector<glm::vec3>& vertices, std::vector<unsigned int>& vertex_indices,
                           std::vector<glm::vec3>& normals, std::vector<unsigned int>& normal_indices);
+    
+    static std::shared_ptr<geogo::Geometry> load_obj(std::string file_path);
     
     /**
      Tries to load the given file into a tdogl::Bitmap.

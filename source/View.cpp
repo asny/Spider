@@ -274,52 +274,23 @@ void View::create_terrain()
 
 void View::create_spider_body()
 {
-    std::vector<glm::vec3> positions, normals;
-    std::vector<unsigned int> position_indices, normal_indices;
+    auto geometry = Reader::load_obj("resources/spider/spider.obj");
+    auto positions = geometry->get_vec3_vertex_attribute("position");
     
-    bool load_success = Reader::load_obj("resources/spider/spider.obj", positions, position_indices, normals, normal_indices);
-    if(load_success)
+    vec3 center;
+    for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
     {
-        vec3 center;
-        for (vec3 vertex : positions) {
-            center += vertex;
-        }
-        center /= positions.size();
-        
-        for (vec3& vertex : positions) {
-            vertex -= center;
-        }
-        
-        auto geometry = shared_ptr<Geometry>(new Geometry());
-        auto position_attribute = geometry->get_vec3_vertex_attribute("position");
-        auto normal_attribute = geometry->get_vec3_vertex_attribute("normal");
-        
-        // Create the vertices
-        auto mapping = std::map<unsigned int, VertexID*>();
-        for( unsigned int i = 0; i < positions.size(); i++ )
-        {
-            auto vertex_id = geometry->create_vertex();
-            mapping[i] = vertex_id;
-            
-            glm::vec3 position = positions[ i ];
-            position_attribute->add(*vertex_id, position);
-            
-            glm::vec3 normal = normals[ i ];
-            normal_attribute->add(*vertex_id, normal);
-        }
-        
-        // Create the faces
-        for (unsigned int i = 0; i < position_indices.size(); i += 3)
-        {
-            auto vertex_id1 = mapping[position_indices[i] - 1];
-            auto vertex_id2 = mapping[position_indices[i+1] - 1];
-            auto vertex_id3 = mapping[position_indices[i+2] - 1];
-            geometry->create_face(vertex_id1, vertex_id2, vertex_id3);
-        }
-        
-        auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
-        spider_body = shared_ptr<GLObject>(new GLObject(geometry, material, GL_TRIANGLES));
+        center += positions->get(*vertex);
     }
+    center /= geometry->get_no_vertices();
+    
+    for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
+    {
+        auto p = positions->get(*vertex);
+        positions->add(*vertex, p - center);
+    }
+    auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
+    spider_body = shared_ptr<GLObject>(new GLObject(geometry, material, GL_TRIANGLES));
 }
 
 void View::create_spider_legs()
