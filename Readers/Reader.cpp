@@ -7,6 +7,9 @@
 //
 
 #include "Reader.hpp"
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 //uses stb_image to try load files
 #define STBI_FAILURE_USERMSG
@@ -18,236 +21,88 @@ using namespace geogo;
 using namespace glm;
 using namespace std;
 
-bool Reader::load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_uvs, std::vector<glm::vec3> & out_normals)
+static bool load_obj(string file_path, vector<vec3>& positions, vector<unsigned int>& position_indices,
+                     vector<vec2>& uv_coordinates, vector<unsigned int>& uv_coordinate_indices,
+                     vector<vec3>& normals, vector<unsigned int>& normal_indices)
 {
-    std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
-    std::vector< glm::vec3 > temp_vertices;
-    std::vector< glm::vec2 > temp_uvs;
-    std::vector< glm::vec3 > temp_normals;
-    
-    FILE * file = fopen(filePath.c_str(), "r");
-    if( file == NULL )
+    string line;
+    ifstream myfile(file_path);
+    if (!myfile.is_open())
     {
-        printf("Impossible to open the file !\n");
         return false;
     }
-    while( 1 )
-    {
-        char lineHeader[128];
-        // read the first word of the line
-        int res = fscanf(file, "%s", lineHeader);
-        if (res == EOF)
-            break; // EOF = End Of File. Quit the loop.
-        
-        // else : parse lineHeader
-        if ( strcmp( lineHeader, "v" ) == 0 )
-        {
-            glm::vec3 vertex;
-            fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
-            temp_vertices.push_back(vertex);
-        }
-        else if ( strcmp( lineHeader, "vt" ) == 0 )
-        {
-            glm::vec2 uv;
-            fscanf(file, "%f %f\n", &uv.x, &uv.y );
-            temp_uvs.push_back(uv);
-        }
-        else if ( strcmp( lineHeader, "vn" ) == 0 )
-        {
-            glm::vec3 normal;
-            fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
-            temp_normals.push_back(normal);
-        }
-        else if ( strcmp( lineHeader, "f" ) == 0 )
-        {
-            unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-            int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
-            if (matches != 9){
-                printf("File can't be read by our simple parser : ( Try exporting with other options\n");
-                return false;
-            }
-            
-            vertexIndices.push_back(vertexIndex[0]);
-            vertexIndices.push_back(vertexIndex[1]);
-            vertexIndices.push_back(vertexIndex[2]);
-            uvIndices    .push_back(uvIndex[0]);
-            uvIndices    .push_back(uvIndex[1]);
-            uvIndices    .push_back(uvIndex[2]);
-            normalIndices.push_back(normalIndex[0]);
-            normalIndices.push_back(normalIndex[1]);
-            normalIndices.push_back(normalIndex[2]);
-        }
-    }
     
-    // For each vertex of each triangle
-    for( unsigned int i = 0; i < vertexIndices.size(); i++ )
+    while ( getline(myfile, line) )
     {
-        unsigned int vertexIndex = vertexIndices[i];
-        glm::vec3 vertex = temp_vertices[ vertexIndex - 1 ];
-        out_vertices.push_back(vertex);
-    }
-    
-    // For each uv of each triangle
-    for( unsigned int i = 0; i < uvIndices.size(); i++ )
-    {
-        unsigned int uvIndex = uvIndices[i];
-        glm::vec2 uv = temp_uvs[ uvIndex - 1 ];
-        out_uvs.push_back(uv);
-    }
-    
-    // For each normal of each triangle
-    for( unsigned int i = 0; i < normalIndices.size(); i++ )
-    {
-        unsigned int normalIndex = normalIndices[i];
-        glm::vec3 normal = temp_normals[ normalIndex - 1 ];
-        out_normals.push_back(normal);
-    }
-    return true;
-}
-
-bool Reader::load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_uvs)
-{
-    std::vector< unsigned int > vertexIndices, uvIndices;
-    std::vector< glm::vec3 > temp_vertices;
-    std::vector< glm::vec2 > temp_uvs;
-    
-    FILE * file = fopen(filePath.c_str(), "r");
-    if( file == NULL )
-    {
-        printf("Impossible to open the file !\n");
-        return false;
-    }
-    while( 1 )
-    {
-        char lineHeader[128];
-        // read the first word of the line
-        int res = fscanf(file, "%s", lineHeader);
-        if (res == EOF)
-            break; // EOF = End Of File. Quit the loop.
-        
-        // else : parse lineHeader
-        if ( strcmp( lineHeader, "v" ) == 0 )
+        stringstream stream(line);
+        string header;
+        stream >> header;
+        if ( header.compare("v") == 0 )
         {
-            glm::vec3 vertex;
-            fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
-            temp_vertices.push_back(vertex);
-        }
-        else if ( strcmp( lineHeader, "vt" ) == 0 )
-        {
-            glm::vec2 uv;
-            fscanf(file, "%f %f\n", &uv.x, &uv.y );
-            temp_uvs.push_back(uv);
-        }
-        else if ( strcmp( lineHeader, "f" ) == 0 )
-        {
-            unsigned int vertexIndex[3], uvIndex[3];
-            int matches = fscanf(file, "%d/%d %d/%d %d/%d\n", &vertexIndex[0], &uvIndex[0], &vertexIndex[1], &uvIndex[1], &vertexIndex[2], &uvIndex[2]);
-            if (matches == 6)
+            vec3 position;
+            string value;
+            for (int i = 0; i < 3; i++)
             {
-                vertexIndices.push_back(vertexIndex[0]);
-                vertexIndices.push_back(vertexIndex[1]);
-                vertexIndices.push_back(vertexIndex[2]);
-                uvIndices    .push_back(uvIndex[0]);
-                uvIndices    .push_back(uvIndex[1]);
-                uvIndices    .push_back(uvIndex[2]);
+                stream >> value;
+                position[i] = stod(value);
             }
+            positions.push_back(position);
         }
-    }
-    
-    // For each vertex of each triangle
-    for( unsigned int i = 0; i < vertexIndices.size(); i++ )
-    {
-        unsigned int vertexIndex = vertexIndices[i];
-        glm::vec3 vertex = temp_vertices[ vertexIndex - 1 ];
-        out_vertices.push_back(vertex);
-    }
-    
-    // For each uv of each triangle
-    for( unsigned int i = 0; i < uvIndices.size(); i++ )
-    {
-        unsigned int uvIndex = uvIndices[i];
-        glm::vec2 uv = temp_uvs[ uvIndex - 1 ];
-        out_uvs.push_back(uv);
-    }
-    
-    return true;
-}
-
-
-bool Reader::load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec3> & out_normals)
-{
-    std::vector< unsigned int > vertexIndices, normalIndices;
-    std::vector< glm::vec3 > temp_vertices, temp_normals;
-    
-    bool success = load_obj(filePath, temp_vertices, vertexIndices, temp_normals, normalIndices);
-    if(!success)
-        return success;
-    
-    // For each vertex of each triangle
-    for( unsigned int i = 0; i < vertexIndices.size(); i++ )
-    {
-        unsigned int vertexIndex = vertexIndices[i];
-        glm::vec3 vertex = temp_vertices[ vertexIndex - 1 ];
-        out_vertices.push_back(vertex);
-    }
-    
-    // For each normal of each triangle
-    for( unsigned int i = 0; i < normalIndices.size(); i++ )
-    {
-        unsigned int normalIndex = normalIndices[i];
-        glm::vec3 normal = temp_normals[ normalIndex - 1 ];
-        out_normals.push_back(normal);
-    }
-    return true;
-}
-
-bool Reader::load_obj(std::string filePath, std::vector<glm::vec3>& vertices, std::vector<unsigned int>& vertex_indices,
-                      std::vector<glm::vec3>& normals, std::vector<unsigned int>& normal_indices)
-{
-    FILE * file = fopen(filePath.c_str(), "r");
-    if( file == NULL )
-    {
-        printf("Impossible to open the file !\n");
-        return false;
-    }
-    while( 1 )
-    {
-        char lineHeader[128];
-        // read the first word of the line
-        int res = fscanf(file, "%s", lineHeader);
-        if (res == EOF)
-            break; // EOF = End Of File. Quit the loop.
-        
-        // else : parse lineHeader
-        if ( strcmp( lineHeader, "v" ) == 0 )
+        else if ( header.compare("vt") == 0 )
         {
-            glm::vec3 vertex;
-            fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
-            vertices.push_back(vertex);
+            vec2 uv_coordinate;
+            string value;
+            for (int i = 0; i < 2; i++)
+            {
+                stream >> value;
+                uv_coordinate[i] = stod(value);
+            }
+            uv_coordinates.push_back(uv_coordinate);
         }
-        else if ( strcmp( lineHeader, "vn" ) == 0 )
+        else if ( header.compare("vn") == 0 )
         {
-            glm::vec3 normal;
-            fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
+            vec3 normal;
+            string value;
+            for (int i = 0; i < 3; i++)
+            {
+                stream >> value;
+                normal[i] = stod(value);
+            }
             normals.push_back(normal);
         }
-        else if ( strcmp( lineHeader, "f" ) == 0 )
+        else if ( header.compare("f") == 0 )
         {
-            unsigned int vertexIndex[3], normalIndex[3];
-            int matches = fscanf(file, "%d//%d %d//%d %d//%d\n", &vertexIndex[0], &normalIndex[0], &vertexIndex[1], &normalIndex[1], &vertexIndex[2], &normalIndex[2] );
-            if (matches != 6){
-                printf("File can't be read by our simple parser : ( Try exporting with other options\n");
-                return false;
+            for(int i = 0; i < 3; i++)
+            {
+                string indices;
+                stream >> indices;
+                stringstream stream2(indices);
+                string value;
+                int j = 0;
+                while (getline(stream2, value, '/'))
+                {
+                    if(value.length() != 0)
+                    {
+                        if(j % 3 == 0)
+                        {
+                            position_indices.push_back(stoi(value));
+                        }
+                        else if(j % 3 == 1)
+                        {
+                            uv_coordinate_indices.push_back(stoi(value));
+                        }
+                        else if(j % 3 == 2)
+                        {
+                            normal_indices.push_back(stoi(value));
+                        }
+                    }
+                    j++;
+                }
             }
-            
-            vertex_indices.push_back(vertexIndex[0]);
-            vertex_indices.push_back(vertexIndex[1]);
-            vertex_indices.push_back(vertexIndex[2]);
-            normal_indices.push_back(normalIndex[0]);
-            normal_indices.push_back(normalIndex[1]);
-            normal_indices.push_back(normalIndex[2]);
         }
     }
+    myfile.close();
+    
     return true;
 }
 
@@ -256,9 +111,10 @@ shared_ptr<Geometry> Reader::load_obj(string file_path)
     auto geometry = shared_ptr<Geometry>(new Geometry());
     
     vector<vec3> positions, normals;
-    vector<unsigned int> position_indices, normal_indices;
+    vector<vec2> uv_coordinates;
+    vector<unsigned int> position_indices, uv_coordinates_indices, normal_indices;
     
-    bool load_success = Reader::load_obj(file_path, positions, position_indices, normals, normal_indices);
+    bool load_success = ::load_obj(file_path, positions, position_indices, uv_coordinates, uv_coordinates_indices, normals, normal_indices);
     if(load_success)
     {
         auto position_attribute = geometry->get_vec3_vertex_attribute("position");

@@ -18,20 +18,13 @@
 class Reader {
     
 public:
-    static bool load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_uvs, std::vector<glm::vec3> & out_normals);
-    
-    static bool load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_uvs);
-    
-    static bool load_obj(std::string filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec3> & out_normals);
-    
-    
-    static bool load_obj(std::string filePath, std::vector<glm::vec3>& vertices, std::vector<unsigned int>& vertex_indices,
-                          std::vector<glm::vec3>& normals, std::vector<unsigned int>& normal_indices);
-    
+    /**
+     Loads an obj file and constructs the corresponding Geometry.
+     */
     static std::shared_ptr<geogo::Geometry> load_obj(std::string file_path);
     
     /**
-     Tries to load the given file into a tdogl::Bitmap.
+     Tries to load the given file into an instance of the Bitmap class.
      */
     static tdogl::Bitmap load_bitmap(std::string filePath);
     
