@@ -46,7 +46,7 @@ namespace geogo
             
             for (auto position : positions) {
                 auto vertex = create_vertex();
-                attribute->add(*vertex, position);
+                attribute->add(vertex, position);
             }
         }
         

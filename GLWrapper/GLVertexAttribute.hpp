@@ -58,7 +58,7 @@ namespace oogl
         
         void add_vertex_data(const geogo::VertexID& id, std::vector<float>& data)
         {
-            ValueType vec = attribute->get(id);
+            ValueType vec = attribute->at(id);
             for(int j = 0; j < size; j++)
             {
                 data.push_back(vec[j]);

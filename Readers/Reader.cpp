@@ -124,7 +124,7 @@ shared_ptr<Geometry> Reader::load_obj(string file_path)
         {
             auto vertex_id = geometry->create_vertex();
             mapping[i] = vertex_id;
-            position_attribute->add(*vertex_id, positions.at(i));
+            position_attribute->add(vertex_id, positions.at(i));
         }
         
         // Create the faces
@@ -143,8 +143,7 @@ shared_ptr<Geometry> Reader::load_obj(string file_path)
             for( unsigned int i = 0; i < normals.size(); i++ )
             {
                 // TODO: For now, we only support per vertex attributes
-                auto vertex_id = mapping[ i ];
-                uv_coordinate_attribute->add(*vertex_id, uv_coordinates.at(i));
+                uv_coordinate_attribute->add(mapping[i], uv_coordinates.at(i));
             }
         }
         
@@ -155,8 +154,7 @@ shared_ptr<Geometry> Reader::load_obj(string file_path)
             for( unsigned int i = 0; i < normals.size(); i++ )
             {
                 // TODO: For now, we only support per vertex attributes
-                auto vertex_id = mapping[ i ];
-                normal_attribute->add(*vertex_id, normals.at(i));
+                normal_attribute->add(mapping[i], normals.at(i));
             }
         }
     }

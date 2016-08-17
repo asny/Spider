@@ -26,18 +26,28 @@ namespace geogo
             
         }
         
-        void add(IDType id, ValueType value)
+        const ValueType& at(const IDType& id) const
         {
-            mapping[id] = value;
+            return mapping.at(id);
+        }
+        
+        const ValueType& at(const IDType* id) const
+        {
+            return at(*id);
+        }
+        
+        void add(const IDType& id, const ValueType& value)
+        {
+            mapping.insert(std::pair<IDType, ValueType>(id,value));
             for(auto listener : listeners)
             {
                 listener();
             }
         }
         
-        ValueType get(IDType id)
+        void add(const IDType* id, const ValueType& value)
         {
-            return mapping.at(id);
+            add(*id, value);
         }
         
         void subscribe(std::function<void()> callback)
