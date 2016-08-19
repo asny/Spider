@@ -29,8 +29,8 @@ namespace oogl
             glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, size * sizeof(float), (const GLvoid *)(0));
             check_gl_error();
             
-            std::function<void()> callback = std::bind(&GLVertexAttribute::deprecate, this);
-            attribute->subscribe(callback);
+            std::function<void()> on_attribute_changed = std::bind(&GLVertexAttribute::deprecate, this);
+            _attribute->subscribe_to(on_attribute_changed);
         }
         
         void update(std::shared_ptr<geogo::Geometry> geometry)
@@ -71,7 +71,7 @@ namespace oogl
         }
         
         bool is_up_to_date = false;
-        std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>> attribute;
+        std::shared_ptr<const geogo::Attribute<geogo::VertexID, ValueType>> attribute;
         GLuint buffer_id;
         int size;
     };
