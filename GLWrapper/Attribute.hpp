@@ -14,78 +14,66 @@
 
 namespace geogo
 {
+    template <class ValueType>
+    class Value
+    {
+        std::function<void()> on_value_changed;
+        ValueType value;
+    public:
+        Value(ValueType&& _value, std::function<void()> _on_value_changed) : value(_value), on_value_changed(_on_value_changed)
+        {
+            
+        }
+        
+        operator const ValueType&() const
+        {
+            return value;
+        };
+        
+        void operator=(const ValueType& _value)
+        {
+            value = _value;
+            on_value_changed();
+        }
+        
+        void operator=(ValueType&& _value)
+        {
+            value = _value;
+            on_value_changed();
+        }
+    };
+    
     template <class IDType, class ValueType>
     class Attribute
     {
     public:
-        class ConstValue
-        {
-            friend class Attribute;
-            const ValueType& const_value;
-            
-            ConstValue(const ValueType& value) : const_value(value)
-            {
-                
-            }
-            
-        public:
-            operator const ValueType&() const
-            {
-                return const_value;
-            };
-        };
-        
-        class Value : public ConstValue
-        {
-            friend class Attribute;
-            Attribute<IDType, ValueType>* attribute;
-            ValueType& value;
-            
-            Value(Attribute<IDType, ValueType>* _attribute, ValueType& _value) : ConstValue(_value), attribute(_attribute), value(_value)
-            {
-                
-            }
-            
-        public:
-            void operator=(const ValueType& _value)
-            {
-                value = _value;
-                attribute->on_attribute_changed();
-            }
-            
-            void operator=(ValueType&& _value)
-            {
-                value = _value;
-                attribute->on_attribute_changed();
-            }
-        };
         
         Attribute()
         {
-            
+            on_value_changed = std::bind(&Attribute::on_attribute_changed, this);
         }
         
-        ConstValue at(const IDType& id) const
+        const Value<ValueType>& at(const IDType& id) const
         {
-            return ConstValue(mapping.at(id));
+            return mapping.at(id);
         }
         
-        ConstValue at(const IDType* id) const
+        const Value<ValueType>& at(const IDType* id) const
         {
             return at(*id);
         }
         
-        Value at(const IDType& id)
+        Value<ValueType>& at(const IDType& id)
         {
             auto it = mapping.find(id);
             if (it == mapping.end())
             {
-                it = mapping.insert(std::pair<IDType, ValueType>(id, ValueType())).first;
+                it = mapping.insert(std::pair<IDType, Value<ValueType>>(id, Value<ValueType>(ValueType(), on_value_changed))).first;
             }
-            return Value(this, it->second);
+            return it->second;
         }
         
-        Value at(const IDType* id)
+        Value<ValueType>& at(const IDType* id)
         {
             return at(*id);
         }
@@ -96,14 +84,15 @@ namespace geogo
         }
         
     private:
-        std::map<IDType, ValueType> mapping;
+        std::map<IDType, Value<ValueType>> mapping;
         std::vector<std::function<void()>> subscribers = std::vector<std::function<void()>>();
+        std::function<void()> on_value_changed;
         
         void on_attribute_changed()
         {
-            for(auto on_attribute_changed : subscribers)
+            for(auto callback : subscribers)
             {
-                on_attribute_changed();
+                callback();
             }
         }
     };
