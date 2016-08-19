@@ -275,20 +275,19 @@ void View::create_terrain()
 void View::create_spider_body()
 {
     auto geometry = Reader::load_obj("resources/spider/spider.obj");
-    auto positions = geometry->get_vec3_vertex_attribute("position");
     
     vec3 center;
     for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
     {
-        vec3 pos = positions->at(vertex);
+        vec3 pos = geometry->position()->at(vertex);
         center += pos;
     }
     center /= geometry->get_no_vertices();
     
     for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
     {
-        vec3 p = positions->at(vertex);
-        positions->at(vertex) = p - center;
+        vec3 p = geometry->position()->at(vertex);
+        geometry->position()->at(vertex) = p - center;
     }
     auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     spider_body = shared_ptr<GLObject>(new GLObject(geometry, material, GL_TRIANGLES));
@@ -305,25 +304,16 @@ void View::create_spider_legs()
 static std::shared_ptr<Geometry> create_box(bool view_from_inside)
 {
     auto geometry = shared_ptr<Geometry>(new Geometry());
-    auto position_attribute = geometry->get_vec3_vertex_attribute("position");
     
-    auto vertexNNP = geometry->create_vertex();
-    position_attribute->at(vertexNNP) = vec3(-1.0, -1.0,  1.0);
-    auto vertexPPP = geometry->create_vertex();
-    position_attribute->at(vertexPPP) = vec3(1.0, 1.0,  1.0);
-    auto vertexPNP = geometry->create_vertex();
-    position_attribute->at(vertexPNP) = vec3(1.0, -1.0,  1.0);
-    auto vertexNPP = geometry->create_vertex();
-    position_attribute->at(vertexNPP) = vec3(-1.0, 1.0,  1.0);
+    auto vertexNNP = geometry->create_vertex(vec3(-1.0, -1.0,  1.0));
+    auto vertexPPP = geometry->create_vertex(vec3(1.0, 1.0,  1.0));
+    auto vertexPNP = geometry->create_vertex(vec3(1.0, -1.0,  1.0));
+    auto vertexNPP = geometry->create_vertex(vec3(-1.0, 1.0,  1.0));
     
-    auto vertexNNN = geometry->create_vertex();
-    position_attribute->at(vertexNNN) = vec3(-1.0, -1.0,  -1.0);
-    auto vertexPPN = geometry->create_vertex();
-    position_attribute->at(vertexPPN) = vec3(1.0, 1.0,  -1.0);
-    auto vertexPNN = geometry->create_vertex();
-    position_attribute->at(vertexPNN) = vec3(1.0, -1.0,  -1.0);
-    auto vertexNPN = geometry->create_vertex();
-    position_attribute->at(vertexNPN) = vec3(-1.0, 1.0,  -1.0);
+    auto vertexNNN = geometry->create_vertex(vec3(-1.0, -1.0,  -1.0));
+    auto vertexPPN = geometry->create_vertex(vec3(1.0, 1.0,  -1.0));
+    auto vertexPNN = geometry->create_vertex(vec3(1.0, -1.0,  -1.0));
+    auto vertexNPN = geometry->create_vertex(vec3(-1.0, 1.0,  -1.0));
     
     if(view_from_inside)
     {
@@ -382,12 +372,11 @@ static std::shared_ptr<Geometry> create_box(bool view_from_inside)
 void View::create_cube()
 {
     auto geometry = create_box(false);
-    auto position = geometry->get_vec3_vertex_attribute("position");
     auto uv_attribute = geometry->get_vec2_vertex_attribute("uv_coordinates");
     
     for (auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
     {
-        vec3 pos = position->at(vertex);
+        vec3 pos = geometry->position()->at(vertex);
         auto uv = vec2(0., 0.);
         if(pos.x < 0)
             uv.x = 1.;

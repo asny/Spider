@@ -118,13 +118,11 @@ shared_ptr<Geometry> Reader::load_obj(string file_path)
     if(load_success)
     {
         // Create the vertices
-        auto position_attribute = geometry->get_vec3_vertex_attribute("position");
         auto mapping = std::map<unsigned int, VertexID*>();
         for( unsigned int i = 0; i < positions.size(); i++ )
         {
-            auto vertex_id = geometry->create_vertex();
+            auto vertex_id = geometry->create_vertex(positions.at(i));
             mapping[i] = vertex_id;
-            position_attribute->at(vertex_id) = positions.at(i);
         }
         
         // Create the faces
