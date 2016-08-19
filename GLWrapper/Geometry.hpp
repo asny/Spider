@@ -39,17 +39,6 @@ namespace geogo
             
         }
         
-        Geometry(const std::vector<glm::vec3>& positions)
-        {
-            // TODO: Should be created outside of Geometry.
-            auto attribute = get_vec3_vertex_attribute("position");
-            
-            for (auto position : positions) {
-                auto vertex = create_vertex();
-                attribute->add(vertex, position);
-            }
-        }
-        
         ~Geometry()
         {
             for(auto vertex = vertices_begin(); vertex != vertices_end(); )
