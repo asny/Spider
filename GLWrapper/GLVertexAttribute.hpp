@@ -17,6 +17,7 @@ namespace oogl
     class GLVertexAttribute
     {
     public:
+        // TODO: Infer size from ValueType
         GLVertexAttribute(int _size, GLuint location, std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>> _attribute)
             : size(_size), attribute(_attribute)
         {
