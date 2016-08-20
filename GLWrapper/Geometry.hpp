@@ -30,11 +30,6 @@ namespace geogo
         
         std::shared_ptr<Attribute<VertexID, glm::vec3>> position_attribute = std::shared_ptr<Attribute<VertexID, glm::vec3>>(new Attribute<VertexID, glm::vec3>());
         
-        std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec2>>> vec2VertexAttributes =
-        std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec2>>>();
-        std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec3>>> vec3VertexAttributes =
-        std::map<std::string, std::shared_ptr<Attribute<VertexID, glm::vec3>>>();
-        
     public:
         Geometry()
         {
@@ -90,37 +85,6 @@ namespace geogo
         std::shared_ptr<const Attribute<VertexID, glm::vec3>> position() const
         {
             return position_attribute;
-        }
-        
-        std::shared_ptr<Attribute<VertexID, glm::vec2>> get_vec2_vertex_attribute(std::string name)
-        {
-            auto result = vec2VertexAttributes.find(name);
-            if(result == vec2VertexAttributes.end())
-            {
-                // Lazy construction
-                auto attribute = std::shared_ptr<Attribute<VertexID, glm::vec2>>(new Attribute<VertexID, glm::vec2>());
-                vec2VertexAttributes[name] = attribute;
-                return attribute;
-            }
-            return result->second;
-        }
-        
-        std::shared_ptr<Attribute<VertexID, glm::vec3>> get_vec3_vertex_attribute(std::string name)
-        {
-            if(name == "position")
-            {
-                return position_attribute;
-            }
-            
-            auto result = vec3VertexAttributes.find(name);
-            if(result == vec3VertexAttributes.end())
-            {
-                // Lazy construction
-                auto attribute = std::shared_ptr<Attribute<VertexID, glm::vec3>>(new Attribute<VertexID, glm::vec3>());
-                vec3VertexAttributes[name] = attribute;
-                return attribute;
-            }
-            return result->second;
         }
         
         VertexID* vertices_begin()

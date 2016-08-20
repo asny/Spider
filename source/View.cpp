@@ -257,7 +257,8 @@ void View::create_terrain()
     for (int i = 0; i < 9; i++) {
         auto geometry = shared_ptr<Geometry>(new Geometry());
         auto object = shared_ptr<GLObject>(new GLObject(geometry, material, GL_TRIANGLE_STRIP));
-        object->use_attribute("normal", geometry->get_vec3_vertex_attribute("normal"));
+        auto normal_attribute = shared_ptr<Attribute<VertexID, vec3>>(new Attribute<VertexID, vec3>());
+        object->use_attribute("normal", normal_attribute);
         terrain_patches.push_back(object);
         
     }
@@ -265,7 +266,9 @@ void View::create_terrain()
 
 void View::create_spider_body()
 {
-    auto geometry = Reader::load_obj("resources/spider/spider.obj");
+    auto geometry = shared_ptr<Geometry>(new Geometry());
+    auto normal_attribute = shared_ptr<Attribute<VertexID, vec3>>(new Attribute<VertexID, vec3>());
+    Reader::load_obj("resources/spider/spider.obj", *geometry, *normal_attribute);
     
     vec3 center;
     for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
@@ -282,7 +285,7 @@ void View::create_spider_body()
     }
     auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     spider_body = shared_ptr<GLObject>(new GLObject(geometry, material, GL_TRIANGLES));
-    spider_body->use_attribute("normal", geometry->get_vec3_vertex_attribute("normal"));
+    spider_body->use_attribute("normal", normal_attribute);
     spider_body->update_uniform_variable("lightPos", light_pos);
     scene->add(spider_body);
 }
@@ -300,7 +303,7 @@ void View::create_spider_legs()
 void View::create_cube()
 {
     auto geometry = Geometry::create_box(false);
-    auto uv_attribute = geometry->get_vec2_vertex_attribute("uv_coordinates");
+    auto uv_attribute = shared_ptr<Attribute<VertexID, vec2>>(new Attribute<VertexID, vec2>());
     
     for (auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
     {
