@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "GLCamera.hpp"
+#include "GLScene.hpp"
 #include "model.hpp"
 
 class View
@@ -21,10 +21,11 @@ class View
     
     std::unique_ptr<Model> model;
     
-    std::unique_ptr<oogl::GLCamera> camera;
+    std::shared_ptr<oogl::GLCamera> camera;
+    std::unique_ptr<oogl::GLScene> scene;
     
     std::shared_ptr<geogo::Geometry> spider_legs_geometry;
-    std::shared_ptr<oogl::GLObject> cube, spider_body, spider_legs, skybox;
+    std::shared_ptr<oogl::GLObject> spider_body;
     std::vector<std::shared_ptr<oogl::GLObject>> terrain_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
     std::vector<std::shared_ptr<oogl::GLObject>> grass_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
     
@@ -49,8 +50,6 @@ private:
     static void update_spider();
     
     static void update_camera();
-    
-    void display();
     
     void update(double elapsedTime);
 };

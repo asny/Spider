@@ -52,9 +52,13 @@ View::View(int &argc, char** argv)
     glfwSetCursorPos(gWindow, 0, 0);
     glfwMakeContextCurrent(gWindow);
     
+    // Create scene
+    scene = unique_ptr<GLScene>(new GLScene(gWindow));
+    
     // Create camera
-    camera = std::unique_ptr<GLCamera>(new GLCamera());
+    camera = std::shared_ptr<GLCamera>(new GLCamera());
     camera->set_screen_size(WIN_SIZE_X, WIN_SIZE_Y);
+    scene->add(camera);
     
     // Create objects
     create_cube();
@@ -65,8 +69,6 @@ View::View(int &argc, char** argv)
     create_grass();
     
     // TODO: Should be moved to GLMaterial.
-    spider_body->update_uniform_variable("lightPos", light_pos);
-    spider_legs->update_uniform_variable("lightPos", light_pos);
     terrain_patches.front()->update_uniform_variable("lightPos", light_pos);
     grass_patches.front()->update_uniform_variable("lightPos", light_pos);
     
@@ -105,7 +107,7 @@ View::View(int &argc, char** argv)
         lastTime = thisTime;
         
         // draw one frame
-        display();
+        scene->draw();
         
         //exit program if escape key is pressed
         if(glfwGetKey(gWindow, GLFW_KEY_ESCAPE))
@@ -114,20 +116,6 @@ View::View(int &argc, char** argv)
     
     // clean up and exit
     glfwTerminate();
-}
-
-void View::display()
-{
-    vector<shared_ptr<GLObject>> objects = {spider_body, spider_legs, cube, skybox};
-    objects.insert(objects.end(), terrain_patches.begin(), terrain_patches.end());
-    if(display_grass)
-    {
-        objects.insert(objects.end(), grass_patches.begin(), grass_patches.end());
-    }
-    
-    camera->draw(objects);
-    
-    glfwSwapBuffers(gWindow);
 }
 
 void print_fps(double elapsedTime)
@@ -293,6 +281,8 @@ void View::create_spider_body()
     auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     auto normals = geometry->get_vec3_vertex_attribute("normal");
     spider_body = shared_ptr<GLObject>(new GLObject(geometry, material, {{"normal", normals}}, GL_TRIANGLES));
+    spider_body->update_uniform_variable("lightPos", light_pos);
+    scene->add(spider_body);
 }
 
 void View::create_spider_legs()
@@ -300,7 +290,9 @@ void View::create_spider_legs()
     auto material = shared_ptr<GLMaterial>(new GLSpiderLegsMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     spider_legs_geometry = shared_ptr<Geometry>(new Geometry());
     
-    spider_legs = shared_ptr<GLObject>(new GLObject(spider_legs_geometry, material, GL_LINES));
+    auto object = shared_ptr<GLObject>(new GLObject(spider_legs_geometry, material, GL_LINES));
+    object->update_uniform_variable("lightPos", light_pos);
+    scene->add(object);
 }
 
 void View::create_cube()
@@ -323,8 +315,8 @@ void View::create_cube()
     cubeTextureBmp.flipVertically();
     auto cubeTexture = shared_ptr<GLTexture>(new GLTexture2D(cubeTextureBmp));
     auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(cubeTexture));
-    
-    cube = shared_ptr<GLObject>(new GLObject(geometry, material, {{"uv_coordinates", uv_attribute}}));
+    auto object = shared_ptr<GLObject>(new GLObject(geometry, material, {{"uv_coordinates", uv_attribute}}));
+    scene->add(object);
 }
 
 void View::create_skybox()
@@ -333,7 +325,8 @@ void View::create_skybox()
     auto bitmaps = {Reader::load_bitmap(path + "right.jpg"), Reader::load_bitmap(path + "left.jpg"), Reader::load_bitmap(path + "top.jpg"), Reader::load_bitmap(path + "top.jpg"), Reader::load_bitmap(path + "front.jpg"), Reader::load_bitmap(path + "back.jpg")};
     auto skybox_texture = shared_ptr<GLTexture3D>(new GLTexture3D(bitmaps));
     auto material = shared_ptr<GLSkyboxMaterial>(new GLSkyboxMaterial(skybox_texture));
-    skybox = shared_ptr<GLObject>(new GLObject(geometry, material));
     auto geometry = Geometry::create_box(true);
+    auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
+    scene->add(object);
 }
 
