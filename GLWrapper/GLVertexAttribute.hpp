@@ -17,15 +17,15 @@ namespace oogl
     class GLVertexAttribute
     {
     public:
-        // TODO: Infer size from ValueType
-        GLVertexAttribute(int _size, GLuint location, std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>> _attribute)
-            : size(_size), attribute(_attribute)
+        GLVertexAttribute(GLuint location, std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>> _attribute)
+            : attribute(_attribute)
         {
             // Generate and bind buffer
             glGenBuffers(1, &buffer_id);
             glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
             
             // Initialize attribute
+            size = sizeof(ValueType) / sizeof(float);
             glEnableVertexAttribArray(location);
             glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, size * sizeof(float), (const GLvoid *)(0));
             check_gl_error();

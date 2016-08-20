@@ -20,18 +20,18 @@ GLObject::GLObject(std::shared_ptr<Geometry> _geometry, std::shared_ptr<GLMateri
     glBindVertexArray(array_id);
     
     auto location = material->get_attribute_location("position");
-    vec3_vertex_attributes.push_back(GLVertexAttribute<glm::vec3>(3, location, geometry->position()));
+    vec3_vertex_attributes.push_back(GLVertexAttribute<glm::vec3>(location, geometry->position()));
     
     for(auto attribute : vec2_attributes)
     {
         auto location = material->get_attribute_location(attribute.first);
-        vec2_vertex_attributes.push_back(GLVertexAttribute<glm::vec2>(2, location, attribute.second));
+        vec2_vertex_attributes.push_back(GLVertexAttribute<glm::vec2>(location, attribute.second));
     }
     
     for(auto attribute : vec3_attributes)
     {
         auto location = material->get_attribute_location(attribute.first);
-        vec3_vertex_attributes.push_back(GLVertexAttribute<glm::vec3>(3, location, attribute.second));
+        vec3_vertex_attributes.push_back(GLVertexAttribute<glm::vec3>(location, attribute.second));
     }
 }
 
