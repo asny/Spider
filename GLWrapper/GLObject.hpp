@@ -25,14 +25,13 @@ namespace oogl
         GLuint array_id;
         std::vector<GLVertexAttribute<glm::vec2>> vec2_vertex_attributes;
         std::vector<GLVertexAttribute<glm::vec3>> vec3_vertex_attributes;
-        GLenum drawmode;
         
         // Transformation
         glm::mat4 modelMatrix = glm::mat4(1.);
         
     public:
         
-        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
+        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material);
         
         void use_attribute(std::string name, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> attribute)
         {

@@ -26,6 +26,7 @@ namespace geogo
         FaceID* end_face = nullptr;
         
         int no_vertices = 0;
+        int no_edges = 0;
         int no_faces = 0;
         
         std::shared_ptr<Attribute<VertexID, glm::vec3>> position_attribute = std::shared_ptr<Attribute<VertexID, glm::vec3>>(new Attribute<VertexID, glm::vec3>());
@@ -110,6 +111,11 @@ namespace geogo
         int get_no_vertices()
         {
             return no_vertices;
+        }
+        
+        int get_no_edges()
+        {
+            return no_edges;
         }
         
         int get_no_faces()

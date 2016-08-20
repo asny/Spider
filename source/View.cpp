@@ -247,7 +247,7 @@ void View::create_grass()
     auto material = shared_ptr<GLMaterial>(new GLGrassMaterial({0.2f,0.5f,0.f, 1.f}, {0.1f, 0.2f, 0.f, 1.f}));
     for (int i = 0; i < 9; i++) {
         auto geometry = shared_ptr<Geometry>(new Geometry());
-        grass_patches.push_back(shared_ptr<GLObject>(new GLObject(geometry, material, GL_LINES)));
+        grass_patches.push_back(shared_ptr<GLObject>(new GLObject(geometry, material)));
     }
 }
 
@@ -256,7 +256,7 @@ void View::create_terrain()
     auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     for (int i = 0; i < 9; i++) {
         auto geometry = shared_ptr<Geometry>(new Geometry());
-        auto object = shared_ptr<GLObject>(new GLObject(geometry, material, GL_TRIANGLE_STRIP));
+        auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
         auto normal_attribute = shared_ptr<Attribute<VertexID, vec3>>(new Attribute<VertexID, vec3>());
         object->use_attribute("normal", normal_attribute);
         terrain_patches.push_back(object);
@@ -284,7 +284,7 @@ void View::create_spider_body()
         geometry->position()->at(vertex) = p - center;
     }
     auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
-    spider_body = shared_ptr<GLObject>(new GLObject(geometry, material, GL_TRIANGLES));
+    spider_body = shared_ptr<GLObject>(new GLObject(geometry, material));
     spider_body->use_attribute("normal", normal_attribute);
     spider_body->update_uniform_variable("lightPos", light_pos);
     scene->add(spider_body);
@@ -295,7 +295,7 @@ void View::create_spider_legs()
     auto material = shared_ptr<GLMaterial>(new GLSpiderLegsMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     spider_legs_geometry = shared_ptr<Geometry>(new Geometry());
     
-    auto object = shared_ptr<GLObject>(new GLObject(spider_legs_geometry, material, GL_LINES));
+    auto object = shared_ptr<GLObject>(new GLObject(spider_legs_geometry, material));
     object->update_uniform_variable("lightPos", light_pos);
     scene->add(object);
 }
