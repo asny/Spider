@@ -13,26 +13,12 @@ using namespace geogo;
 using namespace std;
 using namespace glm;
 
-GLObject::GLObject(std::shared_ptr<Geometry> _geometry, std::shared_ptr<GLMaterial> _material, map<string, shared_ptr<Attribute<VertexID, vec2>>> vec2_attributes, map<string, shared_ptr<Attribute<VertexID, vec3>>> vec3_attributes, GLenum _drawmode) : material(_material), geometry(_geometry), drawmode(_drawmode)
+GLObject::GLObject(std::shared_ptr<Geometry> _geometry, std::shared_ptr<GLMaterial> _material, GLenum _drawmode) : material(_material), geometry(_geometry), drawmode(_drawmode)
 {
     // Generate and bind array
     glGenVertexArrays(1, &array_id);
-    glBindVertexArray(array_id);
     
-    auto location = material->get_attribute_location("position");
-    vec3_vertex_attributes.push_back(GLVertexAttribute<glm::vec3>(location, geometry->position()));
-    
-    for(auto attribute : vec2_attributes)
-    {
-        auto location = material->get_attribute_location(attribute.first);
-        vec2_vertex_attributes.push_back(GLVertexAttribute<glm::vec2>(location, attribute.second));
-    }
-    
-    for(auto attribute : vec3_attributes)
-    {
-        auto location = material->get_attribute_location(attribute.first);
-        vec3_vertex_attributes.push_back(GLVertexAttribute<glm::vec3>(location, attribute.second));
-    }
+    use_attribute("position", geometry->position());
 }
 
 void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)

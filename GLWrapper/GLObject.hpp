@@ -32,24 +32,21 @@ namespace oogl
         
     public:
         
-        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, std::map<std::string, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>>> custom_vec2_attributes, std::map<std::string, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>>> custom_vec3_attributes, GLenum drawmode = GL_TRIANGLES);
+        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES);
         
-        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES) : GLObject(geometry, material, {}, {}, drawmode)
+        void use_attribute(std::string name, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> attribute)
         {
-            
+            glBindVertexArray(array_id);
+            auto location = material->get_attribute_location(name);
+            vec2_vertex_attributes.push_back(GLVertexAttribute<glm::vec2>(location, attribute));
         }
         
-        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, std::map<std::string, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>>> custom_vec3_attributes, GLenum drawmode = GL_TRIANGLES) : GLObject(geometry, material, {}, custom_vec3_attributes, drawmode)
+        void use_attribute(std::string name, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> attribute)
         {
-            
+            glBindVertexArray(array_id);
+            auto location = material->get_attribute_location(name);
+            vec3_vertex_attributes.push_back(GLVertexAttribute<glm::vec3>(location, attribute));
         }
-        
-        
-        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, std::map<std::string, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>>> custom_vec2_attributes, GLenum drawmode = GL_TRIANGLES) : GLObject(geometry, material, custom_vec2_attributes, {}, drawmode)
-        {
-            
-        }
-        
         
         /**
          Updates the value of the uniform variable with the given name.

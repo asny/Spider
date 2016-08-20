@@ -256,8 +256,10 @@ void View::create_terrain()
     auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     for (int i = 0; i < 9; i++) {
         auto geometry = shared_ptr<Geometry>(new Geometry());
-        auto normals = geometry->get_vec3_vertex_attribute("normal");
-        terrain_patches.push_back(shared_ptr<GLObject>(new GLObject(geometry, material, {{"normal", normals}}, GL_TRIANGLE_STRIP)));
+        auto object = shared_ptr<GLObject>(new GLObject(geometry, material, GL_TRIANGLE_STRIP));
+        object->use_attribute("normal", geometry->get_vec3_vertex_attribute("normal"));
+        terrain_patches.push_back(object);
+        
     }
 }
 
@@ -279,8 +281,8 @@ void View::create_spider_body()
         geometry->position()->at(vertex) = p - center;
     }
     auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
-    auto normals = geometry->get_vec3_vertex_attribute("normal");
-    spider_body = shared_ptr<GLObject>(new GLObject(geometry, material, {{"normal", normals}}, GL_TRIANGLES));
+    spider_body = shared_ptr<GLObject>(new GLObject(geometry, material, GL_TRIANGLES));
+    spider_body->use_attribute("normal", geometry->get_vec3_vertex_attribute("normal"));
     spider_body->update_uniform_variable("lightPos", light_pos);
     scene->add(spider_body);
 }
@@ -315,7 +317,8 @@ void View::create_cube()
     cubeTextureBmp.flipVertically();
     auto cubeTexture = shared_ptr<GLTexture>(new GLTexture2D(cubeTextureBmp));
     auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(cubeTexture));
-    auto object = shared_ptr<GLObject>(new GLObject(geometry, material, {{"uv_coordinates", uv_attribute}}));
+    auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
+    object->use_attribute("uv_coordinates", uv_attribute);
     scene->add(object);
 }
 
