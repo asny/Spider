@@ -32,20 +32,20 @@ namespace oogl
         
     public:
         
-        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, std::map<std::string, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>>> vec2_attributes, std::map<std::string, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>>> vec3_attributes, GLenum drawmode = GL_TRIANGLES);
+        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, std::map<std::string, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>>> custom_vec2_attributes, std::map<std::string, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>>> custom_vec3_attributes, GLenum drawmode = GL_TRIANGLES);
         
         GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, GLenum drawmode = GL_TRIANGLES) : GLObject(geometry, material, {}, {}, drawmode)
         {
             
         }
         
-        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, std::map<std::string, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>>> vec3_attributes, GLenum drawmode = GL_TRIANGLES) : GLObject(geometry, material, {}, vec3_attributes, drawmode)
+        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, std::map<std::string, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>>> custom_vec3_attributes, GLenum drawmode = GL_TRIANGLES) : GLObject(geometry, material, {}, custom_vec3_attributes, drawmode)
         {
             
         }
         
         
-        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, std::map<std::string, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>>> vec2_attributes, GLenum drawmode = GL_TRIANGLES) : GLObject(geometry, material, vec2_attributes, {}, drawmode)
+        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material, std::map<std::string, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>>> custom_vec2_attributes, GLenum drawmode = GL_TRIANGLES) : GLObject(geometry, material, custom_vec2_attributes, {}, drawmode)
         {
             
         }
