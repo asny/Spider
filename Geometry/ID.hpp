@@ -51,6 +51,36 @@ namespace geogo
         }
     };
     
+    class EdgeID : public ID
+    {
+        friend class Geometry;
+        
+        VertexID* vertex1;
+        VertexID* vertex2;
+        
+        EdgeID(int id, EdgeID* previous, VertexID* _vertex1, VertexID* _vertex2)
+            : ID(id, previous), vertex1(_vertex1), vertex2(_vertex2)
+        {
+            
+        }
+        
+    public:
+        EdgeID* next()
+        {
+            return static_cast<EdgeID*>(ID::next);
+        }
+        
+        VertexID* v1()
+        {
+            return vertex1;
+        }
+        
+        VertexID* v2()
+        {
+            return vertex2;
+        }
+    };
+    
     class FaceID : public ID
     {
         friend class Geometry;
@@ -60,7 +90,7 @@ namespace geogo
         VertexID* vertex3;
         
         FaceID(int id, FaceID* previous, VertexID* _vertex1, VertexID* _vertex2, VertexID* _vertex3)
-            : ID(id, previous), vertex1(_vertex1), vertex2(_vertex2), vertex3(_vertex3)
+        : ID(id, previous), vertex1(_vertex1), vertex2(_vertex2), vertex3(_vertex3)
         {
             
         }

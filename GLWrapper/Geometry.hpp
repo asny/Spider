@@ -22,6 +22,9 @@ namespace geogo
         VertexID* start_vertex = nullptr;
         VertexID* end_vertex = nullptr;
         
+        EdgeID* start_edge = nullptr;
+        EdgeID* end_edge = nullptr;
+        
         FaceID* start_face = nullptr;
         FaceID* end_face = nullptr;
         
@@ -69,6 +72,15 @@ namespace geogo
             return vertex;
         }
         
+        EdgeID* create_edge(VertexID* vertex1, VertexID* vertex2)
+        {
+            end_edge = new EdgeID(no_edges, end_edge, vertex1, vertex2);
+            no_edges++;
+            if(!start_edge)
+                start_edge = end_edge;
+            return end_edge;
+        }
+        
         FaceID* create_face(VertexID* vertex1, VertexID* vertex2, VertexID* vertex3)
         {
             end_face = new FaceID(no_faces, end_face, vertex1, vertex2, vertex3);
@@ -94,6 +106,16 @@ namespace geogo
         }
         
         VertexID* vertices_end()
+        {
+            return nullptr;
+        }
+        
+        EdgeID* edges_begin()
+        {
+            return start_edge;
+        }
+        
+        EdgeID* edges_end()
         {
             return nullptr;
         }
