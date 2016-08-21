@@ -47,12 +47,12 @@ void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
     
     for (auto glAttribute : vec2_vertex_attributes)
     {
-        glAttribute.update(geometry);
+        update_attribute(glAttribute);
     }
     
     for (auto glAttribute : vec3_vertex_attributes)
     {
-        glAttribute.update(geometry);
+        update_attribute(glAttribute);
     }
     
     material->pre_draw();
