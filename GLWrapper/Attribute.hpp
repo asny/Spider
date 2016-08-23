@@ -12,37 +12,10 @@
 #include <map>
 #include <vector>
 
+#include "Property.h"
+
 namespace geogo
 {
-    template <class T>
-    class Property
-    {
-        std::function<void()> on_property_changed;
-        T value;
-    public:
-        Property(T&& _value, std::function<void()> _on_property_changed) : value(_value), on_property_changed(_on_property_changed)
-        {
-            
-        }
-        
-        operator const T&() const
-        {
-            return value;
-        };
-        
-        void operator=(const T& _value)
-        {
-            value = _value;
-            on_property_changed();
-        }
-        
-        void operator=(T&& _value)
-        {
-            value = _value;
-            on_property_changed();
-        }
-    };
-    
     template <class IDType, class ValueType>
     class Attribute
     {

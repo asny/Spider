@@ -50,6 +50,7 @@
 		7A2A093B1BF7EC04006285D0 /* skybox.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = skybox.vert; path = shaders/skybox.vert; sourceTree = "<group>"; };
 		7A30A01F1D47FA530078C90A /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Geometry.cpp; path = GLWrapper/Geometry.cpp; sourceTree = SOURCE_ROOT; };
 		7A30A0201D47FA530078C90A /* Geometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Geometry.hpp; path = GLWrapper/Geometry.hpp; sourceTree = SOURCE_ROOT; };
+		7A36882F1D6CCB3500A55796 /* Property.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Property.h; path = Geometry/Property.h; sourceTree = "<group>"; };
 		7A370D901BD964E2000783CA /* grass.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grass.geom; path = shaders/grass.geom; sourceTree = "<group>"; };
 		7A383A1C1BBFB6AC00E29333 /* Spider */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Spider; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A383A261BBFB6F700E29333 /* game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = game.cpp; path = source/game.cpp; sourceTree = "<group>"; };
@@ -237,6 +238,7 @@
 				7A5A4F911D4D37A700189B8C /* Attribute.hpp */,
 				7AB1391D1D5B3152007BD188 /* ID.cpp */,
 				7AB1391E1D5B3152007BD188 /* ID.hpp */,
+				7A36882F1D6CCB3500A55796 /* Property.h */,
 			);
 			name = GeoGo;
 			sourceTree = "<group>";
