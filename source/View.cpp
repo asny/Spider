@@ -60,12 +60,6 @@ View::View(int &argc, char** argv)
     camera->set_screen_size(WIN_SIZE_X, WIN_SIZE_Y);
     scene->add(camera);
     
-    // Create objects
-    create_cube();
-    create_skybox();
-    create_spider_body();
-    create_spider_legs();
-    
     // Create model
     model = std::unique_ptr<Model>(new Model(
     [](){
@@ -77,6 +71,14 @@ View::View(int &argc, char** argv)
         update_spider();
         update_camera();
     }));
+    
+    // Create objects
+    create_cube();
+    create_skybox();
+    create_spider_body();
+    create_spider_legs();
+    create_terrain();
+    create_grass();
     
     // Update
     update_terrain_and_grass();
@@ -229,19 +231,30 @@ void View::update_spider()
 
 void View::update_terrain_and_grass()
 {
-    for (auto terrain_patch : instance->model->terrain_patches_to_update())
+    instance->model->update_terrain(instance->model->get_spider_position());
+}
+
+void View::create_grass()
+{
+    auto material = shared_ptr<GLMaterial>(new GLGrassMaterial({0.2f,0.5f,0.f, 1.f}, {0.1f, 0.2f, 0.f, 1.f}));
+    for (TerrainPatch& patch : model->get_terrain_patches())
     {
-        auto ground_material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
-        auto ground = shared_ptr<GLObject>(new GLObject(terrain_patch->get_ground(), ground_material));
-        ground->use_attribute("normal", terrain_patch->get_ground_normals());
-        ground->update_uniform_variable("lightPos", instance->light_pos);
-        instance->scene->add(ground);
-        
-        auto grass_material = shared_ptr<GLMaterial>(new GLGrassMaterial({0.2f,0.5f,0.f, 1.f}, {0.1f, 0.2f, 0.f, 1.f}));
-        auto grass = shared_ptr<GLObject>(new GLObject(terrain_patch->get_grass(), grass_material));
+        auto grass = shared_ptr<GLObject>(new GLObject(patch.get_grass(), material));
         grass->update_uniform_variable("lightPos", instance->light_pos);
         grass->update_uniform_variable("spiderPosition", instance->model->get_spider_position());
         instance->scene->add(grass);
+    }
+}
+
+void View::create_terrain()
+{
+    auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
+    for (TerrainPatch& patch : model->get_terrain_patches())
+    {
+        auto ground = shared_ptr<GLObject>(new GLObject(patch.get_ground(), material));
+        ground->use_attribute("normal", patch.get_ground_normals());
+        ground->update_uniform_variable("lightPos", instance->light_pos);
+        instance->scene->add(ground);
     }
 }
 

@@ -50,9 +50,9 @@ vec3 approximate_normal(const vec3& position, const vector<vec3>& neighbour_posi
     return normalize(normal);
 }
 
-TerrainPatch::TerrainPatch(const vec3& _origo, double size) : origo(_origo)
+TerrainPatch::TerrainPatch()
 {
-    int map_size = static_cast<int>(size) * VERTICES_PER_UNIT + 1;
+    int map_size = static_cast<int>(SIZE) * VERTICES_PER_UNIT + 1;
     heightmap = vector<vector<double>>(map_size);
     grass = vector<vector<vec3>>(map_size);
     for ( auto r = 0; r < map_size; r++ )
@@ -60,6 +60,30 @@ TerrainPatch::TerrainPatch(const vec3& _origo, double size) : origo(_origo)
         heightmap[r] = vector<double>(map_size);
         grass[r] = vector<vec3>(map_size);
     }
+    mapping = map<std::pair<int, int>, geogo::VertexID*>();
+    for (int r = 0; r < map_size; r++)
+    {
+        for (int c = 0; c < map_size; c++)
+        {
+            auto vertex = ground_geometry->create_vertex();
+            mapping[pair<int, int>(r,c)] = vertex;
+            if(r > 0 && c > 0)
+            {
+                ground_geometry->create_face(mapping.at(pair<int, int>(r,c-1)), mapping.at(pair<int, int>(r-1,c-1)), vertex);
+                ground_geometry->create_face(mapping.at(pair<int, int>(r-1,c)), vertex, mapping.at(pair<int, int>(r-1,c-1)));
+            }
+            
+            auto grass_v1 = grass_geometry->create_vertex();
+            auto grass_v2 = grass_geometry->create_vertex();
+            grass_mapping[pair<int,int>(r,c)] = grass_geometry->create_edge(grass_v1, grass_v2);
+        }
+    }
+}
+
+void TerrainPatch::update(const vec3& _origo)
+{
+    origo = _origo;
+    int map_size = static_cast<int>(SIZE) * VERTICES_PER_UNIT + 1;
     
     double scale = (map_size - 1) / static_cast<double>(VERTICES_PER_UNIT);
     set_height(scale, 0, 0, {});
@@ -70,30 +94,26 @@ TerrainPatch::TerrainPatch(const vec3& _origo, double size) : origo(_origo)
     subdivide(0, 0, map_size-1);
     
     double step_size = 1. / static_cast<double>(VERTICES_PER_UNIT);
-    auto mapping = map<std::pair<int, int>, geogo::VertexID*>();
     for (int r = 0; r < map_size; r++)
     {
         for (int c = 0; c < map_size; c++)
         {
             vec3 pos = vec3(origo.x + r * step_size, heightmap[r][c], origo.z + c * step_size);
-            auto vertex = ground_geometry->create_vertex(pos);
-            mapping[pair<int, int>(r,c)] = vertex;
-            if(r > 0 && c > 0)
-            {
-                ground_geometry->create_face(mapping.at(pair<int, int>(r,c-1)), mapping.at(pair<int, int>(r-1,c-1)), vertex);
-                ground_geometry->create_face(mapping.at(pair<int, int>(r-1,c)), vertex, mapping.at(pair<int, int>(r-1,c-1)));
-            }
+            auto ground_vertex = mapping.at(pair<int, int>(r,c));
+            ground_geometry->position()->at(ground_vertex) = pos;
             
-            auto grass_v1 = grass_geometry->create_vertex(pos + vec3(random(-0.5 * step_size, 0.5 * step_size), 0., random(-0.5 * step_size, 0.5 * step_size)));
-            auto grass_v2 = grass_geometry->create_vertex(pos + grass[r][c]);
-            grass_geometry->create_edge(grass_v1, grass_v2);
+            auto grass_p1 = pos + vec3(random(-0.5 * step_size, 0.5 * step_size), 0., random(-0.5 * step_size, 0.5 * step_size));
+            auto grass_p2 = pos + grass[r][c];
+            auto grass_edge = grass_mapping.at(pair<int, int>(r,c));
+            grass_geometry->position()->at(grass_edge->v1()) = grass_p1;
+            grass_geometry->position()->at(grass_edge->v2()) = grass_p2;
         }
     }
     for (int r = 0; r < map_size; r++)
     {
         for (int c = 0; c < map_size; c++)
         {
-            auto vertex = mapping.at(pair<int, int>(r,c));
+            vec3 normal = vec3(0, 1, 0);
             if(r > 0 && c > 0 && r < map_size-1 && c < map_size-1)
             {
                 auto pos = ground_geometry->position()->at(mapping.at(pair<int, int>(r,c)));
@@ -101,11 +121,9 @@ TerrainPatch::TerrainPatch(const vec3& _origo, double size) : origo(_origo)
                 auto p2 = ground_geometry->position()->at(mapping.at(pair<int, int>(r,c+1)));
                 auto p3 = ground_geometry->position()->at(mapping.at(pair<int, int>(r-1,c)));
                 auto p4 = ground_geometry->position()->at(mapping.at(pair<int, int>(r+1,c)));
-                ground_normals->at(vertex) = approximate_normal(pos, {p1, p2, p3, p4});
+                normal = approximate_normal(pos, {p1, p2, p3, p4});
             }
-            else {
-                ground_normals->at(vertex) = vec3(0,1,0);
-            }
+            ground_normals->at(mapping.at(pair<int, int>(r,c))) = normal;
         }
     }
 }
@@ -175,39 +193,69 @@ vec3 TerrainPatch::get_size()
 Terrain::Terrain()
 {
     
-    
 }
 
 pair<int, int> Terrain::index_at(const vec3& position)
 {
     vec2 parameter = vec2(position.x, position.z);
-    vec2 index_vector = vec2(floor(parameter.x / patch_size), floor(parameter.y / patch_size));
+    vec2 index_vector = vec2(floor(parameter.x / TerrainPatch::SIZE), floor(parameter.y / TerrainPatch::SIZE));
     return make_pair(static_cast<int>(index_vector.x), static_cast<int>(index_vector.y));
 }
 
-TerrainPatch* Terrain::create_patch_at(pair<int, int> index)
+void Terrain::update(const glm::vec3& position)
 {
-    vec3 origo = vec3(patch_size * static_cast<double>(index.first), 0., patch_size * static_cast<double>(index.second));
-    TerrainPatch patch = TerrainPatch(origo, patch_size);
-    return &terrain_patches.insert(make_pair(index, patch)).first->second;
+    auto index_at_position = index_at(position);
+    
+    std::vector<TerrainPatch*> free_patches;
+    for (auto& patch : patches)
+    {
+        auto index = index_at(patch.get_center());
+        if(abs(index_at_position.first - index.first) > 1 || abs(index_at_position.second - index.second) > 1)
+        {
+            free_patches.push_back(&patch);
+        }
+    }
+    
+    for (int i = -1; i <= 1; i++)
+    {
+        for (int j = -1; j <= 1; j++)
+        {
+            auto index = make_pair(index_at_position.first + i, index_at_position.second + j);
+            bool found = false;
+            for (auto& patch : patches)
+            {
+                if(index == index_at(patch.get_center()))
+                    found = true;
+            }
+            
+            if(!found)
+            {
+                TerrainPatch* patch;
+                if(free_patches.size() == 0)
+                {
+                    patches.push_back(TerrainPatch());
+                    patch = &patches.back();
+                }
+                else {
+                    patch = free_patches.back();
+                    free_patches.pop_back();
+                }
+                vec3 origo = vec3(TerrainPatch::SIZE * static_cast<double>(index.first), 0., TerrainPatch::SIZE * static_cast<double>(index.second));
+                patch->update(origo);
+            }
+        }
+    }
 }
 
-TerrainPatch* Terrain::get_patch_at(std::pair<int, int> index)
+std::vector<TerrainPatch>& Terrain::get_patches()
 {
-    auto index_patch_pair = terrain_patches.find(index);
-    
-    // If the patch hasn't been created, then we create it.
-    if (index_patch_pair == terrain_patches.end())
-    {
-        return create_patch_at(index);
-    }
-    return &index_patch_pair->second;
+    return patches;
 }
 
 vec3 Terrain::get_terrain_position_at(const glm::vec3& position)
 {
     auto index = index_at(position);
-    TerrainPatch* patch = get_patch_at(index);
-    double height = patch->get_surface_height_at(position);
+    //TerrainPatch* patch = get_patch_at(index);
+    double height = 1;//patch->get_surface_height_at(position);
     return vec3(position.x, height, position.z);
 }

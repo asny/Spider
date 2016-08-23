@@ -28,7 +28,7 @@ public:
     Model(std::function<void()> _on_spider_position_changed, std::function<void()> _on_spider_view_direction_changed)
         : on_spider_position_changed(_on_spider_position_changed), on_spider_view_direction_changed(_on_spider_view_direction_changed)
     {
-        
+        update_terrain(get_spider_position());
     }
     
     // ******** VIEW ********
@@ -65,7 +65,15 @@ public:
         return feet;
     }
     
-    std::vector<TerrainPatch*> terrain_patches_to_update();
+    std::vector<TerrainPatch>& get_terrain_patches()
+    {
+        return terrain.get_patches();
+    }
+    
+    void update_terrain(const glm::vec3& position)
+    {
+        terrain.update(position);
+    }
     
     // ******** CONTROL ********
     

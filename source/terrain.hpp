@@ -18,7 +18,11 @@
 
 class TerrainPatch
 {
+    const static int VERTICES_PER_UNIT = 16;
+    
     glm::vec3 origo;
+    std::map<std::pair<int,int>, geogo::VertexID*> mapping;
+    std::map<std::pair<int,int>, geogo::EdgeID*> grass_mapping;
     std::vector<std::vector<double>> heightmap;
     std::vector<std::vector<glm::vec3>> grass;
     std::shared_ptr<geogo::Geometry> ground_geometry = std::shared_ptr<geogo::Geometry>(new geogo::Geometry());
@@ -32,16 +36,22 @@ class TerrainPatch
     glm::vec2 index_at(const glm::vec3& position) const;
     
 public:
+    constexpr const static double SIZE = 4.;
     
-    const static int VERTICES_PER_UNIT = 16;
+    TerrainPatch();
     
-    TerrainPatch(const glm::vec3& _origo, double _size);
+    void update(const glm::vec3& _origo);
     
     double get_surface_height_at(const glm::vec3& position) const;
     
     glm::vec3 get_grass_vector_at(const glm::vec3& position) const;
     
     glm::vec3 get_origo();
+    
+    glm::vec3 get_center()
+    {
+        return origo + 0.5f * get_size();
+    }
     
     glm::vec3 get_size();
     
@@ -61,21 +71,19 @@ public:
     }
 };
 
-class Terrain {
-    
-    const double patch_size = 4.;
-    
-    std::map<std::pair<int, int>, TerrainPatch> terrain_patches = std::map<std::pair<int, int>, TerrainPatch>();
-    
-    TerrainPatch* create_patch_at(std::pair<int, int> index);
+class Terrain
+{
+    std::vector<TerrainPatch> patches;
     
 public:
     
     Terrain();
     
-    std::pair<int, int> index_at(const glm::vec3& position);
+    std::vector<TerrainPatch>& get_patches();
     
-    TerrainPatch* get_patch_at(std::pair<int, int> index);
+    void update(const glm::vec3& position);
+    
+    std::pair<int, int> index_at(const glm::vec3& position);
     
     glm::vec3 get_terrain_position_at(const glm::vec3& position);
 };
