@@ -42,7 +42,6 @@ private:
     void create_skybox();
     void create_spider_body();
     void create_spider_legs();
-    void create_grass();
     
     static void update_terrain_and_grass();
     static void update_spider();

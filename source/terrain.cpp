@@ -13,6 +13,25 @@
 using namespace std;
 using namespace glm;
 
+double random(double min, double max)
+{
+    return (max - min) * (double)rand()/(double)RAND_MAX + min;
+}
+
+double average(std::vector<double> heights)
+{
+    if(heights.size() == 0)
+    {
+        return 0.;
+    }
+    double sum = 0.;
+    for (auto height : heights)
+    {
+        sum += height;
+    }
+    return sum / static_cast<double>(heights.size());
+}
+
 vec3 approximate_normal(const vec3& position, const vec3& neighbour_position)
 {
     vec3 tangent1 = normalize(neighbour_position - position);
@@ -50,13 +69,13 @@ TerrainPatch::TerrainPatch(const vec3& _origo, double size) : origo(_origo)
     
     subdivide(0, 0, map_size-1);
     
-    double vertices_per_unit = static_cast<double>(VERTICES_PER_UNIT);
+    double step_size = 1. / static_cast<double>(VERTICES_PER_UNIT);
     auto mapping = map<std::pair<int, int>, geogo::VertexID*>();
     for (int r = 0; r < map_size; r++)
     {
         for (int c = 0; c < map_size; c++)
         {
-            vec3 pos = vec3(origo.x + r / vertices_per_unit, heightmap[r][c], origo.z + c / vertices_per_unit);
+            vec3 pos = vec3(origo.x + r * step_size, heightmap[r][c], origo.z + c * step_size);
             auto vertex = ground_geometry->create_vertex(pos);
             mapping[pair<int, int>(r,c)] = vertex;
             if(r > 0 && c > 0)
@@ -64,6 +83,10 @@ TerrainPatch::TerrainPatch(const vec3& _origo, double size) : origo(_origo)
                 ground_geometry->create_face(mapping.at(pair<int, int>(r,c-1)), mapping.at(pair<int, int>(r-1,c-1)), vertex);
                 ground_geometry->create_face(mapping.at(pair<int, int>(r-1,c)), vertex, mapping.at(pair<int, int>(r-1,c-1)));
             }
+            
+            auto grass_v1 = grass_geometry->create_vertex(pos + vec3(random(-0.5 * step_size, 0.5 * step_size), 0., random(-0.5 * step_size, 0.5 * step_size)));
+            auto grass_v2 = grass_geometry->create_vertex(pos + grass[r][c]);
+            grass_geometry->create_edge(grass_v1, grass_v2);
         }
     }
     for (int r = 0; r < map_size; r++)
@@ -85,20 +108,6 @@ TerrainPatch::TerrainPatch(const vec3& _origo, double size) : origo(_origo)
             }
         }
     }
-}
-
-double average(std::vector<double> heights)
-{
-    if(heights.size() == 0)
-    {
-        return 0.;
-    }
-    double sum = 0.;
-    for (auto height : heights)
-    {
-        sum += height;
-    }
-    return sum / static_cast<double>(heights.size());
 }
 
 void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
@@ -201,11 +210,4 @@ vec3 Terrain::get_terrain_position_at(const glm::vec3& position)
     TerrainPatch* patch = get_patch_at(index);
     double height = patch->get_surface_height_at(position);
     return vec3(position.x, height, position.z);
-}
-
-vec3 Terrain::get_grass_vector_at(const glm::vec3& position)
-{
-    auto index = index_at(position);
-    TerrainPatch* patch = get_patch_at(index);
-    return patch->get_grass_vector_at(position);
 }

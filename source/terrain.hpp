@@ -22,6 +22,7 @@ class TerrainPatch
     std::vector<std::vector<double>> heightmap;
     std::vector<std::vector<glm::vec3>> grass;
     std::shared_ptr<geogo::Geometry> ground_geometry = std::shared_ptr<geogo::Geometry>(new geogo::Geometry());
+    std::shared_ptr<geogo::Geometry> grass_geometry = std::shared_ptr<geogo::Geometry>(new geogo::Geometry());
     std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> ground_normals = std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>>(new geogo::Attribute<geogo::VertexID, glm::vec3>());
     
     void set_height(double scale, int r, int c, std::vector<double> neighbour_heights);
@@ -53,6 +54,11 @@ public:
     {
         return ground_normals;
     }
+    
+    std::shared_ptr<geogo::Geometry> get_grass()
+    {
+        return grass_geometry;
+    }
 };
 
 class Terrain {
@@ -72,6 +78,4 @@ public:
     TerrainPatch* get_patch_at(std::pair<int, int> index);
     
     glm::vec3 get_terrain_position_at(const glm::vec3& position);
-    
-    glm::vec3 get_grass_vector_at(const glm::vec3& position);
 };
