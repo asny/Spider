@@ -28,7 +28,7 @@ public:
     Model(std::function<void()> _on_spider_position_changed, std::function<void()> _on_spider_view_direction_changed)
         : on_spider_position_changed(_on_spider_position_changed), on_spider_view_direction_changed(_on_spider_view_direction_changed)
     {
-        update_terrain(get_spider_position());
+        update_terrain();
     }
     
     // ******** VIEW ********
@@ -70,9 +70,9 @@ public:
         return terrain.get_patches();
     }
     
-    void update_terrain(const glm::vec3& position)
+    void update_terrain()
     {
-        terrain.update(position);
+        terrain.update(spider.get_position());
     }
     
     // ******** CONTROL ********
@@ -81,6 +81,7 @@ public:
     {
         spider.move(time);
         on_spider_position_changed();
+        update_terrain();
     }
     
     void rotate(double time)
@@ -98,6 +99,9 @@ public:
     {
         bool is_changed = spider.update_jump(time);
         if(is_changed)
+        {
             on_spider_position_changed();
+            update_terrain();
+        }
     }
 };

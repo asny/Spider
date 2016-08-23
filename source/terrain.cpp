@@ -247,10 +247,6 @@ vec3 Terrain::get_terrain_position_at(const glm::vec3& position)
 {
     auto index = index_at(position);
     TerrainPatch* patch = patch_at(index);
-    if(patch)
-    {
-        double height = patch->get_surface_height_at(position);
-        return vec3(position.x, height, position.z);
-    }
-    return vec3(position.x, 0., position.z);
+    double height = patch->get_surface_height_at(position);
+    return vec3(position.x, height, position.z);
 }
