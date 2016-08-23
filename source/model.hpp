@@ -88,7 +88,8 @@ public:
     
     void update_jump(double time)
     {
-        spider.update_jump(time);
-        on_spider_position_changed();
+        bool is_changed = spider.update_jump(time);
+        if(is_changed)
+            on_spider_position_changed();
     }
 };

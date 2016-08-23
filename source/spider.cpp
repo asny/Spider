@@ -80,7 +80,7 @@ void Spider::jump(bool move_forward)
     }
 }
 
-void Spider::update_jump(float time)
+bool Spider::update_jump(float time)
 {
     if(is_jumping)
     {
@@ -91,5 +91,7 @@ void Spider::update_jump(float time)
             position.y = height;
             is_jumping = false;
         }
+        return true;
     }
+    return false;
 }

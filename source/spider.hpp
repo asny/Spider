@@ -44,5 +44,5 @@ public:
     
     void jump(bool move_forward);
     
-    void update_jump(float time);
+    bool update_jump(float time);
 };
