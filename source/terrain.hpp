@@ -21,7 +21,7 @@ class TerrainPatch
     const static int VERTICES_PER_UNIT = 16;
     
     glm::vec3 origo;
-    std::map<std::pair<int,int>, geogo::VertexID*> mapping;
+    std::map<std::pair<int,int>, geogo::VertexID*> ground_mapping;
     std::map<std::pair<int,int>, geogo::EdgeID*> grass_mapping;
     std::vector<std::vector<double>> heightmap;
     std::vector<std::vector<glm::vec3>> grass;
@@ -44,16 +44,7 @@ public:
     
     double get_surface_height_at(const glm::vec3& position) const;
     
-    glm::vec3 get_grass_vector_at(const glm::vec3& position) const;
-    
     glm::vec3 get_origo();
-    
-    glm::vec3 get_center()
-    {
-        return origo + 0.5f * get_size();
-    }
-    
-    glm::vec3 get_size();
     
     std::shared_ptr<geogo::Geometry> get_ground()
     {
