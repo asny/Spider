@@ -75,6 +75,9 @@ class Terrain
 {
     std::vector<TerrainPatch> patches;
     
+    std::pair<int, int> index_at(const glm::vec3& position);
+    TerrainPatch* patch_at(std::pair<int, int> index);
+    
 public:
     
     Terrain();
@@ -82,8 +85,6 @@ public:
     std::vector<TerrainPatch>& get_patches();
     
     void update(const glm::vec3& position);
-    
-    std::pair<int, int> index_at(const glm::vec3& position);
     
     glm::vec3 get_terrain_position_at(const glm::vec3& position);
 };

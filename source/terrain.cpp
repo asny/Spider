@@ -202,6 +202,16 @@ pair<int, int> Terrain::index_at(const vec3& position)
     return make_pair(static_cast<int>(index_vector.x), static_cast<int>(index_vector.y));
 }
 
+TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
+{
+    for (auto& patch : patches)
+    {
+        if(index == index_at(patch.get_center()))
+            return &patch;
+    }
+    return nullptr;
+}
+
 void Terrain::update(const glm::vec3& position)
 {
     auto index_at_position = index_at(position);
@@ -221,14 +231,8 @@ void Terrain::update(const glm::vec3& position)
         for (int j = -1; j <= 1; j++)
         {
             auto index = make_pair(index_at_position.first + i, index_at_position.second + j);
-            bool found = false;
-            for (auto& patch : patches)
-            {
-                if(index == index_at(patch.get_center()))
-                    found = true;
-            }
-            
-            if(!found)
+            auto patch = patch_at(index);
+            if(!patch)
             {
                 TerrainPatch* patch;
                 if(free_patches.size() == 0)
@@ -255,7 +259,11 @@ std::vector<TerrainPatch>& Terrain::get_patches()
 vec3 Terrain::get_terrain_position_at(const glm::vec3& position)
 {
     auto index = index_at(position);
-    //TerrainPatch* patch = get_patch_at(index);
-    double height = 1;//patch->get_surface_height_at(position);
-    return vec3(position.x, height, position.z);
+    TerrainPatch* patch = patch_at(index);
+    if(patch)
+    {
+        double height = patch->get_surface_height_at(position);
+        return vec3(position.x, height, position.z);
+    }
+    return vec3(position.x, 0., position.z);
 }
