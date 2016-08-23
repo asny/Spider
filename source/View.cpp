@@ -170,15 +170,6 @@ void View::update(double elapsedTime)
         view_type = BIRD;
         update_camera();
     }
-    
-    if(glfwGetKey(gWindow, 'G'))
-    {
-        display_grass = true;
-    }
-    else if(glfwGetKey(gWindow, 'F'))
-    {
-        display_grass = false;
-    }
 }
 
 void View::update_camera()
