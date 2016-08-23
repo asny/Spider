@@ -266,7 +266,7 @@ void View::create_spider_body()
     for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
     {
         vec3 p = geometry->position()->at(vertex);
-        geometry->position()->at(vertex) = p - center;
+        geometry->position()->at(vertex) = p - center + vec3(0,0,0.3);
     }
     auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     spider_body = shared_ptr<GLObject>(new GLObject(geometry, material));
