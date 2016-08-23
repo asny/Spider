@@ -14,12 +14,15 @@
 
 #include "vec2.hpp"
 #include "vec3.hpp"
+#include "Geometry.hpp"
 
 class TerrainPatch
 {
     glm::vec3 origo;
     std::vector<std::vector<double>> heightmap;
     std::vector<std::vector<glm::vec3>> grass;
+    std::shared_ptr<geogo::Geometry> ground_geometry = std::shared_ptr<geogo::Geometry>(new geogo::Geometry());
+    std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> ground_normals = std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>>(new geogo::Attribute<geogo::VertexID, glm::vec3>());
     
     void set_height(double scale, int r, int c, std::vector<double> neighbour_heights);
     
@@ -40,6 +43,16 @@ public:
     glm::vec3 get_origo();
     
     glm::vec3 get_size();
+    
+    std::shared_ptr<geogo::Geometry> get_ground()
+    {
+        return ground_geometry;
+    }
+    
+    std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> get_ground_normals()
+    {
+        return ground_normals;
+    }
 };
 
 class Terrain {

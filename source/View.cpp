@@ -65,11 +65,9 @@ View::View(int &argc, char** argv)
     create_skybox();
     create_spider_body();
     create_spider_legs();
-    create_terrain();
     create_grass();
     
     // TODO: Should be moved to GLMaterial.
-    terrain_patches.front()->update_uniform_variable("lightPos", light_pos);
     grass_patches.front()->update_uniform_variable("lightPos", light_pos);
     
     // Create model
@@ -235,14 +233,14 @@ void View::update_spider()
 
 void View::update_terrain_and_grass()
 {
+    auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     instance->grass_patches.front()->update_uniform_variable("spiderPosition", instance->model->get_spider_position());
-    for (auto patch_index : instance->model->terrain_patches_to_update())
+    for (auto terrain_patch : instance->model->terrain_patches_to_update())
     {
-        vector<vec3> terrain_positions, terrain_normals, grass_end_points;
-        instance->model->get_terrain_patch(patch_index, terrain_positions, terrain_normals, grass_end_points);
-        
-        //instance->terrain_patches[patch_index]->get_geometry()->add_vertex_attribute("position", terrain_positions);
-        //instance->terrain_patches[patch_index]->get_geometry()->add_vertex_attribute("normal", terrain_normals);
+        auto object = shared_ptr<GLObject>(new GLObject(terrain_patch->get_ground(), material));
+        object->use_attribute("normal", terrain_patch->get_ground_normals());
+        object->update_uniform_variable("lightPos", instance->light_pos);
+        instance->scene->add(object);
         
         //instance->grass_patches[patch_index]->get_geometry()->add_vertex_attribute("position", grass_end_points);
     }
@@ -254,19 +252,6 @@ void View::create_grass()
     for (int i = 0; i < 9; i++) {
         auto geometry = shared_ptr<Geometry>(new Geometry());
         grass_patches.push_back(shared_ptr<GLObject>(new GLObject(geometry, material)));
-    }
-}
-
-void View::create_terrain()
-{
-    auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
-    for (int i = 0; i < 9; i++) {
-        auto geometry = shared_ptr<Geometry>(new Geometry());
-        auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
-        auto normal_attribute = shared_ptr<Attribute<VertexID, vec3>>(new Attribute<VertexID, vec3>());
-        object->use_attribute("normal", normal_attribute);
-        terrain_patches.push_back(object);
-        
     }
 }
 

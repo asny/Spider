@@ -24,8 +24,6 @@ class Model {
     std::function<void()> on_spider_position_changed;
     std::function<void()> on_spider_view_direction_changed;
     
-    glm::vec3 approximate_normal_at(const glm::vec3& position, double filter_size);
-    
 public:
     Model(std::function<void()> _on_spider_position_changed, std::function<void()> _on_spider_view_direction_changed)
         : on_spider_position_changed(_on_spider_position_changed), on_spider_view_direction_changed(_on_spider_view_direction_changed)
@@ -67,9 +65,7 @@ public:
         return feet;
     }
     
-    std::vector<int> terrain_patches_to_update();
-    
-    void get_terrain_patch(int patch_index, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec3>& grass_end_points);
+    std::vector<TerrainPatch*> terrain_patches_to_update();
     
     // ******** CONTROL ********
     

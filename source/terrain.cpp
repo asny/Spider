@@ -6,11 +6,30 @@
 //  Copyright © 2015 Asger Nyman Christiansen. All rights reserved.
 //
 
+#include "glm.hpp"
 #include "terrain.hpp"
 #include "simplexnoise.h"
 
 using namespace std;
 using namespace glm;
+
+vec3 approximate_normal(const vec3& position, const vec3& neighbour_position)
+{
+    vec3 tangent1 = normalize(neighbour_position - position);
+    vec3 tangent2 = cross(vec3(0., 1., 0.), tangent1);
+    return normalize(cross(tangent1, tangent2));
+}
+
+
+vec3 approximate_normal(const vec3& position, const vector<vec3>& neighbour_positions)
+{
+    vec3 normal = vec3(0.);
+    for (vec3 pos : neighbour_positions)
+    {
+        normal += approximate_normal(position, pos);
+    }
+    return normalize(normal);
+}
 
 TerrainPatch::TerrainPatch(const vec3& _origo, double size) : origo(_origo)
 {
@@ -30,6 +49,42 @@ TerrainPatch::TerrainPatch(const vec3& _origo, double size) : origo(_origo)
     set_height(scale, map_size - 1, map_size - 1, {});
     
     subdivide(0, 0, map_size-1);
+    
+    double vertices_per_unit = static_cast<double>(VERTICES_PER_UNIT);
+    auto mapping = map<std::pair<int, int>, geogo::VertexID*>();
+    for (int r = 0; r < map_size; r++)
+    {
+        for (int c = 0; c < map_size; c++)
+        {
+            vec3 pos = vec3(origo.x + r / vertices_per_unit, heightmap[r][c], origo.z + c / vertices_per_unit);
+            auto vertex = ground_geometry->create_vertex(pos);
+            mapping[pair<int, int>(r,c)] = vertex;
+            if(r > 0 && c > 0)
+            {
+                ground_geometry->create_face(mapping.at(pair<int, int>(r,c-1)), mapping.at(pair<int, int>(r-1,c-1)), vertex);
+                ground_geometry->create_face(mapping.at(pair<int, int>(r-1,c)), vertex, mapping.at(pair<int, int>(r-1,c-1)));
+            }
+        }
+    }
+    for (int r = 0; r < map_size; r++)
+    {
+        for (int c = 0; c < map_size; c++)
+        {
+            auto vertex = mapping.at(pair<int, int>(r,c));
+            if(r > 0 && c > 0 && r < map_size-1 && c < map_size-1)
+            {
+                auto pos = ground_geometry->position()->at(mapping.at(pair<int, int>(r,c)));
+                auto p1 = ground_geometry->position()->at(mapping.at(pair<int, int>(r,c-1)));
+                auto p2 = ground_geometry->position()->at(mapping.at(pair<int, int>(r,c+1)));
+                auto p3 = ground_geometry->position()->at(mapping.at(pair<int, int>(r-1,c)));
+                auto p4 = ground_geometry->position()->at(mapping.at(pair<int, int>(r+1,c)));
+                ground_normals->at(vertex) = approximate_normal(pos, {p1, p2, p3, p4});
+            }
+            else {
+                ground_normals->at(vertex) = vec3(0,1,0);
+            }
+        }
+    }
 }
 
 double average(std::vector<double> heights)

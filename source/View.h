@@ -26,7 +26,6 @@ class View
     
     std::shared_ptr<geogo::Geometry> spider_legs_geometry;
     std::shared_ptr<oogl::GLObject> spider_body;
-    std::vector<std::shared_ptr<oogl::GLObject>> terrain_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
     std::vector<std::shared_ptr<oogl::GLObject>> grass_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
     
     glm::vec3 light_pos = {0., 2000., 2.};
@@ -44,7 +43,6 @@ private:
     void create_spider_body();
     void create_spider_legs();
     void create_grass();
-    void create_terrain();
     
     static void update_terrain_and_grass();
     static void update_spider();

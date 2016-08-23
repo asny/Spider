@@ -13,52 +13,16 @@
 using namespace std;
 using namespace glm;
 
-vec3 approximate_normal(const vec3& position, const vec3& neighbour_position)
-{
-    vec3 tangent1 = normalize(neighbour_position - position);
-    vec3 tangent2 = cross(vec3(0., 1., 0.), tangent1);
-    return normalize(cross(tangent1, tangent2));
-}
-
-
-vec3 approximate_normal(const vec3& position, const vector<vec3>& neighbour_positions)
-{
-    vec3 normal = vec3(0.);
-    for (vec3 pos : neighbour_positions)
-    {
-        normal += approximate_normal(position, pos);
-    }
-    return normalize(normal);
-}
-
-vec3 Model::approximate_normal_at(const vec3& position, double filter_size)
-{
-    vector<vec3> neighbour_positions;
-    vec3 p = position + vec3(filter_size, 0., 0.);
-    neighbour_positions.push_back(terrain.get_terrain_position_at(p));
-    
-    p = position - vec3(filter_size, 0., 0.);
-    neighbour_positions.push_back(terrain.get_terrain_position_at(p));
-    
-    p = position + vec3(0., 0., filter_size);
-    neighbour_positions.push_back(terrain.get_terrain_position_at(p));
-    
-    p = position - vec3(0., 0., filter_size);
-    neighbour_positions.push_back(terrain.get_terrain_position_at(p));
-    
-    return approximate_normal(position, neighbour_positions);
-}
-
-vector<int> Model::terrain_patches_to_update()
+vector<TerrainPatch*> Model::terrain_patches_to_update()
 {
     vec3 spider_pos = spider.get_position();
     pair<int, int> center = terrain.index_at(spider_pos);
-    auto to_update = vector<int>();
+    auto to_update = vector<TerrainPatch*>();
     
     if (terrainIndexMap.size() == 0) {
         for (int i = 0; i < 9; i++) {
             terrainIndexMap[i] = {center.first - 1 + i % 3, center.second - 1 + std::floor(i/3)};
-            to_update.push_back(i);
+            to_update.push_back(terrain.get_patch_at(terrainIndexMap[i]));
         }
         return to_update;
     }
@@ -69,95 +33,44 @@ vector<int> Model::terrain_patches_to_update()
         if(center.first - current.first == 2 && center.second - current.second == 2)
         {
             terrainIndexMap[i] = {center.first + 1, center.second + 1};
-            to_update.push_back(i);
+            to_update.push_back(terrain.get_patch_at(terrainIndexMap[i]));
         }
         else if(center.first - current.first == -2 && center.second - current.second == -2)
         {
             terrainIndexMap[i] = {center.first - 1, center.second - 1};
-            to_update.push_back(i);
+            to_update.push_back(terrain.get_patch_at(terrainIndexMap[i]));
         }
         else if(center.first - current.first == 2 && center.second - current.second == -2)
         {
             terrainIndexMap[i] = {center.first + 1, center.second - 1};
-            to_update.push_back(i);
+            to_update.push_back(terrain.get_patch_at(terrainIndexMap[i]));
         }
         else if(center.first - current.first == -2 && center.second - current.second == 2)
         {
             terrainIndexMap[i] = {center.first - 1, center.second + 1};
-            to_update.push_back(i);
+            to_update.push_back(terrain.get_patch_at(terrainIndexMap[i]));
         }
         else if(center.first - current.first == 2)
         {
             terrainIndexMap[i] = {center.first + 1, current.second};
-            to_update.push_back(i);
+            to_update.push_back(terrain.get_patch_at(terrainIndexMap[i]));
         }
         else if(center.first - current.first == -2)
         {
             terrainIndexMap[i] = {center.first - 1, current.second};
-            to_update.push_back(i);
+            to_update.push_back(terrain.get_patch_at(terrainIndexMap[i]));
         }
         else if(center.second - current.second == 2)
         {
             terrainIndexMap[i] = {current.first, center.second + 1};
-            to_update.push_back(i);
+            to_update.push_back(terrain.get_patch_at(terrainIndexMap[i]));
         }
         else if(center.second - current.second == -2)
         {
             terrainIndexMap[i] = {current.first, center.second - 1};
-            to_update.push_back(i);
+            to_update.push_back(terrain.get_patch_at(terrainIndexMap[i]));
         }
     }
     
     return to_update;
-}
-
-double random(double min, double max)
-{
-    return (max - min) * (double)rand()/(double)RAND_MAX + min;
-}
-
-void Model::get_terrain_patch(int patch_index, vector<vec3>& positions, vector<vec3>& normals, vector<vec3>& grass_end_points)
-{
-    TerrainPatch* patch = terrain.get_patch_at(terrainIndexMap[patch_index]);
-    auto origo = patch->get_origo();
-    auto size = patch->get_size();
-    const double step_size = 1./TerrainPatch::VERTICES_PER_UNIT;
-    
-    for (double x = origo.x; x <= origo.x + size.x; x += step_size)
-    {
-        for (double z = origo.z; z <= origo.z + size.z; z += step_size)
-        {
-            vec3 p = vec3(x, 0., z);
-            
-            vec3 position = terrain.get_terrain_position_at(p);
-            positions.push_back(position);
-            
-            vec3 normal = approximate_normal_at(position, step_size);
-            normals.push_back(normal);
-            
-            if (z == origo.z)
-            {
-                positions.push_back(position);
-                normals.push_back(normal);
-            }
-            
-            p.x += step_size;
-            
-            position = terrain.get_terrain_position_at(p);
-            positions.push_back(position);
-            
-            normal = approximate_normal_at(position, step_size);
-            normals.push_back(normal);
-            
-            if (z == origo.z + size.z)
-            {
-                positions.push_back(position);
-                normals.push_back(normal);
-            }
-            
-            vec3 grass_vector = terrain.get_grass_vector_at(p);
-            grass_end_points.push_back(position + vec3(random(-0.5 * step_size, 0.5 * step_size), 0., random(-0.5 * step_size, 0.5 * step_size)));
-            grass_end_points.push_back(position + grass_vector);
-        }
-    }
 }
