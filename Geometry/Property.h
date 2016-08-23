@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <functional>
+
 template <class T>
 class Property
 {
