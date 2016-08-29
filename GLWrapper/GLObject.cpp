@@ -55,6 +55,11 @@ void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
         update_attribute(glAttribute);
     }
     
+    for (auto glUniform : vec3_uniforms)
+    {
+        glUniform.use();
+    }
+    
     material->pre_draw();
     material->set(modelMatrix, viewMatrix, projectionMatrix);
     

@@ -18,11 +18,12 @@ namespace oogl {
     {
         GLuint shader_id;
         static GLuint current_shader_id;
-        void use();
         
     public:
         
         GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
+        
+        void use();
         
         // ******* Vertex attribute functionality ********
         

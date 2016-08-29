@@ -11,6 +11,7 @@
 #include "Geometry.hpp"
 #include "GLMaterial.hpp"
 #include "GLVertexAttribute.hpp"
+#include "GLUniform.hpp"
 
 namespace oogl
 {
@@ -25,6 +26,7 @@ namespace oogl
         GLuint array_id;
         std::vector<std::shared_ptr<GLVertexAttribute<glm::vec2>>> vec2_vertex_attributes;
         std::vector<std::shared_ptr<GLVertexAttribute<glm::vec3>>> vec3_vertex_attributes;
+        std::vector<GLUniform<glm::vec3>> vec3_uniforms;
         
         // Transformation
         glm::mat4 modelMatrix = glm::mat4(1.);
@@ -77,6 +79,11 @@ namespace oogl
             glBindVertexArray(array_id);
             auto location = material->get_attribute_location(name);
             vec3_vertex_attributes.push_back(std::shared_ptr<GLVertexAttribute<glm::vec3>>(new GLVertexAttribute<glm::vec3>(location, attribute)));
+        }
+        
+        void use_uniform(const std::string& name, const std::shared_ptr<glm::vec3> value)
+        {
+            vec3_uniforms.push_back(GLUniform<glm::vec3>(name, material->get_shader(), value));
         }
         
         /**

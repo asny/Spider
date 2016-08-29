@@ -28,7 +28,12 @@ namespace oogl
         
     public:
         
-        GLuint get_attribute_location(std::string name)
+        const std::shared_ptr<GLShader> get_shader()
+        {
+            return shader;
+        }
+        
+        GLuint get_attribute_location(const std::string& name)
         {
             return shader->get_attribute_location(name);
         }
@@ -69,7 +74,7 @@ namespace oogl
         GLStandardMaterial(glm::vec4 _ambient, glm::vec4 _diffuse, glm::vec4 _specular) :
         ambient(_ambient), diffuse(_diffuse), specular(_specular)
         {
-            shader = std::shared_ptr<GLShader>(new GLShader("shaders/phong.vert",  "shaders/phong.frag"));
+            shader = std::make_shared<GLShader>("shaders/phong.vert",  "shaders/phong.frag");
         }
         
         void pre_draw();
@@ -82,7 +87,7 @@ namespace oogl
         
         GLTextureMaterial(std::shared_ptr<GLTexture> _texture) : texture(_texture)
         {
-            shader = std::shared_ptr<GLShader>(new GLShader("shaders/texture.vert",  "shaders/texture.frag"));
+            shader = std::make_shared<GLShader>("shaders/texture.vert",  "shaders/texture.frag");
         }
         
         void pre_draw();
@@ -95,7 +100,7 @@ namespace oogl
         
         GLSkyboxMaterial(std::shared_ptr<GLTexture3D> _texture) : texture(_texture)
         {
-            shader = std::shared_ptr<GLShader>(new GLShader("shaders/skybox.vert",  "shaders/skybox.frag"));
+            shader = std::make_shared<GLShader>("shaders/skybox.vert",  "shaders/skybox.frag");
         }
         
         void pre_draw();
@@ -109,7 +114,7 @@ namespace oogl
         
         GLGrassMaterial(glm::vec4 _ambient, glm::vec4 _diffuse) : ambient(_ambient), diffuse(_diffuse)
         {
-            shader = std::shared_ptr<GLShader>(new GLShader("shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom"));
+            shader = std::make_shared<GLShader>("shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom");
             cull_back_faces = false;
         }
         
@@ -122,7 +127,7 @@ namespace oogl
         
         GLSpiderLegsMaterial(glm::vec4 _ambient, glm::vec4 _diffuse, glm::vec4 _specular) : GLStandardMaterial(_ambient, _diffuse, _specular)
         {
-            shader = std::shared_ptr<GLShader>(new GLShader("shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/spider_legs.geom"));
+            shader = std::make_shared<GLShader>("shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/spider_legs.geom");
         }
     };
 }

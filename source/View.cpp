@@ -231,7 +231,7 @@ void View::create_grass()
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto grass = shared_ptr<GLObject>(new GLObject(patch.get_grass(), material));
-        grass->update_uniform_variable("lightPos", instance->light_pos);
+        grass->use_uniform("lightPos", light_pos);
         instance->scene->add(grass);
         grass_patches.push_back(grass);
     }
@@ -244,7 +244,7 @@ void View::create_terrain()
     {
         auto ground = shared_ptr<GLObject>(new GLObject(patch.get_ground(), material));
         ground->use_attribute("normal", patch.get_ground_normals());
-        ground->update_uniform_variable("lightPos", instance->light_pos);
+        ground->use_uniform("lightPos", light_pos);
         instance->scene->add(ground);
     }
 }
@@ -271,7 +271,7 @@ void View::create_spider_body()
     auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     spider_body = shared_ptr<GLObject>(new GLObject(geometry, material));
     spider_body->use_attribute("normal", normal_attribute);
-    spider_body->update_uniform_variable("lightPos", light_pos);
+    spider_body->use_uniform("lightPos", light_pos);
     scene->add(spider_body);
 }
 
@@ -287,7 +287,7 @@ void View::create_spider_legs()
     }
     
     auto object = shared_ptr<GLObject>(new GLObject(spider_legs_geometry, material));
-    object->update_uniform_variable("lightPos", light_pos);
+    object->use_uniform("lightPos", light_pos);
     scene->add(object);
 }
 
