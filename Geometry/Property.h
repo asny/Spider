@@ -9,16 +9,22 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 template <class T>
 class Property
 {
-    std::function<void()> on_property_changed;
+    std::vector<std::function<void()>> subscribers;
     T value;
 public:
-    Property(T&& _value, std::function<void()> _on_property_changed) : value(_value), on_property_changed(_on_property_changed)
+    Property(T&& _value) : value(_value)
     {
         
+    }
+    
+    void listen_to(std::function<void()> on_property_changed)
+    {
+        subscribers.push_back(on_property_changed);
     }
     
     operator const T&() const
@@ -29,12 +35,18 @@ public:
     void operator=(const T& _value)
     {
         value = _value;
-        on_property_changed();
+        for(auto on_property_changed : subscribers)
+        {
+            on_property_changed();
+        }
     }
     
     void operator=(T&& _value)
     {
         value = _value;
-        on_property_changed();
+        for(auto on_property_changed : subscribers)
+        {
+            on_property_changed();
+        }
     }
 };

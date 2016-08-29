@@ -41,7 +41,8 @@ namespace geogo
             auto it = mapping.find(id);
             if (it == mapping.end())
             {
-                it = mapping.insert(std::pair<IDType, Property<ValueType>>(id, Property<ValueType>(ValueType(), on_property_changed))).first;
+                it = mapping.insert(std::make_pair(id, Property<ValueType>(ValueType()))).first;
+                it->second.listen_to(on_property_changed);
             }
             return it->second;
         }
@@ -51,7 +52,7 @@ namespace geogo
             return at(*id);
         }
         
-        void subscribe_to(std::function<void()> on_attribute_changed)
+        void listen_to(std::function<void()> on_attribute_changed)
         {
             subscribers.push_back(on_attribute_changed);
         }

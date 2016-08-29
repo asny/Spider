@@ -31,7 +31,7 @@ namespace oogl
             check_gl_error();
             
             std::function<void()> on_attribute_changed = std::bind(&GLVertexAttribute::deprecate, this);
-            _attribute->subscribe_to(on_attribute_changed);
+            _attribute->listen_to(on_attribute_changed);
         }
         
         bool is_up_to_date()
