@@ -32,7 +32,7 @@ namespace geogo
         int no_edges = 0;
         int no_faces = 0;
         
-        std::shared_ptr<Attribute<VertexID, glm::vec3>> position_attribute = std::shared_ptr<Attribute<VertexID, glm::vec3>>(new Attribute<VertexID, glm::vec3>());
+        std::shared_ptr<Attribute<VertexID, glm::vec3>> position_attribute = std::make_shared<Attribute<VertexID, glm::vec3>>();
         
     public:
         Geometry()

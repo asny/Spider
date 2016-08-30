@@ -8,9 +8,7 @@
 
 #pragma once
 
-#include "Property.h"
 #include "GLUtility.h"
-#include "GLShader.hpp"
 
 template <class ValueType>
 class GLUniform
@@ -29,7 +27,6 @@ public:
     
 private:
     const std::shared_ptr<ValueType> value;
-    const std::shared_ptr<oogl::GLShader> shader;
     GLuint location;
     
     
