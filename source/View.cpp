@@ -96,8 +96,7 @@ View::View(int &argc, char** argv)
         
         update(thisTime - lastTime);
         
-        glm::vec3 wind(0.5 * sin(thisTime) + 0.5, 0., 0.5 * cos(thisTime + 0.5) + 0.5);
-        grass_patches.front()->update_uniform_variable("wind", wind);
+        *wind = glm::vec3(0.5 * sin(thisTime) + 0.5, 0., 0.5 * cos(thisTime + 0.5) + 0.5);
         
         lastTime = thisTime;
         
@@ -221,7 +220,7 @@ void View::update_spider()
 
 void View::update_terrain_and_grass()
 {
-    instance->grass_patches.front()->update_uniform_variable("spiderPosition", instance->model->get_spider_position());
+    *instance->spider_pos = instance->model->get_spider_position();
 }
 
 void View::create_grass()
@@ -231,8 +230,9 @@ void View::create_grass()
     {
         auto grass = shared_ptr<GLObject>(new GLObject(patch.get_grass(), material));
         grass->use_uniform("lightPos", light_pos);
+        grass->use_uniform("spiderPosition", spider_pos);
+        grass->use_uniform("wind", wind);
         instance->scene->add(grass);
-        grass_patches.push_back(grass);
     }
 }
 

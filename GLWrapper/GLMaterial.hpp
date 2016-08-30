@@ -39,16 +39,6 @@ namespace oogl
         }
         
         virtual void pre_draw();
-        
-        /**
-         TODO: Should be deleted!
-         Updates the value of the uniform variable with the given name.
-         */
-        template<typename T>
-        void set_uniform_variable(std::string name, const T& value)
-        {
-            shader->set_uniform_variable(name, value);
-        }
     };
     
     class GLStandardMaterial : public GLMaterial

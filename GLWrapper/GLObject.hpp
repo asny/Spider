@@ -97,15 +97,6 @@ namespace oogl
         }
         
         /**
-         Updates the value of the uniform variable with the given name.
-         */
-        template<typename T>
-        void update_uniform_variable(std::string name, const T& value)
-        {
-            material->set_uniform_variable(name, value);
-        }
-        
-        /**
          Draws the object.
          */
         void draw();

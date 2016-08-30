@@ -24,9 +24,10 @@ class View
     
     std::shared_ptr<geogo::Geometry> spider_legs_geometry;
     std::shared_ptr<oogl::GLObject> spider_body;
-    std::vector<std::shared_ptr<oogl::GLObject>> grass_patches = std::vector<std::shared_ptr<oogl::GLObject>>();
     
     std::shared_ptr<glm::vec3> light_pos = std::make_shared<glm::vec3>(0., 2000., 2.);
+    std::shared_ptr<glm::vec3> wind = std::make_shared<glm::vec3>(0., 0., 0.);
+    std::shared_ptr<glm::vec3> spider_pos = std::make_shared<glm::vec3>(0., 0., 0.);
     
     static View* instance;
     
