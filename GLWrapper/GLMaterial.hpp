@@ -10,6 +10,7 @@
 
 #include "GLTexture.hpp"
 #include "GLShader.hpp"
+#include "GLUniform.hpp"
 
 namespace oogl
 {
@@ -43,15 +44,25 @@ namespace oogl
     
     class GLStandardMaterial : public GLMaterial
     {
-        glm::vec4 ambient;
-        glm::vec4 diffuse;
-        glm::vec4 specular;
+        GLUniform<glm::vec4>* ambient;
+        GLUniform<glm::vec4>* diffuse;
+        GLUniform<glm::vec4>* specular;
     public:
         
-        GLStandardMaterial(glm::vec4 _ambient, glm::vec4 _diffuse, glm::vec4 _specular) :
-        ambient(_ambient), diffuse(_diffuse), specular(_specular)
+        GLStandardMaterial(const glm::vec4& _ambient, const glm::vec4& _diffuse, const glm::vec4& _specular)
         {
             shader = std::make_shared<GLShader>("shaders/phong.vert",  "shaders/phong.frag");
+            
+            ambient = new GLUniform<glm::vec4>(get_uniform_location("ambientMat"), _ambient);
+            diffuse = new GLUniform<glm::vec4>(get_uniform_location("diffuseMat"), _diffuse);
+            specular = new GLUniform<glm::vec4>(get_uniform_location("specMat"), _specular);
+        }
+        
+        ~GLStandardMaterial()
+        {
+            delete ambient;
+            delete diffuse;
+            delete specular;
         }
         
         void pre_draw();
@@ -60,11 +71,19 @@ namespace oogl
     class GLTextureMaterial : public GLMaterial
     {
         std::shared_ptr<GLTexture> texture;
+        GLUniform<int>* texture_id_uniform;
+        std::shared_ptr<int> texture_id = std::make_shared<int>(0);
     public:
         
         GLTextureMaterial(std::shared_ptr<GLTexture> _texture) : texture(_texture)
         {
             shader = std::make_shared<GLShader>("shaders/texture.vert",  "shaders/texture.frag");
+            texture_id_uniform = new GLUniform<int>(get_uniform_location("texture0"), texture_id);
+        }
+        
+        ~GLTextureMaterial()
+        {
+            delete texture_id_uniform;
         }
         
         void pre_draw();
@@ -73,11 +92,19 @@ namespace oogl
     class GLSkyboxMaterial : public GLMaterial
     {
         std::shared_ptr<GLTexture3D> texture;
+        GLUniform<int>* texture_id_uniform;
+        std::shared_ptr<int> texture_id = std::make_shared<int>(0);
     public:
         
         GLSkyboxMaterial(std::shared_ptr<GLTexture3D> _texture) : texture(_texture)
         {
             shader = std::make_shared<GLShader>("shaders/skybox.vert",  "shaders/skybox.frag");
+            texture_id_uniform = new GLUniform<int>(get_uniform_location("texture0"), texture_id);
+        }
+        
+        ~GLSkyboxMaterial()
+        {
+            delete texture_id_uniform;
         }
         
         void pre_draw();
@@ -85,26 +112,56 @@ namespace oogl
     
     class GLGrassMaterial : public GLMaterial
     {
-        glm::vec4 ambient;
-        glm::vec4 diffuse;
+        GLUniform<glm::vec4>* ambient;
+        GLUniform<glm::vec4>* diffuse;
     public:
         
-        GLGrassMaterial(glm::vec4 _ambient, glm::vec4 _diffuse) : ambient(_ambient), diffuse(_diffuse)
+        GLGrassMaterial(const glm::vec4& _ambient, const glm::vec4& _diffuse)
         {
             shader = std::make_shared<GLShader>("shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom");
             cull_back_faces = false;
+            ambient = new GLUniform<glm::vec4>(get_uniform_location("ambientMat"), _ambient);
+            diffuse = new GLUniform<glm::vec4>(get_uniform_location("diffuseMat"), _diffuse);
+        }
+        
+        ~GLGrassMaterial()
+        {
+            delete ambient;
+            delete diffuse;
         }
         
         void pre_draw();
     };
     
-    class GLSpiderLegsMaterial : public GLStandardMaterial
+    class GLSpiderLegsMaterial : public GLMaterial
     {
+        GLUniform<glm::vec4>* ambient;
+        GLUniform<glm::vec4>* diffuse;
+        GLUniform<glm::vec4>* specular;
     public:
         
-        GLSpiderLegsMaterial(glm::vec4 _ambient, glm::vec4 _diffuse, glm::vec4 _specular) : GLStandardMaterial(_ambient, _diffuse, _specular)
+        GLSpiderLegsMaterial(const glm::vec4& _ambient, const glm::vec4& _diffuse, glm::vec4 _specular)
         {
             shader = std::make_shared<GLShader>("shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/spider_legs.geom");
+            
+            ambient = new GLUniform<glm::vec4>(get_uniform_location("ambientMat"), _ambient);
+            diffuse = new GLUniform<glm::vec4>(get_uniform_location("diffuseMat"), _diffuse);
+            specular = new GLUniform<glm::vec4>(get_uniform_location("specMat"), _specular);
+        }
+        
+        ~GLSpiderLegsMaterial()
+        {
+            delete ambient;
+            delete diffuse;
+            delete specular;
+        }
+        
+        void pre_draw()
+        {
+            GLMaterial::pre_draw();
+            ambient->use();
+            diffuse->use();
+            specular->use();
         }
     };
 }

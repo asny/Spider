@@ -34,28 +34,28 @@ void GLMaterial::pre_draw()
 void GLStandardMaterial::pre_draw()
 {
     GLMaterial::pre_draw();
-    shader->set_uniform_variable("ambientMat", ambient);
-    shader->set_uniform_variable("diffuseMat", diffuse);
-    shader->set_uniform_variable("specMat", specular);
+    ambient->use();
+    diffuse->use();
+    specular->use();
 }
 
 void GLTextureMaterial::pre_draw()
 {
     GLMaterial::pre_draw();
-    int texture_id = texture->use();
-    shader->set_uniform_variable("texture0", texture_id);
+    *texture_id = texture->use();
+    texture_id_uniform->use();
 }
 
 void GLSkyboxMaterial::pre_draw()
 {
     GLMaterial::pre_draw();
-    int texture_id = texture->use();
-    shader->set_uniform_variable("texture0", texture_id);
+    *texture_id = texture->use();
+    texture_id_uniform->use();
 }
 
 void GLGrassMaterial::pre_draw()
 {
     GLMaterial::pre_draw();
-    shader->set_uniform_variable("ambientMat", ambient);
-    shader->set_uniform_variable("diffuseMat", diffuse);
+    ambient->use();
+    diffuse->use();
 }

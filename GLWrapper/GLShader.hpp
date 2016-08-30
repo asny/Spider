@@ -32,14 +32,5 @@ namespace oogl {
         // ****** Uniform variable functionality ********
         
         GLuint get_uniform_location(std::string variable_name);
-        GLuint get_uniform_location_with_warning(std::string variable_name);
-        
-        void set_uniform_variable_if_defined(std::string name, const glm::mat4& value);
-        
-        void set_uniform_variable(std::string name, int value);
-        void set_uniform_variable(std::string name, const glm::vec2& value);
-        void set_uniform_variable(std::string name, const glm::vec3& value);
-        void set_uniform_variable(std::string name, const glm::vec4& value);
-        void set_uniform_variable(std::string name, const glm::mat4& value);
     };
 }

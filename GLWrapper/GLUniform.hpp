@@ -15,6 +15,11 @@ class GLUniform
 {
 public:
     
+    GLUniform(GLuint _location, const ValueType& _value) : value(std::make_shared<ValueType>(_value)), location(_location)
+    {
+        
+    }
+    
     GLUniform(GLuint _location, const std::shared_ptr<ValueType> _value) : value(_value), location(_location)
     {
         

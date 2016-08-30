@@ -127,36 +127,3 @@ GLuint GLShader::get_uniform_location(std::string variable_name)
     }
     return uniformLocation;
 }
-
-void GLShader::set_uniform_variable_if_defined(std::string name, const mat4& value)
-{
-    GLuint uniformLocation = glGetUniformLocation(shader_id, &name[0]);
-    if (uniformLocation != NULL_LOCATION) {
-        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &value[0][0]);
-    }
-}
-
-void GLShader::set_uniform_variable(std::string name, int value)
-{
-    glUniform1i(get_uniform_location(name), value);
-}
-
-void GLShader::set_uniform_variable(std::string name, const vec2& value)
-{
-    glUniform2fv(get_uniform_location(name), 1, &value[0]);
-}
-
-void GLShader::set_uniform_variable(std::string name, const vec3& value)
-{
-    glUniform3fv(get_uniform_location(name), 1, &value[0]);
-}
-
-void GLShader::set_uniform_variable(std::string name, const vec4& value)
-{
-    glUniform4fv(get_uniform_location(name), 1, &value[0]);
-}
-
-void GLShader::set_uniform_variable(std::string name, const mat4& value)
-{
-    glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, &value[0][0]);
-}
