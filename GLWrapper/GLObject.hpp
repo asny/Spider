@@ -27,6 +27,7 @@ namespace oogl
         std::vector<std::shared_ptr<GLVertexAttribute<glm::vec2>>> vec2_vertex_attributes;
         std::vector<std::shared_ptr<GLVertexAttribute<glm::vec3>>> vec3_vertex_attributes;
         std::vector<GLUniform<glm::vec3>> vec3_uniforms;
+        std::vector<GLUniform<glm::mat4>> mat4_uniforms;
         
         // Transformation
         glm::mat4 modelMatrix = glm::mat4(1.);
@@ -86,6 +87,11 @@ namespace oogl
             vec3_uniforms.push_back(GLUniform<glm::vec3>(name, material->get_shader(), value));
         }
         
+        void use_uniform(const std::string& name, const std::shared_ptr<glm::mat4> value)
+        {
+            mat4_uniforms.push_back(GLUniform<glm::mat4>(name, material->get_shader(), value));
+        }
+        
         /**
          Updates the value of the uniform variable with the given name.
          */
@@ -98,7 +104,7 @@ namespace oogl
         /**
          Draws the object.
          */
-        void draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+        void draw();
         
         /**
          Set the model matrix.
@@ -106,6 +112,11 @@ namespace oogl
         void set_model_matrix(glm::mat4 _modelMatrix)
         {
             modelMatrix = _modelMatrix;
+        }
+        
+        const glm::mat4& get_model()
+        {
+            return modelMatrix;
         }
     };
 }

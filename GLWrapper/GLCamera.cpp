@@ -7,7 +7,6 @@
 //
 
 #include "GLCamera.hpp"
-#include "GLObject.hpp"
 
 using namespace oogl;
 using namespace std;
@@ -29,24 +28,18 @@ GLCamera::GLCamera()
 void GLCamera::set_screen_size(int width, int height)
 {
     glViewport(0, 0, width, height);
-    projectionMatrix = perspective(45.f, width/float(height), 0.1f, 100.f);
+    projection = perspective(45.f, width/float(height), 0.1f, 100.f);
     check_gl_error();
 }
 
 void GLCamera::set_view(const vec3& eyePosition, const vec3& eyeDirection)
 {
-    viewMatrix = lookAt(eyePosition, eyePosition + eyeDirection, vec3(0., 1., 0.));
+    view = lookAt(eyePosition, eyePosition + eyeDirection, vec3(0., 1., 0.));
     check_gl_error();
 }
 
-void GLCamera::draw(vector<shared_ptr<GLObject>> objects)
+void GLCamera::pre_draw()
 {
     glClearColor(1., 1., 1., 0.);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    for (std::shared_ptr<GLObject> object : objects) {
-        object->draw(viewMatrix, projectionMatrix);
-    }
-    
-    check_gl_error();
 }

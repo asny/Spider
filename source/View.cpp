@@ -52,13 +52,12 @@ View::View(int &argc, char** argv)
     glfwSetCursorPos(gWindow, 0, 0);
     glfwMakeContextCurrent(gWindow);
     
-    // Create scene
-    scene = unique_ptr<GLScene>(new GLScene(gWindow));
-    
     // Create camera
     camera = std::shared_ptr<GLCamera>(new GLCamera());
     camera->set_screen_size(WIN_SIZE_X, WIN_SIZE_Y);
-    scene->add(camera);
+    
+    // Create scene
+    scene = unique_ptr<GLScene>(new GLScene(gWindow, camera));
     
     // Create model
     model = std::unique_ptr<Model>(new Model(

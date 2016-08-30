@@ -21,7 +21,7 @@ GLObject::GLObject(std::shared_ptr<Geometry> _geometry, std::shared_ptr<GLMateri
     use_attribute("position", geometry->position());
 }
 
-void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
+void GLObject::draw()
 {
     GLenum drawmode;
     int no_vertices;
@@ -60,8 +60,12 @@ void GLObject::draw(const mat4& viewMatrix, const mat4& projectionMatrix)
         glUniform.use();
     }
     
+    for (auto glUniform : mat4_uniforms)
+    {
+        glUniform.use();
+    }
+    
     material->pre_draw();
-    material->set(modelMatrix, viewMatrix, projectionMatrix);
     
     glBindVertexArray(array_id);
     glDrawArrays(drawmode, 0, no_vertices);

@@ -17,8 +17,8 @@ namespace oogl {
      Represents a camera.
      */
     class GLCamera {
-        glm::mat4 viewMatrix = glm::mat4(1.);
-        glm::mat4 projectionMatrix = glm::mat4(1.);
+        glm::mat4 view = glm::mat4(1.);
+        glm::mat4 projection = glm::mat4(1.);
         
     public:
         
@@ -34,9 +34,16 @@ namespace oogl {
          */
         void set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
         
-        /**
-         Draws the objects.
-         */
-        void draw(std::vector<std::shared_ptr<GLObject>> objects);
+        void pre_draw();
+        
+        const glm::mat4& get_view()
+        {
+            return view;
+        }
+        
+        const glm::mat4& get_projection()
+        {
+            return projection;
+        }
     };
 }

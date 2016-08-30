@@ -41,19 +41,6 @@ namespace oogl
         virtual void pre_draw();
         
         /**
-         Updates the standard matrices.
-         */
-        virtual void set(const glm::mat4& modelMatrix, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
-        {
-            // TODO: Only set if necessary
-            glm::mat4 modelViewMatrix = viewMatrix * modelMatrix;
-            shader->set_uniform_variable_if_defined("MVMatrix", modelViewMatrix);
-            shader->set_uniform_variable_if_defined("NMatrix", inverseTranspose(modelViewMatrix));
-            shader->set_uniform_variable_if_defined("PMatrix", projectionMatrix);
-            shader->set_uniform_variable_if_defined("MVPMatrix", projectionMatrix * modelViewMatrix);
-        }
-        
-        /**
          TODO: Should be deleted!
          Updates the value of the uniform variable with the given name.
          */

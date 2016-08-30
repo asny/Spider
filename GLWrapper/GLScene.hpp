@@ -18,8 +18,14 @@ namespace oogl {
     class GLScene
     {
         GLFWwindow* gWindow;
+        
+        std::shared_ptr<glm::mat4> modelView = std::make_shared<glm::mat4>(1.);
+        std::shared_ptr<glm::mat4> inverseModelView = std::make_shared<glm::mat4>(1.);
+        std::shared_ptr<glm::mat4> projection = std::make_shared<glm::mat4>(1.);
+        std::shared_ptr<glm::mat4> modelViewProjection = std::make_shared<glm::mat4>(1.);
+        
     public:
-        GLScene(GLFWwindow* _gWindow) : gWindow(_gWindow)
+        GLScene(GLFWwindow* _gWindow, std::shared_ptr<GLCamera> _camera) : gWindow(_gWindow), camera(_camera)
         {
             
         }
@@ -27,25 +33,33 @@ namespace oogl {
         void add(std::shared_ptr<GLObject> object)
         {
             objects.push_back(object);
-        }
-        
-        void add(std::shared_ptr<GLCamera> camera)
-        {
-            cameras.push_back(camera);
+            object->use_uniform("MVMatrix", modelView);
+            object->use_uniform("NMatrix", inverseModelView);
+            object->use_uniform("PMatrix", projection);
+            object->use_uniform("MVPMatrix", modelViewProjection);
         }
         
         void draw()
         {
-            for(auto camera : cameras)
+            camera->pre_draw();
+            *projection = camera->get_projection();
+            
+            for (std::shared_ptr<GLObject> object : objects)
             {
-                camera->draw(objects);
+                *modelView = camera->get_view() * object->get_model();
+                *inverseModelView = inverseTranspose(*modelView);
+                *modelViewProjection = camera->get_projection() * (*modelView);
                 
-                glfwSwapBuffers(gWindow);
+                object->draw();
             }
+            
+            glfwSwapBuffers(gWindow);
+            
+            check_gl_error();
         }
         
     private:
         std::vector<std::shared_ptr<GLObject>> objects = std::vector<std::shared_ptr<GLObject>>();
-        std::vector<std::shared_ptr<GLCamera>> cameras = std::vector<std::shared_ptr<GLCamera>>();
+        std::shared_ptr<GLCamera> camera;
     };
 }
