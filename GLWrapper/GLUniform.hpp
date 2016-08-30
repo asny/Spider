@@ -17,14 +17,13 @@ class GLUniform
 {
 public:
     
-    GLUniform(const std::string& name, const std::shared_ptr<oogl::GLShader> _shader, const std::shared_ptr<ValueType> _value) : value(_value), shader(_shader)
+    GLUniform(GLuint _location, const std::shared_ptr<ValueType> _value) : value(_value), location(_location)
     {
-        location = shader->get_uniform_location(name);
+        
     }
     
     void use()
     {
-        shader->use();
         set(*value);
     }
     

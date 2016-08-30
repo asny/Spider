@@ -84,12 +84,16 @@ namespace oogl
         
         void use_uniform(const std::string& name, const std::shared_ptr<glm::vec3> value)
         {
-            vec3_uniforms.push_back(GLUniform<glm::vec3>(name, material->get_shader(), value));
+            auto location = material->get_uniform_location(name);
+            if(location != NULL_LOCATION)
+                vec3_uniforms.push_back(GLUniform<glm::vec3>(location, value));
         }
         
         void use_uniform(const std::string& name, const std::shared_ptr<glm::mat4> value)
         {
-            mat4_uniforms.push_back(GLUniform<glm::mat4>(name, material->get_shader(), value));
+            auto location = material->get_uniform_location(name);
+            if(location != NULL_LOCATION)
+                mat4_uniforms.push_back(GLUniform<glm::mat4>(location, value));
         }
         
         /**

@@ -16,6 +16,7 @@ bool GLMaterial::currently_cull_back_faces = true;
 
 void GLMaterial::pre_draw()
 {
+    shader->use();
     if(currently_cull_back_faces != cull_back_faces)
     {
         if(cull_back_faces)

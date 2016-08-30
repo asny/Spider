@@ -28,9 +28,9 @@ namespace oogl
         
     public:
         
-        const std::shared_ptr<GLShader> get_shader()
+        GLuint get_uniform_location(const std::string& name)
         {
-            return shader;
+            return shader->get_uniform_location(name);
         }
         
         GLuint get_attribute_location(const std::string& name)
