@@ -28,36 +28,12 @@ void Spider::move(float time)
 {
     if(!is_jumping)
     {
-        position += time * speed * view_direction;
-        
-        for(double& t : feet_cycle)
-        {
-            t = fmod(t + speed * time, 2.);
-            if(t < 0.)
-                t += 2.;
+        auto move_vector = time * speed * view_direction;
+        position += move_vector;
+        for (Leg& leg : legs) {
+            leg.move(move_vector, time);
         }
     }
-}
-
-std::vector<glm::vec3> Spider::get_feet()
-{
-    std::vector<glm::vec3> feet;
-    for(int i = 0; i < initial_feet.size(); i++)
-    {
-        glm::vec3 foot = initial_feet[i];
-        double foot_cycle = feet_cycle[i];
-        
-        if(foot_cycle < 1.)
-        {
-            foot.y = 0.3 * sin(foot_cycle * M_PI);
-            foot.z += foot_cycle;
-        }
-        else {
-            foot.z += (2. - foot_cycle);
-        }
-        feet.push_back(foot);
-    }
-    return feet;
 }
 
 void Spider::rotate(float time)

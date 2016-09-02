@@ -65,6 +65,11 @@ public:
         return feet;
     }
     
+    Spider* get_spider()
+    {
+        return &spider;
+    }
+    
     std::vector<TerrainPatch>& get_terrain_patches()
     {
         return terrain.get_patches();

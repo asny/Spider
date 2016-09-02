@@ -207,15 +207,7 @@ void View::update_spider()
     
     // Update uniform variables
     instance->spider_body->set_model_matrix(model_matrix);
-    
-    // Update vertex attributes
-    auto positions = instance->model->get_spider_feet_positions(model_matrix);
-    auto geometry = instance->spider_legs_geometry;
-    int i = 0;
-    for (auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next()) {
-        geometry->position()->at(vertex) = positions.at(i);
-        i++;
-    }
+    instance->spider_legs->set_model_matrix(model_matrix);
 }
 
 void View::update_terrain_and_grass()
@@ -277,17 +269,10 @@ void View::create_spider_body()
 void View::create_spider_legs()
 {
     auto material = shared_ptr<GLMaterial>(new GLSpiderLegsMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
-    spider_legs_geometry = shared_ptr<Geometry>(new Geometry());
-    for (int i = 0; i < 8; i++)
-    {
-        auto vertex1 = spider_legs_geometry->create_vertex();
-        auto vertex2 = spider_legs_geometry->create_vertex();
-        spider_legs_geometry->create_edge(vertex1, vertex2);
-    }
-    
-    auto object = shared_ptr<GLObject>(new GLObject(spider_legs_geometry, material));
-    object->use_uniform("lightPos", light_pos);
-    scene->add(object);
+    auto geometry = model->get_spider()->get_legs();
+    spider_legs = shared_ptr<GLObject>(new GLObject(geometry, material));
+    spider_legs->use_uniform("lightPos", light_pos);
+    scene->add(spider_legs);
 }
 
 void View::create_cube()
