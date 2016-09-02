@@ -92,6 +92,7 @@ class Spider
     glm::vec3 position;
     glm::vec3 view_direction;
     std::shared_ptr<geogo::Geometry> legs_geometry;
+    std::function<double(glm::vec3)> get_height_at;
     
     std::vector<Leg> legs;
     
@@ -103,7 +104,7 @@ class Spider
     bool is_jumping = false;
     
 public:
-    Spider(glm::vec3 _position, glm::vec3 _view_direction) : position(_position), view_direction(_view_direction)
+    Spider(glm::vec3 _position, glm::vec3 _view_direction, std::function<double(glm::vec3)> _get_height_at) : position(_position), view_direction(_view_direction), get_height_at(_get_height_at)
     {
         height = position.y;
         legs_geometry = std::make_shared<geogo::Geometry>();

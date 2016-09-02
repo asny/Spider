@@ -12,7 +12,7 @@ using namespace glm;
 
 glm::vec3 Spider::get_position()
 {
-    return position;
+    return glm::vec3(position.x, position.y + get_height_at(position), position.z);
 }
 
 glm::vec3 Spider::get_view_direction()

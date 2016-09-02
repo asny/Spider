@@ -30,18 +30,13 @@ public:
     {
         auto initial_position = glm::vec3(0., 0.3, -5.);
         terrain = std::unique_ptr<Terrain>(new Terrain(initial_position));
-        spider = std::unique_ptr<Spider>(new Spider(initial_position, glm::vec3(0., 0., 1.)));
+        using namespace std::placeholders;
+        std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, terrain.get(), _1);
+        spider = std::unique_ptr<Spider>(new Spider(initial_position, glm::vec3(0., 0., 1.), get_height_at));
         update_terrain();
     }
     
     // ******** VIEW ********
-    
-    glm::vec3 get_spider_position()
-    {
-        glm::vec3 pos = spider->get_position();
-        double height = terrain->get_height_at(pos);
-        return glm::vec3(pos.x, pos.y + height, pos.z);
-    }
     
     glm::vec3 get_spider_view_direction()
     {
