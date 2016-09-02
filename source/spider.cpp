@@ -54,7 +54,7 @@ void Spider::jump(bool move_forward)
     }
 }
 
-bool Spider::update_jump(float time)
+bool Spider::update(float time)
 {
     for (Leg& leg : legs) {
         leg.update(time);

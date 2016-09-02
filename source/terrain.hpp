@@ -77,5 +77,5 @@ public:
     
     void update(const glm::vec3& position);
     
-    glm::vec3 get_terrain_position_at(const glm::vec3& position);
+    double get_height_at(const glm::vec3& position);
 };

@@ -117,8 +117,6 @@ public:
     glm::vec3 get_position();
     glm::vec3 get_view_direction();
     
-    std::vector<glm::vec3> get_feet();
-    
     std::shared_ptr<geogo::Geometry> get_legs()
     {
         return legs_geometry;
@@ -130,5 +128,5 @@ public:
     
     void jump(bool move_forward);
     
-    bool update_jump(float time);
+    bool update(float time);
 };

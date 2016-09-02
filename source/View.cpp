@@ -134,7 +134,7 @@ void View::update(double elapsedTime)
     {
         model->jump(glfwGetKey(gWindow, 'W'));
     }
-    model->update_jump(elapsedTime);
+    model->update(elapsedTime);
     
     if(glfwGetKey(gWindow, 'S'))
     {
