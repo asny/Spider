@@ -177,9 +177,9 @@ glm::vec3 TerrainPatch::get_origo()
     return origo;
 }
 
-Terrain::Terrain()
+Terrain::Terrain(const glm::vec3& position)
 {
-    
+    update(position);
 }
 
 pair<int, int> Terrain::index_at(const vec3& position)

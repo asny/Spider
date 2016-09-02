@@ -71,7 +71,7 @@ class Terrain
     
 public:
     
-    Terrain();
+    Terrain(const glm::vec3& position);
     
     std::vector<TerrainPatch>& get_patches();
     
