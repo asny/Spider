@@ -24,16 +24,21 @@ class Model {
     std::function<void()> on_spider_position_changed;
     std::function<void()> on_spider_view_direction_changed;
     
+    void update_terrain()
+    {
+        terrain->update(spider->get_position());
+    }
+    
 public:
     Model(std::function<void()> _on_spider_position_changed, std::function<void()> _on_spider_view_direction_changed)
         : on_spider_position_changed(_on_spider_position_changed), on_spider_view_direction_changed(_on_spider_view_direction_changed)
     {
         auto initial_position = glm::vec3(0., 0.3, -5.);
         terrain = std::unique_ptr<Terrain>(new Terrain(initial_position));
+        
         using namespace std::placeholders;
         std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, terrain.get(), _1);
         spider = std::unique_ptr<Spider>(new Spider(initial_position, glm::vec3(0., 0., 1.), get_height_at));
-        update_terrain();
     }
     
     // ******** VIEW ********
@@ -46,11 +51,6 @@ public:
     std::vector<TerrainPatch>& get_terrain_patches()
     {
         return terrain->get_patches();
-    }
-    
-    void update_terrain()
-    {
-        terrain->update(spider->get_position());
     }
     
     // ******** CONTROL ********
