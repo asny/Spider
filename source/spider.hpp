@@ -19,7 +19,7 @@ class Spider
     class Leg
     {
         glm::vec3 initial_foot_pos;
-        double t = -1.;
+        float t = -1.;
         glm::vec3 destination_vector;
         geogo::VertexID* foot_vertex;
         std::shared_ptr<geogo::Geometry> geometry;
@@ -31,10 +31,9 @@ class Spider
             geometry->create_edge(hip_vertex, foot_vertex);
         }
         
-        void move(double spider_move, double time)
+        void move(float spider_speed, float time)
         {
-            const double radius = 0.5;
-            const double move_time = 1.;
+            const float radius = 0.5;
             
             glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
             if(t < 0.)
@@ -46,23 +45,28 @@ class Spider
                     t = 0.;
                 }
             }
-            
+            foot_pos.z -= spider_speed * time;
+            geometry->position()->at(foot_vertex) = foot_pos;
+        }
+        
+        void update(float time)
+        {
+            const float move_time = 1.;
+            glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
             if(t >= 0.)
             {
                 t = std::min(t + time, move_time);
-                float factor = t/move_time;
+                auto factor = t/move_time;
                 auto destination = initial_foot_pos - destination_vector;
                 auto origin = initial_foot_pos + destination_vector;
                 foot_pos = factor * destination + (1.f-factor) * origin;
-                foot_pos.y = 0.3 * sin(t * M_PI);
+                foot_pos.y = 0.3 * sin(factor * M_PI);
                 
                 if(t + time > move_time)
                 {
                     t = -1.;
                 }
             }
-            
-            foot_pos.z -= spider_move;
             geometry->position()->at(foot_vertex) = foot_pos;
         }
     };

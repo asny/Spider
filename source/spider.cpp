@@ -30,7 +30,7 @@ void Spider::move(float time)
     {
         position += time * speed * view_direction;
         for (Leg& leg : legs) {
-            leg.move(time * speed, time);
+            leg.move(speed, time);
         }
     }
 }
@@ -57,6 +57,9 @@ void Spider::jump(bool move_forward)
 
 bool Spider::update_jump(float time)
 {
+    for (Leg& leg : legs) {
+        leg.update(time);
+    }
     if(is_jumping)
     {
         position += time * jump_vector;
