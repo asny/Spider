@@ -17,7 +17,11 @@ glm::vec3 Spider::get_position()
 
 glm::vec3 Spider::get_view_direction()
 {
-    return view_direction;
+    double height0 = get_height_at(position);
+    double height1 = get_height_at(position + 0.5f * view_direction);
+    double height2 = get_height_at(position + view_direction);
+    double y_view_dir = 0.25 * ((height2 - height0) + (height1 - height0));
+    return glm::normalize(glm::vec3(view_direction.x, y_view_dir, view_direction.z));
 }
 
 void Spider::move(float time)

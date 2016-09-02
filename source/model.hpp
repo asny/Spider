@@ -38,17 +38,6 @@ public:
     
     // ******** VIEW ********
     
-    glm::vec3 get_spider_view_direction()
-    {
-        glm::vec3 view_dir = spider->get_view_direction();
-        glm::vec3 pos = spider->get_position();
-        double height0 = terrain->get_height_at(pos);
-        double height1 = terrain->get_height_at(pos + 0.5f * view_dir);
-        double height2 = terrain->get_height_at(pos + view_dir);
-        double y_view_dir = 0.25 * ((height2 - height0) + (height1 - height0));
-        return glm::normalize(glm::vec3(view_dir.x, y_view_dir, view_dir.z));
-    }
-    
     Spider* get_spider()
     {
         return spider.get();

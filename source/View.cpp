@@ -173,7 +173,7 @@ void View::update(double elapsedTime)
 void View::update_camera()
 {
     vec3 spider_position = instance->model->get_spider()->get_position();
-    vec3 spider_view_direction = instance->model->get_spider_view_direction();
+    vec3 spider_view_direction = instance->model->get_spider()->get_view_direction();
     
     switch (instance->view_type) {
         case FIRST_PERSON:
@@ -197,7 +197,7 @@ void View::update_camera()
 void View::update_spider()
 {
     vec3 spider_position = instance->model->get_spider()->get_position();
-    vec3 spider_view_direction = instance->model->get_spider_view_direction();
+    vec3 spider_view_direction = instance->model->get_spider()->get_view_direction();
     
     // Compute spider model matrix
     mat4 spider_rotation_yaw = orientation(normalize(vec3(spider_view_direction.x, 0., spider_view_direction.z)), vec3(0., 0., 1.));
