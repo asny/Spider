@@ -30,7 +30,7 @@ void Spider::move(float time)
     {
         position += time * speed * view_direction;
         for (Leg& leg : legs) {
-            leg.move(speed, time);
+            leg.move(speed * time);
         }
     }
 }
