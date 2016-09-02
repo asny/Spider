@@ -9,6 +9,9 @@
 #pragma once
 
 #include "vec3.hpp"
+#include "vec4.hpp"
+#include "mat4x4.hpp"
+#include "gtc/matrix_transform.hpp"
 #include "glm.hpp"
 #include "Geometry.hpp"
 #include <vector>
@@ -34,21 +37,16 @@ class Spider
         
         void move(float spider_move)
         {
-            const float radius = 0.5;
-            
             glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
-            foot_pos.z -= spider_move;
-            if(!is_moving)
-            {
-                auto vec = foot_pos - initial_foot_pos;
-                if(glm::length(vec) > radius)
-                {
-                    destination_vector = vec;
-                    is_moving = true;
-                    t = 0.f;
-                }
-            }
-            geometry->position()->at(foot_vertex) = foot_pos;
+            geometry->position()->at(foot_vertex) = foot_pos - glm::vec3(0.f, 0.f, spider_move);
+            check_should_move();
+        }
+        
+        void rotate(float spider_move)
+        {
+            glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
+            geometry->position()->at(foot_vertex) = glm::vec3(glm::rotate(glm::mat4(), -spider_move, glm::vec3(0.,1.,0.)) * glm::vec4(foot_pos, 1.f));
+            check_should_move();
         }
         
         void update(float time)
@@ -60,7 +58,7 @@ class Spider
                 t = std::min(t + std::abs(time), move_time);
                 auto factor = t*t/(move_time * move_time);
                 auto origin = initial_foot_pos + destination_vector;
-                auto destination = initial_foot_pos - 0.8f * destination_vector;
+                auto destination = initial_foot_pos;
                 foot_pos = factor * destination + (1.f-factor) * origin;
                 foot_pos.y = 0.3 * sin(factor * M_PI);
                 
@@ -70,6 +68,22 @@ class Spider
                 }
             }
             geometry->position()->at(foot_vertex) = foot_pos;
+        }
+        
+    private:
+        void check_should_move()
+        {
+            const float radius = 0.5;
+            if(!is_moving)
+            {
+                glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
+                if(glm::length(foot_pos - initial_foot_pos) > radius)
+                {
+                    destination_vector = foot_pos - initial_foot_pos;
+                    is_moving = true;
+                    t = 0.f;
+                }
+            }
         }
     };
     

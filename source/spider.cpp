@@ -8,10 +8,6 @@
 
 #include "spider.hpp"
 
-#include "vec4.hpp"
-#include "mat4x4.hpp"
-#include "gtc/matrix_transform.hpp"
-
 using namespace glm;
 
 glm::vec3 Spider::get_position()
@@ -30,7 +26,7 @@ void Spider::move(float time)
     {
         position += time * speed * view_direction;
         for (Leg& leg : legs) {
-            leg.move(speed * time);
+            leg.move(time * speed);
         }
     }
 }
@@ -40,6 +36,9 @@ void Spider::rotate(float time)
     if(!is_jumping)
     {
         view_direction = vec3(glm::rotate(mat4(), time * angular_speed, vec3(0.,1.,0.)) * vec4(view_direction, 1.));
+        for (Leg& leg : legs) {
+            leg.rotate(time * angular_speed);
+        }
     }
 }
 
