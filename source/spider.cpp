@@ -28,10 +28,9 @@ void Spider::move(float time)
 {
     if(!is_jumping)
     {
-        auto move_vector = time * speed * view_direction;
-        position += move_vector;
+        position += time * speed * view_direction;
         for (Leg& leg : legs) {
-            leg.move(move_vector, time);
+            leg.move(time * speed, time);
         }
     }
 }

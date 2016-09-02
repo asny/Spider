@@ -31,10 +31,10 @@ class Spider
             geometry->create_edge(hip_vertex, foot_vertex);
         }
         
-        void move(const glm::vec3& spider_move, double time)
+        void move(double spider_move, double time)
         {
-            const double radius = 1.;
-            const double move_time = 0.5;
+            const double radius = 0.5;
+            const double move_time = 1.;
             
             glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
             if(t < 0.)
@@ -51,7 +51,7 @@ class Spider
             {
                 t = std::min(t + time, move_time);
                 float factor = t/move_time;
-                auto destination = initial_foot_pos - destination_vector * 0.5f;
+                auto destination = initial_foot_pos - destination_vector;
                 auto origin = initial_foot_pos + destination_vector;
                 foot_pos = factor * destination + (1.f-factor) * origin;
                 foot_pos.y = 0.3 * sin(t * M_PI);
@@ -62,8 +62,7 @@ class Spider
                 }
             }
             
-            foot_pos.x -= spider_move.x;
-            foot_pos.z -= spider_move.z;
+            foot_pos.z -= spider_move;
             geometry->position()->at(foot_vertex) = foot_pos;
         }
     };
