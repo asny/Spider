@@ -35,17 +35,17 @@ class Spider
             geometry->create_edge(hip_vertex, foot_vertex);
         }
         
-        void move(float spider_move)
+        void move(float distance)
         {
             glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
-            geometry->position()->at(foot_vertex) = foot_pos - glm::vec3(0.f, 0.f, spider_move);
+            geometry->position()->at(foot_vertex) = foot_pos - glm::vec3(0.f, 0.f, distance);
             check_should_move();
         }
         
-        void rotate(float spider_move)
+        void rotate(float distance)
         {
             glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
-            geometry->position()->at(foot_vertex) = glm::vec3(glm::rotate(glm::mat4(), -spider_move, glm::vec3(0.,1.,0.)) * glm::vec4(foot_pos, 1.f));
+            geometry->position()->at(foot_vertex) = glm::vec3(glm::rotate(glm::mat4(), -distance, glm::vec3(0.,1.,0.)) * glm::vec4(foot_pos, 1.f));
             check_should_move();
         }
         
@@ -56,7 +56,7 @@ class Spider
             if(is_moving)
             {
                 t = std::min(t + std::abs(time), move_time);
-                auto factor = t*t/(move_time * move_time);
+                auto factor = t / move_time;
                 auto origin = initial_foot_pos + destination_vector;
                 auto destination = initial_foot_pos;
                 foot_pos = factor * destination + (1.f-factor) * origin;
@@ -65,6 +65,7 @@ class Spider
                 if(factor >= 1.)
                 {
                     is_moving = false;
+                    t = 0.f;
                 }
             }
             geometry->position()->at(foot_vertex) = foot_pos;
@@ -77,11 +78,12 @@ class Spider
             if(!is_moving)
             {
                 glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
-                if(glm::length(foot_pos - initial_foot_pos) > radius)
+                glm::vec2 foot_xz = glm::vec2(foot_pos.x, foot_pos.z);
+                glm::vec2 initial_xz = glm::vec2(initial_foot_pos.x, initial_foot_pos.z);
+                if(glm::length(foot_xz - initial_xz) > radius)
                 {
                     destination_vector = foot_pos - initial_foot_pos;
                     is_moving = true;
-                    t = 0.f;
                 }
             }
         }
