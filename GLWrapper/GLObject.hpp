@@ -30,7 +30,7 @@ namespace oogl
         std::vector<GLUniform<glm::mat4>> mat4_uniforms;
         
         // Transformation
-        glm::mat4 modelMatrix = glm::mat4(1.);
+        std::shared_ptr<glm::mat4> modelMatrix = std::make_shared<glm::mat4>(1.);
         
         template<class T>
         void update_attribute(std::shared_ptr<GLVertexAttribute<T>> attribute)
@@ -104,14 +104,22 @@ namespace oogl
         /**
          Set the model matrix.
          */
-        void set_model_matrix(glm::mat4 _modelMatrix)
+        void set_model_matrix(const std::shared_ptr<glm::mat4> _modelMatrix)
         {
             modelMatrix = _modelMatrix;
         }
         
+        /**
+         Set the model matrix.
+         */
+        void set_model_matrix(const glm::mat4& _modelMatrix)
+        {
+            modelMatrix = std::make_shared<glm::mat4>(_modelMatrix);
+        }
+        
         const glm::mat4& get_model()
         {
-            return modelMatrix;
+            return *modelMatrix;
         }
     };
 }

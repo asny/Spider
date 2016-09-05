@@ -62,12 +62,10 @@ View::View(int &argc, char** argv)
     // Create model
     model = std::unique_ptr<Model>(new Model(
     [](){
-        update_spider();
         update_terrain_and_grass();
         update_camera();
     },
     [](){
-        update_spider();
         update_camera();
     }));
     
@@ -81,7 +79,6 @@ View::View(int &argc, char** argv)
     
     // Update
     update_terrain_and_grass();
-    update_spider();
     update_camera();
     
     // run while the window is open
@@ -193,22 +190,6 @@ void View::update_camera()
     }
 }
 
-void View::update_spider()
-{
-    vec3 spider_position = instance->model->get_spider()->get_position();
-    vec3 spider_view_direction = instance->model->get_spider()->get_view_direction();
-    
-    // Compute spider model matrix
-    mat4 spider_rotation_yaw = orientation(normalize(vec3(spider_view_direction.x, 0., spider_view_direction.z)), vec3(0., 0., 1.));
-    mat4 spider_rotation_pitch = orientation(normalize(vec3(0., spider_view_direction.y, 1.)), vec3(0., 0., 1.));
-    mat4 spider_translation = translate(mat4(), spider_position);
-    mat4 model_matrix = spider_translation * spider_rotation_yaw * spider_rotation_pitch;
-    
-    // Update uniform variables
-    instance->spider_body->set_model_matrix(model_matrix);
-    instance->spider_legs->set_model_matrix(model_matrix);
-}
-
 void View::update_terrain_and_grass()
 {
     *instance->spider_pos = instance->model->get_spider()->get_position();
@@ -259,19 +240,21 @@ void View::create_spider_body()
         geometry->position()->at(vertex) = p - center + vec3(0,0,0.3);
     }
     auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
-    spider_body = shared_ptr<GLObject>(new GLObject(geometry, material));
-    spider_body->use_attribute("normal", normal_attribute);
-    spider_body->use_uniform("lightPos", light_pos);
-    scene->add(spider_body);
+    auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
+    object->use_attribute("normal", normal_attribute);
+    object->use_uniform("lightPos", light_pos);
+    object->set_model_matrix(model->get_spider()->get_local2world());
+    scene->add(object);
 }
 
 void View::create_spider_legs()
 {
     auto material = shared_ptr<GLMaterial>(new GLSpiderLegsMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
     auto geometry = model->get_spider()->get_legs();
-    spider_legs = shared_ptr<GLObject>(new GLObject(geometry, material));
-    spider_legs->use_uniform("lightPos", light_pos);
-    scene->add(spider_legs);
+    auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
+    object->use_uniform("lightPos", light_pos);
+    object->set_model_matrix(model->get_spider()->get_local2world());
+    scene->add(object);
 }
 
 void View::create_cube()

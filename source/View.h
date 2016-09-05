@@ -22,9 +22,6 @@ class View
     std::shared_ptr<oogl::GLCamera> camera;
     std::unique_ptr<oogl::GLScene> scene;
     
-    std::shared_ptr<oogl::GLObject> spider_legs;
-    std::shared_ptr<oogl::GLObject> spider_body;
-    
     std::shared_ptr<glm::vec3> light_pos = std::make_shared<glm::vec3>(0., 2000., 2.);
     std::shared_ptr<glm::vec3> wind = std::make_shared<glm::vec3>(0., 0., 0.);
     std::shared_ptr<glm::vec3> spider_pos = std::make_shared<glm::vec3>(0., 0., 0.);
@@ -45,7 +42,6 @@ private:
     void create_terrain();
     
     static void update_terrain_and_grass();
-    static void update_spider();
     
     static void update_camera();
     
