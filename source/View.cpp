@@ -134,8 +134,6 @@ void View::update(double elapsedTime)
     {
         model->jump(glfwGetKey(gWindow, 'W'));
     }
-    model->update(elapsedTime);
-    
     if(glfwGetKey(gWindow, 'S'))
     {
         model->move(-elapsedTime);
@@ -152,6 +150,7 @@ void View::update(double elapsedTime)
     {
         model->rotate(-elapsedTime);
     }
+    model->update(elapsedTime);
     
     if(glfwGetKey(gWindow, '1'))
     {
