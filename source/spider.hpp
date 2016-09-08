@@ -82,9 +82,9 @@ class Spider
                 glm::vec2 default_xz = glm::vec2(default_foot_pos.x, default_foot_pos.z);
                 if(glm::length(foot_xz - default_xz) > radius)
                 {
-                    origin_foot_pos.y = get_height_at(glm::vec3(local2world * glm::vec4(origin_foot_pos, 1.f)));
-                    destination_foot_pos = default_foot_pos;
-                    destination_foot_pos.y = get_height_at(glm::vec3(local2world * glm::vec4(destination_foot_pos, 1.f)));
+                    destination_foot_pos = glm::vec3(local2world * glm::vec4(default_foot_pos, 1.f));
+                    destination_foot_pos.y = get_height_at(glm::vec3(destination_foot_pos));
+                    destination_foot_pos = glm::vec3(glm::inverse(local2world) * glm::vec4(destination_foot_pos, 1.f));
                     is_moving = true;
                 }
             }
