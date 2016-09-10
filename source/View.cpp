@@ -90,13 +90,13 @@ View::View(int &argc, char** argv)
         glfwPollEvents();
         
         // update the scene based on the time elapsed since last update
-        double thisTime = glfwGetTime();
+        *time = glfwGetTime();
         
-        update(thisTime - lastTime);
+        update(*time - lastTime);
         
-        *wind = glm::vec3(0.5 * sin(thisTime) + 0.5, 0., 0.5 * cos(thisTime + 0.5) + 0.5);
+        *wind = glm::vec3(0.5 * sin(*time) + 0.5, 0., 0.5 * cos(*time + 0.5) + 0.5);
         
-        lastTime = thisTime;
+        lastTime = *time;
         
         // draw one frame
         scene->draw();
@@ -149,7 +149,6 @@ void View::update(double elapsedTime)
         model->rotate(-elapsedTime);
     }
     model->update(elapsedTime);
-    *time += elapsedTime;
     
     if(glfwGetKey(gWindow, '1'))
     {
