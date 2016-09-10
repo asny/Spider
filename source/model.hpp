@@ -69,6 +69,7 @@ public:
         spider->move(time);
         on_spider_position_changed();
         update_terrain();
+        fog->update_position(spider->get_position());
     }
     
     void rotate(double time)
@@ -89,6 +90,9 @@ public:
         {
             on_spider_position_changed();
             update_terrain();
+            fog->update_position(spider->get_position());
         }
+        
+        fog->update(time);
     }
 };

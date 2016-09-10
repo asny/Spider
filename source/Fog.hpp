@@ -10,6 +10,7 @@
 
 #include "Geometry.hpp"
 #include "mat4x4.hpp"
+#include "gtx/rotate_vector.hpp"
 
 class Fog {
     
@@ -32,6 +33,16 @@ public:
     const std::shared_ptr<geogo::Geometry> get_geometry()
     {
         return geometry;
+    }
+    
+    void update(double time)
+    {
+        
+    }
+    
+    void update_position(const glm::vec3& position)
+    {
+        *local2world = glm::translate(position);
     }
 };
 
