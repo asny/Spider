@@ -34,10 +34,11 @@ void GLMaterial::pre_draw()
     {
         if(test_depth)
         {
-            glEnable(GL_DEPTH_TEST);
+            glDepthMask(GL_TRUE);
         }
         else {
-            glDisable(GL_DEPTH_TEST);
+            glDepthMask(GL_FALSE);
+            
         }
         currently_test_depth = test_depth;
     }

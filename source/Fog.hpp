@@ -31,7 +31,7 @@ class Fog
     
     void generate_particle()
     {
-        float radius = random(4., 6.);
+        float radius = random(1., 10.);
         double theta = random(0., 2. * M_PI);
         double phi = random(0., M_PI);
         glm::vec3 position = radius * glm::vec3(cos(theta) * sin(phi), sin(theta) * sin(phi), cos(phi));
@@ -53,7 +53,7 @@ class Fog
 public:
     Fog(const glm::vec3& position)
     {
-        for(int i = 0; i < 1000; i++)
+        for(int i = 0; i < 2000; i++)
         {
             generate_particle();
         }

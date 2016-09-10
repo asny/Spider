@@ -9,5 +9,6 @@ in vec3 normal;
 void main()
 {
     // Calculate position
-    gl_Position = MVMatrix * vec4(cos(time) * position + sin(time) * cross(position, normal), 1.);
+    float t = 0.1 * time;
+    gl_Position = MVMatrix * vec4(cos(t) * position + sin(t) * cross(position, normal), 1.);
 }
