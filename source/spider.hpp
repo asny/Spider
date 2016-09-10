@@ -38,6 +38,7 @@ class Spider
         
         void move(float distance, std::function<double(glm::vec3)>& get_height_at, const glm::mat4& local2world)
         {
+            // TODO: Take yaw rotation into account
             glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
             geometry->position()->at(foot_vertex) = foot_pos - glm::vec3(0.f, 0.f, distance);
             check_should_move(get_height_at, local2world);
