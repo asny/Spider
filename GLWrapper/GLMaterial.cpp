@@ -13,6 +13,7 @@ using namespace std;
 using namespace glm;
 
 bool GLMaterial::currently_cull_back_faces = true;
+bool GLMaterial::currently_test_depth = true;
 
 void GLMaterial::pre_draw()
 {
@@ -28,6 +29,17 @@ void GLMaterial::pre_draw()
             glDisable(GL_CULL_FACE);
         }
         currently_cull_back_faces = cull_back_faces;
+    }
+    if(currently_test_depth != test_depth)
+    {
+        if(test_depth)
+        {
+            glEnable(GL_DEPTH_TEST);
+        }
+        else {
+            glDisable(GL_DEPTH_TEST);
+        }
+        currently_test_depth = test_depth;
     }
 }
 

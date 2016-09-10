@@ -17,9 +17,11 @@ namespace oogl
     class GLMaterial
     {
         static bool currently_cull_back_faces;
+        static bool currently_test_depth;
         
     protected:
         bool cull_back_faces = true;
+        bool test_depth = true;
         
         std::shared_ptr<GLShader> shader;
         
@@ -142,7 +144,8 @@ namespace oogl
     public:
         GLSpritesMaterial()
         {
-            shader = std::make_shared<GLShader>("shaders/pre_geom.vert",  "shaders/sprites.frag", "shaders/sprites.geom");   
+            shader = std::make_shared<GLShader>("shaders/pre_geom.vert",  "shaders/sprites.frag", "shaders/sprites.geom");
+            test_depth = false;
         }
     };
 }
