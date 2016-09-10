@@ -135,4 +135,14 @@ namespace oogl
             specular->use();
         }
     };
+    
+    class GLSpritesMaterial : public GLMaterial
+    {
+        
+    public:
+        GLSpritesMaterial()
+        {
+            shader = std::make_shared<GLShader>("shaders/pre_geom.vert",  "shaders/sprites.frag", "shaders/sprites.geom");   
+        }
+    };
 }

@@ -74,6 +74,8 @@
 		7A3895A61BEFB8AE00D6E095 /* Bitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bitmap.h; path = Readers/Bitmap.h; sourceTree = "<group>"; };
 		7A3895A71BEFB8AE00D6E095 /* Reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Reader.cpp; path = Readers/Reader.cpp; sourceTree = "<group>"; };
 		7A3895A81BEFB8AE00D6E095 /* Reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Reader.hpp; path = Readers/Reader.hpp; sourceTree = "<group>"; };
+		7A5252661D83F06F00BE9D1C /* sprites.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = sprites.geom; path = shaders/sprites.geom; sourceTree = "<group>"; };
+		7A5252671D83F6BC00BE9D1C /* sprites.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = sprites.frag; path = shaders/sprites.frag; sourceTree = "<group>"; };
 		7A5A4F8D1D4D308F00189B8C /* GLScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLScene.cpp; path = GLWrapper/GLScene.cpp; sourceTree = SOURCE_ROOT; };
 		7A5A4F8E1D4D309000189B8C /* GLScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLScene.hpp; path = GLWrapper/GLScene.hpp; sourceTree = SOURCE_ROOT; };
 		7A5A4F901D4D37A700189B8C /* Attribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Attribute.cpp; path = GLWrapper/Attribute.cpp; sourceTree = SOURCE_ROOT; };
@@ -169,6 +171,8 @@
 		7A383A341BBFD93A00E29333 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				7A5252671D83F6BC00BE9D1C /* sprites.frag */,
+				7A5252661D83F06F00BE9D1C /* sprites.geom */,
 				7AE74B671C18B00800466559 /* spider_legs.geom */,
 				7A2A093A1BF7EC04006285D0 /* skybox.frag */,
 				7A2A093B1BF7EC04006285D0 /* skybox.vert */,

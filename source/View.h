@@ -36,6 +36,7 @@ private:
     
     void create_cube();
     void create_skybox();
+    void create_fog();
     void create_spider_body();
     void create_spider_legs();
     void create_grass();

@@ -76,6 +76,7 @@ View::View(int &argc, char** argv)
     create_spider_legs();
     create_terrain();
     create_grass();
+    create_fog();
     
     // Update
     update_terrain_and_grass();
@@ -289,6 +290,15 @@ void View::create_skybox()
     auto skybox_texture = shared_ptr<GLTexture3D>(new GLTexture3D(bitmaps));
     auto material = shared_ptr<GLSkyboxMaterial>(new GLSkyboxMaterial(skybox_texture));
     auto geometry = Geometry::create_box(true);
+    auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
+    scene->add(object);
+}
+
+void View::create_fog()
+{
+    auto material = make_shared<GLSpritesMaterial>();
+    auto geometry = make_shared<Geometry>();
+    geometry->create_vertex(vec3(0., 0.5, -2.));
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
     scene->add(object);
 }
