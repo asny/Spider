@@ -32,7 +32,7 @@ void Spider::update_local2world()
     // Compute spider model matrix
     mat4 spider_rotation_yaw = orientation(normalize(vec3(spider_view_direction.x, 0., spider_view_direction.z)), vec3(0., 0., 1.));
     mat4 spider_rotation_pitch = orientation(normalize(vec3(0., spider_view_direction.y, 1.)), vec3(0., 0., 1.));
-    mat4 spider_translation = translate(mat4(), spider_position);
+    mat4 spider_translation = translate(spider_position);
     *local2world = spider_translation * spider_rotation_yaw * spider_rotation_pitch;
 }
 

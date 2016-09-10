@@ -297,9 +297,9 @@ void View::create_skybox()
 void View::create_fog()
 {
     auto material = make_shared<GLSpritesMaterial>();
-    auto geometry = make_shared<Geometry>();
-    geometry->create_vertex(vec3(0., 0.5, -2.));
+    auto geometry = model->get_fog()->get_geometry();
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
+    object->set_model_matrix(model->get_fog()->get_local2world());
     scene->add(object);
 }
 
