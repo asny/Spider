@@ -42,7 +42,7 @@ public:
         std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, terrain.get(), _1);
         spider = std::unique_ptr<Spider>(new Spider(initial_position, glm::vec3(0., 0., 1.), get_height_at));
         
-        fog = std::unique_ptr<Fog>(new Fog());
+        fog = std::unique_ptr<Fog>(new Fog(initial_position));
     }
     
     // ******** VIEW ********

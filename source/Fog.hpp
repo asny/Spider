@@ -14,6 +14,11 @@
 
 class Fog
 {
+    double random(double min, double max)
+    {
+        return (max - min) * (double)rand()/(double)RAND_MAX + min;
+    }
+    
     std::shared_ptr<geogo::Geometry> geometry = std::make_shared<geogo::Geometry>();
     std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> trajectory_normals = std::make_shared<geogo::Attribute<geogo::VertexID, glm::vec3>>();
     std::shared_ptr<glm::mat4> local2world = std::make_shared<glm::mat4>(1.);
@@ -24,12 +29,35 @@ class Fog
         trajectory_normals->at(vertexId) = normal;
     }
     
-public:
-    Fog()
+    void generate_particle()
     {
-        create_particle(glm::vec3(0., 1.5, -5.), glm::vec3(0., 0., 1.));
-        create_particle(glm::vec3(0., 1.5, -4.), glm::vec3(0., 0., 1.));
-        create_particle(glm::vec3(1., 1., -3.), glm::vec3(0., 0., 1.));
+        float radius = random(4., 6.);
+        double theta = random(0., 2. * M_PI);
+        double phi = random(0., M_PI);
+        glm::vec3 position = radius * glm::vec3(cos(theta) * sin(phi), sin(theta) * sin(phi), cos(phi));
+        
+        glm::vec3 normal;
+        if(std::abs(dot(normalize(position), glm::vec3(0., 1., 0.))) < 0.9)
+        {
+            normal = cross(position, glm::vec3(0., 1., 0.));
+        }
+        else
+        {
+            normal = cross(position, glm::vec3(1., 0., 0.));
+        }
+        double alpha = random(0., 2. * M_PI);
+        normal = normalize(cosf(alpha) * normal + sinf(alpha) * cross(position, normal));
+        create_particle(position, normal);
+    }
+    
+public:
+    Fog(const glm::vec3& position)
+    {
+        for(int i = 0; i < 1000; i++)
+        {
+            generate_particle();
+        }
+        update_position(position);
     }
     
     const std::shared_ptr<glm::mat4> get_local2world()
