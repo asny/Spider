@@ -71,12 +71,12 @@ View::View(int &argc, char** argv)
     
     // Create objects
     create_skybox();
-    create_fog();
     create_cube();
-    create_spider_body();
-    create_spider_legs();
     create_terrain();
     create_grass();
+    create_spider_body();
+    create_spider_legs();
+    create_fog();
     
     // Update
     update_terrain_and_grass();

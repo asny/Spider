@@ -17,7 +17,6 @@ GLCamera::GLCamera()
     // Enable states
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
-    glDepthMask(GL_TRUE);
     
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -40,6 +39,8 @@ void GLCamera::set_view(const vec3& eyePosition, const vec3& eyeDirection)
 
 void GLCamera::pre_draw()
 {
+    glDepthMask(GL_TRUE);
+    
     glClearColor(1., 1., 1., 0.);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
