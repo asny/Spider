@@ -34,6 +34,10 @@ private:
     const std::shared_ptr<ValueType> value;
     GLuint location;
     
+    void set(float value)
+    {
+        glUniform1f(location, value);
+    }
     
     void set(int value)
     {

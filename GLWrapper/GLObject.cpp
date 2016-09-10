@@ -57,7 +57,22 @@ void GLObject::draw()
         update_attribute(glAttribute);
     }
     
+    for (auto glUniform : float_uniforms)
+    {
+        glUniform.use();
+    }
+    
+    for (auto glUniform : vec2_uniforms)
+    {
+        glUniform.use();
+    }
+    
     for (auto glUniform : vec3_uniforms)
+    {
+        glUniform.use();
+    }
+    
+    for (auto glUniform : vec4_uniforms)
     {
         glUniform.use();
     }
