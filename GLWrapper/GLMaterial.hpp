@@ -144,7 +144,7 @@ namespace oogl
     public:
         GLSpritesMaterial()
         {
-            shader = std::make_shared<GLShader>("shaders/pre_geom.vert",  "shaders/sprites.frag", "shaders/sprites.geom");
+            shader = std::make_shared<GLShader>("shaders/fog.vert",  "shaders/sprites.frag", "shaders/sprites.geom");
             test_depth = false;
         }
     };

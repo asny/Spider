@@ -26,6 +26,8 @@ class View
     std::shared_ptr<glm::vec3> wind = std::make_shared<glm::vec3>(0., 0., 0.);
     std::shared_ptr<glm::vec3> spider_pos = std::make_shared<glm::vec3>(0., 0., 0.);
     
+    std::shared_ptr<float> time = std::make_shared<float>(0.f);
+    
     static View* instance;
     
 public:

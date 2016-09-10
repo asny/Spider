@@ -92,7 +92,5 @@ public:
             update_terrain();
             fog->update_position(spider->get_position());
         }
-        
-        fog->update(time);
     }
 };

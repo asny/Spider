@@ -149,6 +149,7 @@ void View::update(double elapsedTime)
         model->rotate(-elapsedTime);
     }
     model->update(elapsedTime);
+    *time += elapsedTime;
     
     if(glfwGetKey(gWindow, '1'))
     {
@@ -300,6 +301,8 @@ void View::create_fog()
     auto geometry = model->get_fog()->get_geometry();
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
     object->set_model_matrix(model->get_fog()->get_local2world());
+    object->use_attribute("normal", model->get_fog()->get_trajectory_normals());
+    object->use_uniform("time", time);
     scene->add(object);
 }
 
