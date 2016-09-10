@@ -53,7 +53,7 @@ class Fog
 public:
     Fog(const glm::vec3& position)
     {
-        for(int i = 0; i < 2000; i++)
+        for(int i = 0; i < 700; i++)
         {
             generate_particle();
         }
