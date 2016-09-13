@@ -20,12 +20,12 @@ vec3 up_direction;
 
 float func(float x)
 {
-    return -x*x + x;
+    return -0.5625f * x*x + 0.75f * x;
 }
 
 float dfunc(float x)
 {
-    return -2.f*x + 1.f;
+    return -1.125f*x + 0.75f;
 }
 
 vec3 compute_position(vec3 origin, vec3 top, float parameter)
