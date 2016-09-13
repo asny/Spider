@@ -33,27 +33,22 @@ class Fog
     {
         float radius = random(2., 10.);
         double theta = random(0., 2. * M_PI);
-        double phi = random(0., M_PI);
-        glm::vec3 position = radius * glm::vec3(cos(theta) * sin(phi), sin(theta) * sin(phi), cos(phi));
+        double phi = random(0.25 * M_PI, 0.75 * M_PI);
+        glm::vec3 direction = glm::vec3(cos(theta) * sin(phi), cos(phi), sin(theta) * sin(phi));
         
-        glm::vec3 normal;
-        if(std::abs(dot(normalize(position), glm::vec3(0., 1., 0.))) < 0.9)
-        {
-            normal = cross(position, glm::vec3(0., 1., 0.));
-        }
-        else
-        {
-            normal = cross(position, glm::vec3(1., 0., 0.));
-        }
-        double alpha = random(0., 2. * M_PI);
-        normal = normalize(cosf(alpha) * normal + sinf(alpha) * cross(position, normal));
-        create_particle(position, normal);
+        glm::vec3 tangent = cross(direction, glm::vec3(0., 1., 0.));
+        glm::vec3 normal = cross(direction, tangent);
+        double alpha = random(0., 0.5 * M_PI) - 0.25 * M_PI;
+        float sign = rand()%2 == 0 ? -1.f : 1.f;
+        normal = sign * normalize(cosf(alpha) * normal + sinf(alpha) * tangent);
+        
+        create_particle(radius * direction, normal);
     }
     
 public:
     Fog(const glm::vec3& position)
     {
-        for(int i = 0; i < 1000; i++)
+        for(int i = 0; i < 2000; i++)
         {
             generate_particle();
         }
