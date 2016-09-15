@@ -31,9 +31,9 @@ class Fog
     
     void generate_particle()
     {
-        float radius = random(2., 10.);
+        float radius = random(3., 10.);
         double theta = random(0., 2. * M_PI);
-        double phi = random(0.25 * M_PI, 0.75 * M_PI);
+        double phi = random(0.3 * M_PI, 0.7 * M_PI);
         glm::vec3 direction = glm::vec3(cos(theta) * sin(phi), cos(phi), sin(theta) * sin(phi));
         
         glm::vec3 tangent = cross(direction, glm::vec3(0., 1., 0.));
@@ -46,18 +46,12 @@ class Fog
     }
     
 public:
-    Fog(const glm::vec3& position)
+    Fog()
     {
         for(int i = 0; i < 2000; i++)
         {
             generate_particle();
         }
-        update_position(position);
-    }
-    
-    const std::shared_ptr<glm::mat4> get_local2world()
-    {
-        return local2world;
     }
     
     const std::shared_ptr<geogo::Geometry> get_geometry()
@@ -68,11 +62,6 @@ public:
     const std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> get_trajectory_normals()
     {
         return trajectory_normals;
-    }
-    
-    void update_position(const glm::vec3& position)
-    {
-        *local2world = glm::translate(position);
     }
 };
 

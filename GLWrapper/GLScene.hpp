@@ -21,7 +21,6 @@ namespace oogl {
         
         std::shared_ptr<glm::mat4> modelView = std::make_shared<glm::mat4>(1.);
         std::shared_ptr<glm::mat4> inverseModelView = std::make_shared<glm::mat4>(1.);
-        std::shared_ptr<glm::mat4> projection = std::make_shared<glm::mat4>(1.);
         std::shared_ptr<glm::mat4> modelViewProjection = std::make_shared<glm::mat4>(1.);
         
     public:
@@ -35,20 +34,20 @@ namespace oogl {
             objects.push_back(object);
             object->use_uniform("MVMatrix", modelView);
             object->use_uniform("NMatrix", inverseModelView);
-            object->use_uniform("PMatrix", projection);
+            object->use_uniform("PMatrix", camera->get_projection());
             object->use_uniform("MVPMatrix", modelViewProjection);
+            object->use_uniform("eyePosition", camera->get_position());
         }
         
         void draw()
         {
             camera->pre_draw();
-            *projection = camera->get_projection();
             
             for (std::shared_ptr<GLObject> object : objects)
             {
-                *modelView = camera->get_view() * object->get_model();
+                *modelView = *camera->get_view() * object->get_model();
                 *inverseModelView = inverseTranspose(*modelView);
-                *modelViewProjection = camera->get_projection() * (*modelView);
+                *modelViewProjection = *camera->get_projection() * (*modelView);
                 
                 object->draw();
             }

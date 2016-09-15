@@ -299,7 +299,6 @@ void View::create_fog()
     auto material = make_shared<GLSpritesMaterial>();
     auto geometry = model->get_fog()->get_geometry();
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
-    object->set_model_matrix(model->get_fog()->get_local2world());
     object->use_attribute("normal", model->get_fog()->get_trajectory_normals());
     object->use_uniform("time", time);
     object->use_uniform("radius", make_shared<float>(1.f));

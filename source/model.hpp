@@ -42,7 +42,7 @@ public:
         std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, terrain.get(), _1);
         spider = std::unique_ptr<Spider>(new Spider(initial_position, glm::vec3(0., 0., 1.), get_height_at));
         
-        fog = std::unique_ptr<Fog>(new Fog(initial_position));
+        fog = std::unique_ptr<Fog>(new Fog());
     }
     
     // ******** VIEW ********
@@ -69,7 +69,6 @@ public:
         spider->move(time);
         on_spider_position_changed();
         update_terrain();
-        fog->update_position(spider->get_position());
     }
     
     void rotate(double time)
@@ -90,7 +89,6 @@ public:
         {
             on_spider_position_changed();
             update_terrain();
-            fog->update_position(spider->get_position());
         }
     }
 };

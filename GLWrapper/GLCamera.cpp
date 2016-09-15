@@ -27,13 +27,14 @@ GLCamera::GLCamera()
 void GLCamera::set_screen_size(int width, int height)
 {
     glViewport(0, 0, width, height);
-    projection = perspective(45.f, width/float(height), 0.1f, 100.f);
+    *projection = perspective(45.f, width/float(height), 0.1f, 100.f);
     check_gl_error();
 }
 
 void GLCamera::set_view(const vec3& eyePosition, const vec3& eyeDirection)
 {
-    view = lookAt(eyePosition, eyePosition + eyeDirection, vec3(0., 1., 0.));
+    *position = eyePosition;
+    *view = lookAt(eyePosition, eyePosition + eyeDirection, vec3(0., 1., 0.));
     check_gl_error();
 }
 

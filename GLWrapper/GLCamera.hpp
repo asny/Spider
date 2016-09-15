@@ -16,9 +16,11 @@ namespace oogl {
     /**
      Represents a camera.
      */
-    class GLCamera {
-        glm::mat4 view = glm::mat4(1.);
-        glm::mat4 projection = glm::mat4(1.);
+    class GLCamera
+    {
+        std::shared_ptr<glm::vec3> position = std::make_shared<glm::vec3>();
+        std::shared_ptr<glm::mat4> view = std::make_shared<glm::mat4>(1.);
+        std::shared_ptr<glm::mat4> projection = std::make_shared<glm::mat4>(1.);
         
     public:
         
@@ -36,14 +38,20 @@ namespace oogl {
         
         void pre_draw();
         
-        const glm::mat4& get_view()
+        const std::shared_ptr<glm::mat4> get_view()
         {
             return view;
         }
         
-        const glm::mat4& get_projection()
+        const std::shared_ptr<glm::mat4> get_projection()
         {
             return projection;
         }
+        
+        const std::shared_ptr<glm::vec3> get_position()
+        {
+            return position;
+        }
+        
     };
 }
