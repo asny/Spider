@@ -211,11 +211,15 @@ void View::create_grass()
 
 void View::create_terrain()
 {
-    auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.25f,0.25f,0.25f, 1.f}, {0.4f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
+    auto bmp = Reader::load_bitmap("resources/ground/Dirt.jpg");
+    bmp.flipVertically();
+    auto texture = shared_ptr<GLTexture>(new GLTexture2D(bmp));
+    auto material = make_shared<GLTextureMaterial>(texture);
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto ground = shared_ptr<GLObject>(new GLObject(patch.get_ground(), material));
         ground->use_attribute("normal", patch.get_ground_normals());
+        ground->use_attribute("uv_coordinates", patch.get_uv_coordinates());
         ground->use_uniform("lightPos", light_pos);
         instance->scene->add(ground);
     }

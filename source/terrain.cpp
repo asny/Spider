@@ -123,6 +123,7 @@ void TerrainPatch::update(const vec3& _origo)
                 normal = approximate_normal(pos, {p1, p2, p3, p4});
             }
             ground_normals->at(ground_mapping.at(pair<int, int>(r,c))) = normal;
+            ground_uv_coordinates->at(ground_mapping.at(pair<int, int>(r,c))) = vec2(static_cast<double>(r)/static_cast<double>(map_size), static_cast<double>(c)/static_cast<double>(map_size));
         }
     }
 }
