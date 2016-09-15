@@ -27,7 +27,6 @@ class TerrainPatch
     std::vector<std::vector<glm::vec3>> grass;
     std::shared_ptr<geogo::Geometry> ground_geometry = std::shared_ptr<geogo::Geometry>(new geogo::Geometry());
     std::shared_ptr<geogo::Geometry> grass_geometry = std::shared_ptr<geogo::Geometry>(new geogo::Geometry());
-    std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> ground_normals = std::make_shared<geogo::Attribute<geogo::VertexID, glm::vec3>>();
     std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> ground_uv_coordinates = std::make_shared<geogo::Attribute<geogo::VertexID, glm::vec2>>();
     
     void set_height(double scale, int r, int c, std::vector<double> neighbour_heights);
@@ -50,11 +49,6 @@ public:
     std::shared_ptr<geogo::Geometry> get_ground()
     {
         return ground_geometry;
-    }
-    
-    std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> get_ground_normals()
-    {
-        return ground_normals;
     }
     
     std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> get_uv_coordinates()

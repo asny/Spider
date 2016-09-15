@@ -101,29 +101,13 @@ void TerrainPatch::update(const vec3& _origo)
             auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
             ground_geometry->position()->at(ground_vertex) = pos;
             
+            ground_uv_coordinates->at(ground_mapping.at(pair<int, int>(r,c))) = vec2(static_cast<double>(r)/static_cast<double>(map_size), static_cast<double>(c)/static_cast<double>(map_size));
+            
             auto grass_p1 = pos + vec3(random(-0.5 * step_size, 0.5 * step_size), 0., random(-0.5 * step_size, 0.5 * step_size));
             auto grass_p2 = pos + grass[r][c];
             auto grass_edge = grass_mapping.at(pair<int, int>(r,c));
             grass_geometry->position()->at(grass_edge->v1()) = grass_p1;
             grass_geometry->position()->at(grass_edge->v2()) = grass_p2;
-        }
-    }
-    for (int r = 0; r < map_size; r++)
-    {
-        for (int c = 0; c < map_size; c++)
-        {
-            vec3 normal = vec3(0, 1, 0);
-            if(r > 0 && c > 0 && r < map_size-1 && c < map_size-1)
-            {
-                auto pos = ground_geometry->position()->at(ground_mapping.at(pair<int, int>(r,c)));
-                auto p1 = ground_geometry->position()->at(ground_mapping.at(pair<int, int>(r,c-1)));
-                auto p2 = ground_geometry->position()->at(ground_mapping.at(pair<int, int>(r,c+1)));
-                auto p3 = ground_geometry->position()->at(ground_mapping.at(pair<int, int>(r-1,c)));
-                auto p4 = ground_geometry->position()->at(ground_mapping.at(pair<int, int>(r+1,c)));
-                normal = approximate_normal(pos, {p1, p2, p3, p4});
-            }
-            ground_normals->at(ground_mapping.at(pair<int, int>(r,c))) = normal;
-            ground_uv_coordinates->at(ground_mapping.at(pair<int, int>(r,c))) = vec2(static_cast<double>(r)/static_cast<double>(map_size), static_cast<double>(c)/static_cast<double>(map_size));
         }
     }
 }

@@ -36,8 +36,7 @@ public:
         auto initial_position = glm::vec3(0., 0.3, -5.);
         terrain = std::unique_ptr<Terrain>(new Terrain(initial_position));
         
-        using namespace std::placeholders;
-        std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, terrain.get(), _1);
+        std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, terrain.get(), std::placeholders::_1);
         spider = std::unique_ptr<Spider>(new Spider(initial_position, glm::vec3(0., 0., 1.), get_height_at));
     }
     
