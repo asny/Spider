@@ -17,7 +17,6 @@
 		7A3895A21BEE471A00D6E095 /* GLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A01BEE471A00D6E095 /* GLObject.cpp */; };
 		7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A51BEFB8AE00D6E095 /* Bitmap.cpp */; };
 		7A3895AA1BEFB8AE00D6E095 /* Reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A71BEFB8AE00D6E095 /* Reader.cpp */; };
-		7A52526A1D8402B100BE9D1C /* Fog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A5252681D8402B100BE9D1C /* Fog.cpp */; };
 		7A5A4F8F1D4D309000189B8C /* GLScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A5A4F8D1D4D308F00189B8C /* GLScene.cpp */; };
 		7A5A4F921D4D37A700189B8C /* Attribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A5A4F901D4D37A700189B8C /* Attribute.cpp */; };
 		7A70D0F91BC68BAA003E859B /* GLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0F71BC68BAA003E859B /* GLCamera.cpp */; };
@@ -77,8 +76,6 @@
 		7A3895A81BEFB8AE00D6E095 /* Reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Reader.hpp; path = Readers/Reader.hpp; sourceTree = "<group>"; };
 		7A5252661D83F06F00BE9D1C /* particle.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = particle.geom; path = shaders/particle.geom; sourceTree = "<group>"; };
 		7A5252671D83F6BC00BE9D1C /* fog.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fog.frag; path = shaders/fog.frag; sourceTree = "<group>"; };
-		7A5252681D8402B100BE9D1C /* Fog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Fog.cpp; path = source/Fog.cpp; sourceTree = "<group>"; };
-		7A5252691D8402B100BE9D1C /* Fog.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Fog.hpp; path = source/Fog.hpp; sourceTree = "<group>"; };
 		7A5A4F8D1D4D308F00189B8C /* GLScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLScene.cpp; path = GLWrapper/GLScene.cpp; sourceTree = SOURCE_ROOT; };
 		7A5A4F8E1D4D309000189B8C /* GLScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLScene.hpp; path = GLWrapper/GLScene.hpp; sourceTree = SOURCE_ROOT; };
 		7A5A4F901D4D37A700189B8C /* Attribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Attribute.cpp; path = GLWrapper/Attribute.cpp; sourceTree = SOURCE_ROOT; };
@@ -239,8 +236,6 @@
 				7AB0F2BF1BC07B52009D85FD /* spider.hpp */,
 				7AB0F2C31BC25326009D85FD /* terrain.cpp */,
 				7AB0F2C41BC25326009D85FD /* terrain.hpp */,
-				7A5252681D8402B100BE9D1C /* Fog.cpp */,
-				7A5252691D8402B100BE9D1C /* Fog.hpp */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -326,7 +321,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A52526A1D8402B100BE9D1C /* Fog.cpp in Sources */,
 				7AB1391F1D5B3152007BD188 /* ID.cpp in Sources */,
 				7A3895AA1BEFB8AE00D6E095 /* Reader.cpp in Sources */,
 				7A38959E1BEE447B00D6E095 /* GLShader.cpp in Sources */,

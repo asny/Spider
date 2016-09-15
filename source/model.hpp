@@ -14,13 +14,11 @@
 
 #include "spider.hpp"
 #include "terrain.hpp"
-#include "fog.hpp"
 
 class Model {
     
     std::unique_ptr<Spider> spider;
     std::unique_ptr<Terrain> terrain;
-    std::unique_ptr<Fog> fog;
     
     std::map<int, std::pair<int, int>> terrainIndexMap = std::map<int, std::pair<int, int>>();
     std::function<void()> on_spider_position_changed;
@@ -41,8 +39,6 @@ public:
         using namespace std::placeholders;
         std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, terrain.get(), _1);
         spider = std::unique_ptr<Spider>(new Spider(initial_position, glm::vec3(0., 0., 1.), get_height_at));
-        
-        fog = std::unique_ptr<Fog>(new Fog());
     }
     
     // ******** VIEW ********
@@ -50,11 +46,6 @@ public:
     Spider* get_spider()
     {
         return spider.get();
-    }
-    
-    Fog* get_fog()
-    {
-        return fog.get();
     }
     
     std::vector<TerrainPatch>& get_terrain_patches()

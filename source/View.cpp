@@ -21,8 +21,14 @@ using namespace geogo;
 View* View::instance = NULL;
 GLFWwindow* gWindow = NULL;
 
-void OnError(int errorCode, const char* msg) {
+void OnError(int errorCode, const char* msg)
+{
     throw std::runtime_error(msg);
+}
+
+double rand(double min, double max)
+{
+    return (max - min) * (double)rand()/(double)RAND_MAX + min;
 }
 
 View::View(int &argc, char** argv)
@@ -300,10 +306,28 @@ void View::create_skybox()
 
 void View::create_fog()
 {
+    std::shared_ptr<geogo::Geometry> geometry = std::make_shared<geogo::Geometry>();
+    std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> normals = std::make_shared<geogo::Attribute<geogo::VertexID, glm::vec3>>();
+    for(int i = 0; i < 2000; i++)
+    {
+        float radius = rand(3., 10.);
+        double theta = rand(0., 2. * M_PI);
+        double phi = rand(0.3 * M_PI, 0.7 * M_PI);
+        glm::vec3 direction = glm::vec3(cos(theta) * sin(phi), cos(phi), sin(theta) * sin(phi));
+        
+        glm::vec3 tangent = cross(direction, glm::vec3(0., 1., 0.));
+        glm::vec3 normal = cross(direction, tangent);
+        double alpha = rand(0., 0.5 * M_PI) - 0.25 * M_PI;
+        float sign = rand()%2 == 0 ? -1.f : 1.f;
+        normal = sign * normalize(cosf(alpha) * normal + sinf(alpha) * tangent);
+        
+        auto vertexId = geometry->create_vertex(radius * direction);
+        normals->at(vertexId) = normal;
+    }
+    
     auto material = make_shared<GLSpritesMaterial>();
-    auto geometry = model->get_fog()->get_geometry();
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
-    object->use_attribute("normal", model->get_fog()->get_trajectory_normals());
+    object->use_attribute("normal", normals);
     object->use_uniform("time", time);
     object->use_uniform("radius", make_shared<float>(1.f));
     scene->add(object);
