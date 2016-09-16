@@ -53,13 +53,15 @@ vec3 approximate_normal(const vec3& position, const vector<vec3>& neighbour_posi
 TerrainPatch::TerrainPatch()
 {
     int map_size = static_cast<int>(SIZE) * VERTICES_PER_UNIT + 1;
+    
+    // Initialize height map
     heightmap = vector<vector<double>>(map_size);
-    grass = vector<vector<vec3>>(map_size);
     for ( auto r = 0; r < map_size; r++ )
     {
         heightmap[r] = vector<double>(map_size);
-        grass[r] = vector<vec3>(map_size);
     }
+    
+    // Initialize ground geometry
     for (int r = 0; r < map_size; r++)
     {
         for (int c = 0; c < map_size; c++)
@@ -71,11 +73,13 @@ TerrainPatch::TerrainPatch()
                 ground_geometry->create_face(ground_mapping.at(pair<int, int>(r,c-1)), ground_mapping.at(pair<int, int>(r-1,c-1)), vertex);
                 ground_geometry->create_face(ground_mapping.at(pair<int, int>(r-1,c)), vertex, ground_mapping.at(pair<int, int>(r-1,c-1)));
             }
-            
-            auto grass_v1 = grass_geometry->create_vertex();
-            auto grass_v2 = grass_geometry->create_vertex();
-            grass_mapping[pair<int,int>(r,c)] = grass_geometry->create_edge(grass_v1, grass_v2);
         }
+    }
+    
+    // Initialize grass geometry
+    for (int i = 0; i < NO_GRASS_STRAW; i++)
+    {
+        grass_geometry->create_edge(grass_geometry->create_vertex(), grass_geometry->create_vertex());
     }
 }
 
@@ -84,14 +88,15 @@ void TerrainPatch::update(const vec3& _origo)
     origo = _origo;
     int map_size = static_cast<int>(SIZE) * VERTICES_PER_UNIT + 1;
     
+    // Update height map
     double scale = (map_size - 1) / static_cast<double>(VERTICES_PER_UNIT);
     set_height(scale, 0, 0, {});
     set_height(scale, 0, map_size - 1, {});
     set_height(scale, map_size - 1, 0, {});
     set_height(scale, map_size - 1, map_size - 1, {});
-    
     subdivide(0, 0, map_size-1);
     
+    // Update ground geometry
     double step_size = 1. / static_cast<double>(VERTICES_PER_UNIT);
     for (int r = 0; r < map_size; r++)
     {
@@ -100,15 +105,19 @@ void TerrainPatch::update(const vec3& _origo)
             vec3 pos = vec3(origo.x + r * step_size, heightmap[r][c], origo.z + c * step_size);
             auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
             ground_geometry->position()->at(ground_vertex) = pos;
-            
             ground_uv_coordinates->at(ground_mapping.at(pair<int, int>(r,c))) = vec2(static_cast<double>(r)/static_cast<double>(map_size), static_cast<double>(c)/static_cast<double>(map_size));
-            
-            auto grass_p1 = pos + vec3(random(-0.5 * step_size, 0.5 * step_size), 0., random(-0.5 * step_size, 0.5 * step_size));
-            auto grass_p2 = pos + grass[r][c];
-            auto grass_edge = grass_mapping.at(pair<int, int>(r,c));
-            grass_geometry->position()->at(grass_edge->v1()) = grass_p1;
-            grass_geometry->position()->at(grass_edge->v2()) = grass_p2;
         }
+    }
+    
+    // Update grass geometry
+    for (auto edge = grass_geometry->edges_begin(); edge != grass_geometry->edges_end(); edge = edge->next())
+    {
+        auto pos = origo + vec3(random(0., SIZE), 0., random(0., SIZE));
+        pos.y = get_surface_height_at(pos);
+        grass_geometry->position()->at(edge->v1()) = pos;
+        grass_geometry->position()->at(edge->v2()) = pos + vec3(static_cast<double>(0.5 * raw_noise_3d(pos.x + 10., pos.z + 10., clock())),
+                                   static_cast<double>(0.25 * raw_noise_3d(pos.x, pos.z, clock()) + 0.1),
+                                   static_cast<double>(0.5 * raw_noise_3d(pos.x - 10., pos.z - 10., clock())));
     }
 }
 
@@ -116,9 +125,6 @@ void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> ne
 {
     vec3 position = vec3(origo.x + r/static_cast<double>(VERTICES_PER_UNIT), 0., origo.z + c/static_cast<double>(VERTICES_PER_UNIT));
     heightmap[r][c] = average(neighbour_heights) + 0.15 * scale * static_cast<double>(raw_noise_2d(position.x, position.z));
-    grass[r][c] = vec3(static_cast<double>(0.5 * raw_noise_3d(position.x + 10., position.z + 10., clock())),
-                       static_cast<double>(0.25 * raw_noise_3d(position.x, position.z, clock()) + 0.1),
-                       static_cast<double>(0.5 * raw_noise_3d(position.x - 10., position.z - 10., clock())));
 }
 
 void TerrainPatch::subdivide(int origo_r, int origo_c, int size)

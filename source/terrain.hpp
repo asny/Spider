@@ -19,12 +19,11 @@
 class TerrainPatch
 {
     const static int VERTICES_PER_UNIT = 16;
+    const static int NO_GRASS_STRAW = 10000;
     
     glm::vec3 origo;
     std::map<std::pair<int,int>, geogo::VertexID*> ground_mapping;
-    std::map<std::pair<int,int>, geogo::EdgeID*> grass_mapping;
     std::vector<std::vector<double>> heightmap;
-    std::vector<std::vector<glm::vec3>> grass;
     std::shared_ptr<geogo::Geometry> ground_geometry = std::shared_ptr<geogo::Geometry>(new geogo::Geometry());
     std::shared_ptr<geogo::Geometry> grass_geometry = std::shared_ptr<geogo::Geometry>(new geogo::Geometry());
     std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> ground_uv_coordinates = std::make_shared<geogo::Attribute<geogo::VertexID, glm::vec2>>();
