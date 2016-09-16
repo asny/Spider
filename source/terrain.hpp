@@ -19,6 +19,7 @@
 class TerrainPatch
 {
     const static int VERTICES_PER_UNIT = 16;
+    constexpr const static double VERTEX_DISTANCE = 1./static_cast<double>(VERTICES_PER_UNIT);
     const static int NO_GRASS_STRAW = 10000;
     
     glm::vec3 origo;
@@ -41,7 +42,7 @@ public:
     
     void update(const glm::vec3& _origo);
     
-    double get_surface_height_at(const glm::vec3& position) const;
+    double get_height_at(const glm::vec3& position) const;
     
     glm::vec3 get_origo();
     
