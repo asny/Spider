@@ -33,8 +33,6 @@ class TerrainPatch
     
     void subdivide(int origo_x, int origo_y, int size);
     
-    glm::vec2 index_at(const glm::vec3& position) const;
-    
 public:
     constexpr const static double SIZE = 4.;
     

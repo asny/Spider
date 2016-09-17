@@ -71,20 +71,18 @@ void TerrainPatch::update(const vec3& _origo)
     int map_size = static_cast<int>(SIZE) * VERTICES_PER_UNIT + 1;
     
     // Update height map
-    double scale = (map_size - 1) / static_cast<double>(VERTICES_PER_UNIT);
-    set_height(scale, 0, 0, {});
-    set_height(scale, 0, map_size - 1, {});
-    set_height(scale, map_size - 1, 0, {});
-    set_height(scale, map_size - 1, map_size - 1, {});
+    set_height(SIZE, 0, 0, {});
+    set_height(SIZE, 0, map_size - 1, {});
+    set_height(SIZE, map_size - 1, 0, {});
+    set_height(SIZE, map_size - 1, map_size - 1, {});
     subdivide(0, 0, map_size-1);
     
     // Update ground geometry
-    double step_size = 1. / static_cast<double>(VERTICES_PER_UNIT);
     for (int r = 0; r < map_size; r++)
     {
         for (int c = 0; c < map_size; c++)
         {
-            vec3 pos = vec3(origo.x + r * step_size, heightmap[r][c], origo.z + c * step_size);
+            vec3 pos = vec3(origo.x + r * VERTEX_DISTANCE, heightmap[r][c], origo.z + c * VERTEX_DISTANCE);
             auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
             ground_geometry->position()->at(ground_vertex) = pos;
             ground_uv_coordinates->at(ground_mapping.at(pair<int, int>(r,c))) = vec2(static_cast<double>(r)/static_cast<double>(map_size), static_cast<double>(c)/static_cast<double>(map_size));
@@ -94,7 +92,7 @@ void TerrainPatch::update(const vec3& _origo)
     // Update grass geometry
     for (auto edge = grass_geometry->edges_begin(); edge != grass_geometry->edges_end(); edge = edge->next())
     {
-        auto pos = origo + vec3(random(0., SIZE), 0., random(0., SIZE));
+        auto pos = origo + vec3(random(0., 0.999 * SIZE), 0., random(0., 0.999 * SIZE));
         pos.y = get_height_at(pos);
         grass_geometry->position()->at(edge->v1()) = pos;
         grass_geometry->position()->at(edge->v2()) = pos + vec3(random(-0.2, 0.2), random(0.1, 0.3), random(-0.2, 0.2));
@@ -128,21 +126,21 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
     }
 }
 
-vec2 TerrainPatch::index_at(const vec3& position) const
-{
-    double vertices_per_unit = static_cast<double>(VERTICES_PER_UNIT);
-    vec2 index = vec2((int)floor((position.x - origo.x) * vertices_per_unit), (int)floor((position.z - origo.z) * vertices_per_unit));
-    
-    assert(0 <= index.x < heightmap.size());
-    assert(0 <= index.y < heightmap[0].size());
-    return index;
-}
-
 double TerrainPatch::get_height_at(const vec3& position) const
 {
-    vec2 index = index_at(position);
-    return heightmap[index.x][index.y];
+    double tx = fmod(position.x - origo.x, VERTEX_DISTANCE);
+    double tz = fmod(position.z - origo.z, VERTEX_DISTANCE);
+    
+    int r = static_cast<int>((position.x - tx - origo.x) / VERTEX_DISTANCE);
+    int c = static_cast<int>((position.z - tz - origo.z) / VERTEX_DISTANCE);
+    
+    auto height = (1. - tx) * (1. - tz) * heightmap.at(r).at(c);
+    height += tx * (1. - tz) * heightmap.at(r+1).at(c);
+    height += (1. - tx) * tz * heightmap.at(r).at(c+1);
+    height += tx * tz * heightmap.at(r+1).at(c+1);
+    return height;
 }
+
 glm::vec3 TerrainPatch::get_origo()
 {
     return origo;
