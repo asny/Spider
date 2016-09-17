@@ -80,7 +80,7 @@
 		7A5A4F8E1D4D309000189B8C /* GLScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLScene.hpp; path = GLWrapper/GLScene.hpp; sourceTree = SOURCE_ROOT; };
 		7A5A4F901D4D37A700189B8C /* Attribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Attribute.cpp; path = GLWrapper/Attribute.cpp; sourceTree = SOURCE_ROOT; };
 		7A5A4F911D4D37A700189B8C /* Attribute.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Attribute.hpp; path = GLWrapper/Attribute.hpp; sourceTree = SOURCE_ROOT; };
-		7A70D0F11BC5BF19003E859B /* fastphong.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = fastphong.geom; path = shaders/fastphong.geom; sourceTree = "<group>"; };
+		7A70D0F11BC5BF19003E859B /* flat.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = flat.geom; path = shaders/flat.geom; sourceTree = "<group>"; };
 		7A70D0F71BC68BAA003E859B /* GLCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLCamera.cpp; path = GLWrapper/GLCamera.cpp; sourceTree = SOURCE_ROOT; };
 		7A70D0F81BC68BAA003E859B /* GLCamera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLCamera.hpp; path = GLWrapper/GLCamera.hpp; sourceTree = SOURCE_ROOT; };
 		7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplexnoise.cpp; sourceTree = "<group>"; };
@@ -182,7 +182,7 @@
 				7A3895A31BEE659100D6E095 /* texture.frag */,
 				7AF4B53F1D27B3D0008A5074 /* grass.frag */,
 				7A370D901BD964E2000783CA /* grass.geom */,
-				7A70D0F11BC5BF19003E859B /* fastphong.geom */,
+				7A70D0F11BC5BF19003E859B /* flat.geom */,
 				7AB0F2C61BC28EEB009D85FD /* terrain.geom */,
 				7AB0F2C71BC28EEB009D85FD /* pre_geom.vert */,
 				7AB0F2C11BC2497F009D85FD /* phong.frag */,

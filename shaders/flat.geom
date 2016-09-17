@@ -14,7 +14,7 @@ void main()
     vec3 p2 = gl_in[1].gl_Position.xyz;
     vec3 p3 = gl_in[2].gl_Position.xyz;
     
-    nor = normalize(cross(p3 - p1, p2 - p1));
+    nor = normalize(cross(p2 - p1, p3 - p1));
     
     pos = p1;
     gl_Position = PMatrix * vec4(pos, 1.);

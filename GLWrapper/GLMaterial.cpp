@@ -52,6 +52,14 @@ void GLStandardMaterial::pre_draw()
     specular->use();
 }
 
+void GLFlatMaterial::pre_draw()
+{
+    GLMaterial::pre_draw();
+    ambient->use();
+    diffuse->use();
+    specular->use();
+}
+
 void GLTextureMaterial::pre_draw()
 {
     GLMaterial::pre_draw();

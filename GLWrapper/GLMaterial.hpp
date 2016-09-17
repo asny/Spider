@@ -63,6 +63,25 @@ namespace oogl
         void pre_draw();
     };
     
+    class GLFlatMaterial : public GLMaterial
+    {
+        std::unique_ptr<GLUniform<glm::vec4>> ambient;
+        std::unique_ptr<GLUniform<glm::vec4>> diffuse;
+        std::unique_ptr<GLUniform<glm::vec4>> specular;
+    public:
+        
+        GLFlatMaterial(const glm::vec4& _ambient, const glm::vec4& _diffuse, const glm::vec4& _specular)
+        {
+            shader = std::make_shared<GLShader>("shaders/pre_geom.vert",  "shaders/phong.frag", "shaders/flat.geom");
+            
+            ambient = std::unique_ptr<GLUniform<glm::vec4>>(new GLUniform<glm::vec4>(get_uniform_location("ambientMat"), _ambient));
+            diffuse = std::unique_ptr<GLUniform<glm::vec4>>(new GLUniform<glm::vec4>(get_uniform_location("diffuseMat"), _diffuse));
+            specular = std::unique_ptr<GLUniform<glm::vec4>>(new GLUniform<glm::vec4>(get_uniform_location("specMat"), _specular));
+        }
+        
+        void pre_draw();
+    };
+    
     class GLTextureMaterial : public GLMaterial
     {
         std::shared_ptr<GLTexture> texture;
