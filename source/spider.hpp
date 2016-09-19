@@ -53,21 +53,23 @@ class Spider
         
         void update(float time)
         {
-            const float move_time = 0.2;
+            const static float move_time = 0.2;
             if(is_moving)
             {
-                glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
-                t = std::min(t + std::abs(time), move_time);
-                auto factor = t / move_time;
+                t += std::abs(time);
                 
-                foot_pos = factor * destination_foot_pos + (1.f-factor) * origin_foot_pos;
-                foot_pos.y += 0.3 * sin(factor * M_PI);
-                geometry->position()->at(foot_vertex) = foot_pos;
-                
-                if(factor >= 1.)
+                if(t >= move_time)
                 {
                     is_moving = false;
                     t = 0.f;
+                    geometry->position()->at(foot_vertex) = destination_foot_pos;
+                }
+                else
+                {
+                    auto factor = t / move_time;
+                    glm::vec3 foot_pos = factor * destination_foot_pos + (1.f-factor) * origin_foot_pos;
+                    foot_pos.y += 0.3 * sin(factor * M_PI);
+                    geometry->position()->at(foot_vertex) = foot_pos;
                 }
             }
         }
@@ -83,9 +85,9 @@ class Spider
                 glm::vec2 default_xz = glm::vec2(default_foot_pos.x, default_foot_pos.z);
                 if(glm::length(foot_xz - default_xz) > radius)
                 {
-                    destination_foot_pos = glm::vec3(local2world * glm::vec4(default_foot_pos, 1.f));
-                    destination_foot_pos.y = get_height_at(glm::vec3(destination_foot_pos));
-                    destination_foot_pos = glm::vec3(glm::inverse(local2world) * glm::vec4(destination_foot_pos, 1.f));
+                    destination_foot_pos = glm::vec3(local2world * glm::vec4(default_foot_pos, 1.));
+                    destination_foot_pos.y = get_height_at(destination_foot_pos);
+                    destination_foot_pos = glm::vec3(glm::inverse(local2world) * glm::vec4(destination_foot_pos, 1.));
                     is_moving = true;
                 }
             }
