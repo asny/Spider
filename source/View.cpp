@@ -171,6 +171,11 @@ void View::update(double elapsedTime)
         view_type = BIRD;
         update_camera();
     }
+    else if(glfwGetKey(gWindow, '4'))
+    {
+        view_type = WORM;
+        update_camera();
+    }
 }
 
 void View::update_camera()
@@ -191,6 +196,12 @@ void View::update_camera()
         case BIRD:
         {
             vec3 camera_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
+            instance->camera->set_view(spider_position - 4.f * camera_view, camera_view);
+        }
+            break;
+        case WORM:
+        {
+            vec3 camera_view = normalize(vec3(0., 1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
             instance->camera->set_view(spider_position - 4.f * camera_view, camera_view);
         }
             break;
