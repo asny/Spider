@@ -42,16 +42,16 @@ class Spider
         {
             geometry->position()->at(hip_vertex) = glm::vec3(*local2world * glm::vec4(default_hip_pos_local, 1.));
             
-            const float radius = 0.75;
+            const static float radius = 0.75 * 0.75;
             if(!is_moving)
             {
                 origin_foot_pos = geometry->position()->at(foot_vertex);
-                glm::vec2 foot_xz = glm::vec2(origin_foot_pos.x, origin_foot_pos.z);
                 glm::vec3 default_pos = glm::vec3(*local2world * glm::vec4(default_foot_pos_local, 1.));
-                glm::vec2 default_xz = glm::vec2(default_pos.x, default_pos.z);
-                if(glm::length(foot_xz - default_xz) > radius)
+                auto vec = default_pos - origin_foot_pos;
+                if(vec.x * vec.x + vec.z * vec.z > radius)
                 {
-                    destination_foot_pos = glm::vec3(default_pos.x, get_height_at(default_pos), default_pos.z);
+                    destination_foot_pos = glm::vec3(default_pos.x + 0.25 * vec.x, 0.f, default_pos.z + 0.25 * vec.z);
+                    destination_foot_pos.y = get_height_at(destination_foot_pos);
                     is_moving = true;
                 }
             }
