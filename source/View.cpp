@@ -263,7 +263,6 @@ void View::create_spider_legs()
     auto geometry = model->get_spider()->get_legs();
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
     object->use_uniform("lightPos", light_pos);
-    object->set_model_matrix(model->get_spider()->get_local2world());
     scene->add(object);
 }
 

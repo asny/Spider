@@ -34,6 +34,9 @@ void Spider::update_local2world()
     mat4 spider_rotation_pitch = orientation(normalize(vec3(0., spider_view_direction.y, 1.)), vec3(0., 0., 1.));
     mat4 spider_translation = translate(spider_position);
     *local2world = spider_translation * spider_rotation_yaw * spider_rotation_pitch;
+    for (Leg& leg : legs) {
+        leg.update();
+    }
 }
 
 void Spider::move(float time)
@@ -42,9 +45,6 @@ void Spider::move(float time)
     {
         position += time * speed * view_direction;
         update_local2world();
-        for (Leg& leg : legs) {
-            leg.move(time * speed, get_height_at, *local2world);
-        }
     }
 }
 
@@ -54,9 +54,6 @@ void Spider::rotate(float time)
     {
         view_direction = vec3(glm::rotate(mat4(), time * angular_speed, vec3(0.,1.,0.)) * vec4(view_direction, 1.));
         update_local2world();
-        for (Leg& leg : legs) {
-            leg.rotate(time * angular_speed, get_height_at, *local2world);
-        }
     }
 }
 

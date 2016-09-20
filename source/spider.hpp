@@ -22,33 +22,39 @@ class Spider
 {
     class Leg
     {
-        glm::vec3 default_foot_pos;
+        glm::vec3 default_foot_pos_local, default_hip_pos_local;
         bool is_moving = false;
         float t = 0.f;
         glm::vec3 origin_foot_pos, destination_foot_pos;
-        geogo::VertexID* foot_vertex;
-        std::shared_ptr<geogo::Geometry> geometry;
+        geogo::VertexID *foot_vertex, *hip_vertex;
+        std::shared_ptr<geogo::Geometry> geometry;std::shared_ptr<glm::mat4> local2world = std::make_shared<glm::mat4>(1.);
+        std::function<double(glm::vec3)> get_height_at;
     public:
-        Leg(std::shared_ptr<geogo::Geometry> _geometry, const glm::vec3& foot_pos) : geometry(_geometry), default_foot_pos(foot_pos)
+        Leg(std::shared_ptr<geogo::Geometry> _geometry, std::shared_ptr<glm::mat4> _local2world,
+            std::function<double(glm::vec3)> _get_height_at, const glm::vec3& foot_pos) : geometry(_geometry), local2world(_local2world), get_height_at(_get_height_at), default_foot_pos_local(foot_pos), default_hip_pos_local(0.1f * foot_pos)
         {
-            foot_vertex = geometry->create_vertex(foot_pos);
-            auto hip_vertex = geometry->create_vertex(0.1f * foot_pos);
+            foot_vertex = geometry->create_vertex();
+            hip_vertex = geometry->create_vertex();
             geometry->create_edge(hip_vertex, foot_vertex);
         }
         
-        void move(float distance, std::function<double(glm::vec3)>& get_height_at, const glm::mat4& local2world)
+        void update()
         {
-            // TODO: Take yaw rotation into account
-            glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
-            geometry->position()->at(foot_vertex) = foot_pos - glm::vec3(0.f, 0.f, distance);
-            check_should_move(get_height_at, local2world);
-        }
-        
-        void rotate(float distance, std::function<double(glm::vec3)>& get_height_at, const glm::mat4& local2world)
-        {
-            glm::vec3 foot_pos = geometry->position()->at(foot_vertex);
-            geometry->position()->at(foot_vertex) = glm::vec3(glm::rotate(glm::mat4(), -distance, glm::vec3(0.,1.,0.)) * glm::vec4(foot_pos, 1.f));
-            check_should_move(get_height_at, local2world);
+            geometry->position()->at(hip_vertex) = glm::vec3(*local2world * glm::vec4(default_hip_pos_local, 1.));
+            
+            const float radius = 0.75;
+            if(!is_moving)
+            {
+                origin_foot_pos = geometry->position()->at(foot_vertex);
+                glm::vec2 foot_xz = glm::vec2(origin_foot_pos.x, origin_foot_pos.z);
+                glm::vec3 default_pos = glm::vec3(*local2world * glm::vec4(default_foot_pos_local, 1.));
+                glm::vec2 default_xz = glm::vec2(default_pos.x, default_pos.z);
+                if(glm::length(foot_xz - default_xz) > radius)
+                {
+                    destination_foot_pos = glm::vec3(default_pos.x, get_height_at(default_pos), default_pos.z);
+                    is_moving = true;
+                }
+            }
         }
         
         void update(float time)
@@ -70,25 +76,6 @@ class Spider
                     glm::vec3 foot_pos = factor * destination_foot_pos + (1.f-factor) * origin_foot_pos;
                     foot_pos.y += 0.3 * sin(factor * M_PI);
                     geometry->position()->at(foot_vertex) = foot_pos;
-                }
-            }
-        }
-        
-    private:
-        void check_should_move(std::function<double(glm::vec3)>& get_height_at, const glm::mat4& local2world)
-        {
-            const float radius = 0.5;
-            if(!is_moving)
-            {
-                origin_foot_pos = geometry->position()->at(foot_vertex);
-                glm::vec2 foot_xz = glm::vec2(origin_foot_pos.x, origin_foot_pos.z);
-                glm::vec2 default_xz = glm::vec2(default_foot_pos.x, default_foot_pos.z);
-                if(glm::length(foot_xz - default_xz) > radius)
-                {
-                    destination_foot_pos = glm::vec3(local2world * glm::vec4(default_foot_pos, 1.));
-                    destination_foot_pos.y = get_height_at(destination_foot_pos);
-                    destination_foot_pos = glm::vec3(glm::inverse(local2world) * glm::vec4(destination_foot_pos, 1.));
-                    is_moving = true;
                 }
             }
         }
@@ -119,7 +106,7 @@ public:
         for (auto foot_pos : {glm::vec3(0.75, 0., 2.), glm::vec3(1.,0.,1.), glm::vec3(1.,0.,-0.5), glm::vec3(0.75,0.,-2.),
             glm::vec3(-0.75, 0., 2.), glm::vec3(-1.,0.,1.), glm::vec3(-1.,0.,-0.5), glm::vec3(-0.75,0.,-2.)})
         {
-            legs.push_back(Leg(legs_geometry, foot_pos));
+            legs.push_back(Leg(legs_geometry, local2world, get_height_at, foot_pos));
         }
         update_local2world();
     }
