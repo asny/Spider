@@ -189,7 +189,7 @@ void View::update_camera()
             break;
         case THIRD_PERSON:
         {
-            vec3 camera_view = normalize(vec3(0., -0.5, 0.) + spider_view_direction);
+            vec3 camera_view = normalize(vec3(spider_view_direction.x, -0.5, spider_view_direction.z));
             instance->camera->set_view(spider_position - 2.f * camera_view, camera_view);
         }
             break;
