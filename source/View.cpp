@@ -334,7 +334,7 @@ void View::create_fog()
         normals->at(vertexId) = normal;
     }
     
-    auto material = make_shared<GLSpritesMaterial>();
+    auto material = make_shared<GLFogMaterial>();
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
     object->use_attribute("normal", normals);
     object->use_uniform("time", time);

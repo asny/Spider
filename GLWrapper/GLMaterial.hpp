@@ -157,11 +157,11 @@ namespace oogl
         }
     };
     
-    class GLSpritesMaterial : public GLMaterial
+    class GLFogMaterial : public GLMaterial
     {
         
     public:
-        GLSpritesMaterial()
+        GLFogMaterial()
         {
             shader = std::make_shared<GLShader>("shaders/fog.vert",  "shaders/fog.frag", "shaders/particle.geom");
             test_depth = false;
