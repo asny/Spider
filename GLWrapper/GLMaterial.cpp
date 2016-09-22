@@ -50,6 +50,7 @@ void GLStandardMaterial::pre_draw()
     ambient->use();
     diffuse->use();
     specular->use();
+    opacity->use();
 }
 
 void GLFlatMaterial::pre_draw()
@@ -58,6 +59,7 @@ void GLFlatMaterial::pre_draw()
     ambient->use();
     diffuse->use();
     specular->use();
+    opacity->use();
 }
 
 void GLTextureMaterial::pre_draw()
@@ -79,4 +81,5 @@ void GLGrassMaterial::pre_draw()
     GLMaterial::pre_draw();
     ambient->use();
     diffuse->use();
+    opacity->use();
 }

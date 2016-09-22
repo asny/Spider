@@ -4,9 +4,10 @@ uniform mat4 MVMatrix;
 
 uniform vec3 lightPos;
 
-uniform vec4 ambientMat;
-uniform vec4 diffuseMat;
-uniform vec4 specMat;
+uniform vec3 ambientMat;
+uniform vec3 diffuseMat;
+uniform vec3 specMat;
+uniform float opacity;
 
 in vec3 pos;
 in vec3 nor;
@@ -29,8 +30,8 @@ void main(void)
     vec3 R = normalize(reflect(-L,N));
     
     // Calculate colour
-    vec4 ambient = ambientMat;
-    vec4 diffuse = clamp( diffuseMat * max(dot(N,L), 0.0) , 0.0, 1.0 ) ;
-    vec4 spec = clamp ( specMat * pow(max(dot(R,E), 0.0), specPow) , 0.0, 1.0 );
-    fragColour = ambient + diffuse + spec;
+    vec3 ambient = ambientMat;
+    vec3 diffuse = clamp( diffuseMat * max(dot(N,L), 0.0) , 0.0, 1.0 ) ;
+    vec3 spec = clamp ( specMat * pow(max(dot(R,E), 0.0), specPow) , 0.0, 1.0 );
+    fragColour = vec4(ambient + diffuse + spec, opacity);
 }

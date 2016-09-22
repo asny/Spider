@@ -215,7 +215,7 @@ void View::update_terrain_and_grass()
 
 void View::create_grass()
 {
-    auto material = shared_ptr<GLMaterial>(new GLGrassMaterial({0.2f,0.5f,0.f, 1.f}, {0.1f, 0.2f, 0.f, 1.f}));
+    auto material = shared_ptr<GLMaterial>(new GLGrassMaterial({0.2f,0.5f,0.f}, {0.1f, 0.2f, 0.f}, 1.));
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto grass = shared_ptr<GLObject>(new GLObject(patch.get_grass(), material));
@@ -260,7 +260,7 @@ void View::create_spider_body()
         vec3 p = geometry->position()->at(vertex);
         geometry->position()->at(vertex) = p - center + vec3(0,0,0.3);
     }
-    auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
+    auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f}, {0.3f, 0.2f, 0.2f}, {0.f, 0.f, 0.f}, 1.));
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
     object->use_attribute("normal", normal_attribute);
     object->use_uniform("lightPos", light_pos);
@@ -270,7 +270,7 @@ void View::create_spider_body()
 
 void View::create_spider_legs()
 {
-    auto material = shared_ptr<GLMaterial>(new GLSpiderLegsMaterial({0.1f,0.1f,0.1f, 1.f}, {0.3f, 0.2f, 0.2f, 1.f}, {0.f, 0.f, 0.f, 1.f}));
+    auto material = shared_ptr<GLMaterial>(new GLSpiderLegsMaterial({0.1f,0.1f,0.1f}, {0.3f, 0.2f, 0.2f}, {0.f, 0.f, 0.f}, 1.));
     auto geometry = model->get_spider()->get_legs();
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
     object->use_uniform("lightPos", light_pos);
