@@ -43,6 +43,7 @@ private:
     void create_spider_legs();
     void create_grass();
     void create_terrain();
+    void create_water();
     
     static void update_terrain_and_grass();
     

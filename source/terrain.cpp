@@ -63,6 +63,14 @@ TerrainPatch::TerrainPatch()
     {
         grass_geometry->create_edge(grass_geometry->create_vertex(), grass_geometry->create_vertex());
     }
+    
+    // Initialize water geometry
+    geogo::VertexID* v1 = water_geometry->create_vertex();
+    geogo::VertexID* v2 = water_geometry->create_vertex();
+    geogo::VertexID* v3 = water_geometry->create_vertex();
+    geogo::VertexID* v4 = water_geometry->create_vertex();
+    water_geometry->create_face(v1, v2, v3);
+    water_geometry->create_face(v3, v4, v1);
 }
 
 void TerrainPatch::update(const vec3& _origo)
@@ -85,7 +93,7 @@ void TerrainPatch::update(const vec3& _origo)
             vec3 pos = vec3(origo.x + r * VERTEX_DISTANCE, heightmap[r][c], origo.z + c * VERTEX_DISTANCE);
             auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
             ground_geometry->position()->at(ground_vertex) = pos;
-            ground_uv_coordinates->at(ground_mapping.at(pair<int, int>(r,c))) = vec2(static_cast<double>(r)/static_cast<double>(map_size), static_cast<double>(c)/static_cast<double>(map_size));
+            ground_uv_coordinates->at(ground_vertex) = vec2(static_cast<double>(r)/static_cast<double>(map_size), static_cast<double>(c)/static_cast<double>(map_size));
         }
     }
     
@@ -94,9 +102,28 @@ void TerrainPatch::update(const vec3& _origo)
     {
         auto pos = origo + vec3(random(0., 0.999 * SIZE), 0., random(0., 0.999 * SIZE));
         pos.y = get_height_at(pos);
-        grass_geometry->position()->at(edge->v1()) = pos;
-        grass_geometry->position()->at(edge->v2()) = pos + vec3(random(-0.2, 0.2), random(0.1, 0.3), random(-0.2, 0.2));
+        if(pos.y < 0.)
+        {
+            grass_geometry->position()->at(edge->v1()) = pos;
+            grass_geometry->position()->at(edge->v2()) = pos;
+        }
+        else
+        {
+            grass_geometry->position()->at(edge->v1()) = pos;
+            grass_geometry->position()->at(edge->v2()) = pos + vec3(random(-0.2, 0.2), random(0.1, 0.3), random(-0.2, 0.2));
+        }
     }
+    
+    // Update water geometry
+    double size = SIZE;
+    auto vertex = water_geometry->vertices_begin();
+    water_geometry->position()->at(vertex) = origo;
+    vertex = vertex->next();
+    water_geometry->position()->at(vertex) = origo + glm::vec3(size, 0., 0.);
+    vertex = vertex->next();
+    water_geometry->position()->at(vertex) = origo + glm::vec3(size, 0., size);
+    vertex = vertex->next();
+    water_geometry->position()->at(vertex) = origo + glm::vec3(0., 0., size);
 }
 
 void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)

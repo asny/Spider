@@ -82,6 +82,7 @@ View::View(int &argc, char** argv)
     create_grass();
     create_spider_body();
     create_spider_legs();
+    create_water();
     create_fog();
     
     // Update
@@ -238,6 +239,25 @@ void View::create_terrain()
         ground->use_attribute("uv_coordinates", patch.get_uv_coordinates());
         ground->use_uniform("lightPos", light_pos);
         instance->scene->add(ground);
+    }
+}
+
+void View::create_water()
+{
+    auto material = make_shared<GLStandardMaterial>(glm::vec3(0.3f,0.3f,0.5f), glm::vec3(0.2f, 0.5f, 0.5f), glm::vec3(0.f, 0.f, 0.f), 0.5);
+    for (TerrainPatch& patch : model->get_terrain_patches())
+    {
+        auto geometry = patch.get_water();
+        auto object = make_shared<GLObject>(geometry, material);
+        
+        auto normals = std::make_shared<geogo::Attribute<geogo::VertexID, glm::vec3>>();
+        for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId = vertexId->next())
+        {
+            normals->at(vertexId) = glm::vec3(0., 1., 0.);
+        }
+        object->use_attribute("normal", normals);
+        object->use_uniform("lightPos", light_pos);
+        instance->scene->add(object);
     }
 }
 

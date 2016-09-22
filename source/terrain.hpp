@@ -25,8 +25,9 @@ class TerrainPatch
     glm::vec3 origo;
     std::map<std::pair<int,int>, geogo::VertexID*> ground_mapping;
     std::vector<std::vector<double>> heightmap;
-    std::shared_ptr<geogo::Geometry> ground_geometry = std::shared_ptr<geogo::Geometry>(new geogo::Geometry());
-    std::shared_ptr<geogo::Geometry> grass_geometry = std::shared_ptr<geogo::Geometry>(new geogo::Geometry());
+    std::shared_ptr<geogo::Geometry> ground_geometry = std::make_shared<geogo::Geometry>();
+    std::shared_ptr<geogo::Geometry> water_geometry = std::make_shared<geogo::Geometry>();
+    std::shared_ptr<geogo::Geometry> grass_geometry = std::make_shared<geogo::Geometry>();
     std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> ground_uv_coordinates = std::make_shared<geogo::Attribute<geogo::VertexID, glm::vec2>>();
     
     void set_height(double scale, int r, int c, std::vector<double> neighbour_heights);
@@ -47,6 +48,11 @@ public:
     std::shared_ptr<geogo::Geometry> get_ground()
     {
         return ground_geometry;
+    }
+    
+    std::shared_ptr<geogo::Geometry> get_water()
+    {
+        return water_geometry;
     }
     
     std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> get_uv_coordinates()
