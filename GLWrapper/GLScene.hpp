@@ -31,6 +31,17 @@ namespace oogl {
             
         }
         
+        void wireframe(bool on)
+        {
+            if(on)
+            {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            }
+            else {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            }
+        }
+        
         void add(std::shared_ptr<GLObject> object)
         {
             objects.push_back(object);

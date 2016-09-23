@@ -155,6 +155,15 @@ void View::update(double elapsedTime)
     {
         model->rotate(-elapsedTime);
     }
+    else if(glfwGetKey(gWindow, 'N'))
+    {
+        scene->wireframe(true);
+    }
+    else if(glfwGetKey(gWindow, 'M'))
+    {
+        scene->wireframe(false);
+    }
+    
     model->update(elapsedTime);
     
     if(glfwGetKey(gWindow, '1'))
