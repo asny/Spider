@@ -31,7 +31,7 @@ namespace oogl
             return shader->get_uniform_location(name);
         }
         
-    public: // Should be protrected
+    protected:
         void use_uniform_int(const std::string& name, const std::shared_ptr<int> value)
         {
             auto location = get_uniform_location(name);
@@ -131,6 +131,11 @@ namespace oogl
             use_uniform("eyePosition", position);
         }
         
+        void setup_light(const std::shared_ptr<glm::vec3> light_position)
+        {
+            use_uniform("lightPos", light_position);
+        }
+        
     };
     
     class GLStandardMaterial : public GLMaterial
@@ -201,10 +206,12 @@ namespace oogl
     {
     public:
         
-        GLGrassMaterial(const glm::vec3& _ambient, const glm::vec3& _diffuse, double _opacity)
+        GLGrassMaterial(const std::shared_ptr<glm::vec3> spiderPosition, const std::shared_ptr<glm::vec3> wind, const glm::vec3& _ambient, const glm::vec3& _diffuse, double _opacity)
         {
             shader = std::make_shared<GLShader>("shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom");
             
+            use_uniform("spiderPosition", spiderPosition);
+            use_uniform("wind", wind);
             use_uniform("ambientMat", _ambient);
             use_uniform("diffuseMat", _diffuse);
             use_uniform("opacity", _opacity);
@@ -235,9 +242,13 @@ namespace oogl
     {
         
     public:
-        GLFogMaterial()
+        GLFogMaterial(const std::shared_ptr<float> time, float radius)
         {
             shader = std::make_shared<GLShader>("shaders/fog.vert",  "shaders/fog.frag", "shaders/particle.geom");
+            
+            use_uniform("radius", radius);
+            use_uniform("time", time);
+            
             test_depth = false;
         }
     };
