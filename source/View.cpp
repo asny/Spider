@@ -217,12 +217,12 @@ void View::update_terrain_and_grass()
 void View::create_grass()
 {
     auto material = shared_ptr<GLMaterial>(new GLGrassMaterial({0.2f,0.5f,0.f}, {0.1f, 0.2f, 0.f}, 1.));
+    material->use_uniform("lightPos", light_pos);
+    material->use_uniform("spiderPosition", spider_pos);
+    material->use_uniform("wind", wind);
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto grass = shared_ptr<GLObject>(new GLObject(patch.get_grass(), material));
-        grass->use_uniform("lightPos", light_pos);
-        grass->use_uniform("spiderPosition", spider_pos);
-        grass->use_uniform("wind", wind);
         instance->scene->add(grass);
     }
 }
@@ -233,11 +233,11 @@ void View::create_terrain()
     bmp.flipVertically();
     auto texture = shared_ptr<GLTexture>(new GLTexture2D(bmp));
     auto material = make_shared<GLTextureMaterial>(texture);
+    material->use_uniform("lightPos", light_pos);
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto ground = shared_ptr<GLObject>(new GLObject(patch.get_ground(), material));
         ground->use_attribute("uv_coordinates", patch.get_uv_coordinates());
-        ground->use_uniform("lightPos", light_pos);
         instance->scene->add(ground);
     }
 }
@@ -245,6 +245,7 @@ void View::create_terrain()
 void View::create_water()
 {
     auto material = make_shared<GLStandardMaterial>(glm::vec3(0.3f,0.3f,0.5f), glm::vec3(0.2f, 0.5f, 0.5f), glm::vec3(0.f, 0.f, 0.f), 0.5);
+    material->use_uniform("lightPos", light_pos);
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto geometry = patch.get_water();
@@ -256,7 +257,6 @@ void View::create_water()
             normals->at(vertexId) = glm::vec3(0., 1., 0.);
         }
         object->use_attribute("normal", normals);
-        object->use_uniform("lightPos", light_pos);
         instance->scene->add(object);
     }
 }
@@ -281,9 +281,9 @@ void View::create_spider_body()
         geometry->position()->at(vertex) = p - center + vec3(0,0,0.3);
     }
     auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f}, {0.3f, 0.2f, 0.2f}, {0.f, 0.f, 0.f}, 1.));
+    material->use_uniform("lightPos", light_pos);
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
     object->use_attribute("normal", normal_attribute);
-    object->use_uniform("lightPos", light_pos);
     object->set_model_matrix(model->get_spider()->get_local2world());
     scene->add(object);
 }
@@ -293,7 +293,7 @@ void View::create_spider_legs()
     auto material = shared_ptr<GLMaterial>(new GLSpiderLegsMaterial({0.1f,0.1f,0.1f}, {0.3f, 0.2f, 0.2f}, {0.f, 0.f, 0.f}, 1.));
     auto geometry = model->get_spider()->get_legs();
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
-    object->use_uniform("lightPos", light_pos);
+    material->use_uniform("lightPos", light_pos);
     scene->add(object);
 }
 
@@ -355,10 +355,10 @@ void View::create_fog()
     }
     
     auto material = make_shared<GLFogMaterial>();
+    material->use_uniform("time", time);
+    material->use_uniform("radius", make_shared<float>(1.f));
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
     object->use_attribute("normal", normals);
-    object->use_uniform("time", time);
-    object->use_uniform("radius", make_shared<float>(1.f));
     scene->add(object);
 }
 

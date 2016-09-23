@@ -32,11 +32,7 @@ namespace oogl {
         void add(std::shared_ptr<GLObject> object)
         {
             objects.push_back(object);
-            object->use_uniform("MVMatrix", modelView);
-            object->use_uniform("NMatrix", inverseModelView);
-            object->use_uniform("PMatrix", camera->get_projection());
-            object->use_uniform("MVPMatrix", modelViewProjection);
-            object->use_uniform("eyePosition", camera->get_position());
+            object->get_material()->setup_camera(modelView, inverseModelView, camera->get_projection(), modelViewProjection, camera->get_position());
         }
         
         void draw()

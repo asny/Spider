@@ -26,11 +26,6 @@ namespace oogl
         GLuint array_id;
         std::vector<std::shared_ptr<GLVertexAttribute<glm::vec2>>> vec2_vertex_attributes;
         std::vector<std::shared_ptr<GLVertexAttribute<glm::vec3>>> vec3_vertex_attributes;
-        std::vector<GLUniform<float>> float_uniforms;
-        std::vector<GLUniform<glm::vec2>> vec2_uniforms;
-        std::vector<GLUniform<glm::vec3>> vec3_uniforms;
-        std::vector<GLUniform<glm::vec4>> vec4_uniforms;
-        std::vector<GLUniform<glm::mat4>> mat4_uniforms;
         
         // Transformation
         std::shared_ptr<glm::mat4> modelMatrix = std::make_shared<glm::mat4>(1.);
@@ -85,41 +80,6 @@ namespace oogl
             vec3_vertex_attributes.push_back(std::shared_ptr<GLVertexAttribute<glm::vec3>>(new GLVertexAttribute<glm::vec3>(location, attribute)));
         }
         
-        void use_uniform(const std::string& name, const std::shared_ptr<float> value)
-        {
-            auto location = material->get_uniform_location(name);
-            if(location != NULL_LOCATION)
-                float_uniforms.push_back(GLUniform<float>(location, value));
-        }
-        
-        void use_uniform(const std::string& name, const std::shared_ptr<glm::vec2> value)
-        {
-            auto location = material->get_uniform_location(name);
-            if(location != NULL_LOCATION)
-                vec2_uniforms.push_back(GLUniform<glm::vec2>(location, value));
-        }
-        
-        void use_uniform(const std::string& name, const std::shared_ptr<glm::vec3> value)
-        {
-            auto location = material->get_uniform_location(name);
-            if(location != NULL_LOCATION)
-                vec3_uniforms.push_back(GLUniform<glm::vec3>(location, value));
-        }
-        
-        void use_uniform(const std::string& name, const std::shared_ptr<glm::vec4> value)
-        {
-            auto location = material->get_uniform_location(name);
-            if(location != NULL_LOCATION)
-                vec4_uniforms.push_back(GLUniform<glm::vec4>(location, value));
-        }
-        
-        void use_uniform(const std::string& name, const std::shared_ptr<glm::mat4> value)
-        {
-            auto location = material->get_uniform_location(name);
-            if(location != NULL_LOCATION)
-                mat4_uniforms.push_back(GLUniform<glm::mat4>(location, value));
-        }
-        
         /**
          Draws the object.
          */
@@ -144,6 +104,11 @@ namespace oogl
         const glm::mat4& get_model()
         {
             return *modelMatrix;
+        }
+        
+        const std::shared_ptr<GLMaterial> get_material()
+        {
+            return material;
         }
     };
 }

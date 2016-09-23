@@ -42,44 +42,46 @@ void GLMaterial::pre_draw()
         }
         currently_test_depth = test_depth;
     }
-}
-
-void GLStandardMaterial::pre_draw()
-{
-    GLMaterial::pre_draw();
-    ambient->use();
-    diffuse->use();
-    specular->use();
-    opacity->use();
-}
-
-void GLFlatMaterial::pre_draw()
-{
-    GLMaterial::pre_draw();
-    ambient->use();
-    diffuse->use();
-    specular->use();
-    opacity->use();
+    
+    for (auto glUniform : int_uniforms)
+    {
+        glUniform.use();
+    }
+    
+    for (auto glUniform : float_uniforms)
+    {
+        glUniform.use();
+    }
+    
+    for (auto glUniform : vec2_uniforms)
+    {
+        glUniform.use();
+    }
+    
+    for (auto glUniform : vec3_uniforms)
+    {
+        glUniform.use();
+    }
+    
+    for (auto glUniform : vec4_uniforms)
+    {
+        glUniform.use();
+    }
+    
+    for (auto glUniform : mat4_uniforms)
+    {
+        glUniform.use();
+    }
 }
 
 void GLTextureMaterial::pre_draw()
 {
-    GLMaterial::pre_draw();
     *texture_id = texture->use();
-    texture_id_uniform->use();
+    GLMaterial::pre_draw();
 }
 
 void GLSkyboxMaterial::pre_draw()
 {
-    GLMaterial::pre_draw();
     *texture_id = texture->use();
-    texture_id_uniform->use();
-}
-
-void GLGrassMaterial::pre_draw()
-{
     GLMaterial::pre_draw();
-    ambient->use();
-    diffuse->use();
-    opacity->use();
 }
