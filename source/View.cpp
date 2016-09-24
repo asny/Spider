@@ -225,7 +225,7 @@ void View::update_terrain_and_grass()
 
 void View::create_grass()
 {
-    auto material = shared_ptr<GLMaterial>(new GLGrassMaterial(spider_pos, wind, {0.2f,0.5f,0.f}, {0.1f, 0.2f, 0.f}, 1.));
+    auto material = make_shared<GLGrassMaterial>(spider_pos, wind, vec3(0.2f,0.5f,0.f), vec3(0.1f, 0.2f, 0.f), 1.);
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto grass = shared_ptr<GLObject>(new GLObject(patch.get_grass(), material));
@@ -238,29 +238,27 @@ void View::create_terrain()
     auto bmp = Reader::load_bitmap("resources/ground/Dirt.jpg");
     bmp.flipVertically();
     auto texture = shared_ptr<GLTexture>(new GLTexture2D(bmp));
-    auto material = make_shared<GLTextureMaterial>(texture);
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
+        auto material = make_shared<GLTextureMaterial>(texture, patch.get_uv_coordinates());
         auto ground = shared_ptr<GLObject>(new GLObject(patch.get_ground(), material));
-        ground->use_attribute("uv_coordinates", patch.get_uv_coordinates());
-        instance->scene->add(ground);
+        scene->add(ground);
     }
 }
 
 void View::create_water()
 {
-    auto material = make_shared<GLStandardMaterial>(glm::vec3(0.3f,0.3f,0.5f), glm::vec3(0.2f, 0.5f, 0.5f), glm::vec3(0.f, 0.f, 0.f), 0.5);
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto geometry = patch.get_water();
-        auto object = make_shared<GLObject>(geometry, material);
-        
         auto normals = std::make_shared<geogo::Attribute<geogo::VertexID, glm::vec3>>();
         for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId = vertexId->next())
         {
             normals->at(vertexId) = glm::vec3(0., 1., 0.);
         }
-        object->use_attribute("normal", normals);
+        
+        auto material = make_shared<GLStandardMaterial>(normals, glm::vec3(0.3f,0.3f,0.5f), glm::vec3(0.2f, 0.5f, 0.5f), glm::vec3(0.f, 0.f, 0.f), 0.5);
+        auto object = make_shared<GLObject>(geometry, material);
         instance->scene->add(object);
     }
 }
@@ -268,8 +266,8 @@ void View::create_water()
 void View::create_spider_body()
 {
     auto geometry = shared_ptr<Geometry>(new Geometry());
-    auto normal_attribute = shared_ptr<Attribute<VertexID, vec3>>(new Attribute<VertexID, vec3>());
-    Reader::load_obj("resources/spider/spider.obj", *geometry, *normal_attribute);
+    auto normals = shared_ptr<Attribute<VertexID, vec3>>(new Attribute<VertexID, vec3>());
+    Reader::load_obj("resources/spider/spider.obj", *geometry, *normals);
     
     vec3 center;
     for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
@@ -284,9 +282,8 @@ void View::create_spider_body()
         vec3 p = geometry->position()->at(vertex);
         geometry->position()->at(vertex) = p - center + vec3(0,0,0.3);
     }
-    auto material = shared_ptr<GLMaterial>(new GLStandardMaterial({0.1f,0.1f,0.1f}, {0.3f, 0.2f, 0.2f}, {0.f, 0.f, 0.f}, 1.));
+    auto material = make_shared<GLStandardMaterial>(normals, vec3(0.1f,0.1f,0.1f), vec3(0.3f, 0.2f, 0.2f), vec3(0.f, 0.f, 0.f), 1.);
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
-    object->use_attribute("normal", normal_attribute);
     object->set_model_matrix(model->get_spider()->get_local2world());
     scene->add(object);
 }
@@ -318,9 +315,8 @@ void View::create_cube()
     auto cubeTextureBmp = Reader::load_bitmap("resources/test_texture.jpg");
     cubeTextureBmp.flipVertically();
     auto cubeTexture = shared_ptr<GLTexture>(new GLTexture2D(cubeTextureBmp));
-    auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(cubeTexture));
+    auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(cubeTexture, uv_attribute));
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
-    object->use_attribute("uv_coordinates", uv_attribute);
     scene->add(object);
 }
 
@@ -356,9 +352,8 @@ void View::create_fog()
         normals->at(vertexId) = normal;
     }
     
-    auto material = make_shared<GLFogMaterial>(time, 1.);
+    auto material = make_shared<GLFogMaterial>(normals, time, 1.);
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
-    object->use_attribute("normal", normals);
     scene->add(object);
 }
 

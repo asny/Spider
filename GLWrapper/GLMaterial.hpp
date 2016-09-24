@@ -11,6 +11,7 @@
 #include "GLTexture.hpp"
 #include "GLShader.hpp"
 #include "GLUniform.hpp"
+#include "GLVertexAttribute.hpp"
 
 namespace oogl
 {
@@ -120,6 +121,24 @@ namespace oogl
             return shader->get_attribute_location(name);
         }
         
+        std::shared_ptr<GLVertexAttribute<glm::vec2>> create_attribute(std::string name, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> attribute)
+        {
+            auto location = shader->get_attribute_location(name);
+            return std::make_shared<GLVertexAttribute<glm::vec2>>(location, attribute);
+        }
+        
+        std::shared_ptr<GLVertexAttribute<glm::vec3>> create_attribute(std::string name, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> attribute)
+        {
+            auto location = shader->get_attribute_location(name);
+            return std::make_shared<GLVertexAttribute<glm::vec3>>(location, attribute);
+        }
+        
+        virtual void create_attributes(std::vector<std::shared_ptr<GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
+                               std::vector<std::shared_ptr<GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
+        {
+            
+        }
+        
         virtual void pre_draw();
         
         void setup_camera(const std::shared_ptr<glm::mat4> modelView, const std::shared_ptr<glm::mat4> inverseModelView, const std::shared_ptr<glm::mat4> projection, const std::shared_ptr<glm::mat4> modelViewProjection, const std::shared_ptr<glm::vec3> position)
@@ -140,9 +159,10 @@ namespace oogl
     
     class GLStandardMaterial : public GLMaterial
     {
+        const std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> normals;
     public:
         
-        GLStandardMaterial(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular, double _opacity)
+        GLStandardMaterial(const std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> _normals, const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular, double _opacity) : normals(_normals)
         {
             shader = std::make_shared<GLShader>("shaders/phong.vert",  "shaders/phong.frag");
             use_uniform("ambientMat", _ambient);
@@ -151,6 +171,12 @@ namespace oogl
             use_uniform("opacity", _opacity);
             
             test_depth = _opacity >= 0.999;
+        }
+        
+        void create_attributes(std::vector<std::shared_ptr<GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
+                               std::vector<std::shared_ptr<GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
+        {
+            vec3_vertex_attributes.push_back(create_attribute("normal", normals));
         }
     };
     
@@ -173,14 +199,21 @@ namespace oogl
     class GLTextureMaterial : public GLMaterial
     {
         std::shared_ptr<GLTexture> texture;
+        std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> uv_coordinates;
         std::shared_ptr<int> texture_id = std::make_shared<int>(0);
     public:
         
-        GLTextureMaterial(std::shared_ptr<GLTexture> _texture) : texture(_texture)
+        GLTextureMaterial(std::shared_ptr<GLTexture> _texture, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> _uv_coordinates) : texture(_texture), uv_coordinates(_uv_coordinates)
         {
             shader = std::make_shared<GLShader>("shaders/texture.vert",  "shaders/texture.frag");
             
             use_uniform_int("texture0", texture_id);
+        }
+        
+        void create_attributes(std::vector<std::shared_ptr<GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
+                               std::vector<std::shared_ptr<GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
+        {
+            vec2_vertex_attributes.push_back(create_attribute("uv_coordinates", uv_coordinates));
         }
         
         void pre_draw();
@@ -240,9 +273,10 @@ namespace oogl
     
     class GLFogMaterial : public GLMaterial
     {
+        const std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> normals;
         
     public:
-        GLFogMaterial(const std::shared_ptr<float> time, float radius)
+        GLFogMaterial(const std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> _normals, const std::shared_ptr<float> time, float radius) : normals(_normals)
         {
             shader = std::make_shared<GLShader>("shaders/fog.vert",  "shaders/fog.frag", "shaders/particle.geom");
             
@@ -250,6 +284,12 @@ namespace oogl
             use_uniform("time", time);
             
             test_depth = false;
+        }
+        
+        void create_attributes(std::vector<std::shared_ptr<GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
+                               std::vector<std::shared_ptr<GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
+        {
+            vec3_vertex_attributes.push_back(create_attribute("normal", normals));
         }
     };
 }

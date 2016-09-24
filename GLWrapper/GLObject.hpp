@@ -66,20 +66,6 @@ namespace oogl
         
         GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material);
         
-        void use_attribute(std::string name, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> attribute)
-        {
-            glBindVertexArray(array_id);
-            auto location = material->get_attribute_location(name);
-            vec2_vertex_attributes.push_back(std::shared_ptr<GLVertexAttribute<glm::vec2>>(new GLVertexAttribute<glm::vec2>(location, attribute)));
-        }
-        
-        void use_attribute(std::string name, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> attribute)
-        {
-            glBindVertexArray(array_id);
-            auto location = material->get_attribute_location(name);
-            vec3_vertex_attributes.push_back(std::shared_ptr<GLVertexAttribute<glm::vec3>>(new GLVertexAttribute<glm::vec3>(location, attribute)));
-        }
-        
         /**
          Draws the object.
          */

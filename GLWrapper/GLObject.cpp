@@ -17,8 +17,10 @@ GLObject::GLObject(std::shared_ptr<Geometry> _geometry, std::shared_ptr<GLMateri
 {
     // Generate and bind array
     glGenVertexArrays(1, &array_id);
+    glBindVertexArray(array_id);
     
-    use_attribute("position", geometry->position());
+    vec3_vertex_attributes.push_back(material->create_attribute("position", geometry->position()));
+    material->create_attributes(vec2_vertex_attributes, vec3_vertex_attributes);
 }
 
 void GLObject::draw()
