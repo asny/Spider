@@ -27,50 +27,51 @@ namespace oogl
         std::vector<GLUniform<glm::vec4>> vec4_uniforms;
         std::vector<GLUniform<glm::mat4>> mat4_uniforms;
         
-        GLuint get_uniform_location(const std::string& name)
-        {
-            return shader->get_uniform_location(name);
-        }
-        
     protected:
+        
+        bool cull_back_faces = true;
+        bool test_depth = true;
+        
+        std::shared_ptr<GLShader> shader;
+        
         void use_uniform_int(const std::string& name, const std::shared_ptr<int> value)
         {
-            auto location = get_uniform_location(name);
+            auto location = shader->get_uniform_location(name);
             if(location != NULL_LOCATION)
                 int_uniforms.push_back(GLUniform<int>(location, value));
         }
         
         void use_uniform(const std::string& name, const std::shared_ptr<float> value)
         {
-            auto location = get_uniform_location(name);
+            auto location = shader->get_uniform_location(name);
             if(location != NULL_LOCATION)
                 float_uniforms.push_back(GLUniform<float>(location, value));
         }
         
         void use_uniform(const std::string& name, const std::shared_ptr<glm::vec2> value)
         {
-            auto location = get_uniform_location(name);
+            auto location = shader->get_uniform_location(name);
             if(location != NULL_LOCATION)
                 vec2_uniforms.push_back(GLUniform<glm::vec2>(location, value));
         }
         
         void use_uniform(const std::string& name, const std::shared_ptr<glm::vec3> value)
         {
-            auto location = get_uniform_location(name);
+            auto location = shader->get_uniform_location(name);
             if(location != NULL_LOCATION)
                 vec3_uniforms.push_back(GLUniform<glm::vec3>(location, value));
         }
         
         void use_uniform(const std::string& name, const std::shared_ptr<glm::vec4> value)
         {
-            auto location = get_uniform_location(name);
+            auto location = shader->get_uniform_location(name);
             if(location != NULL_LOCATION)
                 vec4_uniforms.push_back(GLUniform<glm::vec4>(location, value));
         }
         
         void use_uniform(const std::string& name, const std::shared_ptr<glm::mat4> value)
         {
-            auto location = get_uniform_location(name);
+            auto location = shader->get_uniform_location(name);
             if(location != NULL_LOCATION)
                 mat4_uniforms.push_back(GLUniform<glm::mat4>(location, value));
         }
@@ -105,27 +106,13 @@ namespace oogl
             use_uniform(name, std::make_shared<glm::mat4>(value));
         }
         
-        bool cull_back_faces = true;
-        bool test_depth = true;
-        
-        std::shared_ptr<GLShader> shader;
-        
-        GLMaterial()
-        {
-        }
-        
-    public:
-        
-        GLuint get_attribute_location(const std::string& name)
-        {
-            return shader->get_attribute_location(name);
-        }
-        
         std::shared_ptr<GLVertexAttribute<glm::vec2>> create_attribute(std::string name, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> attribute)
         {
             auto location = shader->get_attribute_location(name);
             return std::make_shared<GLVertexAttribute<glm::vec2>>(location, attribute);
         }
+        
+    public:
         
         std::shared_ptr<GLVertexAttribute<glm::vec3>> create_attribute(std::string name, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> attribute)
         {

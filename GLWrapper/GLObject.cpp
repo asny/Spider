@@ -47,8 +47,6 @@ void GLObject::draw()
         return;
     }
     
-    material->pre_draw();
-    
     for (auto glAttribute : vec2_vertex_attributes)
     {
         update_attribute(glAttribute);
@@ -58,6 +56,10 @@ void GLObject::draw()
     {
         update_attribute(glAttribute);
     }
+    
+    // TODO: Foreach material do
+    
+    material->pre_draw();
     
     glBindVertexArray(array_id);
     glDrawArrays(drawmode, 0, no_vertices);
