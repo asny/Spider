@@ -108,16 +108,30 @@ namespace oogl
         
         std::shared_ptr<GLVertexAttribute<glm::vec2>> create_attribute(std::string name, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> attribute)
         {
+            auto glAttribute = std::make_shared<GLVertexAttribute<glm::vec2>>(attribute);
+            
+            // Initialize attribute
             auto location = shader->get_attribute_location(name);
-            return std::make_shared<GLVertexAttribute<glm::vec2>>(location, attribute);
+            glEnableVertexAttribArray(location);
+            glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (const GLvoid *)(0));
+            check_gl_error();
+            
+            return glAttribute;
         }
         
     public:
         
         std::shared_ptr<GLVertexAttribute<glm::vec3>> create_attribute(std::string name, std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> attribute)
         {
+            auto glAttribute = std::make_shared<GLVertexAttribute<glm::vec3>>(attribute);
+            
+            // Initialize attribute
             auto location = shader->get_attribute_location(name);
-            return std::make_shared<GLVertexAttribute<glm::vec3>>(location, attribute);
+            glEnableVertexAttribArray(location);
+            glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (const GLvoid *)(0));
+            check_gl_error();
+            
+            return glAttribute;
         }
         
         virtual void create_attributes(std::vector<std::shared_ptr<GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
