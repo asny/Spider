@@ -15,6 +15,7 @@ using namespace oogl;
 using namespace std;
 using namespace glm;
 
+map<string, shared_ptr<GLShader>> GLShader::dictionary = map<string, shared_ptr<GLShader>>();
 GLuint GLShader::current_shader_id = -1;
 
 // Create a GLSL program object from vertex and fragment shader files
