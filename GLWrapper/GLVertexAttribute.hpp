@@ -29,6 +29,17 @@ namespace oogl
             _attribute->listen_to(on_attribute_changed);
         }
         
+        static std::shared_ptr<GLVertexAttribute<ValueType>> create_or_get(std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>> _attribute)
+        {
+            auto iterator = dictionary.find(_attribute);
+            if (iterator == dictionary.end())
+            {
+                auto glAttribute = std::make_shared<GLVertexAttribute<ValueType>>(_attribute);
+                iterator = dictionary.insert(std::make_pair(_attribute, glAttribute)).first;
+            }
+            return iterator->second;
+        }
+        
         bool is_up_to_date()
         {
             return up_to_date;
@@ -61,10 +72,15 @@ namespace oogl
             up_to_date = false;
         }
         
+        static std::map<std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>>, std::shared_ptr<GLVertexAttribute<ValueType>>> dictionary;
         bool up_to_date = false;
         std::shared_ptr<const geogo::Attribute<geogo::VertexID, ValueType>> attribute;
         GLuint buffer_id;
         int size;
         std::vector<float> data;
     };
+    
+    template<class ValueType>
+    std::map<std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>>, std::shared_ptr<GLVertexAttribute<ValueType>>> GLVertexAttribute<ValueType>::dictionary
+    = std::map<std::shared_ptr<geogo::Attribute<geogo::VertexID, ValueType>>, std::shared_ptr<GLVertexAttribute<ValueType>>>();
 }
