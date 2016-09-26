@@ -25,6 +25,7 @@ GLObject::GLObject(std::shared_ptr<Geometry> _geometry, std::shared_ptr<GLMateri
 
 void GLObject::draw()
 {
+    // Infer draw mode
     GLenum drawmode;
     int no_vertices;
     if(geometry->get_no_faces() > 0)
@@ -47,6 +48,7 @@ void GLObject::draw()
         return;
     }
     
+    // Update buffers if necessary
     for (auto glAttribute : vec2_vertex_attributes)
     {
         update_attribute(glAttribute);
@@ -57,10 +59,10 @@ void GLObject::draw()
         update_attribute(glAttribute);
     }
     
-    // TODO: Foreach material do
-    
+    // Use material specific uniforms and states
     material->pre_draw();
     
+    // Bind vertex array and draw
     glBindVertexArray(array_id);
     glDrawArrays(drawmode, 0, no_vertices);
     
