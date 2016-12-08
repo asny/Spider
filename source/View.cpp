@@ -33,8 +33,8 @@ double rand(double min, double max)
 
 View::View(int &argc, char** argv)
 {
-    const int WIN_SIZE_X = 1200;
-    const int WIN_SIZE_Y = 700;
+    int WIN_SIZE_X = 1200;
+    int WIN_SIZE_Y = 700;
     
     instance = this;
     
@@ -57,6 +57,8 @@ View::View(int &argc, char** argv)
     glfwSetInputMode(gWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPos(gWindow, 0, 0);
     glfwMakeContextCurrent(gWindow);
+    
+    glfwGetFramebufferSize(gWindow, &WIN_SIZE_X, &WIN_SIZE_Y);
     
     // Create camera
     camera = std::shared_ptr<GLCamera>(new GLCamera());
