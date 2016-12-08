@@ -11,7 +11,7 @@
 #include "gtx/rotate_vector.hpp"
 
 #define GLFW_INCLUDE_NONE
-#include <glfw3.h>
+#include "glfw3.h"
 
 using namespace std;
 using namespace glm;
@@ -235,7 +235,7 @@ void View::create_grass()
 
 void View::create_terrain()
 {
-    auto bmp = Reader::load_bitmap("resources/ground/Dirt.jpg");
+    auto bmp = Reader::load_bitmap("resources/grass.jpg");
     bmp.flipVertically();
     auto texture = shared_ptr<GLTexture>(new GLTexture2D(bmp));
     for (TerrainPatch& patch : model->get_terrain_patches())

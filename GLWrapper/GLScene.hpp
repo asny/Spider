@@ -12,7 +12,7 @@
 #include "GLCamera.hpp"
 
 #define GLFW_INCLUDE_NONE
-#include <glfw3.h>
+#include "glfw3.h"
 
 namespace oogl {
     class GLScene
