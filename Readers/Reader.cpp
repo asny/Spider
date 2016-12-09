@@ -165,30 +165,3 @@ Bitmap Reader::load_bitmap(std::string filePath)
     stbi_image_free(pixels);
     return bmp;
 }
-
-char* Reader::read_shader_source(std::string filePath)
-{
-    FILE *filePointer;
-    char *content = NULL;
-    
-    int count=0;
-    
-    if (filePath != "") {
-        filePointer = fopen(filePath.c_str(),"rt");
-        
-        if (filePointer != NULL) {
-            
-            fseek(filePointer, 0, SEEK_END);
-            count = static_cast<int>(ftell(filePointer));
-            rewind(filePointer);
-            
-            if (count > 0) {
-                content = (char *)malloc(sizeof(char) * (count+1));
-                count = static_cast<int>(fread(content,sizeof(char),count,filePointer));
-                content[count] = '\0';
-            }
-            fclose(filePointer);
-        }
-    }
-    return content;
-}

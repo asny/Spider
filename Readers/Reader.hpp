@@ -46,7 +46,4 @@ public:
      Tries to load the given file into an instance of the Bitmap class.
      */
     static tdogl::Bitmap load_bitmap(std::string filePath);
-    
-    // Create a NULL-terminated string by reading the provided file
-    static char* read_shader_source(std::string filePath);
 };
