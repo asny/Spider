@@ -14,7 +14,7 @@
 
 #include "vec2.hpp"
 #include "vec3.hpp"
-#include "Geometry.hpp"
+#include "Geometry.h"
 
 class TerrainPatch
 {

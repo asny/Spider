@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Geometry.hpp"
+#include "Geometry.h"
 #include "GLMaterial.hpp"
 #include "GLVertexAttribute.hpp"
 #include "GLUniform.hpp"

@@ -14,7 +14,7 @@
 #include "gtc/matrix_transform.hpp"
 #include "gtx/rotate_vector.hpp"
 #include "glm.hpp"
-#include "Geometry.hpp"
+#include "Geometry.h"
 #include <vector>
 #include <cmath>
 

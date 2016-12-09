@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		496B07AA1DF99EFC00CFBD10 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 496B07A91DF99EFC00CFBD10 /* OpenGL.framework */; };
 		49BCF6931DF85F7E00A18A7E /* libglfw.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BCF6921DF85F7E00A18A7E /* libglfw.dylib */; };
-		7A30A0211D47FA530078C90A /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A30A01F1D47FA530078C90A /* Geometry.cpp */; };
 		7A3688321D6CCBDB00A55796 /* GLUniform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3688301D6CCBDB00A55796 /* GLUniform.cpp */; };
 		7A383A271BBFB6F700E29333 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A261BBFB6F700E29333 /* game.cpp */; };
 		7A383A331BBFCE5700E29333 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A311BBFCE5700E29333 /* View.cpp */; };
@@ -18,14 +17,12 @@
 		7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A51BEFB8AE00D6E095 /* Bitmap.cpp */; };
 		7A3895AA1BEFB8AE00D6E095 /* Reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A71BEFB8AE00D6E095 /* Reader.cpp */; };
 		7A5A4F8F1D4D309000189B8C /* GLScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A5A4F8D1D4D308F00189B8C /* GLScene.cpp */; };
-		7A5A4F921D4D37A700189B8C /* Attribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A5A4F901D4D37A700189B8C /* Attribute.cpp */; };
 		7A70D0F91BC68BAA003E859B /* GLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0F71BC68BAA003E859B /* GLCamera.cpp */; };
 		7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */; };
 		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; };
 		7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* spider.cpp */; };
 		7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2C31BC25326009D85FD /* terrain.cpp */; };
 		7AB1391A1D5A6B0B007BD188 /* GLVertexAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB139181D5A6B0B007BD188 /* GLVertexAttribute.cpp */; };
-		7AB1391F1D5B3152007BD188 /* ID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB1391D1D5B3152007BD188 /* ID.cpp */; };
 		7AB664EA1D49434C00C71CEE /* GLMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB664E81D49434C00C71CEE /* GLMaterial.cpp */; };
 		7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */; };
 /* End PBXBuildFile section */
@@ -47,10 +44,10 @@
 		496B07A61DF8837F00CFBD10 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		496B07A91DF99EFC00CFBD10 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		49BCF6921DF85F7E00A18A7E /* libglfw.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.dylib; path = ../../../../opt/local/lib/libglfw.dylib; sourceTree = "<group>"; };
+		49FFC5E81DFAE4D5007C0E7D /* GeometryCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GeometryCreator.h; path = Geometry/GeometryCreator.h; sourceTree = "<group>"; };
 		7A2A093A1BF7EC04006285D0 /* skybox.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = skybox.frag; path = shaders/skybox.frag; sourceTree = "<group>"; };
 		7A2A093B1BF7EC04006285D0 /* skybox.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = skybox.vert; path = shaders/skybox.vert; sourceTree = "<group>"; };
-		7A30A01F1D47FA530078C90A /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Geometry.cpp; path = GLWrapper/Geometry.cpp; sourceTree = SOURCE_ROOT; };
-		7A30A0201D47FA530078C90A /* Geometry.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Geometry.hpp; path = GLWrapper/Geometry.hpp; sourceTree = SOURCE_ROOT; };
+		7A30A0201D47FA530078C90A /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Geometry.h; path = GLWrapper/Geometry.h; sourceTree = SOURCE_ROOT; };
 		7A36882F1D6CCB3500A55796 /* Property.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Property.h; path = Geometry/Property.h; sourceTree = "<group>"; };
 		7A3688301D6CCBDB00A55796 /* GLUniform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLUniform.cpp; path = GLWrapper/GLUniform.cpp; sourceTree = SOURCE_ROOT; };
 		7A3688311D6CCBDB00A55796 /* GLUniform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLUniform.hpp; path = GLWrapper/GLUniform.hpp; sourceTree = SOURCE_ROOT; };
@@ -76,7 +73,6 @@
 		7A5252671D83F6BC00BE9D1C /* fog.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fog.frag; path = shaders/fog.frag; sourceTree = "<group>"; };
 		7A5A4F8D1D4D308F00189B8C /* GLScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLScene.cpp; path = GLWrapper/GLScene.cpp; sourceTree = SOURCE_ROOT; };
 		7A5A4F8E1D4D309000189B8C /* GLScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLScene.hpp; path = GLWrapper/GLScene.hpp; sourceTree = SOURCE_ROOT; };
-		7A5A4F901D4D37A700189B8C /* Attribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Attribute.cpp; path = GLWrapper/Attribute.cpp; sourceTree = SOURCE_ROOT; };
 		7A5A4F911D4D37A700189B8C /* Attribute.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Attribute.hpp; path = GLWrapper/Attribute.hpp; sourceTree = SOURCE_ROOT; };
 		7A70D0F11BC5BF19003E859B /* flat.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = flat.geom; path = shaders/flat.geom; sourceTree = "<group>"; };
 		7A70D0F71BC68BAA003E859B /* GLCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLCamera.cpp; path = GLWrapper/GLCamera.cpp; sourceTree = SOURCE_ROOT; };
@@ -95,7 +91,6 @@
 		7AB0F2C71BC28EEB009D85FD /* pre_geom.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = pre_geom.vert; path = shaders/pre_geom.vert; sourceTree = "<group>"; };
 		7AB139181D5A6B0B007BD188 /* GLVertexAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLVertexAttribute.cpp; path = GLWrapper/GLVertexAttribute.cpp; sourceTree = SOURCE_ROOT; };
 		7AB139191D5A6B0B007BD188 /* GLVertexAttribute.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLVertexAttribute.hpp; path = GLWrapper/GLVertexAttribute.hpp; sourceTree = SOURCE_ROOT; };
-		7AB1391D1D5B3152007BD188 /* ID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ID.cpp; path = Geometry/ID.cpp; sourceTree = "<group>"; };
 		7AB1391E1D5B3152007BD188 /* ID.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ID.hpp; path = Geometry/ID.hpp; sourceTree = "<group>"; };
 		7AB664E81D49434C00C71CEE /* GLMaterial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLMaterial.cpp; path = GLWrapper/GLMaterial.cpp; sourceTree = SOURCE_ROOT; };
 		7AB664E91D49434C00C71CEE /* GLMaterial.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLMaterial.hpp; path = GLWrapper/GLMaterial.hpp; sourceTree = SOURCE_ROOT; };
@@ -237,13 +232,11 @@
 		7AB1391C1D5A6CF4007BD188 /* GeoGo */ = {
 			isa = PBXGroup;
 			children = (
-				7A30A01F1D47FA530078C90A /* Geometry.cpp */,
-				7A30A0201D47FA530078C90A /* Geometry.hpp */,
-				7A5A4F901D4D37A700189B8C /* Attribute.cpp */,
+				7A30A0201D47FA530078C90A /* Geometry.h */,
 				7A5A4F911D4D37A700189B8C /* Attribute.hpp */,
-				7AB1391D1D5B3152007BD188 /* ID.cpp */,
 				7AB1391E1D5B3152007BD188 /* ID.hpp */,
 				7A36882F1D6CCB3500A55796 /* Property.h */,
+				49FFC5E81DFAE4D5007C0E7D /* GeometryCreator.h */,
 			);
 			name = GeoGo;
 			sourceTree = "<group>";
@@ -315,14 +308,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7AB1391F1D5B3152007BD188 /* ID.cpp in Sources */,
 				7A3895AA1BEFB8AE00D6E095 /* Reader.cpp in Sources */,
 				7A38959E1BEE447B00D6E095 /* GLShader.cpp in Sources */,
-				7A5A4F921D4D37A700189B8C /* Attribute.cpp in Sources */,
 				7A383A331BBFCE5700E29333 /* View.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
 				7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */,
-				7A30A0211D47FA530078C90A /* Geometry.cpp in Sources */,
 				7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */,
 				7AB664EA1D49434C00C71CEE /* GLMaterial.cpp in Sources */,
 				7AB1391A1D5A6B0B007BD188 /* GLVertexAttribute.cpp in Sources */,

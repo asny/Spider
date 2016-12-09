@@ -9,6 +9,7 @@
 #include "View.h"
 #include "Reader.hpp"
 #include "gtx/rotate_vector.hpp"
+#include "GeometryCreator.h"
 
 #define GLFW_INCLUDE_NONE
 #include "glfw3.h"
@@ -300,7 +301,7 @@ void View::create_spider_legs()
 
 void View::create_cube()
 {
-    auto geometry = Geometry::create_box(false);
+    auto geometry = GeometryCreator::create_box(false);
     auto uv_attribute = shared_ptr<Attribute<VertexID, vec2>>(new Attribute<VertexID, vec2>());
     
     for (auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
@@ -328,7 +329,7 @@ void View::create_skybox()
     auto bitmaps = {Reader::load_bitmap(path + "right.jpg"), Reader::load_bitmap(path + "left.jpg"), Reader::load_bitmap(path + "top.jpg"), Reader::load_bitmap(path + "top.jpg"), Reader::load_bitmap(path + "front.jpg"), Reader::load_bitmap(path + "back.jpg")};
     auto skybox_texture = shared_ptr<GLTexture3D>(new GLTexture3D(bitmaps));
     auto material = shared_ptr<GLSkyboxMaterial>(new GLSkyboxMaterial(skybox_texture));
-    auto geometry = Geometry::create_box(true);
+    auto geometry = GeometryCreator::create_box(true);
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
     scene->add(object);
 }

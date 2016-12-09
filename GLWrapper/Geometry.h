@@ -144,7 +144,5 @@ namespace geogo
         {
             return no_faces;
         }
-        
-        static std::shared_ptr<Geometry> create_box(bool view_from_inside);
     };
 }
