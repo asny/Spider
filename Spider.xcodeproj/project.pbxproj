@@ -44,11 +44,8 @@
 		496B07A61DF8837F00CFBD10 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		496B07A91DF99EFC00CFBD10 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		49BCF6921DF85F7E00A18A7E /* libglfw.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.dylib; path = ../../../../opt/local/lib/libglfw.dylib; sourceTree = "<group>"; };
-		49FFC5E81DFAE4D5007C0E7D /* GeometryCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GeometryCreator.h; path = Geometry/GeometryCreator.h; sourceTree = "<group>"; };
 		7A2A093A1BF7EC04006285D0 /* skybox.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = skybox.frag; path = shaders/skybox.frag; sourceTree = "<group>"; };
 		7A2A093B1BF7EC04006285D0 /* skybox.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = skybox.vert; path = shaders/skybox.vert; sourceTree = "<group>"; };
-		7A30A0201D47FA530078C90A /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Geometry.h; path = GLWrapper/Geometry.h; sourceTree = SOURCE_ROOT; };
-		7A36882F1D6CCB3500A55796 /* Property.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Property.h; path = Geometry/Property.h; sourceTree = "<group>"; };
 		7A3688301D6CCBDB00A55796 /* GLUniform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLUniform.cpp; path = GLWrapper/GLUniform.cpp; sourceTree = SOURCE_ROOT; };
 		7A3688311D6CCBDB00A55796 /* GLUniform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLUniform.hpp; path = GLWrapper/GLUniform.hpp; sourceTree = SOURCE_ROOT; };
 		7A370D901BD964E2000783CA /* grass.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grass.geom; path = shaders/grass.geom; sourceTree = "<group>"; };
@@ -73,7 +70,6 @@
 		7A5252671D83F6BC00BE9D1C /* fog.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fog.frag; path = shaders/fog.frag; sourceTree = "<group>"; };
 		7A5A4F8D1D4D308F00189B8C /* GLScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLScene.cpp; path = GLWrapper/GLScene.cpp; sourceTree = SOURCE_ROOT; };
 		7A5A4F8E1D4D309000189B8C /* GLScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLScene.hpp; path = GLWrapper/GLScene.hpp; sourceTree = SOURCE_ROOT; };
-		7A5A4F911D4D37A700189B8C /* Attribute.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Attribute.hpp; path = GLWrapper/Attribute.hpp; sourceTree = SOURCE_ROOT; };
 		7A70D0F11BC5BF19003E859B /* flat.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = flat.geom; path = shaders/flat.geom; sourceTree = "<group>"; };
 		7A70D0F71BC68BAA003E859B /* GLCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLCamera.cpp; path = GLWrapper/GLCamera.cpp; sourceTree = SOURCE_ROOT; };
 		7A70D0F81BC68BAA003E859B /* GLCamera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLCamera.hpp; path = GLWrapper/GLCamera.hpp; sourceTree = SOURCE_ROOT; };
@@ -91,7 +87,6 @@
 		7AB0F2C71BC28EEB009D85FD /* pre_geom.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = pre_geom.vert; path = shaders/pre_geom.vert; sourceTree = "<group>"; };
 		7AB139181D5A6B0B007BD188 /* GLVertexAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLVertexAttribute.cpp; path = GLWrapper/GLVertexAttribute.cpp; sourceTree = SOURCE_ROOT; };
 		7AB139191D5A6B0B007BD188 /* GLVertexAttribute.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLVertexAttribute.hpp; path = GLWrapper/GLVertexAttribute.hpp; sourceTree = SOURCE_ROOT; };
-		7AB1391E1D5B3152007BD188 /* ID.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ID.hpp; path = Geometry/ID.hpp; sourceTree = "<group>"; };
 		7AB664E81D49434C00C71CEE /* GLMaterial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLMaterial.cpp; path = GLWrapper/GLMaterial.cpp; sourceTree = SOURCE_ROOT; };
 		7AB664E91D49434C00C71CEE /* GLMaterial.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLMaterial.hpp; path = GLWrapper/GLMaterial.hpp; sourceTree = SOURCE_ROOT; };
 		7ABC06551D8423A800D259E8 /* fog.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fog.vert; path = shaders/fog.vert; sourceTree = "<group>"; };
@@ -131,7 +126,6 @@
 				7A383A341BBFD93A00E29333 /* Shaders */,
 				7A70D0FB1BC6BEE8003E859B /* SimplexNoise */,
 				7AF9C41A1BEBEB12008AE5F5 /* Readers */,
-				7AB1391C1D5A6CF4007BD188 /* GeoGo */,
 				7A70D0F31BC68B1B003E859B /* GLWrapper */,
 				7A383A281BBFB6FC00E29333 /* View */,
 				7AB0F2BD1BC07AB1009D85FD /* Model */,
@@ -227,18 +221,6 @@
 				7AB0F2C41BC25326009D85FD /* terrain.hpp */,
 			);
 			name = Model;
-			sourceTree = "<group>";
-		};
-		7AB1391C1D5A6CF4007BD188 /* GeoGo */ = {
-			isa = PBXGroup;
-			children = (
-				7A30A0201D47FA530078C90A /* Geometry.h */,
-				7A5A4F911D4D37A700189B8C /* Attribute.hpp */,
-				7AB1391E1D5B3152007BD188 /* ID.hpp */,
-				7A36882F1D6CCB3500A55796 /* Property.h */,
-				49FFC5E81DFAE4D5007C0E7D /* GeometryCreator.h */,
-			);
-			name = GeoGo;
 			sourceTree = "<group>";
 		};
 		7AF9C41A1BEBEB12008AE5F5 /* Readers */ = {
@@ -423,7 +405,7 @@
 					/opt/local/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include/glm /opt/local/include/GLFW";
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include/glm /opt/local/include/GLFW ../Geometry/";
 			};
 			name = Debug;
 		};
@@ -436,7 +418,7 @@
 					/opt/local/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include/glm /opt/local/include/GLFW";
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include/glm /opt/local/include/GLFW ../Geometry/";
 			};
 			name = Release;
 		};
