@@ -9,12 +9,12 @@
 /* Begin PBXBuildFile section */
 		496B07AA1DF99EFC00CFBD10 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 496B07A91DF99EFC00CFBD10 /* OpenGL.framework */; };
 		49BCF6931DF85F7E00A18A7E /* libglfw.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BCF6921DF85F7E00A18A7E /* libglfw.dylib */; };
+		49FFC5EF1DFB04DE007C0E7D /* Reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49FFC5ED1DFB04DE007C0E7D /* Reader.cpp */; };
 		7A383A271BBFB6F700E29333 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A261BBFB6F700E29333 /* game.cpp */; };
 		7A383A331BBFCE5700E29333 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A311BBFCE5700E29333 /* View.cpp */; };
 		7A38959E1BEE447B00D6E095 /* GLShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A38959C1BEE447B00D6E095 /* GLShader.cpp */; };
 		7A3895A21BEE471A00D6E095 /* GLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A01BEE471A00D6E095 /* GLObject.cpp */; };
 		7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A51BEFB8AE00D6E095 /* Bitmap.cpp */; };
-		7A3895AA1BEFB8AE00D6E095 /* Reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A71BEFB8AE00D6E095 /* Reader.cpp */; };
 		7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */; };
 		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; };
 		7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* spider.cpp */; };
@@ -40,6 +40,8 @@
 		496B07A61DF8837F00CFBD10 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		496B07A91DF99EFC00CFBD10 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		49BCF6921DF85F7E00A18A7E /* libglfw.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.dylib; path = ../../../../opt/local/lib/libglfw.dylib; sourceTree = "<group>"; };
+		49FFC5ED1DFB04DE007C0E7D /* Reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Reader.cpp; path = Readers/Reader.cpp; sourceTree = "<group>"; };
+		49FFC5EE1DFB04DE007C0E7D /* Reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Reader.hpp; path = Readers/Reader.hpp; sourceTree = "<group>"; };
 		7A2A093A1BF7EC04006285D0 /* skybox.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = skybox.frag; path = shaders/skybox.frag; sourceTree = "<group>"; };
 		7A2A093B1BF7EC04006285D0 /* skybox.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = skybox.vert; path = shaders/skybox.vert; sourceTree = "<group>"; };
 		7A3688311D6CCBDB00A55796 /* GLUniform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLUniform.hpp; path = GLWrapper/GLUniform.hpp; sourceTree = SOURCE_ROOT; };
@@ -59,8 +61,6 @@
 		7A3895A41BEE65DB00D6E095 /* texture.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = texture.vert; path = shaders/texture.vert; sourceTree = "<group>"; };
 		7A3895A51BEFB8AE00D6E095 /* Bitmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bitmap.cpp; path = Readers/Bitmap.cpp; sourceTree = "<group>"; };
 		7A3895A61BEFB8AE00D6E095 /* Bitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bitmap.h; path = Readers/Bitmap.h; sourceTree = "<group>"; };
-		7A3895A71BEFB8AE00D6E095 /* Reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Reader.cpp; path = Readers/Reader.cpp; sourceTree = "<group>"; };
-		7A3895A81BEFB8AE00D6E095 /* Reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Reader.hpp; path = Readers/Reader.hpp; sourceTree = "<group>"; };
 		7A5252661D83F06F00BE9D1C /* particle.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = particle.geom; path = shaders/particle.geom; sourceTree = "<group>"; };
 		7A5252671D83F6BC00BE9D1C /* fog.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fog.frag; path = shaders/fog.frag; sourceTree = "<group>"; };
 		7A5A4F8E1D4D309000189B8C /* GLScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLScene.hpp; path = GLWrapper/GLScene.hpp; sourceTree = SOURCE_ROOT; };
@@ -214,10 +214,10 @@
 		7AF9C41A1BEBEB12008AE5F5 /* Readers */ = {
 			isa = PBXGroup;
 			children = (
+				49FFC5ED1DFB04DE007C0E7D /* Reader.cpp */,
+				49FFC5EE1DFB04DE007C0E7D /* Reader.hpp */,
 				7A3895A51BEFB8AE00D6E095 /* Bitmap.cpp */,
 				7A3895A61BEFB8AE00D6E095 /* Bitmap.h */,
-				7A3895A71BEFB8AE00D6E095 /* Reader.cpp */,
-				7A3895A81BEFB8AE00D6E095 /* Reader.hpp */,
 			);
 			name = Readers;
 			sourceTree = "<group>";
@@ -278,7 +278,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A3895AA1BEFB8AE00D6E095 /* Reader.cpp in Sources */,
 				7A38959E1BEE447B00D6E095 /* GLShader.cpp in Sources */,
 				7A383A331BBFCE5700E29333 /* View.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
@@ -289,6 +288,7 @@
 				7A3895A21BEE471A00D6E095 /* GLObject.cpp in Sources */,
 				7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */,
 				7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */,
+				49FFC5EF1DFB04DE007C0E7D /* Reader.cpp in Sources */,
 				7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
