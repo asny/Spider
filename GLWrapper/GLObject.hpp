@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Geometry.h"
+#include "Mesh.h"
 #include "GLMaterial.hpp"
 #include "GLVertexAttribute.hpp"
 #include "GLUniform.hpp"
@@ -20,7 +20,7 @@ namespace oogl
      */
     class GLObject
     {
-        std::shared_ptr<geogo::Geometry> geometry;
+        std::shared_ptr<geogo::Mesh> geometry;
         std::shared_ptr<GLMaterial> material;
         
         GLuint array_id;
@@ -64,7 +64,7 @@ namespace oogl
         
     public:
         
-        GLObject(std::shared_ptr<geogo::Geometry> geometry, std::shared_ptr<GLMaterial> material);
+        GLObject(std::shared_ptr<geogo::Mesh> geometry, std::shared_ptr<GLMaterial> material);
         
         /**
          Draws the object.

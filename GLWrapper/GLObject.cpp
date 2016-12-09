@@ -13,7 +13,7 @@ using namespace geogo;
 using namespace std;
 using namespace glm;
 
-GLObject::GLObject(std::shared_ptr<Geometry> _geometry, std::shared_ptr<GLMaterial> _material) : material(_material), geometry(_geometry)
+GLObject::GLObject(std::shared_ptr<Mesh> _geometry, std::shared_ptr<GLMaterial> _material) : material(_material), geometry(_geometry)
 {
     // Generate and bind array
     glGenVertexArrays(1, &array_id);

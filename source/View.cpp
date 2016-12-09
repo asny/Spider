@@ -9,7 +9,7 @@
 #include "View.h"
 #include "Reader.hpp"
 #include "gtx/rotate_vector.hpp"
-#include "GeometryCreator.h"
+#include "MeshCreator.h"
 
 #define GLFW_INCLUDE_NONE
 #include "glfw3.h"
@@ -268,7 +268,7 @@ void View::create_water()
 
 void View::create_spider_body()
 {
-    auto geometry = shared_ptr<Geometry>(new Geometry());
+    auto geometry = shared_ptr<Mesh>(new Mesh());
     auto normals = shared_ptr<Attribute<VertexID, vec3>>(new Attribute<VertexID, vec3>());
     Reader::load_obj("resources/spider/spider.obj", *geometry, *normals);
     
@@ -301,7 +301,7 @@ void View::create_spider_legs()
 
 void View::create_cube()
 {
-    auto geometry = GeometryCreator::create_box(false);
+    auto geometry = MeshCreator::create_box(false);
     auto uv_attribute = shared_ptr<Attribute<VertexID, vec2>>(new Attribute<VertexID, vec2>());
     
     for (auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
@@ -329,14 +329,14 @@ void View::create_skybox()
     auto bitmaps = {Reader::load_bitmap(path + "right.jpg"), Reader::load_bitmap(path + "left.jpg"), Reader::load_bitmap(path + "top.jpg"), Reader::load_bitmap(path + "top.jpg"), Reader::load_bitmap(path + "front.jpg"), Reader::load_bitmap(path + "back.jpg")};
     auto skybox_texture = shared_ptr<GLTexture3D>(new GLTexture3D(bitmaps));
     auto material = shared_ptr<GLSkyboxMaterial>(new GLSkyboxMaterial(skybox_texture));
-    auto geometry = GeometryCreator::create_box(true);
+    auto geometry = MeshCreator::create_box(true);
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
     scene->add(object);
 }
 
 void View::create_fog()
 {
-    std::shared_ptr<geogo::Geometry> geometry = std::make_shared<geogo::Geometry>();
+    std::shared_ptr<geogo::Mesh> geometry = std::make_shared<geogo::Mesh>();
     std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> normals = std::make_shared<geogo::Attribute<geogo::VertexID, glm::vec3>>();
     for(int i = 0; i < 2000; i++)
     {

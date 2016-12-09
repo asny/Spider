@@ -9,7 +9,7 @@
 #pragma once
 
 #include "GLUtility.h"
-#include "Geometry.h"
+#include "Mesh.h"
 
 namespace oogl
 {   

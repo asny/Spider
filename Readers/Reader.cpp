@@ -106,7 +106,7 @@ static bool load_obj(string file_path, vector<vec3>& positions, vector<unsigned 
     return true;
 }
 
-void Reader::load_obj(string file_path, Geometry& geometry, Attribute<VertexID, vec2>& uv_attribute, Attribute<VertexID, vec3>& normal_attribute)
+void Reader::load_obj(string file_path, Mesh& geometry, Attribute<VertexID, vec2>& uv_attribute, Attribute<VertexID, vec3>& normal_attribute)
 {
     vector<vec3> positions, normals;
     vector<vec2> uv_coordinates;

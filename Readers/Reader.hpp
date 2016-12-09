@@ -12,30 +12,30 @@
 #include "vec2.hpp"
 #include "vec3.hpp"
 
-#include "Geometry.h"
+#include "Mesh.h"
 #include "Bitmap.h"
 
 class Reader {
     
 public:
     /**
-     Loads an obj file and constructs the corresponding Geometry.
+     Loads an obj file and constructs the corresponding Mesh.
      */
-    static void load_obj(std::string file_path, geogo::Geometry& geometry, geogo::Attribute<geogo::VertexID, glm::vec2>& uv_coordinates, geogo::Attribute<geogo::VertexID, glm::vec3>& normals);
+    static void load_obj(std::string file_path, geogo::Mesh& geometry, geogo::Attribute<geogo::VertexID, glm::vec2>& uv_coordinates, geogo::Attribute<geogo::VertexID, glm::vec3>& normals);
     
-    static void load_obj(std::string file_path, geogo::Geometry& geometry, geogo::Attribute<geogo::VertexID, glm::vec3>& normals)
+    static void load_obj(std::string file_path, geogo::Mesh& geometry, geogo::Attribute<geogo::VertexID, glm::vec3>& normals)
     {
         geogo::Attribute<geogo::VertexID, glm::vec2> uv_coordinates;
         load_obj(file_path, geometry, uv_coordinates, normals);
     }
     
-    static void load_obj(std::string file_path, geogo::Geometry& geometry, geogo::Attribute<geogo::VertexID, glm::vec2>& uv_coordinates)
+    static void load_obj(std::string file_path, geogo::Mesh& geometry, geogo::Attribute<geogo::VertexID, glm::vec2>& uv_coordinates)
     {
         geogo::Attribute<geogo::VertexID, glm::vec3> normals;
         load_obj(file_path, geometry, uv_coordinates, normals);
     }
     
-    static void load_obj(std::string file_path, geogo::Geometry& geometry)
+    static void load_obj(std::string file_path, geogo::Mesh& geometry)
     {
         geogo::Attribute<geogo::VertexID, glm::vec2> uv_coordinates;
         geogo::Attribute<geogo::VertexID, glm::vec3> normals;
