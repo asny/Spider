@@ -24,19 +24,41 @@ namespace oogl {
         
     public:
         
-        GLCamera();
+        GLCamera()
+        {
+            // Enable states
+            glEnable(GL_DEPTH_TEST);
+            glDepthFunc(GL_LEQUAL);
+            
+            glEnable(GL_BLEND);
+            glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        }
         
         /**
          Reshape the window.
          */
-        void set_screen_size(int width, int height);
+        void set_screen_size(int width, int height)
+        {
+            glViewport(0, 0, width, height);
+            *projection = glm::perspective(45.f, width/float(height), 0.1f, 100.f);
+        }
         
         /**
          Set the camera/eye.
          */
-        void set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection);
+        void set_view(const glm::vec3& eyePosition, const glm::vec3& eyeDirection)
+        {
+            *position = eyePosition;
+            *view = lookAt(eyePosition, eyePosition + eyeDirection, glm::vec3(0., 1., 0.));
+        }
         
-        void pre_draw();
+        void pre_draw()
+        {
+            glDepthMask(GL_TRUE);
+            
+            glClearColor(1., 1., 1., 0.);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        }
         
         const std::shared_ptr<glm::mat4> get_view()
         {
