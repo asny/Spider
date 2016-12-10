@@ -9,7 +9,6 @@
 #pragma once
 
 #include "GLUtility.h"
-#include "Bitmap.h"
 
 namespace oogl
 {
@@ -23,17 +22,17 @@ namespace oogl
         GLenum minMagFilter = GL_LINEAR; // GL_NEAREST or GL_LINEAR
         GLenum wrapMode = GL_CLAMP_TO_EDGE; // GL_REPEAT, GL_MIRRORED_REPEAT, GL_CLAMP_TO_EDGE, or GL_CLAMP_TO_BORDER
         
-        void bind_image(const tdogl::Bitmap& bitmap, GLenum target)
+        void bind_image(unsigned char* data, unsigned int width, unsigned int height, GLenum format, GLenum target)
         {
             glTexImage2D(target,
                          0,
-                         TextureFormatForBitmapFormat(bitmap.format()),
-                         (GLsizei)bitmap.width(),
-                         (GLsizei)bitmap.height(),
+                         format,
+                         (GLsizei)width,
+                         (GLsizei)height,
                          0,
-                         TextureFormatForBitmapFormat(bitmap.format()),
+                         format,
                          GL_UNSIGNED_BYTE,
-                         bitmap.pixelBuffer());
+                         data);
         }
         
         /**
@@ -64,17 +63,6 @@ namespace oogl
             check_gl_error();
             return 0; //return 0 because the texture is bound to GL_TEXTURE0
         }
-        
-    private:
-        
-        static GLenum TextureFormatForBitmapFormat(tdogl::Bitmap::Format format)
-        {
-            switch (format) {
-                case tdogl::Bitmap::Format_RGB: return GL_RGB;
-                case tdogl::Bitmap::Format_RGBA: return GL_RGBA;
-                default: throw std::runtime_error("Unrecognised Bitmap::Format");
-            }
-        }
     };
     
     /**
@@ -86,10 +74,10 @@ namespace oogl
         /**
          Creates a texture from a bitmap.
          */
-        GLTexture2D(const tdogl::Bitmap& bitmap) : GLTexture::GLTexture()
+        GLTexture2D(unsigned char* data, unsigned int width, unsigned int height, GLenum format) : GLTexture::GLTexture()
         {
             use();
-            bind_image(bitmap, GL_TEXTURE_2D);
+            bind_image(data, width, height, format, GL_TEXTURE_2D);
             
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minMagFilter);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, minMagFilter);
@@ -121,12 +109,12 @@ namespace oogl
         /**
          Creates a 3D texture from a set of bitmaps.
          */
-        GLTexture3D(const std::vector<tdogl::Bitmap>& bitmaps) : GLTexture::GLTexture()
+        GLTexture3D(const std::vector<unsigned char*>& data, unsigned int width, unsigned int height, GLenum format) : GLTexture::GLTexture()
         {
             use();
-            for(GLuint i = 0; i < bitmaps.size(); i++)
+            for(GLuint i = 0; i < data.size(); i++)
             {
-                bind_image(bitmaps[i], GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
+                bind_image(data[i], width, height, format, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
             }
             
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, minMagFilter);

@@ -32,6 +32,15 @@ double rand(double min, double max)
     return (max - min) * (double)rand()/(double)RAND_MAX + min;
 }
 
+static GLenum TextureFormatForBitmapFormat(tdogl::Bitmap::Format format)
+{
+    switch (format) {
+        case tdogl::Bitmap::Format_RGB: return GL_RGB;
+        case tdogl::Bitmap::Format_RGBA: return GL_RGBA;
+        default: throw std::runtime_error("Unrecognised Bitmap::Format");
+    }
+}
+
 View::View(int &argc, char** argv)
 {
     int WIN_SIZE_X = 1200;
@@ -240,7 +249,7 @@ void View::create_terrain()
 {
     auto bmp = Reader::load_bitmap("resources/grass.jpg");
     bmp.flipVertically();
-    auto texture = shared_ptr<GLTexture>(new GLTexture2D(bmp));
+    auto texture = shared_ptr<GLTexture>(new GLTexture2D(bmp.pixelBuffer(), bmp.width(), bmp.height(), TextureFormatForBitmapFormat(bmp.format())));
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto material = make_shared<GLTextureMaterial>(texture, patch.get_uv_coordinates());
@@ -315,9 +324,9 @@ void View::create_cube()
         uv_attribute->at(*vertex) = uv;
     }
     
-    auto cubeTextureBmp = Reader::load_bitmap("resources/test_texture.jpg");
-    cubeTextureBmp.flipVertically();
-    auto cubeTexture = shared_ptr<GLTexture>(new GLTexture2D(cubeTextureBmp));
+    auto bitmap = Reader::load_bitmap("resources/test_texture.jpg");
+    bitmap.flipVertically();
+    auto cubeTexture = shared_ptr<GLTexture>(new GLTexture2D(bitmap.pixelBuffer(), bitmap.width(), bitmap.height(), TextureFormatForBitmapFormat(bitmap.format())));
     auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(cubeTexture, uv_attribute));
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
     scene->add(object);
@@ -326,8 +335,9 @@ void View::create_cube()
 void View::create_skybox()
 {
     const string path = "resources/skybox_evening/";
-    auto bitmaps = {Reader::load_bitmap(path + "right.jpg"), Reader::load_bitmap(path + "left.jpg"), Reader::load_bitmap(path + "top.jpg"), Reader::load_bitmap(path + "top.jpg"), Reader::load_bitmap(path + "front.jpg"), Reader::load_bitmap(path + "back.jpg")};
-    auto skybox_texture = shared_ptr<GLTexture3D>(new GLTexture3D(bitmaps));
+    auto bitmap = Reader::load_bitmap(path + "right.jpg");
+    auto data = {bitmap.pixelBuffer(), Reader::load_bitmap(path + "left.jpg").pixelBuffer(), Reader::load_bitmap(path + "top.jpg").pixelBuffer(), Reader::load_bitmap(path + "top.jpg").pixelBuffer(), Reader::load_bitmap(path + "front.jpg").pixelBuffer(), Reader::load_bitmap(path + "back.jpg").pixelBuffer()};
+    auto skybox_texture = shared_ptr<GLTexture3D>(new GLTexture3D(data, bitmap.width(), bitmap.height(), TextureFormatForBitmapFormat(bitmap.format())));
     auto material = shared_ptr<GLSkyboxMaterial>(new GLSkyboxMaterial(skybox_texture));
     auto geometry = MeshCreator::create_box(true);
     auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
