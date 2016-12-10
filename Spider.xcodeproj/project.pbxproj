@@ -17,7 +17,6 @@
 		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; };
 		7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* spider.cpp */; };
 		7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2C31BC25326009D85FD /* terrain.cpp */; };
-		7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -76,7 +75,6 @@
 		7ABC06551D8423A800D259E8 /* fog.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fog.vert; path = shaders/fog.vert; sourceTree = "<group>"; };
 		7AE74B671C18B00800466559 /* spider_legs.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = spider_legs.geom; path = shaders/spider_legs.geom; sourceTree = "<group>"; };
 		7AF4B53F1D27B3D0008A5074 /* grass.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grass.frag; path = shaders/grass.frag; sourceTree = "<group>"; };
-		7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLTexture.cpp; path = GLWrapper/GLTexture.cpp; sourceTree = SOURCE_ROOT; };
 		7AF9C41F1BED491F008AE5F5 /* GLTexture.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLTexture.hpp; path = GLWrapper/GLTexture.hpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -162,7 +160,6 @@
 			isa = PBXGroup;
 			children = (
 				7A70D0F81BC68BAA003E859B /* GLCamera.hpp */,
-				7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */,
 				7AF9C41F1BED491F008AE5F5 /* GLTexture.hpp */,
 				7A38959D1BEE447B00D6E095 /* GLShader.hpp */,
 				7AB664E91D49434C00C71CEE /* GLMaterial.hpp */,
@@ -267,7 +264,6 @@
 			files = (
 				7A383A331BBFCE5700E29333 /* View.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
-				7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */,
 				7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */,
 				7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */,
 				7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */,

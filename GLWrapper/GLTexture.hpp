@@ -23,23 +23,58 @@ namespace oogl
         GLenum minMagFilter = GL_LINEAR; // GL_NEAREST or GL_LINEAR
         GLenum wrapMode = GL_CLAMP_TO_EDGE; // GL_REPEAT, GL_MIRRORED_REPEAT, GL_CLAMP_TO_EDGE, or GL_CLAMP_TO_BORDER
         
-        void bind_image(const tdogl::Bitmap& bitmap, GLenum target);
+        void bind_image(const tdogl::Bitmap& bitmap, GLenum target)
+        {
+            glTexImage2D(target,
+                         0,
+                         TextureFormatForBitmapFormat(bitmap.format()),
+                         (GLsizei)bitmap.width(),
+                         (GLsizei)bitmap.height(),
+                         0,
+                         TextureFormatForBitmapFormat(bitmap.format()),
+                         GL_UNSIGNED_BYTE,
+                         bitmap.pixelBuffer());
+        }
         
         /**
          Creates a texture from a bitmap.
          */
-        GLTexture();
+        GLTexture()
+        {
+            glGenTextures(1, &texture_id);
+            check_gl_error();
+        }
         
         /**
          Deletes the texture.
          */
-        ~GLTexture();
+        ~GLTexture()
+        {
+            glDeleteTextures(1, &texture_id);
+            check_gl_error();
+        }
         
     public:
         /**
          Bind the texture and returns the id of the active texture.
          */
-        virtual int use();
+        virtual int use()
+        {
+            glActiveTexture(GL_TEXTURE0);
+            check_gl_error();
+            return 0; //return 0 because the texture is bound to GL_TEXTURE0
+        }
+        
+    private:
+        
+        static GLenum TextureFormatForBitmapFormat(tdogl::Bitmap::Format format)
+        {
+            switch (format) {
+                case tdogl::Bitmap::Format_RGB: return GL_RGB;
+                case tdogl::Bitmap::Format_RGBA: return GL_RGBA;
+                default: throw std::runtime_error("Unrecognised Bitmap::Format");
+            }
+        }
     };
     
     /**
@@ -51,12 +86,30 @@ namespace oogl
         /**
          Creates a texture from a bitmap.
          */
-        GLTexture2D(const tdogl::Bitmap& bitmap);
+        GLTexture2D(const tdogl::Bitmap& bitmap) : GLTexture::GLTexture()
+        {
+            use();
+            bind_image(bitmap, GL_TEXTURE_2D);
+            
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minMagFilter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, minMagFilter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
+            
+            glBindTexture(GL_TEXTURE_2D, 0);
+            check_gl_error();
+        }
         
         /**
          Bind the texture and returns the id of the active texture.
          */
-        int use();
+        int use()
+        {
+            int id = GLTexture::use();
+            glBindTexture(GL_TEXTURE_2D, texture_id);
+            check_gl_error();
+            return id;
+        }
     };
     
     /**
@@ -68,12 +121,34 @@ namespace oogl
         /**
          Creates a 3D texture from a set of bitmaps.
          */
-        GLTexture3D(const std::vector<tdogl::Bitmap>& bitmaps);
+        GLTexture3D(const std::vector<tdogl::Bitmap>& bitmaps) : GLTexture::GLTexture()
+        {
+            use();
+            for(GLuint i = 0; i < bitmaps.size(); i++)
+            {
+                bind_image(bitmaps[i], GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
+            }
+            
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, minMagFilter);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, minMagFilter);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, wrapMode);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, wrapMode);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, wrapMode);
+            
+            glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+            check_gl_error();
+        }
         
         /**
          Bind the texture and returns the id of the active texture.
          */
-        int use();
+        int use()
+        {
+            int id = GLTexture::use();
+            glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+            check_gl_error();
+            return id;
+        }
     };
 
 }
