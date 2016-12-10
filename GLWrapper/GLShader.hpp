@@ -16,10 +16,8 @@ namespace oogl {
      */
     class GLShader
     {
-        static std::map<std::string, std::shared_ptr<GLShader>> dictionary;
         
         GLuint shader_id;
-        static GLuint current_shader_id;
         
     public:
         GLShader(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "")
@@ -37,6 +35,7 @@ namespace oogl {
         
         static std::shared_ptr<GLShader> create_or_get(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "")
         {
+            static std::map<std::string, std::shared_ptr<GLShader>> dictionary = std::map<std::string, std::shared_ptr<GLShader>>();
             auto key = vertexShaderFilename + fragmentShaderFilename + geometryShaderFilename;
             auto iterator = dictionary.find(key);
             if (iterator == dictionary.end())
@@ -49,6 +48,7 @@ namespace oogl {
         
         void use()
         {
+            static GLuint current_shader_id = -1;
             if(current_shader_id != shader_id)
             {
                 glUseProgram(shader_id);

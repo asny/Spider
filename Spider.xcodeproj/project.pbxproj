@@ -12,7 +12,6 @@
 		49FFC5EF1DFB04DE007C0E7D /* Reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49FFC5ED1DFB04DE007C0E7D /* Reader.cpp */; };
 		7A383A271BBFB6F700E29333 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A261BBFB6F700E29333 /* game.cpp */; };
 		7A383A331BBFCE5700E29333 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A311BBFCE5700E29333 /* View.cpp */; };
-		7A38959E1BEE447B00D6E095 /* GLShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A38959C1BEE447B00D6E095 /* GLShader.cpp */; };
 		7A3895A21BEE471A00D6E095 /* GLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A01BEE471A00D6E095 /* GLObject.cpp */; };
 		7A3895A91BEFB8AE00D6E095 /* Bitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3895A51BEFB8AE00D6E095 /* Bitmap.cpp */; };
 		7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */; };
@@ -50,7 +49,6 @@
 		7A383A321BBFCE5700E29333 /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = View.h; path = source/View.h; sourceTree = "<group>"; };
 		7A383A371BBFDC3300E29333 /* gouraud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gouraud.vert; path = shaders/gouraud.vert; sourceTree = "<group>"; };
 		7A383A391BBFDC9F00E29333 /* gouraud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gouraud.frag; path = shaders/gouraud.frag; sourceTree = "<group>"; };
-		7A38959C1BEE447B00D6E095 /* GLShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLShader.cpp; path = GLWrapper/GLShader.cpp; sourceTree = SOURCE_ROOT; };
 		7A38959D1BEE447B00D6E095 /* GLShader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GLShader.hpp; path = GLWrapper/GLShader.hpp; sourceTree = SOURCE_ROOT; };
 		7A38959F1BEE45F200D6E095 /* GLUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLUtility.h; path = GLWrapper/GLUtility.h; sourceTree = SOURCE_ROOT; };
 		7A3895A01BEE471A00D6E095 /* GLObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLObject.cpp; path = GLWrapper/GLObject.cpp; sourceTree = SOURCE_ROOT; };
@@ -170,7 +168,6 @@
 				7A70D0F81BC68BAA003E859B /* GLCamera.hpp */,
 				7AF9C41E1BED491F008AE5F5 /* GLTexture.cpp */,
 				7AF9C41F1BED491F008AE5F5 /* GLTexture.hpp */,
-				7A38959C1BEE447B00D6E095 /* GLShader.cpp */,
 				7A38959D1BEE447B00D6E095 /* GLShader.hpp */,
 				7AB664E81D49434C00C71CEE /* GLMaterial.cpp */,
 				7AB664E91D49434C00C71CEE /* GLMaterial.hpp */,
@@ -274,7 +271,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A38959E1BEE447B00D6E095 /* GLShader.cpp in Sources */,
 				7A383A331BBFCE5700E29333 /* View.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
 				7AF9C4201BED491F008AE5F5 /* GLTexture.cpp in Sources */,
