@@ -17,9 +17,6 @@ namespace oogl
 {
     class GLMaterial
     {
-        static bool currently_cull_back_faces;
-        static bool currently_test_depth;
-        
         std::vector<GLUniform<int>> int_uniforms;
         std::vector<GLUniform<float>> float_uniforms;
         std::vector<GLUniform<glm::vec2>> vec2_uniforms;
@@ -140,7 +137,70 @@ namespace oogl
             
         }
         
-        virtual void pre_draw();
+        virtual void pre_draw()
+        {
+            shader->use();
+            
+            // Cull back faces
+            static bool currently_cull_back_faces = true;
+            if(currently_cull_back_faces != cull_back_faces)
+            {
+                if(cull_back_faces)
+                {
+                    glEnable(GL_CULL_FACE);
+                    glCullFace(GL_BACK);
+                }
+                else {
+                    glDisable(GL_CULL_FACE);
+                }
+                currently_cull_back_faces = cull_back_faces;
+            }
+            
+            // Depth test
+            static bool currently_test_depth = true;
+            if(currently_test_depth != test_depth)
+            {
+                if(test_depth)
+                {
+                    glDepthMask(GL_TRUE);
+                }
+                else {
+                    glDepthMask(GL_FALSE);
+                    
+                }
+                currently_test_depth = test_depth;
+            }
+            
+            for (auto glUniform : int_uniforms)
+            {
+                glUniform.use();
+            }
+            
+            for (auto glUniform : float_uniforms)
+            {
+                glUniform.use();
+            }
+            
+            for (auto glUniform : vec2_uniforms)
+            {
+                glUniform.use();
+            }
+            
+            for (auto glUniform : vec3_uniforms)
+            {
+                glUniform.use();
+            }
+            
+            for (auto glUniform : vec4_uniforms)
+            {
+                glUniform.use();
+            }
+            
+            for (auto glUniform : mat4_uniforms)
+            {
+                glUniform.use();
+            }
+        }
         
         void setup_camera(const std::shared_ptr<glm::mat4> modelView, const std::shared_ptr<glm::mat4> inverseModelView, const std::shared_ptr<glm::mat4> projection, const std::shared_ptr<glm::mat4> modelViewProjection, const std::shared_ptr<glm::vec3> position)
         {
@@ -217,7 +277,11 @@ namespace oogl
             vec2_vertex_attributes.push_back(create_attribute("uv_coordinates", uv_coordinates));
         }
         
-        void pre_draw();
+        void pre_draw()
+        {
+            *texture_id = texture->use();
+            GLMaterial::pre_draw();
+        }
     };
     
     class GLSkyboxMaterial : public GLMaterial
@@ -233,7 +297,11 @@ namespace oogl
             use_uniform_int("texture0", texture_id);
         }
         
-        void pre_draw();
+        void pre_draw()
+        {
+            *texture_id = texture->use();
+            GLMaterial::pre_draw();
+        }
     };
     
     class GLGrassMaterial : public GLMaterial
