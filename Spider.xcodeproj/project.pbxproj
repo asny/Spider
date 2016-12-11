@@ -342,7 +342,7 @@
 					/opt/local/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include/glm /opt/local/include/GLFW ./../Mesh/ ./../GLEngine/";
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include/glm /opt/local/include/GLFW ./../Mesh/include/ ./../GLEngine/include/";
 			};
 			name = Debug;
 		};
@@ -355,7 +355,7 @@
 					/opt/local/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "/usr/local/include/glm /opt/local/include/GLFW ./../Mesh/ ./../GLEngine/";
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include/glm /opt/local/include/GLFW ./../Mesh/include/ ./../GLEngine/include/";
 			};
 			name = Release;
 		};
