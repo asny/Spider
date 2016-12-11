@@ -8,11 +8,6 @@
 
 #pragma once
 
-#include <vector>
-#include "vec2.hpp"
-#include "vec3.hpp"
-
-#include "Mesh.h"
 #include "Bitmap.h"
 
 class Reader {
