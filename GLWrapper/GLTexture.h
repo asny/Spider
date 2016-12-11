@@ -1,7 +1,4 @@
 //
-//  GLTexture.hpp
-//  Spider
-//
 //  Created by Asger Nyman Christiansen on 06/11/15.
 //  Copyright © 2015 Asger Nyman Christiansen. All rights reserved.
 //

@@ -1,15 +1,12 @@
 //
-//  GLScene.hpp
-//  Spider
-//
 //  Created by Asger Nyman Christiansen on 30/07/16.
 //  Copyright © 2016 Asger Nyman Christiansen. All rights reserved.
 //
 
 #pragma once
 
-#include "GLObject.hpp"
-#include "GLCamera.hpp"
+#include "GLObject.h"
+#include "GLCamera.h"
 
 #define GLFW_INCLUDE_NONE
 #include "glfw3.h"

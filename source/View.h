@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "GLScene.hpp"
+#include "GLScene.h"
 #include "model.hpp"
 
 class View

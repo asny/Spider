@@ -1,7 +1,4 @@
 //
-//  GLObject.hpp
-//  Spider
-//
 //  Created by Asger Nyman Christiansen on 07/11/15.
 //  Copyright © 2015 Asger Nyman Christiansen. All rights reserved.
 //
@@ -9,9 +6,9 @@
 #pragma once
 
 #include "Mesh.h"
-#include "GLMaterial.hpp"
-#include "GLVertexAttribute.hpp"
-#include "GLUniform.hpp"
+#include "GLMaterial.h"
+#include "GLVertexAttribute.h"
+#include "GLUniform.h"
 
 namespace oogl
 {
