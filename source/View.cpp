@@ -75,7 +75,7 @@ View::View(int &argc, char** argv)
     camera->set_screen_size(WIN_SIZE_X, WIN_SIZE_Y);
     
     // Create scene
-    scene = unique_ptr<GLScene>(new GLScene(gWindow, camera));
+    scene = unique_ptr<GLScene>(new GLScene(camera));
     
     // Create model
     model = std::unique_ptr<Model>(new Model(
@@ -119,6 +119,8 @@ View::View(int &argc, char** argv)
         
         // draw one frame
         scene->draw();
+        
+        glfwSwapBuffers(gWindow);
         
         //exit program if escape key is pressed
         if(glfwGetKey(gWindow, GLFW_KEY_ESCAPE))
