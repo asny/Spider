@@ -36,34 +36,23 @@
 		49BCF6921DF85F7E00A18A7E /* libglfw.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.dylib; path = ../../../../opt/local/lib/libglfw.dylib; sourceTree = "<group>"; };
 		49FFC5ED1DFB04DE007C0E7D /* Reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Reader.cpp; path = Readers/Reader.cpp; sourceTree = "<group>"; };
 		49FFC5EE1DFB04DE007C0E7D /* Reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Reader.hpp; path = Readers/Reader.hpp; sourceTree = "<group>"; };
-		7A2A093A1BF7EC04006285D0 /* skybox.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = skybox.frag; path = shaders/skybox.frag; sourceTree = "<group>"; };
-		7A2A093B1BF7EC04006285D0 /* skybox.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = skybox.vert; path = shaders/skybox.vert; sourceTree = "<group>"; };
 		7A370D901BD964E2000783CA /* grass.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grass.geom; path = shaders/grass.geom; sourceTree = "<group>"; };
 		7A383A1C1BBFB6AC00E29333 /* Spider */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Spider; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A383A261BBFB6F700E29333 /* game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = game.cpp; path = source/game.cpp; sourceTree = "<group>"; };
 		7A383A311BBFCE5700E29333 /* View.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = View.cpp; path = source/View.cpp; sourceTree = "<group>"; };
 		7A383A321BBFCE5700E29333 /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = View.h; path = source/View.h; sourceTree = "<group>"; };
-		7A383A371BBFDC3300E29333 /* gouraud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gouraud.vert; path = shaders/gouraud.vert; sourceTree = "<group>"; };
-		7A383A391BBFDC9F00E29333 /* gouraud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gouraud.frag; path = shaders/gouraud.frag; sourceTree = "<group>"; };
-		7A3895A31BEE659100D6E095 /* texture.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = texture.frag; path = shaders/texture.frag; sourceTree = "<group>"; };
-		7A3895A41BEE65DB00D6E095 /* texture.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = texture.vert; path = shaders/texture.vert; sourceTree = "<group>"; };
 		7A3895A51BEFB8AE00D6E095 /* Bitmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bitmap.cpp; path = Readers/Bitmap.cpp; sourceTree = "<group>"; };
 		7A3895A61BEFB8AE00D6E095 /* Bitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bitmap.h; path = Readers/Bitmap.h; sourceTree = "<group>"; };
-		7A5252661D83F06F00BE9D1C /* particle.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = particle.geom; path = shaders/particle.geom; sourceTree = "<group>"; };
 		7A5252671D83F6BC00BE9D1C /* fog.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fog.frag; path = shaders/fog.frag; sourceTree = "<group>"; };
-		7A70D0F11BC5BF19003E859B /* flat.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = flat.geom; path = shaders/flat.geom; sourceTree = "<group>"; };
 		7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplexnoise.cpp; sourceTree = "<group>"; };
 		7A70D0FD1BC6BEE8003E859B /* simplexnoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexnoise.h; sourceTree = "<group>"; };
 		7AB0F2BA1BC07AA0009D85FD /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = model.cpp; path = source/model.cpp; sourceTree = "<group>"; };
 		7AB0F2BB1BC07AA0009D85FD /* model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = model.hpp; path = source/model.hpp; sourceTree = "<group>"; };
 		7AB0F2BE1BC07B52009D85FD /* spider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = spider.cpp; path = source/spider.cpp; sourceTree = "<group>"; };
 		7AB0F2BF1BC07B52009D85FD /* spider.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = spider.hpp; path = source/spider.hpp; sourceTree = "<group>"; };
-		7AB0F2C11BC2497F009D85FD /* phong.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = phong.frag; path = shaders/phong.frag; sourceTree = "<group>"; };
-		7AB0F2C21BC2497F009D85FD /* phong.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = phong.vert; path = shaders/phong.vert; sourceTree = "<group>"; };
 		7AB0F2C31BC25326009D85FD /* terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = terrain.cpp; path = source/terrain.cpp; sourceTree = "<group>"; };
 		7AB0F2C41BC25326009D85FD /* terrain.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = terrain.hpp; path = source/terrain.hpp; sourceTree = "<group>"; };
 		7AB0F2C61BC28EEB009D85FD /* terrain.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = terrain.geom; path = shaders/terrain.geom; sourceTree = "<group>"; };
-		7AB0F2C71BC28EEB009D85FD /* pre_geom.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = pre_geom.vert; path = shaders/pre_geom.vert; sourceTree = "<group>"; };
 		7ABC06551D8423A800D259E8 /* fog.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fog.vert; path = shaders/fog.vert; sourceTree = "<group>"; };
 		7AE74B671C18B00800466559 /* spider_legs.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = spider_legs.geom; path = shaders/spider_legs.geom; sourceTree = "<group>"; };
 		7AF4B53F1D27B3D0008A5074 /* grass.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grass.frag; path = shaders/grass.frag; sourceTree = "<group>"; };
@@ -127,21 +116,10 @@
 			children = (
 				7ABC06551D8423A800D259E8 /* fog.vert */,
 				7A5252671D83F6BC00BE9D1C /* fog.frag */,
-				7A5252661D83F06F00BE9D1C /* particle.geom */,
 				7AE74B671C18B00800466559 /* spider_legs.geom */,
-				7A2A093A1BF7EC04006285D0 /* skybox.frag */,
-				7A2A093B1BF7EC04006285D0 /* skybox.vert */,
-				7A3895A41BEE65DB00D6E095 /* texture.vert */,
-				7A3895A31BEE659100D6E095 /* texture.frag */,
 				7AF4B53F1D27B3D0008A5074 /* grass.frag */,
 				7A370D901BD964E2000783CA /* grass.geom */,
-				7A70D0F11BC5BF19003E859B /* flat.geom */,
 				7AB0F2C61BC28EEB009D85FD /* terrain.geom */,
-				7AB0F2C71BC28EEB009D85FD /* pre_geom.vert */,
-				7AB0F2C11BC2497F009D85FD /* phong.frag */,
-				7AB0F2C21BC2497F009D85FD /* phong.vert */,
-				7A383A391BBFDC9F00E29333 /* gouraud.frag */,
-				7A383A371BBFDC3300E29333 /* gouraud.vert */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
