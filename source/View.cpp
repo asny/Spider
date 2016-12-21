@@ -11,6 +11,8 @@
 #include "gtx/rotate_vector.hpp"
 #include "MeshCreator.h"
 #include "materials/GLStandardMaterial.h"
+#include "materials/GLTextureMaterial.h"
+#include "materials/GLSkyboxMaterial.h"
 
 #define GLFW_INCLUDE_NONE
 #include "glfw3.h"
