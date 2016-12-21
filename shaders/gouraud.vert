@@ -1,5 +1,6 @@
 #version 150
 
+uniform mat4 VMatrix;
 uniform mat4 MVMatrix;
 uniform mat4 MVPMatrix;
 uniform mat4 NMatrix;
@@ -23,7 +24,7 @@ void main()
     // Compute vectors
     vec3 p = (MVMatrix * vec4(position, 1.)).xyz;
     vec3 N = normalize(mat3(NMatrix) * normal);
-    vec3 L = normalize((MVMatrix * vec4(lightPos, 1.f)).xyz - p);
+    vec3 L = normalize((VMatrix * vec4(lightPos, 1.f)).xyz - p);
     vec3 E = normalize(-p);
     vec3 R = normalize(reflect(-L,N));
     

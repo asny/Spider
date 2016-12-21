@@ -1,6 +1,6 @@
 #version 150
 
-uniform mat4 MVMatrix;
+uniform mat4 VMatrix;
 
 uniform vec3 lightPos;
 
@@ -22,7 +22,7 @@ void main(void)
     {
         N = -N;
     }
-    vec3 L = normalize((MVMatrix * vec4(lightPos, 1.f)).xyz - pos);
+    vec3 L = normalize((VMatrix * vec4(lightPos, 1.f)).xyz - pos);
     
     // Calculate colour
     vec3 ambient = ambientFactor * ambientMat;
