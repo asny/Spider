@@ -44,7 +44,7 @@ static GLenum TextureFormatForBitmapFormat(tdogl::Bitmap::Format format)
 
 View::View(int &argc, char** argv)
 {
-    int WIN_SIZE_X = 1200;
+    int WIN_SIZE_X = 1400;
     int WIN_SIZE_Y = 700;
     
     instance = this;
@@ -71,8 +71,17 @@ View::View(int &argc, char** argv)
     
     glfwGetFramebufferSize(gWindow, &WIN_SIZE_X, &WIN_SIZE_Y);
     
-    // Create camera
-    camera = std::unique_ptr<GLCamera>(new GLCamera(WIN_SIZE_X, WIN_SIZE_Y));
+    // Create cameras
+    double no_views = 3.;
+    double views_height = WIN_SIZE_Y / no_views;
+    double views_width = (1. - 1./no_views) * WIN_SIZE_X / no_views;
+    camera = std::unique_ptr<GLCamera>(new GLCamera(WIN_SIZE_X - views_width, WIN_SIZE_Y));
+    camera->set_screen_position(views_width, 0);
+    bird_camera = std::unique_ptr<GLCamera>(new GLCamera(views_width, views_height));
+    third_person_camera = std::unique_ptr<GLCamera>(new GLCamera(views_width, views_height));
+    third_person_camera->set_screen_position(0, views_height);
+    worm_camera = std::unique_ptr<GLCamera>(new GLCamera(views_width, views_height));
+    worm_camera->set_screen_position(0, 2. * views_height);
     
     // Create scene
     scene = unique_ptr<GLScene>(new GLScene());
@@ -120,6 +129,9 @@ View::View(int &argc, char** argv)
         // draw one frame
         GLCamera::clear_screen();
         camera->draw(*scene);
+        bird_camera->draw(*scene);
+        third_person_camera->draw(*scene);
+        worm_camera->draw(*scene);
         
         glfwSwapBuffers(gWindow);
         
@@ -208,29 +220,28 @@ void View::update_camera()
     vec3 spider_position = instance->model->get_spider()->get_position();
     vec3 spider_view_direction = instance->model->get_spider()->get_view_direction();
     
+    vec3 bird_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
+    vec3 third_person_view = normalize(vec3(spider_view_direction.x, -0.5, spider_view_direction.z));
+    vec3 worm_view = normalize(vec3(0., 1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
+    
     switch (instance->view_type) {
         case FIRST_PERSON:
             instance->camera->set_view(spider_position - 0.5f * spider_view_direction + vec3(0.,0.4,0.), spider_view_direction);
             break;
         case THIRD_PERSON:
-        {
-            vec3 camera_view = normalize(vec3(spider_view_direction.x, -0.5, spider_view_direction.z));
-            instance->camera->set_view(spider_position - 2.f * camera_view, camera_view);
-        }
+            instance->camera->set_view(spider_position - 2.f * third_person_view, third_person_view);
             break;
         case BIRD:
-        {
-            vec3 camera_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
-            instance->camera->set_view(spider_position - 4.f * camera_view, camera_view);
-        }
+            instance->camera->set_view(spider_position - 4.f * bird_view, bird_view);
             break;
         case WORM:
-        {
-            vec3 camera_view = normalize(vec3(0., 1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
-            instance->camera->set_view(spider_position - 4.f * camera_view, camera_view);
-        }
+            instance->camera->set_view(spider_position - 4.f * worm_view, worm_view);
             break;
     }
+    
+    instance->bird_camera->set_view(spider_position - 4.f * bird_view, bird_view);
+    instance->third_person_camera->set_view(spider_position - 2.f * third_person_view, third_person_view);
+    instance->worm_camera->set_view(spider_position - 4.f * worm_view, worm_view);
 }
 
 void View::update_terrain_and_grass()
