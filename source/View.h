@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "GLScene.h"
+#include "GLCamera.h"
 #include "model.hpp"
 
 class View
@@ -19,7 +19,7 @@ class View
     
     std::unique_ptr<Model> model;
     
-    std::shared_ptr<oogl::GLCamera> camera;
+    std::unique_ptr<oogl::GLCamera> camera;
     std::unique_ptr<oogl::GLScene> scene;
     
     std::shared_ptr<glm::vec3> wind = std::make_shared<glm::vec3>(0., 0., 0.);

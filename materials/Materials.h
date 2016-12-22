@@ -69,7 +69,7 @@ public:
         
         use_uniform("MVMatrix", modelView);
         use_uniform("PMatrix", projection);
-        use_uniform("eyePosition", eye_position);
+        use_uniform("eyePosition", camera_position);
         use_uniform("radius", radius);
         use_uniform("time", time);
         

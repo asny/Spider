@@ -72,11 +72,11 @@ View::View(int &argc, char** argv)
     glfwGetFramebufferSize(gWindow, &WIN_SIZE_X, &WIN_SIZE_Y);
     
     // Create camera
-    camera = std::shared_ptr<GLCamera>(new GLCamera());
+    camera = std::unique_ptr<GLCamera>(new GLCamera());
     camera->set_screen_size(WIN_SIZE_X, WIN_SIZE_Y);
     
     // Create scene
-    scene = unique_ptr<GLScene>(new GLScene(camera));
+    scene = unique_ptr<GLScene>(new GLScene());
     
     // Create model
     model = std::unique_ptr<Model>(new Model(
@@ -119,7 +119,7 @@ View::View(int &argc, char** argv)
         lastTime = *time;
         
         // draw one frame
-        scene->draw();
+        camera->draw(*scene);
         
         glfwSwapBuffers(gWindow);
         
@@ -172,11 +172,11 @@ void View::update(double elapsedTime)
     }
     else if(glfwGetKey(gWindow, 'N'))
     {
-        scene->wireframe(true);
+        camera->wireframe(true);
     }
     else if(glfwGetKey(gWindow, 'M'))
     {
-        scene->wireframe(false);
+        camera->wireframe(false);
     }
     
     model->update(elapsedTime);
