@@ -21,6 +21,11 @@ public:
     {
         shader = oogl::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom");
         
+        use_uniform("VMatrix", view);
+        use_uniform("MVMatrix", modelView);
+        use_uniform("NMatrix", inverseModelView);
+        use_uniform("PMatrix", projection);
+        
         use_uniform("spiderPosition", spiderPosition);
         use_uniform("wind", wind);
         use_uniform("ambientMat", _ambient);
@@ -40,6 +45,10 @@ public:
     {
         shader = oogl::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/phong.frag", "shaders/spider_legs.geom");
         
+        use_uniform("VMatrix", view);
+        use_uniform("MVMatrix", modelView);
+        use_uniform("NMatrix", inverseModelView);
+        use_uniform("PMatrix", projection);
         use_uniform("ambientMat", _ambient);
         use_uniform("diffuseMat", _diffuse);
         use_uniform("specMat", _specular);
@@ -58,6 +67,9 @@ public:
     {
         shader = oogl::GLShader::create_or_get("shaders/fog.vert",  "shaders/fog.frag", "../GLEngine/shaders/particle.geom");
         
+        use_uniform("MVMatrix", modelView);
+        use_uniform("PMatrix", projection);
+        use_uniform("eyePosition", eye_position);
         use_uniform("radius", radius);
         use_uniform("time", time);
         
