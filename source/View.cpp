@@ -72,8 +72,7 @@ View::View(int &argc, char** argv)
     glfwGetFramebufferSize(gWindow, &WIN_SIZE_X, &WIN_SIZE_Y);
     
     // Create camera
-    camera = std::unique_ptr<GLCamera>(new GLCamera());
-    camera->set_screen_size(WIN_SIZE_X, WIN_SIZE_Y);
+    camera = std::unique_ptr<GLCamera>(new GLCamera(WIN_SIZE_X, WIN_SIZE_Y));
     
     // Create scene
     scene = unique_ptr<GLScene>(new GLScene());
@@ -119,6 +118,7 @@ View::View(int &argc, char** argv)
         lastTime = *time;
         
         // draw one frame
+        GLCamera::clear_screen();
         camera->draw(*scene);
         
         glfwSwapBuffers(gWindow);
