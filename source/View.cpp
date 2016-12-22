@@ -100,7 +100,7 @@ View::View(int &argc, char** argv)
     create_skybox();
     create_cube();
     create_terrain();
-    create_grass();
+//    create_grass();
     create_spider_body();
     create_spider_legs();
     create_water();
