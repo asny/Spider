@@ -254,8 +254,7 @@ void View::create_grass()
     auto material = make_shared<GLGrassMaterial>(spider_pos, wind, vec3(0.2f,0.5f,0.f), vec3(0.1f, 0.2f, 0.f), 1.);
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
-        auto grass = shared_ptr<GLObject>(new GLObject(patch.get_grass(), material));
-        instance->scene->add(grass);
+        instance->scene->add_leaf(patch.get_grass(), material);
     }
 }
 
@@ -267,8 +266,7 @@ void View::create_terrain()
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto material = make_shared<GLTextureMaterial>(texture, patch.get_uv_coordinates());
-        auto ground = shared_ptr<GLObject>(new GLObject(patch.get_ground(), material));
-        scene->add(ground);
+        scene->add_leaf(patch.get_ground(), material);
     }
 }
 
@@ -284,13 +282,15 @@ void View::create_water()
         }
         
         auto material = make_shared<GLStandardMaterial>(normals, glm::vec3(0.3f,0.3f,0.5f), glm::vec3(0.2f, 0.5f, 0.5f), glm::vec3(0.f, 0.f, 0.f), 0.5);
-        auto object = make_shared<GLObject>(geometry, material);
-        instance->scene->add(object);
+        instance->scene->add_leaf(geometry, material);
     }
 }
 
 void View::create_spider_body()
 {
+    auto spider_transformation = std::make_shared<GLTransformationNode>(model->get_spider()->get_local2world());
+    scene->add_child(spider_transformation);
+    
     auto geometry = shared_ptr<Mesh>(new Mesh());
     auto normals = shared_ptr<Attribute<VertexID, vec3>>(new Attribute<VertexID, vec3>());
     MeshCreator::load_from_obj("resources/spider/spider.obj", *geometry, *normals);
@@ -309,17 +309,14 @@ void View::create_spider_body()
         geometry->position()->at(vertex) = p - center + vec3(0,0,0.3);
     }
     auto material = make_shared<GLStandardMaterial>(normals, vec3(0.1f,0.1f,0.1f), vec3(0.3f, 0.2f, 0.2f), vec3(0.f, 0.f, 0.f), 1.);
-    auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
-    object->set_model_matrix(model->get_spider()->get_local2world());
-    scene->add(object);
+    spider_transformation->add_leaf(geometry, material);
 }
 
 void View::create_spider_legs()
 {
     auto material = shared_ptr<GLMaterial>(new GLSpiderLegsMaterial({0.1f,0.1f,0.1f}, {0.3f, 0.2f, 0.2f}, {0.f, 0.f, 0.f}, 1.));
     auto geometry = model->get_spider()->get_legs();
-    auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
-    scene->add(object);
+    scene->add_leaf(geometry, material);
 }
 
 void View::create_cube()
@@ -342,8 +339,7 @@ void View::create_cube()
     bitmap.flipVertically();
     auto cubeTexture = shared_ptr<GLTexture>(new GLTexture2D(bitmap.pixelBuffer(), bitmap.width(), bitmap.height(), TextureFormatForBitmapFormat(bitmap.format())));
     auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(cubeTexture, uv_attribute));
-    auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
-    scene->add(object);
+    scene->add_leaf(geometry, material);
 }
 
 void View::create_skybox()
@@ -354,8 +350,7 @@ void View::create_skybox()
     auto skybox_texture = shared_ptr<GLTexture3D>(new GLTexture3D(data, bitmap.width(), bitmap.height(), TextureFormatForBitmapFormat(bitmap.format())));
     auto material = shared_ptr<GLSkyboxMaterial>(new GLSkyboxMaterial(skybox_texture));
     auto geometry = MeshCreator::create_box(true);
-    auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
-    scene->add(object);
+    scene->add_leaf(geometry, material);
 }
 
 void View::create_fog()
@@ -380,7 +375,6 @@ void View::create_fog()
     }
     
     auto material = make_shared<GLFogMaterial>(normals, time, 1.);
-    auto object = shared_ptr<GLObject>(new GLObject(geometry, material));
-    scene->add(object);
+    scene->add_leaf(geometry, material);
 }
 
