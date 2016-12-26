@@ -17,7 +17,7 @@
 
 using namespace std;
 using namespace glm;
-using namespace oogl;
+using namespace gle;
 using namespace mesh;
 
 View* View::instance = NULL;

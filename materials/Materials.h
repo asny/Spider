@@ -13,13 +13,13 @@
 #include "materials/GLTextureMaterial.h"
 #include "materials/GLSkyboxMaterial.h"
 
-class GLGrassMaterial : public oogl::GLMaterial
+class GLGrassMaterial : public gle::GLMaterial
 {
 public:
     
     GLGrassMaterial(const std::shared_ptr<glm::vec3> spiderPosition, const std::shared_ptr<glm::vec3> wind, const glm::vec3& _ambient, const glm::vec3& _diffuse, double _opacity)
     {
-        shader = oogl::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom");
+        shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom");
         
         use_uniform("VMatrix", view);
         use_uniform("MVMatrix", modelView);
@@ -37,13 +37,13 @@ public:
     }
 };
 
-class GLSpiderLegsMaterial : public oogl::GLMaterial
+class GLSpiderLegsMaterial : public gle::GLMaterial
 {
 public:
     
     GLSpiderLegsMaterial(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular, double _opacity)
     {
-        shader = oogl::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/phong.frag", "shaders/spider_legs.geom");
+        shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/phong.frag", "shaders/spider_legs.geom");
         
         use_uniform("VMatrix", view);
         use_uniform("MVMatrix", modelView);
@@ -58,14 +58,14 @@ public:
     }
 };
 
-class GLFogMaterial : public oogl::GLMaterial
+class GLFogMaterial : public gle::GLMaterial
 {
     const std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> normals;
     
 public:
     GLFogMaterial(const std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> _normals, const std::shared_ptr<float> time, float radius) : normals(_normals)
     {
-        shader = oogl::GLShader::create_or_get("shaders/fog.vert",  "shaders/fog.frag", "../GLEngine/shaders/particle.geom");
+        shader = gle::GLShader::create_or_get("shaders/fog.vert",  "shaders/fog.frag", "../GLEngine/shaders/particle.geom");
         
         use_uniform("MVMatrix", modelView);
         use_uniform("PMatrix", projection);
@@ -76,8 +76,8 @@ public:
         test_depth = false;
     }
     
-    void create_attributes(std::vector<std::shared_ptr<oogl::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
-                           std::vector<std::shared_ptr<oogl::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
+    void create_attributes(std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
+                           std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
     {
         vec3_vertex_attributes.push_back(create_attribute("normal", normals));
     }

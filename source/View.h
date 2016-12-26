@@ -19,8 +19,8 @@ class View
     
     std::unique_ptr<Model> model;
     
-    std::unique_ptr<oogl::GLCamera> camera, third_person_camera, bird_camera, worm_camera;
-    std::unique_ptr<oogl::GLScene> scene;
+    std::unique_ptr<gle::GLCamera> camera, third_person_camera, bird_camera, worm_camera;
+    std::unique_ptr<gle::GLScene> scene;
     
     std::shared_ptr<glm::vec3> wind = std::make_shared<glm::vec3>(0., 0., 0.);
     std::shared_ptr<glm::vec3> spider_pos = std::make_shared<glm::vec3>(0., 0., 0.);
