@@ -60,10 +60,10 @@ public:
 
 class GLFogMaterial : public oogl::GLMaterial
 {
-    const std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> normals;
+    const std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> normals;
     
 public:
-    GLFogMaterial(const std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> _normals, const std::shared_ptr<float> time, float radius) : normals(_normals)
+    GLFogMaterial(const std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> _normals, const std::shared_ptr<float> time, float radius) : normals(_normals)
     {
         shader = oogl::GLShader::create_or_get("shaders/fog.vert",  "shaders/fog.frag", "../GLEngine/shaders/particle.geom");
         

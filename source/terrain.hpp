@@ -23,12 +23,12 @@ class TerrainPatch
     const static int NO_GRASS_STRAW = 10000;
     
     glm::vec3 origo;
-    std::map<std::pair<int,int>, geogo::VertexID*> ground_mapping;
+    std::map<std::pair<int,int>, mesh::VertexID*> ground_mapping;
     std::vector<std::vector<double>> heightmap;
-    std::shared_ptr<geogo::Mesh> ground_geometry = std::make_shared<geogo::Mesh>();
-    std::shared_ptr<geogo::Mesh> water_geometry = std::make_shared<geogo::Mesh>();
-    std::shared_ptr<geogo::Mesh> grass_geometry = std::make_shared<geogo::Mesh>();
-    std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> ground_uv_coordinates = std::make_shared<geogo::Attribute<geogo::VertexID, glm::vec2>>();
+    std::shared_ptr<mesh::Mesh> ground_geometry = std::make_shared<mesh::Mesh>();
+    std::shared_ptr<mesh::Mesh> water_geometry = std::make_shared<mesh::Mesh>();
+    std::shared_ptr<mesh::Mesh> grass_geometry = std::make_shared<mesh::Mesh>();
+    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> ground_uv_coordinates = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
     
     void set_height(double scale, int r, int c, std::vector<double> neighbour_heights);
     
@@ -45,22 +45,22 @@ public:
     
     glm::vec3 get_origo();
     
-    std::shared_ptr<geogo::Mesh> get_ground()
+    std::shared_ptr<mesh::Mesh> get_ground()
     {
         return ground_geometry;
     }
     
-    std::shared_ptr<geogo::Mesh> get_water()
+    std::shared_ptr<mesh::Mesh> get_water()
     {
         return water_geometry;
     }
     
-    std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec2>> get_uv_coordinates()
+    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> get_uv_coordinates()
     {
         return ground_uv_coordinates;
     }
     
-    std::shared_ptr<geogo::Mesh> get_grass()
+    std::shared_ptr<mesh::Mesh> get_grass()
     {
         return grass_geometry;
     }

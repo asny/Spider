@@ -18,7 +18,7 @@
 using namespace std;
 using namespace glm;
 using namespace oogl;
-using namespace geogo;
+using namespace mesh;
 
 View* View::instance = NULL;
 GLFWwindow* gWindow = NULL;
@@ -275,7 +275,7 @@ void View::create_water()
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto geometry = patch.get_water();
-        auto normals = std::make_shared<geogo::Attribute<geogo::VertexID, glm::vec3>>();
+        auto normals = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec3>>();
         for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId = vertexId->next())
         {
             normals->at(vertexId) = glm::vec3(0., 1., 0.);
@@ -355,8 +355,8 @@ void View::create_skybox()
 
 void View::create_fog()
 {
-    std::shared_ptr<geogo::Mesh> geometry = std::make_shared<geogo::Mesh>();
-    std::shared_ptr<geogo::Attribute<geogo::VertexID, glm::vec3>> normals = std::make_shared<geogo::Attribute<geogo::VertexID, glm::vec3>>();
+    std::shared_ptr<mesh::Mesh> geometry = std::make_shared<mesh::Mesh>();
+    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> normals = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec3>>();
     for(int i = 0; i < 2000; i++)
     {
         float radius = rand(3., 10.);
