@@ -15,70 +15,116 @@
 
 class GLGrassMaterial : public gle::GLMaterial
 {
+    std::shared_ptr<glm::vec3> spider_position;
+    std::shared_ptr<glm::vec3> wind;
+    
+    glm::vec3 ambient, diffuse;
+    float opacity;
 public:
     
-    GLGrassMaterial(const std::shared_ptr<glm::vec3> spiderPosition, const std::shared_ptr<glm::vec3> wind, const glm::vec3& _ambient, const glm::vec3& _diffuse, double _opacity)
+    GLGrassMaterial(const std::shared_ptr<glm::vec3> _spider_position, const std::shared_ptr<glm::vec3> _wind, const glm::vec3& _ambient, const glm::vec3& _diffuse, float _opacity) : spider_position(_spider_position), wind(_wind), ambient(_ambient), diffuse(_diffuse), opacity(_opacity)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom");
         
-        use_uniform("VMatrix", view);
-        use_uniform("MVMatrix", modelView);
-        use_uniform("NMatrix", inverseModelView);
-        use_uniform("PMatrix", projection);
-        
-        use_uniform("spiderPosition", spiderPosition);
-        use_uniform("wind", wind);
-        use_uniform("ambientMat", _ambient);
-        use_uniform("diffuseMat", _diffuse);
-        use_uniform("opacity", _opacity);
-        
         cull_back_faces = false;
         test_depth = _opacity >= 0.999;
+    }
+    
+    bool should_draw(gle::DrawPassMode draw_pass)
+    {
+        return draw_pass == gle::FORWARD;
+    }
+    
+    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    {
+        gle::GLMaterial::pre_draw();
+        auto modelView = view * model;
+        
+        gle::GLUniform::use(shader, "VMatrix", view);
+        gle::GLUniform::use(shader, "MVMatrix", modelView);
+        gle::GLUniform::use(shader, "PMatrix", projection);
+        gle::GLUniform::use(shader, "NMatrix", inverseTranspose(modelView));
+        
+        gle::GLUniform::use(shader, "spiderPosition", *spider_position);
+        gle::GLUniform::use(shader, "wind", *wind);
+        
+        gle::GLUniform::use(shader, "ambientMat", ambient);
+        gle::GLUniform::use(shader, "diffuseMat", diffuse);
+        gle::GLUniform::use(shader, "opacity", opacity);
     }
 };
 
 class GLSpiderLegsMaterial : public gle::GLMaterial
 {
+    glm::vec3 ambient, diffuse, specular;
+    float opacity;
 public:
     
-    GLSpiderLegsMaterial(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular, double _opacity)
+    GLSpiderLegsMaterial(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular, float _opacity)
+        : ambient(_ambient), diffuse(_diffuse), specular(_specular), opacity(_opacity)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/phong.frag", "shaders/spider_legs.geom");
         
-        use_uniform("VMatrix", view);
-        use_uniform("MVMatrix", modelView);
-        use_uniform("NMatrix", inverseModelView);
-        use_uniform("PMatrix", projection);
-        use_uniform("ambientMat", _ambient);
-        use_uniform("diffuseMat", _diffuse);
-        use_uniform("specMat", _specular);
-        use_uniform("opacity", _opacity);
-        
         test_depth = _opacity >= 0.999;
+    }
+    
+    bool should_draw(gle::DrawPassMode draw_pass)
+    {
+        return draw_pass == gle::FORWARD;
+    }
+    
+    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    {
+        gle::GLMaterial::pre_draw();
+        auto modelView = view * model;
+        
+        gle::GLUniform::use(shader, "VMatrix", view);
+        gle::GLUniform::use(shader, "MVMatrix", modelView);
+        gle::GLUniform::use(shader, "PMatrix", projection);
+        gle::GLUniform::use(shader, "NMatrix", inverseTranspose(modelView));
+        
+        gle::GLUniform::use(shader, "ambientMat", ambient);
+        gle::GLUniform::use(shader, "diffuseMat", diffuse);
+        gle::GLUniform::use(shader, "specMat", specular);
+        gle::GLUniform::use(shader, "opacity", opacity);
     }
 };
 
 class GLFogMaterial : public gle::GLMaterial
 {
     const std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> normals;
-    
+    std::shared_ptr<float> time;
+    float radius;
 public:
-    GLFogMaterial(const std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> _normals, const std::shared_ptr<float> time, float radius) : normals(_normals)
+    GLFogMaterial(const std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> _normals, const std::shared_ptr<float> _time, float _radius)
+        : normals(_normals), time(_time), radius(_radius)
     {
         shader = gle::GLShader::create_or_get("shaders/fog.vert",  "shaders/fog.frag", "../GLEngine/shaders/particle.geom");
         
-        use_uniform("MVMatrix", modelView);
-        use_uniform("PMatrix", projection);
-        use_uniform("eyePosition", camera_position);
-        use_uniform("radius", radius);
-        use_uniform("time", time);
-        
         test_depth = false;
+    }
+    
+    bool should_draw(gle::DrawPassMode draw_pass)
+    {
+        return draw_pass == gle::FORWARD;
     }
     
     void create_attributes(std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
                            std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
     {
-        vec3_vertex_attributes.push_back(create_attribute("normal", normals));
+        vec3_vertex_attributes.push_back(shader->create_attribute("normal", normals));
+    }
+    
+    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    {
+        gle::GLMaterial::pre_draw();
+        auto modelView = view * model;
+        
+        gle::GLUniform::use(shader, "eyePosition", camera_position);
+        gle::GLUniform::use(shader, "MVMatrix", modelView);
+        gle::GLUniform::use(shader, "PMatrix", projection);
+        
+        gle::GLUniform::use(shader, "radius", radius);
+        gle::GLUniform::use(shader, "time", *time);
     }
 };
