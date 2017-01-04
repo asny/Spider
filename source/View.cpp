@@ -275,13 +275,7 @@ void View::create_water()
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto geometry = patch.get_water();
-        auto normals = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec3>>();
-        for(auto vertexId = geometry->vertices_begin(); vertexId != geometry->vertices_end(); vertexId = vertexId->next())
-        {
-            normals->at(vertexId) = glm::vec3(0., 1., 0.);
-        }
-        
-        auto material = make_shared<GLStandardMaterial>(normals, glm::vec3(0.3f,0.3f,0.5f), glm::vec3(0.2f, 0.5f, 0.5f), glm::vec3(0.f, 0.f, 0.f), 0.5);
+        auto material = make_shared<GLStandardMaterial>(geometry->normal(), glm::vec3(0.3f,0.3f,0.5f), glm::vec3(0.2f, 0.5f, 0.5f), glm::vec3(0.f, 0.f, 0.f), 0.5);
         instance->scene->add_leaf(geometry, material);
     }
 }
