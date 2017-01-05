@@ -106,9 +106,10 @@ public:
         return draw_pass == gle::FORWARD;
     }
     
-    void create_attributes(std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
-                           std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
+    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
+                                   std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
     {
+        vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
         vec3_vertex_attributes.push_back(shader->create_attribute("normal", normals));
     }
     
