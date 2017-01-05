@@ -25,9 +25,6 @@ public:
     GLGrassMaterial(const std::shared_ptr<glm::vec3> _spider_position, const std::shared_ptr<glm::vec3> _wind, const glm::vec3& _ambient, const glm::vec3& _diffuse, float _opacity) : spider_position(_spider_position), wind(_wind), ambient(_ambient), diffuse(_diffuse), opacity(_opacity)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom");
-        
-        cull_back_faces = false;
-        test_depth = _opacity >= 0.999;
     }
     
     bool should_draw(gle::DrawPassMode draw_pass)
@@ -37,7 +34,9 @@ public:
     
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
     {
-        gle::GLMaterial::pre_draw();
+        shader->depth_test(opacity >= 0.999);
+        shader->cull_back_faces(false);
+        
         auto modelView = view * model;
         
         gle::GLUniform::use(shader, "VMatrix", view);
@@ -64,8 +63,6 @@ public:
         : ambient(_ambient), diffuse(_diffuse), specular(_specular), opacity(_opacity)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/phong.frag", "shaders/spider_legs.geom");
-        
-        test_depth = _opacity >= 0.999;
     }
     
     bool should_draw(gle::DrawPassMode draw_pass)
@@ -75,7 +72,9 @@ public:
     
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
     {
-        gle::GLMaterial::pre_draw();
+        shader->depth_test(opacity >= 0.999);
+        shader->cull_back_faces(true);
+        
         auto modelView = view * model;
         
         gle::GLUniform::use(shader, "VMatrix", view);
@@ -100,8 +99,6 @@ public:
         : normals(_normals), time(_time), radius(_radius)
     {
         shader = gle::GLShader::create_or_get("shaders/fog.vert",  "shaders/fog.frag", "../GLEngine/shaders/particle.geom");
-        
-        test_depth = false;
     }
     
     bool should_draw(gle::DrawPassMode draw_pass)
@@ -117,7 +114,9 @@ public:
     
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
     {
-        gle::GLMaterial::pre_draw();
+        shader->depth_test(false);
+        shader->cull_back_faces(true);
+        
         auto modelView = view * model;
         
         gle::GLUniform::use(shader, "eyePosition", camera_position);
