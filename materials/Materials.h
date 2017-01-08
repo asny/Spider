@@ -40,8 +40,8 @@ public:
     
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
     {
-        gle::GLShader::depth_write(opacity >= 0.999);
-        gle::GLShader::cull_back_faces(false);
+        gle::GLState::depth_write(opacity >= 0.999);
+        gle::GLState::cull_back_faces(false);
         
         auto modelView = view * model;
         
@@ -84,8 +84,8 @@ public:
     
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
     {
-        gle::GLShader::depth_write(opacity >= 0.999);
-        gle::GLShader::cull_back_faces(true);
+        gle::GLState::depth_write(opacity >= 0.999);
+        gle::GLState::cull_back_faces(true);
         
         auto modelView = view * model;
         
@@ -127,8 +127,8 @@ public:
     
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
     {
-        gle::GLShader::depth_write(false);
-        gle::GLShader::cull_back_faces(true);
+        gle::GLState::depth_write(false);
+        gle::GLState::cull_back_faces(true);
         
         auto modelView = view * model;
         
