@@ -71,17 +71,8 @@ View::View(int &argc, char** argv)
     
     glfwGetFramebufferSize(gWindow, &WIN_SIZE_X, &WIN_SIZE_Y);
     
-    // Create cameras
-    double no_views = 3.;
-    double views_height = WIN_SIZE_Y / no_views;
-    double views_width = (1. - 1./no_views) * WIN_SIZE_X / no_views;
-    camera = std::unique_ptr<GLCamera>(new GLCamera(WIN_SIZE_X - views_width, WIN_SIZE_Y));
-    camera->set_screen_position(views_width, 0);
-    bird_camera = std::unique_ptr<GLCamera>(new GLCamera(views_width, views_height));
-    third_person_camera = std::unique_ptr<GLCamera>(new GLCamera(views_width, views_height));
-    third_person_camera->set_screen_position(0, views_height);
-    worm_camera = std::unique_ptr<GLCamera>(new GLCamera(views_width, views_height));
-    worm_camera->set_screen_position(0, 2. * views_height);
+    // Create camera
+    camera = std::unique_ptr<GLCamera>(new GLCamera(WIN_SIZE_X, WIN_SIZE_Y));
     
     // Create scene
     scene = unique_ptr<GLScene>(new GLScene());
@@ -129,9 +120,6 @@ View::View(int &argc, char** argv)
         // draw one frame
         GLCamera::clear_screen();
         camera->draw(*scene);
-        bird_camera->draw(*scene);
-        third_person_camera->draw(*scene);
-        worm_camera->draw(*scene);
         
         glfwSwapBuffers(gWindow);
         
@@ -238,10 +226,6 @@ void View::update_camera()
             instance->camera->set_view(spider_position - 4.f * worm_view, worm_view);
             break;
     }
-    
-    instance->bird_camera->set_view(spider_position - 4.f * bird_view, bird_view);
-    instance->third_person_camera->set_view(spider_position - 2.f * third_person_view, third_person_view);
-    instance->worm_camera->set_view(spider_position - 4.f * worm_view, worm_view);
 }
 
 void View::update_terrain_and_grass()
