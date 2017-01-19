@@ -235,7 +235,7 @@ void View::update_terrain_and_grass()
 
 void View::create_grass()
 {
-    auto material = make_shared<GLGrassMaterial>(spider_pos, wind, vec3(0.2f,0.5f,0.f), vec3(0.1f, 0.2f, 0.f), 1.);
+    auto material = make_shared<GLGrassMaterial>(spider_pos, wind, vec3(0.3f,0.7f,0.f));
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         instance->scene->add_leaf(patch.get_grass(), material);
@@ -259,7 +259,7 @@ void View::create_water()
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto geometry = patch.get_water();
-        auto material = make_shared<GLStandardMaterial>(geometry->normal(), glm::vec3(0.3f,0.3f,0.5f), glm::vec3(0.2f, 0.5f, 0.5f), glm::vec3(0.f, 0.f, 0.f), 0.5);
+        auto material = make_shared<GLStandardMaterial>(glm::vec3(0.3f,0.3f,0.5f), glm::vec3(0.2f, 0.5f, 0.5f), glm::vec3(0.f, 0.f, 0.f), 0.5);
         instance->scene->add_leaf(geometry, material);
     }
 }
@@ -286,7 +286,7 @@ void View::create_spider_body()
         vec3 p = geometry->position()->at(vertex);
         geometry->position()->at(vertex) = p - center + vec3(0,0,0.3);
     }
-    auto material = make_shared<GLStandardMaterial>(normals, vec3(0.1f,0.1f,0.1f), vec3(0.3f, 0.2f, 0.2f), vec3(0.f, 0.f, 0.f), 1.);
+    auto material = make_shared<GLColorMaterial>(vec3(0.3f, 0.2f, 0.2f), normals);
     spider_transformation->add_leaf(geometry, material);
 }
 
