@@ -58,19 +58,18 @@ public:
 
 class GLSpiderLegsMaterial : public gle::GLMaterial
 {
-    glm::vec3 ambient, diffuse, specular;
-    float opacity;
+    glm::vec3 color;
 public:
     
-    GLSpiderLegsMaterial(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular, float _opacity)
-        : ambient(_ambient), diffuse(_diffuse), specular(_specular), opacity(_opacity)
+    GLSpiderLegsMaterial(const glm::vec3& _color)
+        : color(_color)
     {
-        shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/phong.frag", "shaders/spider_legs.geom");
+        shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/color_material.frag", "shaders/spider_legs.geom");
     }
     
     bool should_draw(gle::DrawPassMode draw_pass)
     {
-        return draw_pass == gle::FORWARD;
+        return draw_pass == gle::DEFERRED;
     }
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
@@ -82,20 +81,16 @@ public:
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
     {
         gle::GLState::depth_test(true);
-        gle::GLState::depth_write(opacity >= 0.999);
+        gle::GLState::depth_write(true);
         gle::GLState::cull_back_faces(true);
         
         auto modelView = view * model;
         
-        gle::GLUniform::use(shader, "VMatrix", view);
         gle::GLUniform::use(shader, "MVMatrix", modelView);
         gle::GLUniform::use(shader, "PMatrix", projection);
         gle::GLUniform::use(shader, "NMatrix", inverseTranspose(modelView));
         
-        gle::GLUniform::use(shader, "ambientMat", ambient);
-        gle::GLUniform::use(shader, "diffuseMat", diffuse);
-        gle::GLUniform::use(shader, "specMat", specular);
-        gle::GLUniform::use(shader, "opacity", opacity);
+        gle::GLUniform::use(shader, "materialColor", color);
     }
 };
 

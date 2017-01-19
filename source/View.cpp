@@ -292,7 +292,7 @@ void View::create_spider_body()
 
 void View::create_spider_legs()
 {
-    auto material = shared_ptr<GLMaterial>(new GLSpiderLegsMaterial({0.1f,0.1f,0.1f}, {0.3f, 0.2f, 0.2f}, {0.f, 0.f, 0.f}, 1.));
+    auto material = make_shared<GLSpiderLegsMaterial>(glm::vec3(0.3f, 0.2f, 0.2f));
     auto geometry = model->get_spider()->get_legs();
     scene->add_leaf(geometry, material);
 }
