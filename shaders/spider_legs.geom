@@ -3,20 +3,18 @@
 layout (lines) in;
 layout (triangle_strip, max_vertices = 264) out;
 
-uniform mat4 NMatrix;
-uniform mat4 MVMatrix;
-uniform mat4 PMatrix;
+uniform mat4 VPMatrix;
 
 out vec3 pos;
 out vec3 nor;
 
-vec3 up_direction;
+vec3 up_direction = vec3(0., 1., 0.);
 
 void emit_vertex(vec3 position, vec3 normal)
 {
     pos = position;
     nor = normal;
-    gl_Position = PMatrix * vec4(pos, 1.);
+    gl_Position = VPMatrix * vec4(pos, 1.);
     EmitVertex();
 }
 
@@ -102,7 +100,6 @@ void emit_leg(vec3 origin, vec3 foot)
 
 void main()
 {
-    up_direction = normalize((NMatrix * vec4(0., 1., 0., 1.)).xyz);
     vec3 origin = gl_in[0].gl_Position.xyz;
     vec3 foot = gl_in[1].gl_Position.xyz;
     

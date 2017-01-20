@@ -84,11 +84,8 @@ public:
         gle::GLState::depth_write(true);
         gle::GLState::cull_back_faces(true);
         
-        auto modelView = view * model;
-        
-        gle::GLUniform::use(shader, "MVMatrix", modelView);
-        gle::GLUniform::use(shader, "PMatrix", projection);
-        gle::GLUniform::use(shader, "NMatrix", inverseTranspose(modelView));
+        gle::GLUniform::use(shader, "MMatrix", model);
+        gle::GLUniform::use(shader, "VPMatrix", projection * view);
         
         gle::GLUniform::use(shader, "materialColor", color);
     }
