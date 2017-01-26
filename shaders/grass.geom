@@ -4,8 +4,8 @@ layout (lines) in;
 layout (triangle_strip, max_vertices = 264) out;
 
 uniform mat4 NMatrix;
-uniform mat4 MVMatrix;
-uniform mat4 PMatrix;
+uniform mat4 MMatrix;
+uniform mat4 VPMatrix;
 
 uniform vec3 spiderPosition;
 uniform vec3 wind;
@@ -15,8 +15,7 @@ out vec3 nor;
 out float ambientFactor;
 
 const float half_width = 0.015f;
-
-vec3 up_direction;
+const vec3 up_direction = vec3(0., 1., 0.);
 
 float func(float x)
 {
@@ -47,12 +46,12 @@ void emit_straw_half(vec3 origin, vec3 corner, vec3 top, float step_size)
         
         pos = compute_position(origin, top, parameter);
         ambientFactor = 0.6;
-        gl_Position = PMatrix * vec4(pos, 1.);
+        gl_Position = VPMatrix * vec4(pos, 1.);
         EmitVertex();
         
         pos = compute_position(corner, top, parameter);
         ambientFactor = 1.;
-        gl_Position = PMatrix * vec4(pos, 1.);
+        gl_Position = VPMatrix * vec4(pos, 1.);
         EmitVertex();
     }
     EndPrimitive();
@@ -89,19 +88,15 @@ vec3 compute_top(vec3 origin, vec3 straw, vec3 bend_direction, vec3 spider_posit
 void main()
 {
     vec3 origin = gl_in[0].gl_Position.xyz;
-    // Check if the straw is behind the camera
-    if(origin.z > 0.)
-        return;
     vec3 straw = gl_in[1].gl_Position.xyz - origin;
     
     // Compute directions
-    up_direction = (NMatrix * vec4(0., 1., 0., 1.)).xyz;
     vec3 straw_direction = normalize(straw);
     vec3 leave_direction = normalize(cross(up_direction, straw_direction));
     vec3 bend_direction = normalize(cross(leave_direction, up_direction));
     
     // Find distance to spider
-    vec3 spider_position = (MVMatrix * vec4(spiderPosition, 1.)).xyz;
+    vec3 spider_position = (MMatrix * vec4(spiderPosition, 1.)).xyz;
     float distance_to_spider = distance(origin, spider_position);
     
     // Compute top

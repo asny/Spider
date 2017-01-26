@@ -43,11 +43,9 @@ public:
         gle::GLState::depth_write(true);
         gle::GLState::cull_back_faces(false);
         
-        auto modelView = view * model;
-        
-        gle::GLUniform::use(shader, "MVMatrix", modelView);
-        gle::GLUniform::use(shader, "PMatrix", projection);
-        gle::GLUniform::use(shader, "NMatrix", inverseTranspose(modelView));
+        gle::GLUniform::use(shader, "MMatrix", model);
+        gle::GLUniform::use(shader, "VPMatrix", projection * view);
+        gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
         
         gle::GLUniform::use(shader, "spiderPosition", *spider_position);
         gle::GLUniform::use(shader, "wind", *wind);
