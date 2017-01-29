@@ -97,6 +97,9 @@ View::View(int &argc, char** argv)
     create_water();
     create_fog();
     
+    // Create light
+    scene->add_light(std::make_shared<GLDirectionalLight>(vec3(0., -1., 0.5)));
+    
     // Update
     update_terrain_and_grass();
     update_camera();
