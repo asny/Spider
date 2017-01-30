@@ -69,8 +69,8 @@ TerrainPatch::TerrainPatch()
     mesh::VertexID* v2 = water_geometry->create_vertex();
     mesh::VertexID* v3 = water_geometry->create_vertex();
     mesh::VertexID* v4 = water_geometry->create_vertex();
-    water_geometry->create_face(v1, v2, v3);
-    water_geometry->create_face(v3, v4, v1);
+    water_geometry->create_face(v2, v1, v3);
+    water_geometry->create_face(v4, v3, v1);
 }
 
 void TerrainPatch::update(const vec3& _origo)
