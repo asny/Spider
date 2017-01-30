@@ -262,7 +262,7 @@ void View::create_water()
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
         auto geometry = patch.get_water();
-        auto material = make_shared<GLStandardMaterial>(glm::vec3(0.3f,0.3f,0.5f), glm::vec3(0.2f, 0.5f, 0.5f), glm::vec3(0.f, 0.f, 0.f), 0.5);
+        auto material = make_shared<WaterMaterial>(time, skybox_texture);
         instance->scene->add_leaf(geometry, material);
     }
 }
@@ -328,7 +328,7 @@ void View::create_skybox()
     const string path = "resources/skybox_evening/";
     auto bitmap = Reader::load_bitmap(path + "right.jpg");
     auto data = {bitmap.pixelBuffer(), Reader::load_bitmap(path + "left.jpg").pixelBuffer(), Reader::load_bitmap(path + "top.jpg").pixelBuffer(), Reader::load_bitmap(path + "top.jpg").pixelBuffer(), Reader::load_bitmap(path + "front.jpg").pixelBuffer(), Reader::load_bitmap(path + "back.jpg").pixelBuffer()};
-    auto skybox_texture = shared_ptr<GLTexture3D>(new GLTexture3D(data, bitmap.width(), bitmap.height(), TextureFormatForBitmapFormat(bitmap.format())));
+    skybox_texture = shared_ptr<GLTexture3D>(new GLTexture3D(data, bitmap.width(), bitmap.height(), TextureFormatForBitmapFormat(bitmap.format())));
     auto material = shared_ptr<GLSkyboxMaterial>(new GLSkyboxMaterial(skybox_texture));
     auto geometry = MeshCreator::create_box(true);
     scene->add_leaf(geometry, material);

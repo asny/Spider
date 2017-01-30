@@ -129,3 +129,44 @@ public:
         gle::GLUniform::use(shader, "time", *time);
     }
 };
+
+class WaterMaterial : public gle::GLMaterial
+{
+    std::shared_ptr<float> time;
+    std::shared_ptr<gle::GLTexture3D> texture;
+public:
+    WaterMaterial(const std::shared_ptr<float> _time, std::shared_ptr<gle::GLTexture3D> _texture)
+        : texture(_texture) , time(_time)
+    {
+        shader = gle::GLShader::create_or_get("shaders/water.vert",  "shaders/water.frag");
+    }
+    
+    bool should_draw(gle::DrawPassMode draw_pass)
+    {
+        return draw_pass == gle::FORWARD;
+    }
+    
+    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
+                           std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
+    {
+        vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
+        vec3_vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
+    }
+    
+    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    {
+        gle::GLState::depth_test(true);
+        gle::GLState::depth_write(false);
+        gle::GLState::cull_back_faces(true);
+        
+        texture->use(0);
+        gle::GLUniform::use(shader, "texture0", 0);
+        
+        gle::GLUniform::use(shader, "MMatrix", model);
+        gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
+        gle::GLUniform::use(shader, "MVPMatrix", projection * view * model);
+        
+        gle::GLUniform::use(shader, "eyePosition", camera_position);
+//        gle::GLUniform::use(shader, "time", *time);
+    }
+};
