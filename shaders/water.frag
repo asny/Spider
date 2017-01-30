@@ -18,16 +18,20 @@ void main()
     vec3 normal = normalize(nor);
     vec3 incidentDir = normalize(pos - eyePosition.xyz);
     
-    // Reflection
-    vec3 reflectDir = normalize(reflect(incidentDir, normal));
-    vec4 reflectColor = texture(texture0, reflectDir);
-    
     // Compute cosinus to the incident angle
     float cosAngle = dot(normal, -incidentDir);
     
     // Compute fresnel approximation
     float fresnel = mix(F, 1.f, pow(1. - max(cosAngle, 0.), FresnelPower));
     
-    // Mix reflection and refraction
-    fragColour = vec4(reflectColor.xyz, fresnel);
+    // Reflection
+    vec3 reflectDir = normalize(reflect(incidentDir, normal));
+    vec3 reflectColor = texture(texture0, reflectDir).xyz;
+    
+    // absorbtion
+    vec3 absprbtionColor = vec3(0.3,0.4,0.5);
+    float absorbtion = (1.f - fresnel) * 0.5f;
+    
+    // Mix reflection and absprbtion
+    fragColour = vec4(mix(absprbtionColor, reflectColor, fresnel/(fresnel + absorbtion)), fresnel + absorbtion);
 }
