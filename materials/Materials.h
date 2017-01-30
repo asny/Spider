@@ -170,3 +170,45 @@ public:
 //        gle::GLUniform::use(shader, "time", *time);
     }
 };
+
+class TerrainMaterial : public gle::GLMaterial
+{
+    std::shared_ptr<gle::GLTexture> ground_texture;
+    std::shared_ptr<gle::GLTexture> lake_texture;
+    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
+public:
+    
+    TerrainMaterial(std::shared_ptr<gle::GLTexture> _ground_texture, std::shared_ptr<gle::GLTexture> _lake_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
+        : ground_texture(_ground_texture), lake_texture(_lake_texture), uv_coordinates(_uv_coordinates)
+    {
+        shader = gle::GLShader::create_or_get("../GLEngine/shaders/texture.vert",  "shaders/terrain.frag");
+    }
+    
+    bool should_draw(gle::DrawPassMode draw_pass)
+    {
+        return draw_pass == gle::DEFERRED;
+    }
+    
+    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
+                           std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
+    {
+        vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
+        vec3_vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
+        vec2_vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
+    }
+    
+    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    {
+        gle::GLState::depth_test(true);
+        gle::GLState::depth_write(true);
+        gle::GLState::cull_back_faces(true);
+        
+        ground_texture->use(0);
+        lake_texture->use(1);
+        gle::GLUniform::use(shader, "groundTexture", 0);
+        gle::GLUniform::use(shader, "lakeTexture", 1);
+        gle::GLUniform::use(shader, "MMatrix", model);
+        gle::GLUniform::use(shader, "MVPMatrix", projection * view * model);
+        gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
+    }
+};

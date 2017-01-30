@@ -37,6 +37,7 @@
 		49BCF6921DF85F7E00A18A7E /* libglfw.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.dylib; path = ../../../../opt/local/lib/libglfw.dylib; sourceTree = "<group>"; };
 		49EBFAE41E3F1DE400503199 /* water.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = water.frag; path = shaders/water.frag; sourceTree = "<group>"; };
 		49EBFAE51E3F1DE400503199 /* water.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = water.vert; path = shaders/water.vert; sourceTree = "<group>"; };
+		49EBFAE61E3FDD3300503199 /* terrain.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = terrain.frag; path = shaders/terrain.frag; sourceTree = "<group>"; };
 		49FFC5ED1DFB04DE007C0E7D /* Reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Reader.cpp; path = Readers/Reader.cpp; sourceTree = "<group>"; };
 		49FFC5EE1DFB04DE007C0E7D /* Reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Reader.hpp; path = Readers/Reader.hpp; sourceTree = "<group>"; };
 		7A370D901BD964E2000783CA /* grass.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grass.geom; path = shaders/grass.geom; sourceTree = "<group>"; };
@@ -117,6 +118,7 @@
 		7A383A341BBFD93A00E29333 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				49EBFAE61E3FDD3300503199 /* terrain.frag */,
 				49EBFAE41E3F1DE400503199 /* water.frag */,
 				49EBFAE51E3F1DE400503199 /* water.vert */,
 				7ABC06551D8423A800D259E8 /* fog.vert */,

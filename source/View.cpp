@@ -247,12 +247,16 @@ void View::create_grass()
 
 void View::create_terrain()
 {
-    auto bmp = Reader::load_bitmap("resources/grass.jpg");
-    bmp.flipVertically();
-    auto texture = shared_ptr<GLTexture>(new GLTexture2D(bmp.pixelBuffer(), bmp.width(), bmp.height(), TextureFormatForBitmapFormat(bmp.format())));
+    auto bmp_ground = Reader::load_bitmap("resources/grass.jpg");
+    bmp_ground.flipVertically();
+    auto ground_texture = shared_ptr<GLTexture>(new GLTexture2D(bmp_ground.pixelBuffer(), bmp_ground.width(), bmp_ground.height(), TextureFormatForBitmapFormat(bmp_ground.format())));
+    
+    auto bmp_lake = Reader::load_bitmap("resources/bottom.png");
+    bmp_lake.flipVertically();
+    auto lake_texture = shared_ptr<GLTexture>(new GLTexture2D(bmp_lake.pixelBuffer(), bmp_lake.width(), bmp_lake.height(), TextureFormatForBitmapFormat(bmp_lake.format())));
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
-        auto material = make_shared<GLTextureMaterial>(texture, patch.get_uv_coordinates());
+        auto material = make_shared<TerrainMaterial>(ground_texture, lake_texture, patch.get_uv_coordinates());
         scene->add_leaf(patch.get_ground(), material);
     }
 }
