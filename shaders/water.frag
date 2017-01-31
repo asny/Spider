@@ -19,7 +19,7 @@ void main()
     vec3 incidentDir = normalize(pos - eyePosition.xyz);
     
     // Perturb normal
-    normal = normalize(normal + 0.05 * vec3(cos(pos.x + time), 0., sin(pos.z + 2. * time)));
+    normal = normalize(normal + 0.01 * vec3(cos(pos.x + time), 0., sin(pos.z + 2. * time)));
     
     // Compute cosinus to the incident angle
     float cosAngle = dot(normal, -incidentDir);
@@ -31,10 +31,6 @@ void main()
     vec3 reflectDir = normalize(reflect(incidentDir, normal));
     vec3 reflectColor = texture(texture0, reflectDir).xyz;
     
-    // absorbtion
-    vec3 absorbtionColor = vec3(0.3,0.4,0.5);
-    float absorbtion = (1.f - fresnel) * min(0.5 + fresnel, 1.f);
-    
     // Mix reflection and absprbtion
-    fragColour = vec4(mix(absorbtionColor, reflectColor, fresnel/(fresnel + absorbtion)), fresnel + absorbtion);
+    fragColour = vec4(reflectColor, fresnel);
 }
