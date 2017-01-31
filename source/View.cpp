@@ -256,7 +256,7 @@ void View::create_terrain()
     auto lake_texture = shared_ptr<GLTexture>(new GLTexture2D(bmp_lake.pixelBuffer(), bmp_lake.width(), bmp_lake.height(), TextureFormatForBitmapFormat(bmp_lake.format())));
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
-        auto material = make_shared<TerrainMaterial>(ground_texture, lake_texture, patch.get_uv_coordinates());
+        auto material = make_shared<TerrainMaterial>(time, ground_texture, lake_texture, patch.get_uv_coordinates());
         scene->add_leaf(patch.get_ground(), material);
     }
 }

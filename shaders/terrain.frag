@@ -2,6 +2,7 @@
 
 uniform sampler2D groundTexture;
 uniform sampler2D lakeTexture;
+uniform float time;
 
 in vec2 coords;
 in vec3 nor;
@@ -19,7 +20,9 @@ void main()
         color = texture(groundTexture, coords);
     }
     else {
-        color = texture(lakeTexture, coords);
+        vec2 uv = coords
+            - 0.05 * vec2(cos(pos.x + time), sin(pos.z + 2. * time));
+        color = texture(lakeTexture, uv);
     }
     normal = vec4(nor, 1.0);
 }
