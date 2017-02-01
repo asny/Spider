@@ -7,6 +7,7 @@ uniform float time;
 
 in vec3 pos;
 in vec3 nor;
+in vec2 coords;
 
 out vec4 fragColour;
 
@@ -20,7 +21,7 @@ void main()
     vec3 incidentDir = normalize(pos - eyePosition.xyz);
     
     // Perturb normal
-    float noise = texture(noiseTexture, pos.xz).x - 0.5;
+    float noise = texture(noiseTexture, coords).x - 0.5;
     float wave = sin(mod(time * (1.f + noise), 6.28));
     normal = normalize(normal +
                        + 0.5 * vec3(noise, 0., noise)

@@ -263,7 +263,7 @@ void View::create_terrain()
         auto material = make_shared<TerrainMaterial>(time, ground_texture, lake_texture, noise_texture, patch.get_uv_coordinates());
         scene->add_leaf(patch.get_ground(), material);
         
-        auto water_material = make_shared<WaterMaterial>(time, skybox_texture, noise_texture);
+        auto water_material = make_shared<WaterMaterial>(time, skybox_texture, noise_texture, patch.get_water_uv_coordinates());
         instance->scene->add_leaf(patch.get_water(), water_material);
     }
 }

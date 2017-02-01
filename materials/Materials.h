@@ -134,11 +134,12 @@ class WaterMaterial : public gle::GLMaterial
 {
     std::shared_ptr<float> time;
     std::shared_ptr<gle::GLTexture> texture, noise_texture;
+    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
 public:
-    WaterMaterial(const std::shared_ptr<float> _time, std::shared_ptr<gle::GLTexture3D> _texture, std::shared_ptr<gle::GLTexture> _noise_texture)
-        : texture(_texture) , time(_time), noise_texture(_noise_texture)
+    WaterMaterial(const std::shared_ptr<float> _time, std::shared_ptr<gle::GLTexture3D> _texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
+        : texture(_texture) , time(_time), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
-        shader = gle::GLShader::create_or_get("shaders/water.vert",  "shaders/water.frag");
+        shader = gle::GLShader::create_or_get("../GLEngine/shaders/texture.vert",  "shaders/water.frag");
     }
     
     bool should_draw(gle::DrawPassMode draw_pass)
@@ -151,6 +152,7 @@ public:
     {
         vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
         vec3_vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
+        vec2_vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
     }
     
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)

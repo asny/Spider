@@ -118,12 +118,16 @@ void TerrainPatch::update(const vec3& _origo)
     double size = SIZE;
     auto vertex = water_geometry->vertices_begin();
     water_geometry->position()->at(vertex) = origo;
+    water_uv_coordinates->at(vertex) = vec2(0., 0.);
     vertex = vertex->next();
     water_geometry->position()->at(vertex) = origo + glm::vec3(size, 0., 0.);
+    water_uv_coordinates->at(vertex) = vec2(1., 0.);
     vertex = vertex->next();
     water_geometry->position()->at(vertex) = origo + glm::vec3(size, 0., size);
+    water_uv_coordinates->at(vertex) = vec2(1., 1.);
     vertex = vertex->next();
     water_geometry->position()->at(vertex) = origo + glm::vec3(0., 0., size);
+    water_uv_coordinates->at(vertex) = vec2(0., 1.);
 }
 
 void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
