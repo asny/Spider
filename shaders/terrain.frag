@@ -22,7 +22,10 @@ void main()
     }
     else {
         float noise = texture(noiseTexture, coords).x - 0.5;
-        vec2 uv = coords - 0.1 * vec2(sin(time), sin(time)) - 0.5 * vec2(noise, noise);
+        float wave = sin(mod(time * (1.f + noise), 6.28));
+        vec2 uv = coords
+            - 0.1 * vec2(wave, wave)
+            - 0.5 * vec2(noise, noise);
         vec3 bottomColor = texture(lakeTexture, uv).xyz;
         
         // absorption

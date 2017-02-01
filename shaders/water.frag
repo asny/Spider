@@ -21,9 +21,10 @@ void main()
     
     // Perturb normal
     float noise = texture(noiseTexture, pos.xz).x - 0.5;
+    float wave = sin(mod(time * (1.f + noise), 6.28));
     normal = normalize(normal +
                        + 0.5 * vec3(noise, 0., noise)
-                       + 0.1 * vec3(sin(time), 0., sin(time)));
+                       + 0.1 * vec3(wave, 0., wave));
     
     // Compute cosinus to the incident angle
     float cosAngle = dot(normal, -incidentDir);
