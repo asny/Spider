@@ -30,7 +30,7 @@ void main()
         
         // absorption
         vec3 absorptionColor = vec3(0.,0.3,0.3);
-        float absorption = min(max(0.5f + abs(pos.y + 0.5f), 0.f), 1.f);
+        float absorption = min(max(0.5f + abs(pos.y + 0.25f), 0.f), 1.f);
         color = vec4(mix(bottomColor, absorptionColor, absorption), 1.);
     }
     normal = vec4(nor, 1.0);
