@@ -2,6 +2,7 @@
 
 uniform sampler2D groundTexture;
 uniform sampler2D lakeTexture;
+uniform sampler2D noiseTexture;
 uniform float time;
 
 in vec2 coords;
@@ -20,12 +21,13 @@ void main()
         color = texture(groundTexture, coords);
     }
     else {
-        vec2 uv = coords - 0.01 * vec2(cos(pos.x + time), sin(pos.z + 2. * time));
+        float noise = texture(noiseTexture, coords).x - 0.5;
+        vec2 uv = coords - 0.1 * vec2(sin(time), sin(time)) - 0.5 * vec2(noise, noise);
         vec3 bottomColor = texture(lakeTexture, uv).xyz;
         
         // absorption
-        vec3 absorptionColor = vec3(0.2,0.3,0.4);
-        float absorption = min(max(5.f * abs(pos.y + 0.2f), 0.f), 1.f);
+        vec3 absorptionColor = vec3(0.,0.3,0.3);
+        float absorption = min(max(0.5f + abs(pos.y + 0.5f), 0.f), 1.f);
         color = vec4(mix(bottomColor, absorptionColor, absorption), 1.);
     }
     normal = vec4(nor, 1.0);

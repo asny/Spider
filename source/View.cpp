@@ -94,7 +94,6 @@ View::View(int &argc, char** argv)
 //    create_grass();
     create_spider_body();
     create_spider_legs();
-    create_water();
     create_fog();
     
     // Create light
@@ -254,20 +253,18 @@ void View::create_terrain()
     auto bmp_lake = Reader::load_bitmap("resources/bottom.png");
     bmp_lake.flipVertically();
     auto lake_texture = shared_ptr<GLTexture>(new GLTexture2D(bmp_lake.pixelBuffer(), bmp_lake.width(), bmp_lake.height(), TextureFormatForBitmapFormat(bmp_lake.format())));
+    
+    auto bmp_noise = Reader::load_bitmap("resources/water_noise.jpg");
+    bmp_noise.flipVertically();
+    auto noise_texture = shared_ptr<GLTexture>(new GLTexture2D(bmp_noise.pixelBuffer(), bmp_noise.width(), bmp_noise.height(), TextureFormatForBitmapFormat(bmp_noise.format())));
+    
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
-        auto material = make_shared<TerrainMaterial>(time, ground_texture, lake_texture, patch.get_uv_coordinates());
+        auto material = make_shared<TerrainMaterial>(time, ground_texture, lake_texture, noise_texture, patch.get_uv_coordinates());
         scene->add_leaf(patch.get_ground(), material);
-    }
-}
-
-void View::create_water()
-{
-    for (TerrainPatch& patch : model->get_terrain_patches())
-    {
-        auto geometry = patch.get_water();
-        auto material = make_shared<WaterMaterial>(time, skybox_texture);
-        instance->scene->add_leaf(geometry, material);
+        
+        auto water_material = make_shared<WaterMaterial>(time, skybox_texture, noise_texture);
+        instance->scene->add_leaf(patch.get_water(), water_material);
     }
 }
 

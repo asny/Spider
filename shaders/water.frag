@@ -1,6 +1,7 @@
 #version 330
 
 uniform samplerCube texture0;
+uniform sampler2D noiseTexture;
 uniform vec3 eyePosition;
 uniform float time;
 
@@ -19,7 +20,10 @@ void main()
     vec3 incidentDir = normalize(pos - eyePosition.xyz);
     
     // Perturb normal
-    normal = normalize(normal + 0.01 * vec3(cos(pos.x + time), 0., sin(pos.z + 2. * time)));
+    float noise = texture(noiseTexture, pos.xz).x - 0.5;
+    normal = normalize(normal +
+                       + 0.5 * vec3(noise, 0., noise)
+                       + 0.1 * vec3(sin(time), 0., sin(time)));
     
     // Compute cosinus to the incident angle
     float cosAngle = dot(normal, -incidentDir);
