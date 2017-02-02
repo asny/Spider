@@ -94,7 +94,7 @@ View::View(int &argc, char** argv)
 //    create_grass();
     create_spider_body();
     create_spider_legs();
-    create_fog();
+//    create_fog();
     create_butterfly();
     
     // Create light
@@ -318,10 +318,9 @@ void View::create_cube()
 void View::create_skybox()
 {
     const string path = "resources/skybox_evening/";
-    auto bitmap = Reader::load_bitmap(path + "right.jpg");
-    auto data = {bitmap.pixelBuffer(), Reader::load_bitmap(path + "left.jpg").pixelBuffer(), Reader::load_bitmap(path + "top.jpg").pixelBuffer(), Reader::load_bitmap(path + "top.jpg").pixelBuffer(), Reader::load_bitmap(path + "front.jpg").pixelBuffer(), Reader::load_bitmap(path + "back.jpg").pixelBuffer()};
-    skybox_texture = shared_ptr<GLTexture3D>(new GLTexture3D(data, bitmap.width(), bitmap.height(), TextureFormatForBitmapFormat(bitmap.format())));
-    auto material = shared_ptr<GLSkyboxMaterial>(new GLSkyboxMaterial(skybox_texture));
+    auto filenames = {path + "right.jpg", path + "left.jpg", path + "top.jpg", path + "top.jpg", path + "front.jpg", path + "back.jpg"};
+    skybox_texture = make_shared<GLTexture3D>(filenames);
+    auto material = make_shared<GLSkyboxMaterial>(skybox_texture);
     auto geometry = MeshCreator::create_box(true);
     scene->add_leaf(geometry, material);
 }
