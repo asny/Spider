@@ -247,17 +247,9 @@ void View::create_grass()
 
 void View::create_terrain()
 {
-    auto bmp_ground = Reader::load_bitmap("resources/grass.jpg");
-    bmp_ground.flipVertically();
-    auto ground_texture = shared_ptr<GLTexture>(new GLTexture2D(bmp_ground.pixelBuffer(), bmp_ground.width(), bmp_ground.height(), TextureFormatForBitmapFormat(bmp_ground.format())));
-    
-    auto bmp_lake = Reader::load_bitmap("resources/bottom.png");
-    bmp_lake.flipVertically();
-    auto lake_texture = shared_ptr<GLTexture>(new GLTexture2D(bmp_lake.pixelBuffer(), bmp_lake.width(), bmp_lake.height(), TextureFormatForBitmapFormat(bmp_lake.format())));
-    
-    auto bmp_noise = Reader::load_bitmap("resources/water_noise.jpg");
-    bmp_noise.flipVertically();
-    auto noise_texture = shared_ptr<GLTexture>(new GLTexture2D(bmp_noise.pixelBuffer(), bmp_noise.width(), bmp_noise.height(), TextureFormatForBitmapFormat(bmp_noise.format())));
+    auto ground_texture = make_shared<GLTexture2D>("resources/grass.jpg");
+    auto lake_texture = make_shared<GLTexture2D>("resources/bottom.png");
+    auto noise_texture = make_shared<GLTexture2D>("resources/water_noise.jpg");
     
     for (TerrainPatch& patch : model->get_terrain_patches())
     {
@@ -318,10 +310,8 @@ void View::create_cube()
         uv_attribute->at(*vertex) = uv;
     }
     
-    auto bitmap = Reader::load_bitmap("resources/test_texture.jpg");
-    bitmap.flipVertically();
-    auto cubeTexture = shared_ptr<GLTexture>(new GLTexture2D(bitmap.pixelBuffer(), bitmap.width(), bitmap.height(), TextureFormatForBitmapFormat(bitmap.format())));
-    auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(cubeTexture, uv_attribute));
+    auto test_texture = make_shared<GLTexture2D>("resources/test_texture.jpg");
+    auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(test_texture, uv_attribute));
     scene->add_leaf(geometry, material);
 }
 
