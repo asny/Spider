@@ -95,6 +95,7 @@ View::View(int &argc, char** argv)
     create_spider_body();
     create_spider_legs();
     create_fog();
+    create_butterfly();
     
     // Create light
     scene->add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.1, 0.))));
@@ -358,5 +359,19 @@ void View::create_fog()
     
     auto material = make_shared<GLFogMaterial>(normals, time, 1.);
     scene->add_leaf(geometry, material);
+}
+
+void View::create_butterfly()
+{
+    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_attribute = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
+    auto geometry = MeshCreator::create_quad(uv_attribute);
+    auto texture = make_shared<GLTexture2D>("resources/butterfly2.png");
+    
+    auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(texture, uv_attribute));
+    
+    auto transformation = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(0., 2., 0.)) * glm::scale(mat4(1.), vec3(2., 1., 1.)));
+    scene->add_child(transformation);
+    transformation->add_leaf(geometry, material);
+    
 }
 
