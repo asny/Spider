@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		496B07AA1DF99EFC00CFBD10 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 496B07A91DF99EFC00CFBD10 /* OpenGL.framework */; };
 		49BCF6931DF85F7E00A18A7E /* libglfw.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BCF6921DF85F7E00A18A7E /* libglfw.dylib */; };
+		49EBFAF41E43BEA400503199 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EBFAF21E43BEA400503199 /* SDL2_image.framework */; };
+		49EBFAF51E43BEA400503199 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EBFAF31E43BEA400503199 /* SDL2.framework */; };
 		49FFC5EF1DFB04DE007C0E7D /* Reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49FFC5ED1DFB04DE007C0E7D /* Reader.cpp */; };
 		7A383A271BBFB6F700E29333 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A261BBFB6F700E29333 /* game.cpp */; };
 		7A383A331BBFCE5700E29333 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A311BBFCE5700E29333 /* View.cpp */; };
@@ -37,6 +39,8 @@
 		49BCF6921DF85F7E00A18A7E /* libglfw.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.dylib; path = ../../../../opt/local/lib/libglfw.dylib; sourceTree = "<group>"; };
 		49EBFAE41E3F1DE400503199 /* water.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = water.frag; path = shaders/water.frag; sourceTree = "<group>"; };
 		49EBFAE61E3FDD3300503199 /* terrain.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = terrain.frag; path = shaders/terrain.frag; sourceTree = "<group>"; };
+		49EBFAF21E43BEA400503199 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
+		49EBFAF31E43BEA400503199 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		49FFC5ED1DFB04DE007C0E7D /* Reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Reader.cpp; path = Readers/Reader.cpp; sourceTree = "<group>"; };
 		49FFC5EE1DFB04DE007C0E7D /* Reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Reader.hpp; path = Readers/Reader.hpp; sourceTree = "<group>"; };
 		7A370D901BD964E2000783CA /* grass.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grass.geom; path = shaders/grass.geom; sourceTree = "<group>"; };
@@ -66,6 +70,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49EBFAF41E43BEA400503199 /* SDL2_image.framework in Frameworks */,
+				49EBFAF51E43BEA400503199 /* SDL2.framework in Frameworks */,
 				496B07AA1DF99EFC00CFBD10 /* OpenGL.framework in Frameworks */,
 				49BCF6931DF85F7E00A18A7E /* libglfw.dylib in Frameworks */,
 			);
@@ -77,6 +83,8 @@
 		496B07A31DF8833200CFBD10 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				49EBFAF21E43BEA400503199 /* SDL2_image.framework */,
+				49EBFAF31E43BEA400503199 /* SDL2.framework */,
 				496B07A91DF99EFC00CFBD10 /* OpenGL.framework */,
 			);
 			name = Frameworks;
@@ -320,7 +328,15 @@
 		7A383A241BBFB6AC00E29333 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = /usr/local/include;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					/Library/Frameworks/SDL2.framework/Headers/,
+					/Library/Frameworks/SDL2_image.framework/Headers/,
+				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/opt/local/lib,
@@ -333,7 +349,15 @@
 		7A383A251BBFB6AC00E29333 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = /usr/local/include;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					/Library/Frameworks/SDL2.framework/Headers/,
+					/Library/Frameworks/SDL2_image.framework/Headers/,
+				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/opt/local/lib,
