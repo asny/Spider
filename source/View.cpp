@@ -117,6 +117,7 @@ View::View(int &argc, char** argv)
         update(*time - lastTime);
         
         *wind = glm::vec3(0.5 * sin(*time) + 0.5, 0., 0.5 * cos(*time + 0.5) + 0.5);
+        *butterfly_angle = sin(10.f * *time);
         
         lastTime = *time;
         
@@ -381,17 +382,20 @@ void View::create_butterfly()
     auto material1 = make_shared<GLTextureMaterial>(texture, uv_coordinates1);
     auto material2 = make_shared<GLTextureMaterial>(texture, uv_coordinates2);
     
-    auto global_transformation = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(0., 2., 0.)));
+    auto global_transformation = std::make_shared<GLTranslationNode>(glm::vec3(0., 2., 0.));
     scene->add_child(global_transformation);
     
     auto transformation1 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(-1., 0., 0.)));
     global_transformation->add_child(transformation1);
-    transformation1->add_leaf(geometry1, material1);
+    
+    auto rotation1 = std::make_shared<GLRotationNode>(glm::vec3(0., -1., 0.), butterfly_angle);
+    transformation1->add_child(rotation1);
+    rotation1->add_leaf(geometry1, material1);
     
     auto transformation2 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(1., 0., 0.)));
     global_transformation->add_child(transformation2);
     
-    auto rotation2 = std::make_shared<GLRotationNode>(glm::vec3(0., 1., 0.), time);
+    auto rotation2 = std::make_shared<GLRotationNode>(glm::vec3(0., 1., 0.), butterfly_angle);
     transformation2->add_child(rotation2);
     rotation2->add_leaf(geometry2, material2);
     
