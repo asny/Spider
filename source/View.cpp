@@ -352,15 +352,48 @@ void View::create_fog()
 
 void View::create_butterfly()
 {
-    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_attribute = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
-    auto geometry = MeshCreator::create_quad(uv_attribute);
+    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates1 = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
+    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates2 = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
+    
+    auto geometry1 = MeshCreator::create_quad();
+    auto geometry2 = MeshCreator::create_quad();
+    
+    auto vertexId = geometry1->vertices_begin();
+    uv_coordinates1->at(vertexId) = glm::vec2(0., 0.);
+    vertexId = vertexId->next();
+    uv_coordinates1->at(vertexId) = glm::vec2(0., 1.);
+    vertexId = vertexId->next();
+    uv_coordinates1->at(vertexId) = glm::vec2(0.5, 1.);
+    vertexId = vertexId->next();
+    uv_coordinates1->at(vertexId) = glm::vec2(0.5, 0.);
+    
+    vertexId = geometry2->vertices_begin();
+    uv_coordinates2->at(vertexId) = glm::vec2(0.5, 0.);
+    vertexId = vertexId->next();
+    uv_coordinates2->at(vertexId) = glm::vec2(0.5, 1.);
+    vertexId = vertexId->next();
+    uv_coordinates2->at(vertexId) = glm::vec2(1., 1.);
+    vertexId = vertexId->next();
+    uv_coordinates2->at(vertexId) = glm::vec2(1., 0.);
+    
     auto texture = make_shared<GLTexture2D>("resources/butterfly2.png");
     
-    auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(texture, uv_attribute));
+    auto material1 = make_shared<GLTextureMaterial>(texture, uv_coordinates1);
+    auto material2 = make_shared<GLTextureMaterial>(texture, uv_coordinates2);
     
-    auto transformation = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(0., 2., 0.)) * glm::scale(mat4(1.), vec3(2., 1., 1.)));
-    scene->add_child(transformation);
-    transformation->add_leaf(geometry, material);
+    auto global_transformation = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(0., 2., 0.)));
+    scene->add_child(global_transformation);
+    
+    auto transformation1 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(-1., 0., 0.)));
+    global_transformation->add_child(transformation1);
+    transformation1->add_leaf(geometry1, material1);
+    
+    auto transformation2 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(1., 0., 0.)));
+    global_transformation->add_child(transformation2);
+    
+    auto rotation2 = std::make_shared<GLRotationNode>(glm::vec3(0., 1., 0.), time);
+    transformation2->add_child(rotation2);
+    rotation2->add_leaf(geometry2, material2);
     
 }
 
