@@ -11,6 +11,7 @@
 #include "Materials.h"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/rotate_vector.hpp"
+#include "Random.h"
 
 using namespace std;
 using namespace gle;
@@ -47,27 +48,41 @@ Butterfly::Butterfly(GLNode& scene)
     auto material1 = make_shared<GLTextureMaterial>(texture, uv_coordinates1);
     auto material2 = make_shared<GLTextureMaterial>(texture, uv_coordinates2);
     
-    auto global_transformation = std::make_shared<GLTranslationNode>(glm::vec3(0., 2., 0.));
+    auto global_transformation = std::make_shared<GLTransformationNode>(transformation);
     scene.add_child(global_transformation);
     
-    auto transformation1 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(-1., 0., 0.)));
-    global_transformation->add_child(transformation1);
+    // First wing
+    auto rotation1 = std::make_shared<GLRotationNode>(glm::vec3(0., -1., 0.), wing_angle);
+    global_transformation->add_child(rotation1);
     
-    auto rotation1 = std::make_shared<GLRotationNode>(glm::vec3(0., -1., 0.), butterfly_angle);
-    transformation1->add_child(rotation1);
-    rotation1->add_leaf(geometry1, material1);
+    auto transformation1 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(-1., 0., 0.)));
+    rotation1->add_child(transformation1);
+    
+    transformation1->add_leaf(geometry1, material1);
+    
+    // Second wing
+    auto rotation2 = std::make_shared<GLRotationNode>(glm::vec3(0., 1., 0.), wing_angle);
+    global_transformation->add_child(rotation2);
     
     auto transformation2 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(1., 0., 0.)));
-    global_transformation->add_child(transformation2);
+    rotation2->add_child(transformation2);
     
-    auto rotation2 = std::make_shared<GLRotationNode>(glm::vec3(0., 1., 0.), butterfly_angle);
-    transformation2->add_child(rotation2);
-    rotation2->add_leaf(geometry2, material2);
+    transformation2->add_leaf(geometry2, material2);
 }
 
 void Butterfly::update(double time)
 {
-    *butterfly_angle = sin(10.f * time);
+    static double last_time = 0.;
+    float elapsed_time = time - last_time;
+    *wing_angle = sin(10.f * time);
+    
+    view_direction = normalize(view_direction + 0.05f * Random::direction());
+    position += elapsed_time * view_direction;
+    
+    mat4 rotation = orientation(view_direction, vec3(0., 1., 0.));
+    *transformation = glm::translate(position) * rotation;
+    
+    last_time = time;
 }
 
 
