@@ -78,14 +78,7 @@ View::View(int &argc, char** argv)
     scene = unique_ptr<GLScene>(new GLScene());
     
     // Create model
-    model = std::unique_ptr<Model>(new Model(
-    [](){
-        update_terrain_and_grass();
-        update_camera();
-    },
-    [](){
-        update_camera();
-    }));
+    model = std::unique_ptr<Model>(new Model());
     
     // Create objects
     create_skybox();
@@ -99,10 +92,6 @@ View::View(int &argc, char** argv)
     
     // Create light
     scene->add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.1, 0.))));
-    
-    // Update
-    update_terrain_and_grass();
-    update_camera();
     
     // run while the window is open
     double lastTime = glfwGetTime();
@@ -184,27 +173,25 @@ void View::update(double elapsedTime)
     }
     
     model->update(elapsedTime);
+    *instance->spider_pos = instance->model->get_spider()->get_position();
     
     if(glfwGetKey(gWindow, '1'))
     {
         view_type = FIRST_PERSON;
-        update_camera();
     }
     else if(glfwGetKey(gWindow, '2'))
     {
         view_type = THIRD_PERSON;
-        update_camera();
     }
     else if(glfwGetKey(gWindow, '3'))
     {
         view_type = BIRD;
-        update_camera();
     }
     else if(glfwGetKey(gWindow, '4'))
     {
         view_type = WORM;
-        update_camera();
     }
+    update_camera();
 }
 
 void View::update_camera()
@@ -230,11 +217,6 @@ void View::update_camera()
             instance->camera->set_view(spider_position - 4.f * worm_view, worm_view);
             break;
     }
-}
-
-void View::update_terrain_and_grass()
-{
-    *instance->spider_pos = instance->model->get_spider()->get_position();
 }
 
 void View::create_grass()

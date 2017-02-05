@@ -46,8 +46,6 @@ private:
     void create_terrain();
     void create_butterfly();
     
-    static void update_terrain_and_grass();
-    
     static void update_camera();
     
     void update(double elapsedTime);
