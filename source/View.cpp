@@ -7,7 +7,6 @@
 //
 
 #include "View.h"
-#include "Reader.hpp"
 #include "gtx/rotate_vector.hpp"
 #include "MeshCreator.h"
 #include "Materials.h"
@@ -31,15 +30,6 @@ void OnError(int errorCode, const char* msg)
 double rand(double min, double max)
 {
     return (max - min) * (double)rand()/(double)RAND_MAX + min;
-}
-
-static GLenum TextureFormatForBitmapFormat(tdogl::Bitmap::Format format)
-{
-    switch (format) {
-        case tdogl::Bitmap::Format_RGB: return GL_RGB;
-        case tdogl::Bitmap::Format_RGBA: return GL_RGBA;
-        default: throw std::runtime_error("Unrecognised Bitmap::Format");
-    }
 }
 
 View::View(int &argc, char** argv)
