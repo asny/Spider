@@ -8,15 +8,10 @@
 
 #include "glm.hpp"
 #include "terrain.hpp"
-#include "simplexnoise.h"
+#include "Random.h"
 
 using namespace std;
 using namespace glm;
-
-double random(double min, double max)
-{
-    return (max - min) * (double)rand()/(double)RAND_MAX + min;
-}
 
 double average(std::vector<double> heights)
 {
@@ -100,7 +95,7 @@ void TerrainPatch::update(const vec3& _origo)
     // Update grass geometry
     for (auto edge = grass_geometry->edges_begin(); edge != grass_geometry->edges_end(); edge = edge->next())
     {
-        auto pos = origo + vec3(random(0., 0.999 * SIZE), 0., random(0., 0.999 * SIZE));
+        auto pos = origo + vec3(Random::value(0., 0.999 * SIZE), 0., Random::value(0., 0.999 * SIZE));
         pos.y = get_height_at(pos);
         if(pos.y < 0.)
         {
@@ -110,7 +105,7 @@ void TerrainPatch::update(const vec3& _origo)
         else
         {
             grass_geometry->position()->at(edge->v1()) = pos;
-            grass_geometry->position()->at(edge->v2()) = pos + vec3(random(-0.2, 0.2), random(0.1, 0.3), random(-0.2, 0.2));
+            grass_geometry->position()->at(edge->v2()) = pos + vec3(Random::value(-0.2, 0.2), Random::value(0.1, 0.3), Random::value(-0.2, 0.2));
         }
     }
     

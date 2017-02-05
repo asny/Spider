@@ -10,6 +10,7 @@
 #include "gtx/rotate_vector.hpp"
 #include "MeshCreator.h"
 #include "Materials.h"
+#include "Random.h"
 
 #define GLFW_INCLUDE_NONE
 #include "glfw3.h"
@@ -25,11 +26,6 @@ GLFWwindow* gWindow = NULL;
 void OnError(int errorCode, const char* msg)
 {
     throw std::runtime_error(msg);
-}
-
-double rand(double min, double max)
-{
-    return (max - min) * (double)rand()/(double)RAND_MAX + min;
 }
 
 View::View(int &argc, char** argv)
@@ -304,14 +300,14 @@ void View::create_fog()
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> normals = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec3>>();
     for(int i = 0; i < 2000; i++)
     {
-        float radius = rand(3., 10.);
-        double theta = rand(0., 2. * M_PI);
-        double phi = rand(0.3 * M_PI, 0.7 * M_PI);
+        float radius = Random::value(3., 10.);
+        double theta = Random::value(0., 2. * M_PI);
+        double phi = Random::value(0.3 * M_PI, 0.7 * M_PI);
         glm::vec3 direction = glm::vec3(cos(theta) * sin(phi), cos(phi), sin(theta) * sin(phi));
         
         glm::vec3 tangent = cross(direction, glm::vec3(0., 1., 0.));
         glm::vec3 normal = cross(direction, tangent);
-        double alpha = rand(0., 0.5 * M_PI) - 0.25 * M_PI;
+        double alpha = Random::value(0., 0.5 * M_PI) - 0.25 * M_PI;
         float sign = rand()%2 == 0 ? -1.f : 1.f;
         normal = sign * normalize(cosf(alpha) * normal + sinf(alpha) * tangent);
         
