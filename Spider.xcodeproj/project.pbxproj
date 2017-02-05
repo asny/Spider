@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		493F8F141E475DF600D94AC1 /* Butterfly.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 493F8F121E475DF600D94AC1 /* Butterfly.cpp */; };
 		496B07AA1DF99EFC00CFBD10 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 496B07A91DF99EFC00CFBD10 /* OpenGL.framework */; };
 		49BCF6931DF85F7E00A18A7E /* libglfw.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BCF6921DF85F7E00A18A7E /* libglfw.dylib */; };
 		49EBFAF41E43BEA400503199 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EBFAF21E43BEA400503199 /* SDL2_image.framework */; };
@@ -33,6 +34,8 @@
 
 /* Begin PBXFileReference section */
 		4900D18D1E0BBC4D00F92EBD /* Materials.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Materials.h; path = materials/Materials.h; sourceTree = "<group>"; };
+		493F8F121E475DF600D94AC1 /* Butterfly.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Butterfly.cpp; path = source/Butterfly.cpp; sourceTree = "<group>"; };
+		493F8F131E475DF600D94AC1 /* Butterfly.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Butterfly.hpp; path = source/Butterfly.hpp; sourceTree = "<group>"; };
 		496B07A91DF99EFC00CFBD10 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		49BCF6921DF85F7E00A18A7E /* libglfw.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.dylib; path = ../../../../opt/local/lib/libglfw.dylib; sourceTree = "<group>"; };
 		49EBFAE41E3F1DE400503199 /* water.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = water.frag; path = shaders/water.frag; sourceTree = "<group>"; };
@@ -143,6 +146,8 @@
 		7AB0F2BD1BC07AB1009D85FD /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				493F8F121E475DF600D94AC1 /* Butterfly.cpp */,
+				493F8F131E475DF600D94AC1 /* Butterfly.hpp */,
 				7AB0F2BA1BC07AA0009D85FD /* model.cpp */,
 				7AB0F2BB1BC07AA0009D85FD /* model.hpp */,
 				7AB0F2BE1BC07B52009D85FD /* spider.cpp */,
@@ -218,6 +223,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A383A331BBFCE5700E29333 /* View.cpp in Sources */,
+				493F8F141E475DF600D94AC1 /* Butterfly.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
 				7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */,
 				7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */,

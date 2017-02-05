@@ -78,7 +78,7 @@ View::View(int &argc, char** argv)
     create_spider_body();
     create_spider_legs();
 //    create_fog();
-    create_butterfly();
+    butterfly = unique_ptr<Butterfly>(new Butterfly(*scene));
     
     // Create light
     scene->add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.1, 0.))));
@@ -94,9 +94,9 @@ View::View(int &argc, char** argv)
         *time = glfwGetTime();
         
         update(*time - lastTime);
+        butterfly->update(*time);
         
         *wind = glm::vec3(0.5 * sin(*time) + 0.5, 0., 0.5 * cos(*time + 0.5) + 0.5);
-        *butterfly_angle = sin(10.f * *time);
         
         lastTime = *time;
         
@@ -321,55 +321,5 @@ void View::create_fog()
     
     auto material = make_shared<GLFogMaterial>(normals, time, 1.);
     scene->add_leaf(geometry, material);
-}
-
-void View::create_butterfly()
-{
-    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates1 = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
-    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates2 = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
-    
-    auto geometry1 = MeshCreator::create_quad();
-    auto geometry2 = MeshCreator::create_quad();
-    
-    auto vertexId = geometry1->vertices_begin();
-    uv_coordinates1->at(vertexId) = glm::vec2(0., 0.);
-    vertexId = vertexId->next();
-    uv_coordinates1->at(vertexId) = glm::vec2(0., 1.);
-    vertexId = vertexId->next();
-    uv_coordinates1->at(vertexId) = glm::vec2(0.5, 1.);
-    vertexId = vertexId->next();
-    uv_coordinates1->at(vertexId) = glm::vec2(0.5, 0.);
-    
-    vertexId = geometry2->vertices_begin();
-    uv_coordinates2->at(vertexId) = glm::vec2(0.5, 0.);
-    vertexId = vertexId->next();
-    uv_coordinates2->at(vertexId) = glm::vec2(0.5, 1.);
-    vertexId = vertexId->next();
-    uv_coordinates2->at(vertexId) = glm::vec2(1., 1.);
-    vertexId = vertexId->next();
-    uv_coordinates2->at(vertexId) = glm::vec2(1., 0.);
-    
-    auto texture = make_shared<GLTexture2D>("resources/butterfly2.png");
-    
-    auto material1 = make_shared<GLTextureMaterial>(texture, uv_coordinates1);
-    auto material2 = make_shared<GLTextureMaterial>(texture, uv_coordinates2);
-    
-    auto global_transformation = std::make_shared<GLTranslationNode>(glm::vec3(0., 2., 0.));
-    scene->add_child(global_transformation);
-    
-    auto transformation1 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(-1., 0., 0.)));
-    global_transformation->add_child(transformation1);
-    
-    auto rotation1 = std::make_shared<GLRotationNode>(glm::vec3(0., -1., 0.), butterfly_angle);
-    transformation1->add_child(rotation1);
-    rotation1->add_leaf(geometry1, material1);
-    
-    auto transformation2 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(1., 0., 0.)));
-    global_transformation->add_child(transformation2);
-    
-    auto rotation2 = std::make_shared<GLRotationNode>(glm::vec3(0., 1., 0.), butterfly_angle);
-    transformation2->add_child(rotation2);
-    rotation2->add_leaf(geometry2, material2);
-    
 }
 

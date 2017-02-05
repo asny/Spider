@@ -10,6 +10,7 @@
 
 #include "GLCamera.h"
 #include "model.hpp"
+#include "butterfly.hpp"
 
 class View
 {
@@ -23,11 +24,11 @@ class View
     std::unique_ptr<gle::GLScene> scene;
     
     std::shared_ptr<glm::vec3> wind = std::make_shared<glm::vec3>(0., 0., 0.);
-    std::shared_ptr<float> butterfly_angle = std::make_shared<float>(0.f);
     std::shared_ptr<glm::vec3> spider_pos = std::make_shared<glm::vec3>(0., 0., 0.);
     
     std::shared_ptr<float> time = std::make_shared<float>(0.f);
     std::shared_ptr<gle::GLTexture3D> skybox_texture;
+    std::unique_ptr<Butterfly> butterfly;
     
     static View* instance;
     
@@ -44,7 +45,6 @@ private:
     void create_spider_legs();
     void create_grass();
     void create_terrain();
-    void create_butterfly();
     
     static void update_camera();
     
