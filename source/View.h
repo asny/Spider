@@ -28,7 +28,6 @@ class View
     
     std::shared_ptr<float> time = std::make_shared<float>(0.f);
     std::shared_ptr<gle::GLTexture3D> skybox_texture;
-    std::unique_ptr<Butterfly> butterfly;
     
     static View* instance;
     

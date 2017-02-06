@@ -74,7 +74,6 @@ View::View(int &argc, char** argv)
     create_spider_body();
     create_spider_legs();
 //    create_fog();
-    butterfly = unique_ptr<Butterfly>(new Butterfly(*scene));
     
     // Create light
     scene->add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.1, 0.))));
@@ -90,7 +89,7 @@ View::View(int &argc, char** argv)
         *time = glfwGetTime();
         
         update(*time - lastTime);
-        butterfly->update(*time);
+        Butterfly::spawn_and_destroy_and_update(*scene, *time);
         
         *wind = glm::vec3(0.5 * sin(*time) + 0.5, 0., 0.5 * cos(*time + 0.5) + 0.5);
         

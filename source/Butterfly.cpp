@@ -72,7 +72,6 @@ Butterfly::Butterfly(GLNode& scene)
 
 void Butterfly::update(double time)
 {
-    static double last_time = 0.;
     float elapsed_time = time - last_time;
     *wing_angle = sin(10.f * time);
     
