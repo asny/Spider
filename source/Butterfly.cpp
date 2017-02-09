@@ -68,20 +68,25 @@ Butterfly::Butterfly()
     rotation2->add_child(transformation2);
     
     transformation2->add_leaf(geometry2, material2);
+    
+    // Initialise position and view direction
+    view_direction = Random::direction();
+    position = vec3(Random::value(-5, 5), Random::value(2, 5), Random::value(-5, 5));
+    start_wing_angle = Random::value(0, pi<double>());
 }
 
 void Butterfly::update(double time)
 {
     float elapsed_time = time - last_time;
-    *wing_angle = sin(10.f * time);
+    last_time = time;
     
-    view_direction = normalize(view_direction + 0.05f * Random::direction());
+    *wing_angle = sin(start_wing_angle + 15.f * time);
+    
+    view_direction = normalize(view_direction + 0.1f * Random::direction());
     position += elapsed_time * view_direction;
     
-    mat4 rotation = orientation(view_direction, vec3(0., 1., 0.));
-    *transformation = glm::translate(position) * rotation;
+    *transformation = glm::translate(position) * orientation(view_direction, vec3(0., 1., 0.));
     
-    last_time = time;
 }
 
 

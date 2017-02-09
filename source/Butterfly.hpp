@@ -13,11 +13,13 @@
 
 class Butterfly : public gle::GLNode
 {
-    glm::vec3 position = glm::vec3(0.f, 2.f, 0.f);
-    glm::vec3 view_direction = glm::vec3(0.f, 0.f, -1.f);
+    glm::vec3 position;
+    glm::vec3 view_direction;
+    double last_time = 0.;
+    double start_wing_angle;
+    
     std::shared_ptr<glm::mat4> transformation = std::make_shared<glm::mat4>(1.);
     std::shared_ptr<float> wing_angle = std::make_shared<float>(0.f);
-    double last_time = 0.;
     
     void update(double time);
     
