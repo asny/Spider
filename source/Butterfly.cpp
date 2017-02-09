@@ -17,7 +17,7 @@ using namespace std;
 using namespace gle;
 using namespace glm;
 
-Butterfly::Butterfly(GLNode& scene)
+Butterfly::Butterfly()
 {
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates1 = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates2 = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
@@ -49,7 +49,7 @@ Butterfly::Butterfly(GLNode& scene)
     auto material2 = make_shared<GLTextureMaterial>(texture, uv_coordinates2);
     
     auto global_transformation = std::make_shared<GLTransformationNode>(transformation);
-    scene.add_child(global_transformation);
+    this->add_child(global_transformation);
     
     // First wing
     auto rotation1 = std::make_shared<GLRotationNode>(glm::vec3(0., -1., 0.), wing_angle);

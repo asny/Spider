@@ -11,7 +11,7 @@
 #include <memory>
 #include "GLScene.h"
 
-class Butterfly
+class Butterfly : public gle::GLNode
 {
     glm::vec3 position = glm::vec3(0.f, 2.f, 0.f);
     glm::vec3 view_direction = glm::vec3(0.f, 0.f, -1.f);
@@ -19,25 +19,43 @@ class Butterfly
     std::shared_ptr<float> wing_angle = std::make_shared<float>(0.f);
     double last_time = 0.;
     
-    Butterfly(gle::GLNode& scene);
-    
     void update(double time);
     
-public:
-    static void spawn_and_destroy_and_update(gle::GLNode& scene, double time)
+    static void spawn(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node)
     {
-        static std::vector<Butterfly> butterflies;
-        
-        if(butterflies.size() == 0)
+        static int NO_BUTTERFLIES = 10;
+        if(butterflies.size() < NO_BUTTERFLIES)
         {
-            for (int i = 0; i < 100; i++) {
-                butterflies.push_back(Butterfly(scene));
+            auto butterfly = std::make_shared<Butterfly>();
+            butterflies.push_back(butterfly);
+            node.add_child(butterfly);
+        }
+    }
+    
+    static void destroy(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node)
+    {
+        for (int i = 0; i < butterflies.size(); i++) {
+            if(butterflies[i]->position.y < 0)
+            {
+                node.remove_child(butterflies[i]);
+                butterflies.erase(butterflies.begin() + i);
+                i--;
             }
         }
+    }
+    
+public:
+    Butterfly();
+    
+    static void spawn_and_destroy_and_update(gle::GLNode& node, double time)
+    {
+        static std::vector<std::shared_ptr<Butterfly>> butterflies;
+        spawn(butterflies, node);
+        destroy(butterflies, node);
         
-        for(Butterfly& butterfly : butterflies)
+        for(auto butterfly : butterflies)
         {
-            butterfly.update(time);
+            butterfly->update(time);
         }
     }
 };
