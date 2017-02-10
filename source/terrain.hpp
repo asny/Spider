@@ -18,7 +18,7 @@
 
 class TerrainPatch
 {
-    const static int VERTICES_PER_UNIT = 16;
+    const static int VERTICES_PER_UNIT = 8;
     constexpr const static double VERTEX_DISTANCE = 1./static_cast<double>(VERTICES_PER_UNIT);
     const static int NO_GRASS_STRAW = 10000;
     
@@ -36,7 +36,7 @@ class TerrainPatch
     void subdivide(int origo_x, int origo_y, int size);
     
 public:
-    constexpr const static double SIZE = 4.;
+    constexpr const static double SIZE = 8.;
     
     TerrainPatch();
     
