@@ -96,7 +96,6 @@ View::View(int &argc, char** argv)
         lastTime = *time;
         
         // draw one frame
-        GLCamera::clear_screen();
         camera->draw(*scene);
         
         glfwSwapBuffers(gWindow);
