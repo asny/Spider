@@ -26,11 +26,6 @@ public:
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/color_material.frag", "shaders/grass.geom");
     }
     
-    bool should_draw(gle::DrawPassMode draw_pass)
-    {
-        return draw_pass == gle::DEFERRED;
-    }
-    
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
                            std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
     {
@@ -65,11 +60,6 @@ public:
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/color_material.frag", "shaders/spider_legs.geom");
     }
     
-    bool should_draw(gle::DrawPassMode draw_pass)
-    {
-        return draw_pass == gle::DEFERRED;
-    }
-    
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
                            std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
     {
@@ -99,11 +89,7 @@ public:
         : normals(_normals), time(_time), radius(_radius)
     {
         shader = gle::GLShader::create_or_get("shaders/fog.vert",  "shaders/fog.frag", "../GLEngine/shaders/particle.geom");
-    }
-    
-    bool should_draw(gle::DrawPassMode draw_pass)
-    {
-        return draw_pass == gle::FORWARD;
+        mode = gle::FORWARD;
     }
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
@@ -140,11 +126,7 @@ public:
         : texture(_texture) , time(_time), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/texture.vert",  "shaders/water.frag");
-    }
-    
-    bool should_draw(gle::DrawPassMode draw_pass)
-    {
-        return draw_pass == gle::FORWARD;
+        mode = gle::FORWARD;
     }
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
@@ -186,11 +168,6 @@ public:
         : time(_time), ground_texture(_ground_texture), lake_texture(_lake_texture), uv_coordinates(_uv_coordinates), noise_texture(_noise_texture)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/texture.vert",  "shaders/terrain.frag");
-    }
-    
-    bool should_draw(gle::DrawPassMode draw_pass)
-    {
-        return draw_pass == gle::DEFERRED;
     }
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
