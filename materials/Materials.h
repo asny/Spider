@@ -21,7 +21,8 @@ class GLGrassMaterial : public gle::GLMaterial
     glm::vec3 color;
 public:
     
-    GLGrassMaterial(const std::shared_ptr<glm::vec3> _spider_position,const std::shared_ptr<glm::vec3> _wind, const glm::vec3& _color) : spider_position(_spider_position), wind(_wind), color(_color)
+    GLGrassMaterial(const std::shared_ptr<glm::vec3> _spider_position,const std::shared_ptr<glm::vec3> _wind, const glm::vec3& _color)
+        : GLMaterial(gle::DEFERRED), spider_position(_spider_position), wind(_wind), color(_color)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/color_material.frag", "shaders/grass.geom");
     }
@@ -55,7 +56,7 @@ class GLSpiderLegsMaterial : public gle::GLMaterial
 public:
     
     GLSpiderLegsMaterial(const glm::vec3& _color)
-        : color(_color)
+        : GLMaterial(gle::DEFERRED), color(_color)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/color_material.frag", "shaders/spider_legs.geom");
     }
@@ -86,10 +87,9 @@ class GLFogMaterial : public gle::GLMaterial
     float radius;
 public:
     GLFogMaterial(const std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> _normals, const std::shared_ptr<float> _time, float _radius)
-        : normals(_normals), time(_time), radius(_radius)
+        : GLMaterial(gle::FORWARD), normals(_normals), time(_time), radius(_radius)
     {
         shader = gle::GLShader::create_or_get("shaders/fog.vert",  "shaders/fog.frag", "../GLEngine/shaders/particle.geom");
-        mode = gle::FORWARD;
     }
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
@@ -123,10 +123,9 @@ class WaterMaterial : public gle::GLMaterial
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
 public:
     WaterMaterial(const std::shared_ptr<float> _time, std::shared_ptr<gle::GLTexture3D> _texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
-        : texture(_texture) , time(_time), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
+        : GLMaterial(gle::FORWARD), texture(_texture) , time(_time), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/texture.vert",  "shaders/water.frag");
-        mode = gle::FORWARD;
     }
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
@@ -165,7 +164,7 @@ class TerrainMaterial : public gle::GLMaterial
 public:
     
     TerrainMaterial(const std::shared_ptr<float> _time, std::shared_ptr<gle::GLTexture> _ground_texture, std::shared_ptr<gle::GLTexture> _lake_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
-        : time(_time), ground_texture(_ground_texture), lake_texture(_lake_texture), uv_coordinates(_uv_coordinates), noise_texture(_noise_texture)
+        : GLMaterial(gle::DEFERRED), time(_time), ground_texture(_ground_texture), lake_texture(_lake_texture), uv_coordinates(_uv_coordinates), noise_texture(_noise_texture)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/texture.vert",  "shaders/terrain.frag");
     }
