@@ -13,7 +13,6 @@
 		49EBFAF41E43BEA400503199 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EBFAF21E43BEA400503199 /* SDL2_image.framework */; };
 		49EBFAF51E43BEA400503199 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EBFAF31E43BEA400503199 /* SDL2.framework */; };
 		7A383A271BBFB6F700E29333 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A261BBFB6F700E29333 /* game.cpp */; };
-		7A383A331BBFCE5700E29333 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A311BBFCE5700E29333 /* View.cpp */; };
 		7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */; };
 		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; };
 		7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* spider.cpp */; };
@@ -46,8 +45,6 @@
 		7A370D901BD964E2000783CA /* grass.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grass.geom; path = shaders/grass.geom; sourceTree = "<group>"; };
 		7A383A1C1BBFB6AC00E29333 /* Spider */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Spider; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A383A261BBFB6F700E29333 /* game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = game.cpp; path = source/game.cpp; sourceTree = "<group>"; };
-		7A383A311BBFCE5700E29333 /* View.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = View.cpp; path = source/View.cpp; sourceTree = "<group>"; };
-		7A383A321BBFCE5700E29333 /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = View.h; path = source/View.h; sourceTree = "<group>"; };
 		7A5252671D83F6BC00BE9D1C /* fog.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fog.frag; path = shaders/fog.frag; sourceTree = "<group>"; };
 		7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplexnoise.cpp; sourceTree = "<group>"; };
 		7A70D0FD1BC6BEE8003E859B /* simplexnoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexnoise.h; sourceTree = "<group>"; };
@@ -95,7 +92,6 @@
 				7A383A341BBFD93A00E29333 /* Shaders */,
 				7A70D0FB1BC6BEE8003E859B /* SimplexNoise */,
 				7AF9C41A1BEBEB12008AE5F5 /* Rendering */,
-				7A383A281BBFB6FC00E29333 /* View */,
 				7AB0F2BD1BC07AB1009D85FD /* Model */,
 				7A383A261BBFB6F700E29333 /* game.cpp */,
 				7A383A1D1BBFB6AC00E29333 /* Products */,
@@ -109,15 +105,6 @@
 				7A383A1C1BBFB6AC00E29333 /* Spider */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		7A383A281BBFB6FC00E29333 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				7A383A311BBFCE5700E29333 /* View.cpp */,
-				7A383A321BBFCE5700E29333 /* View.h */,
-			);
-			name = View;
 			sourceTree = "<group>";
 		};
 		7A383A341BBFD93A00E29333 /* Shaders */ = {
@@ -224,7 +211,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A383A331BBFCE5700E29333 /* View.cpp in Sources */,
 				493F8F141E475DF600D94AC1 /* Butterfly.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
 				7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */,
