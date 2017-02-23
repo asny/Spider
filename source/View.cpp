@@ -11,6 +11,7 @@
 #include "MeshCreator.h"
 #include "Materials.h"
 #include "Random.h"
+#include "effects/GLFogEffect.h"
 
 #define GLFW_INCLUDE_NONE
 #include "glfw3.h"
@@ -59,6 +60,8 @@ View::View(int &argc, char** argv)
     
     // Create camera
     camera = std::unique_ptr<GLCamera>(new GLCamera(WIN_SIZE_X, WIN_SIZE_Y));
+    auto fog_effect = std::make_shared<GLFogEffect>(make_shared<GLTexture2D>("resources/water_noise.jpg"));
+    camera->set_post_effect(fog_effect);
     
     // Create scene
     scene = unique_ptr<GLScene>(new GLScene());
@@ -87,6 +90,7 @@ View::View(int &argc, char** argv)
         
         // update the scene based on the time elapsed since last update
         *time = glfwGetTime();
+        fog_effect->time = *time;
         
         update(*time - lastTime);
         Butterfly::spawn_and_destroy_and_update(*scene, *time);
