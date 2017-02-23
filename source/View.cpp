@@ -79,7 +79,7 @@ View::View(int &argc, char** argv)
 //    create_fog();
     
     // Create light
-    scene->add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.1, 0.))));
+    scene->add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.5, 0.))));
     
     // run while the window is open
     double lastTime = glfwGetTime();
