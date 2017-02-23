@@ -76,7 +76,6 @@ View::View(int &argc, char** argv)
 //    create_grass();
     create_spider_body();
     create_spider_legs();
-//    create_fog();
     
     // Create light
     scene->add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.5, 0.))));
@@ -293,31 +292,6 @@ void View::create_skybox()
     skybox_texture = make_shared<GLTexture3D>(filenames);
     auto material = make_shared<GLSkyboxMaterial>(skybox_texture);
     auto geometry = MeshCreator::create_box(true);
-    scene->add_leaf(geometry, material);
-}
-
-void View::create_fog()
-{
-    std::shared_ptr<mesh::Mesh> geometry = std::make_shared<mesh::Mesh>();
-    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> normals = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec3>>();
-    for(int i = 0; i < 2000; i++)
-    {
-        float radius = Random::value(3., 10.);
-        double theta = Random::value(0., 2. * M_PI);
-        double phi = Random::value(0.3 * M_PI, 0.7 * M_PI);
-        glm::vec3 direction = glm::vec3(cos(theta) * sin(phi), cos(phi), sin(theta) * sin(phi));
-        
-        glm::vec3 tangent = cross(direction, glm::vec3(0., 1., 0.));
-        glm::vec3 normal = cross(direction, tangent);
-        double alpha = Random::value(0., 0.5 * M_PI) - 0.25 * M_PI;
-        float sign = rand()%2 == 0 ? -1.f : 1.f;
-        normal = sign * normalize(cosf(alpha) * normal + sinf(alpha) * tangent);
-        
-        auto vertexId = geometry->create_vertex(radius * direction);
-        normals->at(vertexId) = normal;
-    }
-    
-    auto material = make_shared<GLFogMaterial>(normals, time, 1.);
     scene->add_leaf(geometry, material);
 }
 
