@@ -25,12 +25,6 @@ using namespace mesh;
 
 GLFWwindow* gWindow = NULL;
 
-enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD, WORM };
-
-VIEW_TYPE view_type = FIRST_PERSON;
-
-std::shared_ptr<gle::GLTexture3D> skybox_texture;
-
 void OnError(int errorCode, const char* msg)
 {
     throw std::runtime_error(msg);
@@ -50,8 +44,29 @@ void print_fps(double elapsedTime)
     }
 }
 
-void update_view(GLCamera& camera, const glm::vec3& spider_position, const glm::vec3& spider_view_direction)
+void update_camera(GLCamera& camera, const glm::vec3& spider_position, const glm::vec3& spider_view_direction)
 {
+    enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD, WORM };
+    
+    static VIEW_TYPE view_type = FIRST_PERSON;
+    
+    if(glfwGetKey(gWindow, '1'))
+    {
+        view_type = FIRST_PERSON;
+    }
+    else if(glfwGetKey(gWindow, '2'))
+    {
+        view_type = THIRD_PERSON;
+    }
+    else if(glfwGetKey(gWindow, '3'))
+    {
+        view_type = BIRD;
+    }
+    else if(glfwGetKey(gWindow, '4'))
+    {
+        view_type = WORM;
+    }
+    
     vec3 bird_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
     vec3 third_person_view = normalize(vec3(spider_view_direction.x, -0.5, spider_view_direction.z));
     vec3 worm_view = normalize(vec3(0., 1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
@@ -106,23 +121,6 @@ void update(double elapsedTime, GLCamera& camera, Spider& spider)
     }
     
     spider.update(elapsedTime);
-    
-    if(glfwGetKey(gWindow, '1'))
-    {
-        view_type = FIRST_PERSON;
-    }
-    else if(glfwGetKey(gWindow, '2'))
-    {
-        view_type = THIRD_PERSON;
-    }
-    else if(glfwGetKey(gWindow, '3'))
-    {
-        view_type = BIRD;
-    }
-    else if(glfwGetKey(gWindow, '4'))
-    {
-        view_type = WORM;
-    }
 }
 
 void create_cube(GLNode& root)
@@ -205,7 +203,7 @@ int main(int argc, char** argv)
         fog_effect->time = time;
         
         update(time - lastTime, camera, spider);
-        update_view(camera, spider.get_position(), spider.get_view_direction());
+        update_camera(camera, spider.get_position(), spider.get_view_direction());
         
         Butterfly::spawn_and_destroy_and_update(scene, time);
         terrain.update(time, spider.get_position());
