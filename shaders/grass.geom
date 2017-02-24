@@ -1,7 +1,7 @@
 #version 330
 
 layout (lines) in;
-layout (triangle_strip, max_vertices = 264) out;
+layout (triangle_strip, max_vertices = 24) out;
 
 uniform mat4 NMatrix;
 uniform mat4 MMatrix;
@@ -107,7 +107,7 @@ void main()
     vec3 corner2 = origin - half_width * leave_direction - 0.5 * half_width * bend_direction;
     
     // Emit vertices
-    float step_size = 1.f / max(ceil(30.f - 3.f * distance_to_spider), 4);
+    float step_size = 0.2f;
     emit_straw_half(origin, corner1, top, step_size);
     emit_straw_half(origin, corner2, top, step_size);
 }
