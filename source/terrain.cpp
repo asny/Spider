@@ -9,9 +9,11 @@
 #include "glm.hpp"
 #include "terrain.hpp"
 #include "Random.h"
+#include "Materials.h"
 
 using namespace std;
 using namespace glm;
+using namespace gle;
 
 double average(std::vector<double> heights)
 {
@@ -172,9 +174,30 @@ glm::vec3 TerrainPatch::get_origo()
     return origo;
 }
 
-Terrain::Terrain(const glm::vec3& position)
+Terrain::Terrain(GLScene& scene, const glm::vec3& position)
 {
     update(position);
+    create_scene_graph(scene);
+}
+
+void Terrain::create_scene_graph(GLScene& scene)
+{
+    auto ground_texture = make_shared<GLTexture2D>("resources/grass.jpg");
+    auto lake_texture = make_shared<GLTexture2D>("resources/bottom.png");
+    auto noise_texture = make_shared<GLTexture2D>("resources/water_noise.jpg");
+    
+    const string path = "resources/skybox_evening/";
+    auto filenames = {path + "right.jpg", path + "left.jpg", path + "top.jpg", path + "top.jpg", path + "front.jpg", path + "back.jpg"};
+    auto skybox_texture = make_shared<GLTexture3D>(filenames);
+    
+    for (TerrainPatch& patch : get_patches())
+    {
+        auto material = make_shared<TerrainMaterial>(ground_texture, lake_texture, noise_texture, patch.get_uv_coordinates());
+        scene.add_leaf(patch.get_ground(), material);
+        
+        auto water_material = make_shared<WaterMaterial>(skybox_texture, noise_texture, patch.get_water_uv_coordinates());
+        scene.add_leaf(patch.get_water(), water_material);
+    }
 }
 
 pair<int, int> Terrain::index_at(const vec3& position)

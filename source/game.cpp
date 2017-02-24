@@ -146,22 +146,6 @@ void create_grass()
     }
 }
 
-void create_terrain()
-{
-    auto ground_texture = make_shared<GLTexture2D>("resources/grass.jpg");
-    auto lake_texture = make_shared<GLTexture2D>("resources/bottom.png");
-    auto noise_texture = make_shared<GLTexture2D>("resources/water_noise.jpg");
-    
-    for (TerrainPatch& patch : model->get_terrain_patches())
-    {
-        auto material = make_shared<TerrainMaterial>(t, ground_texture, lake_texture, noise_texture, patch.get_uv_coordinates());
-        scene->add_leaf(patch.get_ground(), material);
-        
-        auto water_material = make_shared<WaterMaterial>(t, skybox_texture, noise_texture, patch.get_water_uv_coordinates());
-        scene->add_leaf(patch.get_water(), water_material);
-    }
-}
-
 void create_cube()
 {
     auto geometry = MeshCreator::create_box(false);
@@ -234,7 +218,6 @@ int main(int argc, char** argv)
     // Create objects
     create_skybox();
     create_cube();
-    create_terrain();
     //    create_grass();
     
     // Create light

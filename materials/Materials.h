@@ -118,12 +118,13 @@ public:
 
 class WaterMaterial : public gle::GLMaterial
 {
-    std::shared_ptr<float> time;
     std::shared_ptr<gle::GLTexture> texture, noise_texture;
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
 public:
-    WaterMaterial(const std::shared_ptr<float> _time, std::shared_ptr<gle::GLTexture3D> _texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
-        : GLMaterial(gle::FORWARD), texture(_texture) , time(_time), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
+    float time = 0.f;
+    
+    WaterMaterial(std::shared_ptr<gle::GLTexture3D> _texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
+        : GLMaterial(gle::FORWARD), texture(_texture) , noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/texture.vert",  "shaders/water.frag");
     }
@@ -152,19 +153,19 @@ public:
         gle::GLUniform::use(shader, "MVPMatrix", projection * view * model);
         
         gle::GLUniform::use(shader, "eyePosition", camera_position);
-        gle::GLUniform::use(shader, "time", *time);
+        gle::GLUniform::use(shader, "time", time);
     }
 };
 
 class TerrainMaterial : public gle::GLMaterial
 {
-    std::shared_ptr<float> time;
     std::shared_ptr<gle::GLTexture> ground_texture, lake_texture, noise_texture;
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
 public:
+    float time = 0.f;
     
-    TerrainMaterial(const std::shared_ptr<float> _time, std::shared_ptr<gle::GLTexture> _ground_texture, std::shared_ptr<gle::GLTexture> _lake_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
-        : GLMaterial(gle::DEFERRED), time(_time), ground_texture(_ground_texture), lake_texture(_lake_texture), uv_coordinates(_uv_coordinates), noise_texture(_noise_texture)
+    TerrainMaterial(std::shared_ptr<gle::GLTexture> _ground_texture, std::shared_ptr<gle::GLTexture> _lake_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
+        : GLMaterial(gle::DEFERRED), ground_texture(_ground_texture), lake_texture(_lake_texture), uv_coordinates(_uv_coordinates), noise_texture(_noise_texture)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/texture.vert",  "shaders/terrain.frag");
     }
@@ -193,6 +194,6 @@ public:
         gle::GLUniform::use(shader, "MMatrix", model);
         gle::GLUniform::use(shader, "MVPMatrix", projection * view * model);
         gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
-        gle::GLUniform::use(shader, "time", *time);
+        gle::GLUniform::use(shader, "time", time);
     }
 };

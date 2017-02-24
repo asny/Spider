@@ -15,6 +15,7 @@
 #include "vec2.hpp"
 #include "vec3.hpp"
 #include "Mesh.h"
+#include "GLScene.h"
 
 class TerrainPatch
 {
@@ -78,10 +79,11 @@ class Terrain
     
     std::pair<int, int> index_at(const glm::vec3& position);
     TerrainPatch* patch_at(std::pair<int, int> index);
+    void create_scene_graph(gle::GLScene& scene);
     
 public:
     
-    Terrain(const glm::vec3& position);
+    Terrain(gle::GLScene& scene, const glm::vec3& position);
     
     std::vector<TerrainPatch>& get_patches();
     
