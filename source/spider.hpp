@@ -63,16 +63,12 @@ public:
     Spider(gle::GLScene& scene, glm::vec3 _position, glm::vec3 _view_direction, std::function<double(glm::vec3)> _get_height_at) : position(_position), view_direction(_view_direction), get_height_at(_get_height_at)
     {
         height = position.y;
-        create_spider_body(scene);
+        create_scene_graph(scene);
         update_local2world();
     }
     
     glm::vec3 get_position();
     glm::vec3 get_view_direction();
-    const std::shared_ptr<glm::mat4> get_local2world()
-    {
-        return local2world;
-    }
     
     void move(float time);
     
@@ -83,6 +79,6 @@ public:
     bool update(float time);
     
 private:
-    void create_spider_body(gle::GLScene& scene);
+    void create_scene_graph(gle::GLScene& scene);
     
 };

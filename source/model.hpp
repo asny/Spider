@@ -20,8 +20,6 @@ class Model {
     std::unique_ptr<Spider> spider;
     std::unique_ptr<Terrain> terrain;
     
-    std::map<int, std::pair<int, int>> terrainIndexMap = std::map<int, std::pair<int, int>>();
-    
     void update_terrain()
     {
         terrain->update(spider->get_position());

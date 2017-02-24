@@ -14,9 +14,10 @@ using namespace gle;
 using namespace std;
 using namespace mesh;
 
-void Spider::create_spider_body(GLScene& scene)
+void Spider::create_scene_graph(GLScene& scene)
 {
-    auto spider_transformation = std::make_shared<GLTransformationNode>(get_local2world());
+    // Create body
+    auto spider_transformation = std::make_shared<GLTransformationNode>(local2world);
     scene.add_child(spider_transformation);
     
     auto geometry = shared_ptr<Mesh>(new Mesh());
