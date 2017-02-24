@@ -15,7 +15,7 @@
 		7A383A271BBFB6F700E29333 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A261BBFB6F700E29333 /* game.cpp */; };
 		7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */; };
 		7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BA1BC07AA0009D85FD /* model.cpp */; };
-		7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* spider.cpp */; };
+		7AB0F2C01BC07B52009D85FD /* Spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* Spider.cpp */; };
 		7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2C31BC25326009D85FD /* terrain.cpp */; };
 /* End PBXBuildFile section */
 
@@ -50,8 +50,8 @@
 		7A70D0FD1BC6BEE8003E859B /* simplexnoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexnoise.h; sourceTree = "<group>"; };
 		7AB0F2BA1BC07AA0009D85FD /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = model.cpp; path = source/model.cpp; sourceTree = "<group>"; };
 		7AB0F2BB1BC07AA0009D85FD /* model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = model.hpp; path = source/model.hpp; sourceTree = "<group>"; };
-		7AB0F2BE1BC07B52009D85FD /* spider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = spider.cpp; path = source/spider.cpp; sourceTree = "<group>"; };
-		7AB0F2BF1BC07B52009D85FD /* spider.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = spider.hpp; path = source/spider.hpp; sourceTree = "<group>"; };
+		7AB0F2BE1BC07B52009D85FD /* Spider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Spider.cpp; path = source/Spider.cpp; sourceTree = "<group>"; };
+		7AB0F2BF1BC07B52009D85FD /* Spider.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Spider.hpp; path = source/Spider.hpp; sourceTree = "<group>"; };
 		7AB0F2C31BC25326009D85FD /* terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = terrain.cpp; path = source/terrain.cpp; sourceTree = "<group>"; };
 		7AB0F2C41BC25326009D85FD /* terrain.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = terrain.hpp; path = source/terrain.hpp; sourceTree = "<group>"; };
 		7AB0F2C61BC28EEB009D85FD /* terrain.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = terrain.geom; path = shaders/terrain.geom; sourceTree = "<group>"; };
@@ -139,8 +139,8 @@
 				493F8F131E475DF600D94AC1 /* Butterfly.hpp */,
 				7AB0F2BA1BC07AA0009D85FD /* model.cpp */,
 				7AB0F2BB1BC07AA0009D85FD /* model.hpp */,
-				7AB0F2BE1BC07B52009D85FD /* spider.cpp */,
-				7AB0F2BF1BC07B52009D85FD /* spider.hpp */,
+				7AB0F2BE1BC07B52009D85FD /* Spider.cpp */,
+				7AB0F2BF1BC07B52009D85FD /* Spider.hpp */,
 				7AB0F2C31BC25326009D85FD /* terrain.cpp */,
 				7AB0F2C41BC25326009D85FD /* terrain.hpp */,
 			);
@@ -214,7 +214,7 @@
 				493F8F141E475DF600D94AC1 /* Butterfly.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
 				7AB0F2BC1BC07AA0009D85FD /* model.cpp in Sources */,
-				7AB0F2C01BC07B52009D85FD /* spider.cpp in Sources */,
+				7AB0F2C01BC07B52009D85FD /* Spider.cpp in Sources */,
 				7AB0F2C51BC25326009D85FD /* terrain.cpp in Sources */,
 				7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */,
 			);
