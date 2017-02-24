@@ -29,7 +29,7 @@ double average(std::vector<double> heights)
     return sum / static_cast<double>(heights.size());
 }
 
-TerrainPatch::TerrainPatch()
+Terrain::TerrainPatch::TerrainPatch()
 {
     int map_size = static_cast<int>(SIZE) * VERTICES_PER_UNIT + 1;
     
@@ -70,7 +70,7 @@ TerrainPatch::TerrainPatch()
     water_geometry->create_face(v4, v3, v1);
 }
 
-void TerrainPatch::update(const vec3& _origo)
+void Terrain::TerrainPatch::update(const vec3& _origo)
 {
     origo = _origo;
     int map_size = static_cast<int>(SIZE) * VERTICES_PER_UNIT + 1;
@@ -127,13 +127,13 @@ void TerrainPatch::update(const vec3& _origo)
     water_uv_coordinates->at(vertex) = vec2(0., 1.);
 }
 
-void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
+void Terrain::TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
 {
     heightmap[r][c] = average(neighbour_heights) +
         0.15 * scale * static_cast<double>(raw_noise_2d(origo.x + r * VERTEX_DISTANCE, origo.z + c * VERTEX_DISTANCE));
 }
 
-void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
+void Terrain::TerrainPatch::subdivide(int origo_r, int origo_c, int size)
 {
     int half_size = size/2;
     if(half_size >= 1)
@@ -154,7 +154,7 @@ void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
     }
 }
 
-double TerrainPatch::get_height_at(const vec3& position) const
+double Terrain::TerrainPatch::get_height_at(const vec3& position) const
 {
     double tx = fmod(position.x - origo.x, VERTEX_DISTANCE);
     double tz = fmod(position.z - origo.z, VERTEX_DISTANCE);
@@ -169,7 +169,7 @@ double TerrainPatch::get_height_at(const vec3& position) const
     return height;
 }
 
-glm::vec3 TerrainPatch::get_origo()
+glm::vec3 Terrain::TerrainPatch::get_origo()
 {
     return origo;
 }
@@ -211,7 +211,7 @@ pair<int, int> Terrain::index_at(const vec3& position)
     return make_pair(static_cast<int>(index_vector.x), static_cast<int>(index_vector.y));
 }
 
-TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
+Terrain::TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
 {
     for (auto& patch : patches)
     {
