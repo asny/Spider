@@ -5,14 +5,16 @@
 
 #include <iostream>
 #include "gtx/rotate_vector.hpp"
+#include "Random.h"
 
-#include "model.hpp"
 #include "GLCamera.h"
-#include "Butterfly.hpp"
 #include "MeshCreator.h"
 #include "Materials.h"
-#include "Random.h"
 #include "effects/GLFogEffect.h"
+
+#include "spider.hpp"
+#include "terrain.hpp"
+#include "Butterfly.hpp"
 
 #define GLFW_INCLUDE_NONE
 #include "glfw3.h"
@@ -23,7 +25,6 @@ using namespace gle;
 using namespace mesh;
 
 GLFWwindow* gWindow = NULL;
-std::unique_ptr<Model> model;
 
 enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD, WORM };
 
@@ -31,6 +32,9 @@ VIEW_TYPE view_type = FIRST_PERSON;
 
 std::unique_ptr<gle::GLCamera> camera;
 std::unique_ptr<gle::GLScene> scene;
+
+std::unique_ptr<Spider> spider;
+std::unique_ptr<Terrain> terrain;
 
 std::shared_ptr<float> t = std::make_shared<float>(0.f);
 
@@ -57,8 +61,8 @@ void print_fps(double elapsedTime)
 
 void update_camera()
 {
-    vec3 spider_position = model->get_spider()->get_position();
-    vec3 spider_view_direction = model->get_spider()->get_view_direction();
+    vec3 spider_position = spider->get_position();
+    vec3 spider_view_direction = spider->get_view_direction();
     
     vec3 bird_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
     vec3 third_person_view = normalize(vec3(spider_view_direction.x, -0.5, spider_view_direction.z));
@@ -86,23 +90,23 @@ void update(double elapsedTime)
     
     if(glfwGetKey(gWindow, ' '))
     {
-        model->jump(glfwGetKey(gWindow, 'W'));
+        spider->jump(glfwGetKey(gWindow, 'W'));
     }
     if(glfwGetKey(gWindow, 'S'))
     {
-        model->move(-elapsedTime);
+        spider->move(-elapsedTime);
     }
     else if(glfwGetKey(gWindow, 'W'))
     {
-        model->move(elapsedTime);
+        spider->move(elapsedTime);
     }
     if(glfwGetKey(gWindow, 'A'))
     {
-        model->rotate(elapsedTime);
+        spider->rotate(elapsedTime);
     }
     else if(glfwGetKey(gWindow, 'D'))
     {
-        model->rotate(-elapsedTime);
+        spider->rotate(-elapsedTime);
     }
     else if(glfwGetKey(gWindow, 'N'))
     {
@@ -113,7 +117,7 @@ void update(double elapsedTime)
         camera->wireframe(false);
     }
     
-    model->update(elapsedTime);
+    spider->update(elapsedTime);
     
     if(glfwGetKey(gWindow, '1'))
     {
@@ -200,13 +204,15 @@ int main(int argc, char** argv)
     // Create scene
     scene = unique_ptr<GLScene>(new GLScene());
     
-    // Create model
-    model = std::unique_ptr<Model>(new Model(*scene));
-    
     // Create objects
+    auto initial_position = glm::vec3(0., 0.3, -5.);
+    terrain = std::unique_ptr<Terrain>(new Terrain(*scene, initial_position));
+    
+    std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, terrain.get(), std::placeholders::_1);
+    spider = std::unique_ptr<Spider>(new Spider(*scene, initial_position, glm::vec3(0., 0., 1.), get_height_at));
+    
     create_skybox();
     create_cube();
-    //    create_grass();
     
     // Create light
     scene->add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.5, 0.))));
@@ -224,6 +230,7 @@ int main(int argc, char** argv)
         
         update(*t - lastTime);
         Butterfly::spawn_and_destroy_and_update(*scene, *t);
+        terrain->update(*t, spider->get_position());
         
         lastTime = *t;
         
