@@ -3,7 +3,6 @@
 //  Copyright (c) 2015 Asger Nyman Christiansen. All rights reserved.
 //
 
-#include <iostream>
 #include "gtx/rotate_vector.hpp"
 #include "Random.h"
 
@@ -12,8 +11,8 @@
 #include "Materials.h"
 #include "effects/GLFogEffect.h"
 
-#include "spider.hpp"
-#include "terrain.hpp"
+#include "Spider.hpp"
+#include "Terrain.hpp"
 #include "Butterfly.hpp"
 
 #define GLFW_INCLUDE_NONE
@@ -30,7 +29,6 @@ enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD, WORM };
 
 VIEW_TYPE view_type = FIRST_PERSON;
 
-std::unique_ptr<gle::GLCamera> camera;
 std::unique_ptr<gle::GLScene> scene;
 
 std::unique_ptr<Spider> spider;
@@ -59,7 +57,7 @@ void print_fps(double elapsedTime)
     }
 }
 
-void update_camera()
+void update_view(GLCamera& camera)
 {
     vec3 spider_position = spider->get_position();
     vec3 spider_view_direction = spider->get_view_direction();
@@ -70,21 +68,21 @@ void update_camera()
     
     switch (view_type) {
         case FIRST_PERSON:
-            camera->set_view(spider_position - 0.5f * spider_view_direction + vec3(0.,0.4,0.), spider_view_direction);
+            camera.set_view(spider_position - 0.5f * spider_view_direction + vec3(0.,0.4,0.), spider_view_direction);
             break;
         case THIRD_PERSON:
-            camera->set_view(spider_position - 2.f * third_person_view, third_person_view);
+            camera.set_view(spider_position - 2.f * third_person_view, third_person_view);
             break;
         case BIRD:
-            camera->set_view(spider_position - 4.f * bird_view, bird_view);
+            camera.set_view(spider_position - 4.f * bird_view, bird_view);
             break;
         case WORM:
-            camera->set_view(spider_position - 4.f * worm_view, worm_view);
+            camera.set_view(spider_position - 4.f * worm_view, worm_view);
             break;
     }
 }
 
-void update(double elapsedTime)
+void update(double elapsedTime, GLCamera& camera)
 {
     print_fps(elapsedTime);
     
@@ -110,11 +108,11 @@ void update(double elapsedTime)
     }
     else if(glfwGetKey(gWindow, 'N'))
     {
-        camera->wireframe(true);
+        camera.wireframe(true);
     }
     else if(glfwGetKey(gWindow, 'M'))
     {
-        camera->wireframe(false);
+        camera.wireframe(false);
     }
     
     spider->update(elapsedTime);
@@ -135,7 +133,6 @@ void update(double elapsedTime)
     {
         view_type = WORM;
     }
-    update_camera();
 }
 
 void create_cube()
@@ -187,9 +184,9 @@ int main(int argc, char** argv)
     glfwGetFramebufferSize(gWindow, &WIN_SIZE_X, &WIN_SIZE_Y);
     
     // Create camera
-    camera = std::unique_ptr<GLCamera>(new GLCamera(WIN_SIZE_X, WIN_SIZE_Y));
+    auto camera = GLCamera(WIN_SIZE_X, WIN_SIZE_Y);
     auto fog_effect = std::make_shared<GLFogEffect>(make_shared<GLTexture2D>("resources/water_noise.jpg"));
-    camera->set_post_effect(fog_effect);
+    camera.set_post_effect(fog_effect);
     
     // Create scene
     scene = unique_ptr<GLScene>(new GLScene());
@@ -217,14 +214,16 @@ int main(int argc, char** argv)
         *t = glfwGetTime();
         fog_effect->time = *t;
         
-        update(*t - lastTime);
+        update(*t - lastTime, camera);
+        update_view(camera);
+        
         Butterfly::spawn_and_destroy_and_update(*scene, *t);
         terrain->update(*t, spider->get_position());
         
         lastTime = *t;
         
         // draw one frame
-        camera->draw(*scene);
+        camera.draw(*scene);
         
         glfwSwapBuffers(gWindow);
         
