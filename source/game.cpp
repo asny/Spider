@@ -29,8 +29,6 @@ enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD, WORM };
 
 VIEW_TYPE view_type = FIRST_PERSON;
 
-std::shared_ptr<float> t = std::make_shared<float>(0.f);
-
 std::shared_ptr<gle::GLTexture3D> skybox_texture;
 
 void OnError(int errorCode, const char* msg)
@@ -203,16 +201,16 @@ int main(int argc, char** argv)
         glfwPollEvents();
         
         // update the scene based on the time elapsed since last update
-        *t = glfwGetTime();
-        fog_effect->time = *t;
+        double time = glfwGetTime();
+        fog_effect->time = time;
         
-        update(*t - lastTime, camera, spider);
+        update(time - lastTime, camera, spider);
         update_view(camera, spider.get_position(), spider.get_view_direction());
         
-        Butterfly::spawn_and_destroy_and_update(scene, *t);
-        terrain.update(*t, spider.get_position());
+        Butterfly::spawn_and_destroy_and_update(scene, time);
+        terrain.update(time, spider.get_position());
         
-        lastTime = *t;
+        lastTime = time;
         
         // draw one frame
         camera.draw(scene);
