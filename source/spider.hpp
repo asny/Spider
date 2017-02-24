@@ -45,7 +45,6 @@ class Spider
     
     glm::vec3 position;
     glm::vec3 view_direction;
-    std::shared_ptr<mesh::Mesh> legs_geometry;
     std::shared_ptr<glm::mat4> local2world = std::make_shared<glm::mat4>(1.);
     std::function<double(glm::vec3)> get_height_at;
     
@@ -64,14 +63,8 @@ public:
     Spider(gle::GLScene& scene, glm::vec3 _position, glm::vec3 _view_direction, std::function<double(glm::vec3)> _get_height_at) : position(_position), view_direction(_view_direction), get_height_at(_get_height_at)
     {
         height = position.y;
-        legs_geometry = std::make_shared<mesh::Mesh>();
-        for (auto foot_pos : {glm::vec3(0.75, 0., 2.), glm::vec3(1.,0.,1.), glm::vec3(1.,0.,-0.5), glm::vec3(0.75,0.,-2.),
-            glm::vec3(-0.75, 0., 2.), glm::vec3(-1.,0.,1.), glm::vec3(-1.,0.,-0.5), glm::vec3(-0.75,0.,-2.)})
-        {
-            legs.push_back(Leg(legs_geometry, foot_pos));
-        }
-        update_local2world();
         create_spider_body(scene);
+        update_local2world();
     }
     
     glm::vec3 get_position();
@@ -79,11 +72,6 @@ public:
     const std::shared_ptr<glm::mat4> get_local2world()
     {
         return local2world;
-    }
-    
-    std::shared_ptr<mesh::Mesh> get_legs()
-    {
-        return legs_geometry;
     }
     
     void move(float time);

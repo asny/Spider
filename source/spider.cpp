@@ -41,7 +41,13 @@ void Spider::create_spider_body(GLScene& scene)
     
     // Create legs
     auto legs_material = make_shared<GLSpiderLegsMaterial>(glm::vec3(0.3f, 0.2f, 0.2f));
-    scene.add_leaf(get_legs(), legs_material);
+    auto legs_geometry = std::make_shared<mesh::Mesh>();
+    for (auto foot_pos : {glm::vec3(0.75, 0., 2.), glm::vec3(1.,0.,1.), glm::vec3(1.,0.,-0.5), glm::vec3(0.75,0.,-2.),
+        glm::vec3(-0.75, 0., 2.), glm::vec3(-1.,0.,1.), glm::vec3(-1.,0.,-0.5), glm::vec3(-0.75,0.,-2.)})
+    {
+        legs.push_back(Leg(legs_geometry, foot_pos));
+    }
+    scene.add_leaf(legs_geometry, legs_material);
 }
 
 void Spider::Leg::update(const glm::mat4& local2world, std::function<double(glm::vec3)> get_height_at)
