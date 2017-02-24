@@ -29,8 +29,6 @@ enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD, WORM };
 
 VIEW_TYPE view_type = FIRST_PERSON;
 
-std::unique_ptr<gle::GLScene> scene;
-
 std::unique_ptr<Spider> spider;
 std::unique_ptr<Terrain> terrain;
 
@@ -135,7 +133,7 @@ void update(double elapsedTime, GLCamera& camera)
     }
 }
 
-void create_cube()
+void create_cube(GLNode& root)
 {
     auto geometry = MeshCreator::create_box(false);
     auto uv_attribute = shared_ptr<Attribute<VertexID, vec2>>(new Attribute<VertexID, vec2>());
@@ -153,7 +151,7 @@ void create_cube()
     
     auto test_texture = make_shared<GLTexture2D>("resources/test_texture.jpg");
     auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(test_texture, uv_attribute));
-    scene->add_leaf(geometry, material);
+    root.add_leaf(geometry, material);
 }
 
 int main(int argc, char** argv)
@@ -189,19 +187,19 @@ int main(int argc, char** argv)
     camera.set_post_effect(fog_effect);
     
     // Create scene
-    scene = unique_ptr<GLScene>(new GLScene());
+    auto scene = GLScene();
     
     // Create objects
     auto initial_position = glm::vec3(0., 0.3, -5.);
-    terrain = std::unique_ptr<Terrain>(new Terrain(*scene, initial_position));
+    terrain = std::unique_ptr<Terrain>(new Terrain(scene, initial_position));
     
     std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, terrain.get(), std::placeholders::_1);
-    spider = std::unique_ptr<Spider>(new Spider(*scene, initial_position, glm::vec3(0., 0., 1.), get_height_at));
+    spider = std::unique_ptr<Spider>(new Spider(scene, initial_position, glm::vec3(0., 0., 1.), get_height_at));
     
-    create_cube();
+    create_cube(scene);
     
     // Create light
-    scene->add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.5, 0.))));
+    scene.add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.5, 0.))));
     
     // run while the window is open
     double lastTime = glfwGetTime();
@@ -217,13 +215,13 @@ int main(int argc, char** argv)
         update(*t - lastTime, camera);
         update_view(camera);
         
-        Butterfly::spawn_and_destroy_and_update(*scene, *t);
+        Butterfly::spawn_and_destroy_and_update(scene, *t);
         terrain->update(*t, spider->get_position());
         
         lastTime = *t;
         
         // draw one frame
-        camera.draw(*scene);
+        camera.draw(scene);
         
         glfwSwapBuffers(gWindow);
         
