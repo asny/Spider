@@ -194,10 +194,10 @@ void Terrain::create_scene_graph(GLScene& scene)
     
     for (TerrainPatch& patch : patches)
     {
-        auto material = make_shared<TerrainMaterial>(ground_texture, lake_texture, noise_texture, patch.get_uv_coordinates());
-        scene.add_leaf(patch.get_ground(), material);
+        auto terrain_material = make_shared<TerrainMaterial>(time, ground_texture, lake_texture, noise_texture, patch.get_uv_coordinates());
+        scene.add_leaf(patch.get_ground(), terrain_material);
         
-        auto water_material = make_shared<WaterMaterial>(skybox_texture, noise_texture, patch.get_water_uv_coordinates());
+        auto water_material = make_shared<WaterMaterial>(time, skybox_texture, noise_texture, patch.get_water_uv_coordinates());
         scene.add_leaf(patch.get_water(), water_material);
         
         scene.add_leaf(patch.get_grass(), grass_material);
@@ -221,10 +221,11 @@ TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
     return nullptr;
 }
 
-void Terrain::update(double time, const glm::vec3& _position)
+void Terrain::update(double _time, const glm::vec3& _position)
 {
+    *time = _time;
     *position = _position;
-    *wind = glm::vec3(0.5 * sin(time) + 0.5, 0., 0.5 * cos(time + 0.5) + 0.5);
+    *wind = glm::vec3(0.5 * sin(_time) + 0.5, 0., 0.5 * cos(_time + 0.5) + 0.5);
     
     auto index_at_position = index_at(_position);
     
