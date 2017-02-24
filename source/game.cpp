@@ -29,9 +29,6 @@ enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD, WORM };
 
 VIEW_TYPE view_type = FIRST_PERSON;
 
-std::unique_ptr<Spider> spider;
-std::unique_ptr<Terrain> terrain;
-
 std::shared_ptr<float> t = std::make_shared<float>(0.f);
 
 std::shared_ptr<gle::GLTexture3D> skybox_texture;
@@ -55,11 +52,8 @@ void print_fps(double elapsedTime)
     }
 }
 
-void update_view(GLCamera& camera)
+void update_view(GLCamera& camera, const glm::vec3& spider_position, const glm::vec3& spider_view_direction)
 {
-    vec3 spider_position = spider->get_position();
-    vec3 spider_view_direction = spider->get_view_direction();
-    
     vec3 bird_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
     vec3 third_person_view = normalize(vec3(spider_view_direction.x, -0.5, spider_view_direction.z));
     vec3 worm_view = normalize(vec3(0., 1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
@@ -80,29 +74,29 @@ void update_view(GLCamera& camera)
     }
 }
 
-void update(double elapsedTime, GLCamera& camera)
+void update(double elapsedTime, GLCamera& camera, Spider& spider)
 {
     print_fps(elapsedTime);
     
     if(glfwGetKey(gWindow, ' '))
     {
-        spider->jump(glfwGetKey(gWindow, 'W'));
+        spider.jump(glfwGetKey(gWindow, 'W'));
     }
     if(glfwGetKey(gWindow, 'S'))
     {
-        spider->move(-elapsedTime);
+        spider.move(-elapsedTime);
     }
     else if(glfwGetKey(gWindow, 'W'))
     {
-        spider->move(elapsedTime);
+        spider.move(elapsedTime);
     }
     if(glfwGetKey(gWindow, 'A'))
     {
-        spider->rotate(elapsedTime);
+        spider.rotate(elapsedTime);
     }
     else if(glfwGetKey(gWindow, 'D'))
     {
-        spider->rotate(-elapsedTime);
+        spider.rotate(-elapsedTime);
     }
     else if(glfwGetKey(gWindow, 'N'))
     {
@@ -113,7 +107,7 @@ void update(double elapsedTime, GLCamera& camera)
         camera.wireframe(false);
     }
     
-    spider->update(elapsedTime);
+    spider.update(elapsedTime);
     
     if(glfwGetKey(gWindow, '1'))
     {
@@ -191,10 +185,10 @@ int main(int argc, char** argv)
     
     // Create objects
     auto initial_position = glm::vec3(0., 0.3, -5.);
-    terrain = std::unique_ptr<Terrain>(new Terrain(scene, initial_position));
+    auto terrain = Terrain(scene, initial_position);
     
-    std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, terrain.get(), std::placeholders::_1);
-    spider = std::unique_ptr<Spider>(new Spider(scene, initial_position, glm::vec3(0., 0., 1.), get_height_at));
+    std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, &terrain, std::placeholders::_1);
+    auto spider = Spider(scene, initial_position, glm::vec3(0., 0., 1.), get_height_at);
     
     create_cube(scene);
     
@@ -212,11 +206,11 @@ int main(int argc, char** argv)
         *t = glfwGetTime();
         fog_effect->time = *t;
         
-        update(*t - lastTime, camera);
-        update_view(camera);
+        update(*t - lastTime, camera, spider);
+        update_view(camera, spider.get_position(), spider.get_view_direction());
         
         Butterfly::spawn_and_destroy_and_update(scene, *t);
-        terrain->update(*t, spider->get_position());
+        terrain.update(*t, spider.get_position());
         
         lastTime = *t;
         
