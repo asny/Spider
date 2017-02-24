@@ -87,10 +87,8 @@ void update_camera(GLCamera& camera, const glm::vec3& spider_position, const glm
     }
 }
 
-void update(double elapsedTime, GLCamera& camera, Spider& spider)
+void update_spider(Spider& spider, double elapsedTime)
 {
-    print_fps(elapsedTime);
-    
     if(glfwGetKey(gWindow, ' '))
     {
         spider.jump(glfwGetKey(gWindow, 'W'));
@@ -110,14 +108,6 @@ void update(double elapsedTime, GLCamera& camera, Spider& spider)
     else if(glfwGetKey(gWindow, 'D'))
     {
         spider.rotate(-elapsedTime);
-    }
-    else if(glfwGetKey(gWindow, 'N'))
-    {
-        camera.wireframe(true);
-    }
-    else if(glfwGetKey(gWindow, 'M'))
-    {
-        camera.wireframe(false);
     }
     
     spider.update(elapsedTime);
@@ -192,7 +182,7 @@ int main(int argc, char** argv)
     scene.add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.5, 0.))));
     
     // run while the window is open
-    double lastTime = glfwGetTime();
+    double last_time = glfwGetTime();
     while(!glfwWindowShouldClose(gWindow))
     {
         // process pending events
@@ -200,15 +190,16 @@ int main(int argc, char** argv)
         
         // update the scene based on the time elapsed since last update
         double time = glfwGetTime();
-        fog_effect->time = time;
+        double elapsed_time = time - last_time;
+        last_time = time;
         
-        update(time - lastTime, camera, spider);
+        print_fps(elapsed_time);
+        update_spider(spider, elapsed_time);
         update_camera(camera, spider.get_position(), spider.get_view_direction());
         
+        fog_effect->time = time;
         Butterfly::spawn_and_destroy_and_update(scene, time);
         terrain.update(time, spider.get_position());
-        
-        lastTime = time;
         
         // draw one frame
         camera.draw(scene);
