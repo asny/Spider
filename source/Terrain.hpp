@@ -82,8 +82,6 @@ class Terrain
     
     TerrainPatch* patch_at(std::pair<int, int> index);
     
-    void create_scene_graph(gle::GLScene& scene);
-    
 public:
     
     Terrain(gle::GLScene& scene, const glm::vec3& position);

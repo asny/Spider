@@ -159,16 +159,6 @@ void create_cube()
     scene->add_leaf(geometry, material);
 }
 
-void create_skybox()
-{
-    const string path = "resources/skybox_evening/";
-    auto filenames = {path + "right.jpg", path + "left.jpg", path + "top.jpg", path + "top.jpg", path + "front.jpg", path + "back.jpg"};
-    skybox_texture = make_shared<GLTexture3D>(filenames);
-    auto material = make_shared<GLSkyboxMaterial>(skybox_texture);
-    auto geometry = MeshCreator::create_box(true);
-    scene->add_leaf(geometry, material);
-}
-
 int main(int argc, char** argv)
 {
     int WIN_SIZE_X = 1400;
@@ -211,7 +201,6 @@ int main(int argc, char** argv)
     std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, terrain.get(), std::placeholders::_1);
     spider = std::unique_ptr<Spider>(new Spider(*scene, initial_position, glm::vec3(0., 0., 1.), get_height_at));
     
-    create_skybox();
     create_cube();
     
     // Create light

@@ -171,14 +171,11 @@ glm::vec3 Terrain::TerrainPatch::get_origo()
     return origo;
 }
 
-Terrain::Terrain(GLScene& scene, const glm::vec3& position)
+Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
 {
-    update(0., position);
-    create_scene_graph(scene);
-}
-
-void Terrain::create_scene_graph(GLScene& scene)
-{
+    update(0., _position);
+    
+    // Load textures
     auto ground_texture = make_shared<GLTexture2D>("resources/grass.jpg");
     auto lake_texture = make_shared<GLTexture2D>("resources/bottom.png");
     auto noise_texture = make_shared<GLTexture2D>("resources/water_noise.jpg");
@@ -187,8 +184,13 @@ void Terrain::create_scene_graph(GLScene& scene)
     auto filenames = {path + "right.jpg", path + "left.jpg", path + "top.jpg", path + "top.jpg", path + "front.jpg", path + "back.jpg"};
     auto skybox_texture = make_shared<GLTexture3D>(filenames);
     
-    auto grass_material = make_shared<GLGrassMaterial>(position, wind, vec3(0.3f,0.7f,0.f));
+    // Create skybox
+    auto skybox_material = make_shared<GLSkyboxMaterial>(skybox_texture);
+    auto skybox_geometry = MeshCreator::create_box(true);
+    scene.add_leaf(skybox_geometry, skybox_material);
     
+    // Create terrain
+    auto grass_material = make_shared<GLGrassMaterial>(position, wind, vec3(0.3f,0.7f,0.f));
     for (TerrainPatch& patch : patches)
     {
         auto terrain_material = make_shared<TerrainMaterial>(time, ground_texture, lake_texture, noise_texture, patch.get_uv_coordinates());
