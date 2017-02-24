@@ -162,13 +162,6 @@ void create_terrain()
     }
 }
 
-void create_spider_legs()
-{
-    auto material = make_shared<GLSpiderLegsMaterial>(glm::vec3(0.3f, 0.2f, 0.2f));
-    auto geometry = model->get_spider()->get_legs();
-    scene->add_leaf(geometry, material);
-}
-
 void create_cube()
 {
     auto geometry = MeshCreator::create_box(false);
@@ -243,7 +236,6 @@ int main(int argc, char** argv)
     create_cube();
     create_terrain();
     //    create_grass();
-    create_spider_legs();
     
     // Create light
     scene->add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.5, 0.))));

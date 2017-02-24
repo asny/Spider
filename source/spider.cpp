@@ -38,6 +38,10 @@ void Spider::create_spider_body(GLScene& scene)
     }
     auto material = make_shared<GLColorMaterial>(vec3(0.3f, 0.2f, 0.2f), normals);
     spider_transformation->add_leaf(geometry, material);
+    
+    // Create legs
+    auto legs_material = make_shared<GLSpiderLegsMaterial>(glm::vec3(0.3f, 0.2f, 0.2f));
+    scene.add_leaf(get_legs(), legs_material);
 }
 
 void Spider::Leg::update(const glm::mat4& local2world, std::function<double(glm::vec3)> get_height_at)
