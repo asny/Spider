@@ -7,8 +7,38 @@
 //
 
 #include "spider.hpp"
+#include "Materials.h"
 
 using namespace glm;
+using namespace gle;
+using namespace std;
+using namespace mesh;
+
+void Spider::create_spider_body(GLScene& scene)
+{
+    auto spider_transformation = std::make_shared<GLTransformationNode>(get_local2world());
+    scene.add_child(spider_transformation);
+    
+    auto geometry = shared_ptr<Mesh>(new Mesh());
+    auto normals = shared_ptr<Attribute<VertexID, vec3>>(new Attribute<VertexID, vec3>());
+    MeshCreator::load_from_obj("resources/spider/spider.obj", *geometry, *normals);
+    
+    vec3 center;
+    for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
+    {
+        vec3 pos = geometry->position()->at(vertex);
+        center += pos;
+    }
+    center /= geometry->get_no_vertices();
+    
+    for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
+    {
+        vec3 p = geometry->position()->at(vertex);
+        geometry->position()->at(vertex) = p - center + vec3(0,0,0.3);
+    }
+    auto material = make_shared<GLColorMaterial>(vec3(0.3f, 0.2f, 0.2f), normals);
+    spider_transformation->add_leaf(geometry, material);
+}
 
 void Spider::Leg::update(const glm::mat4& local2world, std::function<double(glm::vec3)> get_height_at)
 {

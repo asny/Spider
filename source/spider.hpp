@@ -15,6 +15,7 @@
 #include "gtx/rotate_vector.hpp"
 #include "glm.hpp"
 #include "Mesh.h"
+#include "GLScene.h"
 #include <vector>
 #include <cmath>
 
@@ -60,7 +61,7 @@ class Spider
     void update_local2world();
     
 public:
-    Spider(glm::vec3 _position, glm::vec3 _view_direction, std::function<double(glm::vec3)> _get_height_at) : position(_position), view_direction(_view_direction), get_height_at(_get_height_at)
+    Spider(gle::GLScene& scene, glm::vec3 _position, glm::vec3 _view_direction, std::function<double(glm::vec3)> _get_height_at) : position(_position), view_direction(_view_direction), get_height_at(_get_height_at)
     {
         height = position.y;
         legs_geometry = std::make_shared<mesh::Mesh>();
@@ -70,6 +71,7 @@ public:
             legs.push_back(Leg(legs_geometry, foot_pos));
         }
         update_local2world();
+        create_spider_body(scene);
     }
     
     glm::vec3 get_position();
@@ -91,4 +93,8 @@ public:
     void jump(bool move_forward);
     
     bool update(float time);
+    
+private:
+    void create_spider_body(gle::GLScene& scene);
+    
 };

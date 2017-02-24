@@ -162,32 +162,6 @@ void create_terrain()
     }
 }
 
-void create_spider_body()
-{
-    auto spider_transformation = std::make_shared<GLTransformationNode>(model->get_spider()->get_local2world());
-    scene->add_child(spider_transformation);
-    
-    auto geometry = shared_ptr<Mesh>(new Mesh());
-    auto normals = shared_ptr<Attribute<VertexID, vec3>>(new Attribute<VertexID, vec3>());
-    MeshCreator::load_from_obj("resources/spider/spider.obj", *geometry, *normals);
-    
-    vec3 center;
-    for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
-    {
-        vec3 pos = geometry->position()->at(vertex);
-        center += pos;
-    }
-    center /= geometry->get_no_vertices();
-    
-    for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
-    {
-        vec3 p = geometry->position()->at(vertex);
-        geometry->position()->at(vertex) = p - center + vec3(0,0,0.3);
-    }
-    auto material = make_shared<GLColorMaterial>(vec3(0.3f, 0.2f, 0.2f), normals);
-    spider_transformation->add_leaf(geometry, material);
-}
-
 void create_spider_legs()
 {
     auto material = make_shared<GLSpiderLegsMaterial>(glm::vec3(0.3f, 0.2f, 0.2f));
@@ -262,14 +236,13 @@ int main(int argc, char** argv)
     scene = unique_ptr<GLScene>(new GLScene());
     
     // Create model
-    model = std::unique_ptr<Model>(new Model());
+    model = std::unique_ptr<Model>(new Model(*scene));
     
     // Create objects
     create_skybox();
     create_cube();
     create_terrain();
     //    create_grass();
-    create_spider_body();
     create_spider_legs();
     
     // Create light
