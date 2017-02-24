@@ -76,18 +76,20 @@ public:
 class Terrain
 {
     std::vector<TerrainPatch> patches;
+    std::shared_ptr<glm::vec3> wind = std::make_shared<glm::vec3>(0., 0., 0.);
+    std::shared_ptr<glm::vec3> position = std::make_shared<glm::vec3>(0., 0., 0.);
     
     std::pair<int, int> index_at(const glm::vec3& position);
+    
     TerrainPatch* patch_at(std::pair<int, int> index);
+    
     void create_scene_graph(gle::GLScene& scene);
     
 public:
     
     Terrain(gle::GLScene& scene, const glm::vec3& position);
     
-    std::vector<TerrainPatch>& get_patches();
-    
-    void update(const glm::vec3& position);
+    void update(double time, const glm::vec3& position);
     
     double get_height_at(const glm::vec3& position);
 };

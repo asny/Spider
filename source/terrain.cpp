@@ -176,7 +176,7 @@ glm::vec3 TerrainPatch::get_origo()
 
 Terrain::Terrain(GLScene& scene, const glm::vec3& position)
 {
-    update(position);
+    update(0., position);
     create_scene_graph(scene);
 }
 
@@ -190,13 +190,17 @@ void Terrain::create_scene_graph(GLScene& scene)
     auto filenames = {path + "right.jpg", path + "left.jpg", path + "top.jpg", path + "top.jpg", path + "front.jpg", path + "back.jpg"};
     auto skybox_texture = make_shared<GLTexture3D>(filenames);
     
-    for (TerrainPatch& patch : get_patches())
+    auto grass_material = make_shared<GLGrassMaterial>(position, wind, vec3(0.3f,0.7f,0.f));
+    
+    for (TerrainPatch& patch : patches)
     {
         auto material = make_shared<TerrainMaterial>(ground_texture, lake_texture, noise_texture, patch.get_uv_coordinates());
         scene.add_leaf(patch.get_ground(), material);
         
         auto water_material = make_shared<WaterMaterial>(skybox_texture, noise_texture, patch.get_water_uv_coordinates());
         scene.add_leaf(patch.get_water(), water_material);
+        
+        scene.add_leaf(patch.get_grass(), grass_material);
     }
 }
 
@@ -217,9 +221,12 @@ TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
     return nullptr;
 }
 
-void Terrain::update(const glm::vec3& position)
+void Terrain::update(double time, const glm::vec3& _position)
 {
-    auto index_at_position = index_at(position);
+    *position = _position;
+    *wind = glm::vec3(0.5 * sin(time) + 0.5, 0., 0.5 * cos(time + 0.5) + 0.5);
+    
+    auto index_at_position = index_at(_position);
     
     std::vector<TerrainPatch*> free_patches;
     for (auto& patch : patches)
@@ -254,11 +261,6 @@ void Terrain::update(const glm::vec3& position)
             }
         }
     }
-}
-
-std::vector<TerrainPatch>& Terrain::get_patches()
-{
-    return patches;
 }
 
 double Terrain::get_height_at(const glm::vec3& position)

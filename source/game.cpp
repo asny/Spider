@@ -32,8 +32,6 @@ VIEW_TYPE view_type = FIRST_PERSON;
 std::unique_ptr<gle::GLCamera> camera;
 std::unique_ptr<gle::GLScene> scene;
 
-std::shared_ptr<glm::vec3> wind = std::make_shared<glm::vec3>(0., 0., 0.);
-std::shared_ptr<glm::vec3> spider_pos = std::make_shared<glm::vec3>(0., 0., 0.);
 std::shared_ptr<float> t = std::make_shared<float>(0.f);
 
 std::shared_ptr<gle::GLTexture3D> skybox_texture;
@@ -116,7 +114,6 @@ void update(double elapsedTime)
     }
     
     model->update(elapsedTime);
-    *spider_pos = model->get_spider()->get_position();
     
     if(glfwGetKey(gWindow, '1'))
     {
@@ -135,15 +132,6 @@ void update(double elapsedTime)
         view_type = WORM;
     }
     update_camera();
-}
-
-void create_grass()
-{
-    auto material = make_shared<GLGrassMaterial>(spider_pos, wind, vec3(0.3f,0.7f,0.f));
-    for (TerrainPatch& patch : model->get_terrain_patches())
-    {
-        scene->add_leaf(patch.get_grass(), material);
-    }
 }
 
 void create_cube()
@@ -236,8 +224,6 @@ int main(int argc, char** argv)
         
         update(*t - lastTime);
         Butterfly::spawn_and_destroy_and_update(*scene, *t);
-        
-        *wind = glm::vec3(0.5 * sin(*t) + 0.5, 0., 0.5 * cos(*t + 0.5) + 0.5);
         
         lastTime = *t;
         

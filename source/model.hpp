@@ -20,9 +20,9 @@ class Model {
     std::unique_ptr<Spider> spider;
     std::unique_ptr<Terrain> terrain;
     
-    void update_terrain()
+    void update_terrain(double time)
     {
-        terrain->update(spider->get_position());
+        terrain->update(time, spider->get_position());
     }
     
 public:
@@ -42,17 +42,12 @@ public:
         return spider.get();
     }
     
-    std::vector<TerrainPatch>& get_terrain_patches()
-    {
-        return terrain->get_patches();
-    }
-    
     // ******** CONTROL ********
     
     void move(double time)
     {
         spider->move(time);
-        update_terrain();
+        update_terrain(time);
     }
     
     void rotate(double time)
@@ -70,7 +65,7 @@ public:
         bool is_changed = spider->update(time);
         if(is_changed)
         {
-            update_terrain();
+            update_terrain(time);
         }
     }
 };
