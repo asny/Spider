@@ -22,6 +22,7 @@ using namespace std;
 using namespace glm;
 using namespace gle;
 using namespace mesh;
+using namespace std::chrono;
 
 GLFWwindow* gWindow = NULL;
 
@@ -182,16 +183,18 @@ int main(int argc, char** argv)
     scene.add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.5, 0.))));
     
     // run while the window is open
-    double last_time = glfwGetTime();
+    auto start_time = high_resolution_clock::now();
+    auto last_time = start_time;
     while(!glfwWindowShouldClose(gWindow))
     {
         // process pending events
         glfwPollEvents();
         
         // update the scene based on the time elapsed since last update
-        double time = glfwGetTime();
-        double elapsed_time = time - last_time;
-        last_time = time;
+        auto current_time = high_resolution_clock::now();
+        double time = 0.001 * duration_cast<milliseconds>(current_time - start_time).count();
+        double elapsed_time = 0.001 * duration_cast<milliseconds>(current_time - last_time).count();
+        last_time = current_time;
         
         print_fps(elapsed_time);
         update_spider(spider, elapsed_time);
