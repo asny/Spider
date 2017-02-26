@@ -165,7 +165,7 @@ int main(int argc, char** argv)
     // Create camera
     auto camera = GLCamera(WIN_SIZE_X, WIN_SIZE_Y);
     auto fog_effect = std::make_shared<GLFogEffect>(make_shared<GLTexture2D>("resources/water_noise.jpg"));
-    camera.set_post_effect(fog_effect);
+    camera.add_post_effect(fog_effect);
     
     // Create scene
     auto scene = GLScene();
