@@ -2,7 +2,7 @@
 
 in vec2 posLocal;
 
-out vec4 fragColour;
+layout (location = 0) out vec4 color;
 
 void main(void)
 {
@@ -12,5 +12,5 @@ void main(void)
         discard;
     }
     float opacity = 0.25f * (1.f - dist);
-    fragColour = vec4(1., 1., 1., opacity);
+    color = vec4(1., 1., 1., opacity);
 }

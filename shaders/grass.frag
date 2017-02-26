@@ -12,7 +12,7 @@ in vec3 pos;
 in vec3 nor;
 in float ambientFactor;
 
-out vec4 fragColour;
+layout (location = 0) out vec4 color;
 
 void main(void)
 {
@@ -27,5 +27,5 @@ void main(void)
     // Calculate colour
     vec3 ambient = ambientFactor * ambientMat;
     vec3 diffuse = clamp( diffuseMat * max(dot(N,L), 0.0) , 0.0, 1.0 ) ;
-    fragColour = vec4(ambient + diffuse, opacity);
+    color = vec4(ambient + diffuse, opacity);
 }
