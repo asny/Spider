@@ -87,8 +87,9 @@ Butterfly::Butterfly()
     start_wing_angle = Random::value(0, pi<double>());
 }
 
-void Butterfly::update(double time)
+void Butterfly::update()
 {
+    float time = gle::time();
     float elapsed_time = time - last_time;
     last_time = time;
     

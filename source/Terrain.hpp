@@ -86,7 +86,7 @@ public:
     
     Terrain(gle::GLScene& scene, const glm::vec3& position);
     
-    void update(double time, const glm::vec3& position);
+    void update(const glm::vec3& position);
     
     double get_height_at(const glm::vec3& position);
 };

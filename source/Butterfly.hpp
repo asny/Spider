@@ -21,7 +21,7 @@ class Butterfly : public gle::GLNode
     std::shared_ptr<glm::mat4> transformation = std::make_shared<glm::mat4>(1.);
     std::shared_ptr<float> wing_angle = std::make_shared<float>(0.f);
     
-    void update(double time);
+    void update();
     
     static void spawn(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node)
     {
@@ -49,7 +49,7 @@ class Butterfly : public gle::GLNode
 public:
     Butterfly();
     
-    static void spawn_and_destroy_and_update(gle::GLNode& node, double time)
+    static void spawn_and_destroy_and_update(gle::GLNode& node)
     {
         static std::vector<std::shared_ptr<Butterfly>> butterflies;
         spawn(butterflies, node);
@@ -57,7 +57,7 @@ public:
         
         for(auto butterfly : butterflies)
         {
-            butterfly->update(time);
+            butterfly->update();
         }
     }
 };

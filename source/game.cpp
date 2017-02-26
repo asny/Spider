@@ -210,10 +210,8 @@ int main(int argc, char** argv)
         update_spider(spider, elapsed_time);
         update_camera(camera, spider.get_position(), spider.get_view_direction());
         
-        double time = get_time();
-        fog_effect->time = time;
-        Butterfly::spawn_and_destroy_and_update(scene, time);
-        terrain.update(time, spider.get_position());
+        Butterfly::spawn_and_destroy_and_update(scene);
+        terrain.update(spider.get_position());
         
         // draw one frame
         camera.draw(scene);

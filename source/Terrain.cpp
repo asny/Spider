@@ -173,7 +173,7 @@ glm::vec3 Terrain::TerrainPatch::get_origo()
 
 Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
 {
-    update(0., _position);
+    update(_position);
     
     // Load textures
     auto ground_texture = make_shared<GLTexture2D>("resources/grass.jpg");
@@ -220,11 +220,11 @@ Terrain::TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
     return nullptr;
 }
 
-void Terrain::update(double _time, const glm::vec3& _position)
+void Terrain::update(const glm::vec3& _position)
 {
-    *time = _time;
+    *time = gle::time();
     *position = _position;
-    *wind = glm::vec3(0.5 * sin(_time) + 0.5, 0., 0.5 * cos(_time + 0.5) + 0.5);
+    *wind = glm::vec3(0.5 * sin(*time) + 0.5, 0., 0.5 * cos(*time + 0.5) + 0.5);
     
     auto index_at_position = index_at(_position);
     
