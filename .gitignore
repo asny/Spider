@@ -1,14 +1,11 @@
 .DS_Store
 
 # 3d model files
-*.obj
 *.3ds
 *.lwo
 *.mtl
 *.tif
 *.dxf
-*.jpg
-*.png
 *.mix
 
 # Xcode user project files
