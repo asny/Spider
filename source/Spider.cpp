@@ -22,7 +22,7 @@ void Spider::create_scene_graph(GLScene& scene)
     
     auto geometry = shared_ptr<Mesh>(new Mesh());
     auto normals = shared_ptr<Attribute<VertexID, vec3>>(new Attribute<VertexID, vec3>());
-    MeshCreator::load_from_obj("resources/spider/spider.obj", *geometry, *normals);
+    MeshCreator::load_from_obj("resources/spider.obj", *geometry, *normals);
     
     vec3 center;
     for(auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
