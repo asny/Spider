@@ -10,10 +10,10 @@
 		493F8F141E475DF600D94AC1 /* Butterfly.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 493F8F121E475DF600D94AC1 /* Butterfly.cpp */; };
 		496B07AA1DF99EFC00CFBD10 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 496B07A91DF99EFC00CFBD10 /* OpenGL.framework */; };
 		49BCF6931DF85F7E00A18A7E /* libglfw.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BCF6921DF85F7E00A18A7E /* libglfw.dylib */; };
+		49E3833C1E6A11240024D5D7 /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49E3833A1E6A11240024D5D7 /* simplexnoise.cpp */; };
 		49EBFAF41E43BEA400503199 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EBFAF21E43BEA400503199 /* SDL2_image.framework */; };
 		49EBFAF51E43BEA400503199 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EBFAF31E43BEA400503199 /* SDL2.framework */; };
 		7A383A271BBFB6F700E29333 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A383A261BBFB6F700E29333 /* game.cpp */; };
-		7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */; };
 		7AB0F2C01BC07B52009D85FD /* Spider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2BE1BC07B52009D85FD /* Spider.cpp */; };
 		7AB0F2C51BC25326009D85FD /* Terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0F2C31BC25326009D85FD /* Terrain.cpp */; };
 /* End PBXBuildFile section */
@@ -34,9 +34,11 @@
 		4900D18D1E0BBC4D00F92EBD /* Materials.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Materials.h; path = materials/Materials.h; sourceTree = "<group>"; };
 		493F8F121E475DF600D94AC1 /* Butterfly.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Butterfly.cpp; path = source/Butterfly.cpp; sourceTree = "<group>"; };
 		493F8F131E475DF600D94AC1 /* Butterfly.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Butterfly.hpp; path = source/Butterfly.hpp; sourceTree = "<group>"; };
-		493F8F151E47B4BB00D94AC1 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Random.h; sourceTree = "<group>"; };
 		496B07A91DF99EFC00CFBD10 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		49BCF6921DF85F7E00A18A7E /* libglfw.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.dylib; path = ../../../../opt/local/lib/libglfw.dylib; sourceTree = "<group>"; };
+		49E383391E6A11240024D5D7 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Random.h; path = random/Random.h; sourceTree = "<group>"; };
+		49E3833A1E6A11240024D5D7 /* simplexnoise.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = simplexnoise.cpp; path = random/simplexnoise.cpp; sourceTree = "<group>"; };
+		49E3833B1E6A11240024D5D7 /* simplexnoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplexnoise.h; path = random/simplexnoise.h; sourceTree = "<group>"; };
 		49EBFAE41E3F1DE400503199 /* water.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = water.frag; path = shaders/water.frag; sourceTree = "<group>"; };
 		49EBFAE61E3FDD3300503199 /* terrain.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = terrain.frag; path = shaders/terrain.frag; sourceTree = "<group>"; };
 		49EBFAF21E43BEA400503199 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
@@ -45,8 +47,6 @@
 		7A383A1C1BBFB6AC00E29333 /* Spider */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Spider; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A383A261BBFB6F700E29333 /* game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = game.cpp; path = source/game.cpp; sourceTree = "<group>"; };
 		7A5252671D83F6BC00BE9D1C /* fog.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fog.frag; path = shaders/fog.frag; sourceTree = "<group>"; };
-		7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplexnoise.cpp; sourceTree = "<group>"; };
-		7A70D0FD1BC6BEE8003E859B /* simplexnoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexnoise.h; sourceTree = "<group>"; };
 		7AB0F2BE1BC07B52009D85FD /* Spider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Spider.cpp; path = source/Spider.cpp; sourceTree = "<group>"; };
 		7AB0F2BF1BC07B52009D85FD /* Spider.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Spider.hpp; path = source/Spider.hpp; sourceTree = "<group>"; };
 		7AB0F2C31BC25326009D85FD /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Terrain.cpp; path = source/Terrain.cpp; sourceTree = "<group>"; };
@@ -82,12 +82,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		49E3833D1E6A112D0024D5D7 /* Random */ = {
+			isa = PBXGroup;
+			children = (
+				49E383391E6A11240024D5D7 /* Random.h */,
+				49E3833A1E6A11240024D5D7 /* simplexnoise.cpp */,
+				49E3833B1E6A11240024D5D7 /* simplexnoise.h */,
+			);
+			name = Random;
+			sourceTree = "<group>";
+		};
 		7A383A131BBFB6AC00E29333 = {
 			isa = PBXGroup;
 			children = (
 				49BCF6921DF85F7E00A18A7E /* libglfw.dylib */,
 				7A383A341BBFD93A00E29333 /* Shaders */,
-				7A70D0FB1BC6BEE8003E859B /* SimplexNoise */,
+				49E3833D1E6A112D0024D5D7 /* Random */,
 				7AF9C41A1BEBEB12008AE5F5 /* Rendering */,
 				7AB0F2BD1BC07AB1009D85FD /* Model */,
 				7A383A261BBFB6F700E29333 /* game.cpp */,
@@ -117,16 +127,6 @@
 				7AB0F2C61BC28EEB009D85FD /* terrain.geom */,
 			);
 			name = Shaders;
-			sourceTree = "<group>";
-		};
-		7A70D0FB1BC6BEE8003E859B /* SimplexNoise */ = {
-			isa = PBXGroup;
-			children = (
-				7A70D0FC1BC6BEE8003E859B /* simplexnoise.cpp */,
-				7A70D0FD1BC6BEE8003E859B /* simplexnoise.h */,
-				493F8F151E47B4BB00D94AC1 /* Random.h */,
-			);
-			path = SimplexNoise;
 			sourceTree = "<group>";
 		};
 		7AB0F2BD1BC07AB1009D85FD /* Model */ = {
@@ -210,7 +210,7 @@
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
 				7AB0F2C01BC07B52009D85FD /* Spider.cpp in Sources */,
 				7AB0F2C51BC25326009D85FD /* Terrain.cpp in Sources */,
-				7A70D0FE1BC6BEE8003E859B /* simplexnoise.cpp in Sources */,
+				49E3833C1E6A11240024D5D7 /* simplexnoise.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
