@@ -44,7 +44,6 @@ void print_fps(double elapsedTime)
 
 void update_camera(GLCamera& camera, const glm::vec3& spider_position, const glm::vec3& spider_view_direction)
 {
-    
     vec3 bird_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
     vec3 third_person_view = normalize(vec3(spider_view_direction.x, -0.5, spider_view_direction.z));
     vec3 worm_view = normalize(vec3(0., 1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
@@ -67,25 +66,26 @@ void update_camera(GLCamera& camera, const glm::vec3& spider_position, const glm
 
 void update_spider(Spider& spider, double elapsedTime)
 {
-//    if(glfwGetKey(gWindow, ' '))
+    const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
+    if( currentKeyStates[ SDL_SCANCODE_UP ] )
+    {
+        spider.move(elapsedTime);
+    }
+    else if( currentKeyStates[ SDL_SCANCODE_DOWN ] )
+    {
+        spider.move(-elapsedTime);
+    }
+    else if( currentKeyStates[ SDL_SCANCODE_LEFT ] )
+    {
+        spider.rotate(elapsedTime);
+    }
+    else if( currentKeyStates[ SDL_SCANCODE_RIGHT ] )
+    {
+        spider.rotate(-elapsedTime);
+    }
+//    else if( currentKeyStates[ SDL_SCANCODE_SPACE ] )
 //    {
-//        spider.jump(glfwGetKey(gWindow, 'W'));
-//    }
-//    if(glfwGetKey(gWindow, 'S'))
-//    {
-//        spider.move(-elapsedTime);
-//    }
-//    else if(glfwGetKey(gWindow, 'W'))
-//    {
-//        spider.move(elapsedTime);
-//    }
-//    if(glfwGetKey(gWindow, 'A'))
-//    {
-//        spider.rotate(elapsedTime);
-//    }
-//    else if(glfwGetKey(gWindow, 'D'))
-//    {
-//        spider.rotate(-elapsedTime);
+//        spider.jump();
 //    }
     
     spider.update(elapsedTime);
@@ -127,17 +127,6 @@ bool handle_events()
         {
             switch( e.key.keysym.sym )
             {
-                case SDLK_UP:
-                break;
-                
-                case SDLK_DOWN:
-                break;
-                
-                case SDLK_LEFT:
-                break;
-                
-                case SDLK_RIGHT:
-                break;
                 case '1':
                     view_type = FIRST_PERSON;
                 break;
@@ -213,14 +202,15 @@ int main(int argc, char** argv)
     {
         quit = handle_events();
         
-        // update the scene based on the time elapsed since last update
+        // Update time
         float current_time = gle::time();
         float elapsed_time = current_time - last_time;
         last_time = current_time;
         print_fps(elapsed_time);
+        
+        // update the scene based on the time elapsed since last update
         update_spider(spider, elapsed_time);
         update_camera(camera, spider.get_position(), spider.get_view_direction());
-        
         Butterfly::spawn_and_destroy_and_update(scene);
         terrain.update(spider.get_position());
         
