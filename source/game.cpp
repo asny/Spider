@@ -67,59 +67,46 @@ void update_camera(GLCamera& camera, const glm::vec3& spider_position, const glm
 bool handle_events(Spider& spider)
 {
     SDL_Event e;
-    //Handle events on queue
     while( SDL_PollEvent( &e ) != 0 )
     {
-        //User requests quit
-        if( e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
+        if( e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE)
         {
             return true;
         }
-        if( e.type == SDL_KEYDOWN )
-        {
-            switch( e.key.keysym.sym )
-            {
-                case SDLK_1:
-                    view_type = FIRST_PERSON;
-                break;
-                case SDLK_2:
-                    view_type = THIRD_PERSON;
-                break;
-                case SDLK_3:
-                    view_type = BIRD;
-                break;
-                case SDLK_4:
-                    view_type = WORM;
-                break;
-                case SDLK_SPACE:
-                    spider.jump();
-                break;
-                default:
-                break;
-            }
-            
-        }
-        
         switch( e.key.keysym.sym )
         {
             case SDLK_UP:
             case SDLK_w:
             spider.move_foward(e.type == SDL_KEYDOWN);
             break;
-            
             case SDLK_DOWN:
             case SDLK_s:
             spider.move_backward(e.type == SDL_KEYDOWN);
             break;
-            
             case SDLK_LEFT:
             case SDLK_a:
             spider.rotate_left(e.type == SDL_KEYDOWN);
             break;
-            
             case SDLK_RIGHT:
             case SDLK_d:
             spider.rotate_right(e.type == SDL_KEYDOWN);
+            break;
+            case SDLK_1:
+            view_type = FIRST_PERSON;
+            break;
+            case SDLK_2:
+            view_type = THIRD_PERSON;
+            break;
+            case SDLK_3:
+            view_type = BIRD;
+            break;
+            case SDLK_4:
+            view_type = WORM;
+            break;
+            case SDLK_SPACE:
+            spider.jump();
+            break;
+            default:
             break;
         }
     }
