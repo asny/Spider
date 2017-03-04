@@ -15,8 +15,8 @@
 #include "Terrain.hpp"
 #include "Butterfly.hpp"
 
-#define GLFW_INCLUDE_NONE
-#include "glfw3.h"
+#define SDL_MAIN_HANDLED
+#include "SDL.h"
 
 using namespace std;
 using namespace glm;
@@ -24,7 +24,7 @@ using namespace gle;
 using namespace mesh;
 using namespace std::chrono;
 
-GLFWwindow* gWindow = NULL;
+SDL_Window* window = NULL;
 
 void OnError(int errorCode, const char* msg)
 {
@@ -51,22 +51,22 @@ void update_camera(GLCamera& camera, const glm::vec3& spider_position, const glm
     
     static VIEW_TYPE view_type = FIRST_PERSON;
     
-    if(glfwGetKey(gWindow, '1'))
-    {
-        view_type = FIRST_PERSON;
-    }
-    else if(glfwGetKey(gWindow, '2'))
-    {
-        view_type = THIRD_PERSON;
-    }
-    else if(glfwGetKey(gWindow, '3'))
-    {
-        view_type = BIRD;
-    }
-    else if(glfwGetKey(gWindow, '4'))
-    {
-        view_type = WORM;
-    }
+//    if(glfwGetKey(gWindow, '1'))
+//    {
+//        view_type = FIRST_PERSON;
+//    }
+//    else if(glfwGetKey(gWindow, '2'))
+//    {
+//        view_type = THIRD_PERSON;
+//    }
+//    else if(glfwGetKey(gWindow, '3'))
+//    {
+//        view_type = BIRD;
+//    }
+//    else if(glfwGetKey(gWindow, '4'))
+//    {
+//        view_type = WORM;
+//    }
     
     vec3 bird_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
     vec3 third_person_view = normalize(vec3(spider_view_direction.x, -0.5, spider_view_direction.z));
@@ -90,26 +90,26 @@ void update_camera(GLCamera& camera, const glm::vec3& spider_position, const glm
 
 void update_spider(Spider& spider, double elapsedTime)
 {
-    if(glfwGetKey(gWindow, ' '))
-    {
-        spider.jump(glfwGetKey(gWindow, 'W'));
-    }
-    if(glfwGetKey(gWindow, 'S'))
-    {
-        spider.move(-elapsedTime);
-    }
-    else if(glfwGetKey(gWindow, 'W'))
-    {
-        spider.move(elapsedTime);
-    }
-    if(glfwGetKey(gWindow, 'A'))
-    {
-        spider.rotate(elapsedTime);
-    }
-    else if(glfwGetKey(gWindow, 'D'))
-    {
-        spider.rotate(-elapsedTime);
-    }
+//    if(glfwGetKey(gWindow, ' '))
+//    {
+//        spider.jump(glfwGetKey(gWindow, 'W'));
+//    }
+//    if(glfwGetKey(gWindow, 'S'))
+//    {
+//        spider.move(-elapsedTime);
+//    }
+//    else if(glfwGetKey(gWindow, 'W'))
+//    {
+//        spider.move(elapsedTime);
+//    }
+//    if(glfwGetKey(gWindow, 'A'))
+//    {
+//        spider.rotate(elapsedTime);
+//    }
+//    else if(glfwGetKey(gWindow, 'D'))
+//    {
+//        spider.rotate(-elapsedTime);
+//    }
     
     spider.update(elapsedTime);
 }
@@ -135,32 +135,56 @@ void create_cube(GLNode& root)
     root.add_leaf(geometry, material);
 }
 
+bool init_SDL(int width, int height)
+{
+    //Initialization flag
+    bool success = true;
+    
+    //Initialize SDL
+    if( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
+    {
+        printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+        success = false;
+    }
+    else
+    {
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+        
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        
+        //Create window
+        window = SDL_CreateWindow( "Spider game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE );
+        if( window == NULL )
+        {
+            printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+            success = false;
+        }
+    }
+    
+    return success;
+}
+
+void close_SDL()
+{
+    //Destroy window
+    SDL_DestroyWindow( window );
+    window = NULL;
+    
+    //Quit SDL subsystems
+    SDL_Quit();
+}
+
 int main(int argc, char** argv)
 {
     int WIN_SIZE_X = 1400;
     int WIN_SIZE_Y = 700;
     
-    // initialise GLFW
-    glfwSetErrorCallback(OnError);
-    if(!glfwInit())
-        throw std::runtime_error("glfwInit failed");
+    if(!init_SDL(WIN_SIZE_X, WIN_SIZE_Y))
+        throw std::runtime_error("SDL init failed");
     
-    // Open a window with GLFW
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    gWindow = glfwCreateWindow(WIN_SIZE_X, WIN_SIZE_Y, "Spider game", NULL, NULL);
-    if(!gWindow)
-        throw std::runtime_error("glfwCreateWindow failed. Can your hardware handle OpenGL 3.2?");
-    
-    // GLFW settings
-    glfwSetInputMode(gWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPos(gWindow, 0, 0);
-    glfwMakeContextCurrent(gWindow);
-    
-    glfwGetFramebufferSize(gWindow, &WIN_SIZE_X, &WIN_SIZE_Y);
+//    SDL_GetWindowSize(window, &WIN_SIZE_X, &WIN_SIZE_Y);
+    SDL_GLContext glcontext = SDL_GL_CreateContext(window);
     
     // Create camera
     auto camera = GLCamera(WIN_SIZE_X, WIN_SIZE_Y);
@@ -182,12 +206,22 @@ int main(int argc, char** argv)
     // Create light
     scene.add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.5, 0.))));
     
-    // run while the window is open
+    bool quit = false;
+    SDL_Event e;
     float last_time = gle::time();
-    while(!glfwWindowShouldClose(gWindow))
+    
+    //While application is running
+    while( !quit )
     {
-        // process pending events
-        glfwPollEvents();
+        //Handle events on queue
+        while( SDL_PollEvent( &e ) != 0 )
+        {
+            //User requests quit
+            if( e.type == SDL_QUIT )
+            {
+                quit = true;
+            }
+        }
         
         // update the scene based on the time elapsed since last update
         float current_time = gle::time();
@@ -203,14 +237,10 @@ int main(int argc, char** argv)
         // draw one frame
         camera.draw(scene);
         
-        glfwSwapBuffers(gWindow);
-        
-        //exit program if escape key is pressed
-        if(glfwGetKey(gWindow, GLFW_KEY_ESCAPE))
-            glfwSetWindowShouldClose(gWindow, GL_TRUE);
+        SDL_GL_SwapWindow(window);
     }
     
-    // clean up and exit
-    glfwTerminate();
+    SDL_GL_DeleteContext(glcontext);
+    close_SDL();
     return 0;
 }
