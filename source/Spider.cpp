@@ -152,7 +152,7 @@ void Spider::jump(bool move_forward)
     }
 }
 
-bool Spider::update(float time)
+void Spider::update(float time)
 {
     if(is_jumping)
     {
@@ -164,10 +164,8 @@ bool Spider::update(float time)
             is_jumping = false;
         }
         update_local2world();
-        return true;
     }
     for (Leg& leg : legs) {
         leg.update(time);
     }
-    return false;
 }

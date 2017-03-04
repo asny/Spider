@@ -76,7 +76,7 @@ public:
     
     void jump(bool move_forward);
     
-    bool update(float time);
+    void update(float time);
     
 private:
     void create_scene_graph(gle::GLScene& scene);
