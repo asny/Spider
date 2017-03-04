@@ -135,59 +135,35 @@ void create_cube(GLNode& root)
     root.add_leaf(geometry, material);
 }
 
-bool init_SDL(int width, int height)
+int main(int argc, char** argv)
 {
-    //Initialization flag
-    bool success = true;
+    int window_width = 1400;
+    int window_height = 700;
     
     //Initialize SDL
     if( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
     {
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-        success = false;
-    }
-    else
-    {
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-        
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        
-        //Create window
-        window = SDL_CreateWindow( "Spider game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE );
-        if( window == NULL )
-        {
-            printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-            success = false;
-        }
-    }
-    
-    return success;
-}
-
-void close_SDL()
-{
-    //Destroy window
-    SDL_DestroyWindow( window );
-    window = NULL;
-    
-    //Quit SDL subsystems
-    SDL_Quit();
-}
-
-int main(int argc, char** argv)
-{
-    int WIN_SIZE_X = 1400;
-    int WIN_SIZE_Y = 700;
-    
-    if(!init_SDL(WIN_SIZE_X, WIN_SIZE_Y))
         throw std::runtime_error("SDL init failed");
+    }
     
-//    SDL_GetWindowSize(window, &WIN_SIZE_X, &WIN_SIZE_Y);
-    SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    
+    //Create window
+    auto window = SDL_CreateWindow( "Spider game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE );
+    if( window == NULL )
+    {
+        printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+        throw std::runtime_error("SDL init failed");
+    }
+    
+    auto glcontext = SDL_GL_CreateContext(window);
     
     // Create camera
-    auto camera = GLCamera(WIN_SIZE_X, WIN_SIZE_Y);
+    auto camera = GLCamera(window_width, window_height);
     auto fog_effect = std::make_shared<GLFogEffect>(make_shared<GLTexture2D>("resources/water_noise.jpg"));
     camera.add_post_effect(fog_effect);
     
@@ -240,7 +216,14 @@ int main(int argc, char** argv)
         SDL_GL_SwapWindow(window);
     }
     
+    // Delete context
     SDL_GL_DeleteContext(glcontext);
-    close_SDL();
+    
+    // Destroy window
+    SDL_DestroyWindow( window );
+    window = NULL;
+    
+    // Quit SDL subsystems
+    SDL_Quit();
     return 0;
 }
