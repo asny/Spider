@@ -24,6 +24,10 @@ using namespace gle;
 using namespace mesh;
 using namespace std::chrono;
 
+enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD, WORM };
+
+VIEW_TYPE view_type = FIRST_PERSON;
+
 void print_fps(double elapsedTime)
 {
     static int draws = 0;
@@ -40,26 +44,6 @@ void print_fps(double elapsedTime)
 
 void update_camera(GLCamera& camera, const glm::vec3& spider_position, const glm::vec3& spider_view_direction)
 {
-    enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD, WORM };
-    
-    static VIEW_TYPE view_type = FIRST_PERSON;
-    
-//    if(glfwGetKey(gWindow, '1'))
-//    {
-//        view_type = FIRST_PERSON;
-//    }
-//    else if(glfwGetKey(gWindow, '2'))
-//    {
-//        view_type = THIRD_PERSON;
-//    }
-//    else if(glfwGetKey(gWindow, '3'))
-//    {
-//        view_type = BIRD;
-//    }
-//    else if(glfwGetKey(gWindow, '4'))
-//    {
-//        view_type = WORM;
-//    }
     
     vec3 bird_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
     vec3 third_person_view = normalize(vec3(spider_view_direction.x, -0.5, spider_view_direction.z));
@@ -128,6 +112,53 @@ void create_cube(GLNode& root)
     root.add_leaf(geometry, material);
 }
 
+bool handle_events()
+{
+    SDL_Event e;
+    //Handle events on queue
+    while( SDL_PollEvent( &e ) != 0 )
+    {
+        //User requests quit
+        if( e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
+        {
+            return true;
+        }
+        if( e.type == SDL_KEYDOWN )
+        {
+            switch( e.key.keysym.sym )
+            {
+                case SDLK_UP:
+                break;
+                
+                case SDLK_DOWN:
+                break;
+                
+                case SDLK_LEFT:
+                break;
+                
+                case SDLK_RIGHT:
+                break;
+                case '1':
+                    view_type = FIRST_PERSON;
+                break;
+                case '2':
+                    view_type = THIRD_PERSON;
+                break;
+                case '3':
+                    view_type = BIRD;
+                break;
+                case '4':
+                    view_type = WORM;
+                break;
+                default:
+                break;
+            }
+            
+        }
+    }
+    return false;
+}
+
 int main(int argc, char** argv)
 {
     // Initialize SDL
@@ -175,21 +206,12 @@ int main(int argc, char** argv)
     scene.add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.5, 0.))));
     
     bool quit = false;
-    SDL_Event e;
     float last_time = gle::time();
     
     //While application is running
     while( !quit )
     {
-        //Handle events on queue
-        while( SDL_PollEvent( &e ) != 0 )
-        {
-            //User requests quit
-            if( e.type == SDL_QUIT )
-            {
-                quit = true;
-            }
-        }
+        quit = handle_events();
         
         // update the scene based on the time elapsed since last update
         float current_time = gle::time();
