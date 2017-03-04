@@ -64,33 +64,6 @@ void update_camera(GLCamera& camera, const glm::vec3& spider_position, const glm
     }
 }
 
-void update_spider(Spider& spider, double elapsedTime)
-{
-    const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
-    if( currentKeyStates[ SDL_SCANCODE_UP ] )
-    {
-        spider.move(elapsedTime);
-    }
-    else if( currentKeyStates[ SDL_SCANCODE_DOWN ] )
-    {
-        spider.move(-elapsedTime);
-    }
-    else if( currentKeyStates[ SDL_SCANCODE_LEFT ] )
-    {
-        spider.rotate(elapsedTime);
-    }
-    else if( currentKeyStates[ SDL_SCANCODE_RIGHT ] )
-    {
-        spider.rotate(-elapsedTime);
-    }
-//    else if( currentKeyStates[ SDL_SCANCODE_SPACE ] )
-//    {
-//        spider.jump();
-//    }
-    
-    spider.update(elapsedTime);
-}
-
 void create_cube(GLNode& root)
 {
     auto geometry = MeshCreator::create_box(false);
@@ -112,7 +85,7 @@ void create_cube(GLNode& root)
     root.add_leaf(geometry, material);
 }
 
-bool handle_events()
+bool handle_events(Spider& spider)
 {
     SDL_Event e;
     //Handle events on queue
@@ -127,22 +100,44 @@ bool handle_events()
         {
             switch( e.key.keysym.sym )
             {
-                case '1':
+                case SDLK_1:
                     view_type = FIRST_PERSON;
                 break;
-                case '2':
+                case SDLK_2:
                     view_type = THIRD_PERSON;
                 break;
-                case '3':
+                case SDLK_3:
                     view_type = BIRD;
                 break;
-                case '4':
+                case SDLK_4:
                     view_type = WORM;
+                break;
+                case SDLK_SPACE:
+                    spider.jump();
                 break;
                 default:
                 break;
             }
             
+        }
+        
+        switch( e.key.keysym.sym )
+        {
+            case SDLK_UP:
+            spider.move_foward(e.type == SDL_KEYDOWN);
+            break;
+            
+            case SDLK_DOWN:
+            spider.move_backward(e.type == SDL_KEYDOWN);
+            break;
+            
+            case SDLK_LEFT:
+            spider.rotate_left(e.type == SDL_KEYDOWN);
+            break;
+            
+            case SDLK_RIGHT:
+            spider.rotate_right(e.type == SDL_KEYDOWN);
+            break;
         }
     }
     return false;
@@ -200,7 +195,8 @@ int main(int argc, char** argv)
     //While application is running
     while( !quit )
     {
-        quit = handle_events();
+        // Handle events
+        quit = handle_events(spider);
         
         // Update time
         float current_time = gle::time();
@@ -208,11 +204,13 @@ int main(int argc, char** argv)
         last_time = current_time;
         print_fps(elapsed_time);
         
-        // update the scene based on the time elapsed since last update
-        update_spider(spider, elapsed_time);
-        update_camera(camera, spider.get_position(), spider.get_view_direction());
+        // Update the scene based on the time elapsed since last update
+        spider.update(elapsed_time);
         Butterfly::spawn_and_destroy_and_update(scene);
         terrain.update(spider.get_position());
+        
+        // Update the camera
+        update_camera(camera, spider.get_position(), spider.get_view_direction());
         
         // draw one frame
         camera.draw(scene);

@@ -122,31 +122,13 @@ void Spider::update_local2world()
     }
 }
 
-void Spider::move(float time)
-{
-    if(!is_jumping)
-    {
-        position += time * speed * view_direction;
-        update_local2world();
-    }
-}
-
-void Spider::rotate(float time)
-{
-    if(!is_jumping)
-    {
-        view_direction = vec3(glm::rotate(mat4(), time * angular_speed, vec3(0.,1.,0.)) * vec4(view_direction, 1.));
-        update_local2world();
-    }
-}
-
-void Spider::jump(bool move_forward)
+void Spider::jump()
 {
     if(!is_jumping)
     {
         is_jumping = true;
         jump_vector = vec3(0.f, 4.f, 0.f);
-        if (move_forward) {
+        if (is_moving_forward) {
             jump_vector += speed * view_direction;
         }
     }
@@ -163,8 +145,28 @@ void Spider::update(float time)
             position.y = height;
             is_jumping = false;
         }
-        update_local2world();
     }
+    else {
+        if (is_moving_forward)
+        {
+            position += time * speed * view_direction;
+        }
+        if (is_moving_backward)
+        {
+            position -= time * speed * view_direction;
+        }
+        if (is_rotating_left)
+        {
+            view_direction = vec3(glm::rotate(mat4(), time * angular_speed, vec3(0.,1.,0.)) * vec4(view_direction, 1.));
+        }
+        if (is_rotating_right)
+        {
+            view_direction = vec3(glm::rotate(mat4(), -time * angular_speed, vec3(0.,1.,0.)) * vec4(view_direction, 1.));
+        }
+    }
+    
+    update_local2world();
+    
     for (Leg& leg : legs) {
         leg.update(time);
     }

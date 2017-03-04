@@ -55,6 +55,12 @@ class Spider
     const float gravity = -9.82;
     float height;
     glm::vec3 jump_vector;
+    
+    // Move states
+    bool is_moving_forward = false;
+    bool is_moving_backward = false;
+    bool is_rotating_right = false;
+    bool is_rotating_left = false;
     bool is_jumping = false;
     
     void update_local2world();
@@ -70,11 +76,27 @@ public:
     glm::vec3 get_position();
     glm::vec3 get_view_direction();
     
-    void move(float time);
+    void move_foward(bool value)
+    {
+        is_moving_forward = value;
+    }
     
-    void rotate(float time);
+    void move_backward(bool value)
+    {
+        is_moving_backward = value;
+    }
     
-    void jump(bool move_forward);
+    void rotate_right(bool value)
+    {
+        is_rotating_right = value;
+    }
+    
+    void rotate_left(bool value)
+    {
+        is_rotating_left = value;
+    }
+    
+    void jump();
     
     void update(float time);
     
