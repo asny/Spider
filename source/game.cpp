@@ -3,11 +3,7 @@
 //  Copyright (c) 2015 Asger Nyman Christiansen. All rights reserved.
 //
 
-#include "gtx/rotate_vector.hpp"
-#include "Random.h"
-
 #include "GLCamera.h"
-#include "MeshCreator.h"
 #include "Materials.h"
 #include "effects/GLFogEffect.h"
 
