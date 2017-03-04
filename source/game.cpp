@@ -140,7 +140,7 @@ int main(int argc, char** argv)
     int window_width = 1400;
     int window_height = 700;
     
-    //Initialize SDL
+    // Initialize SDL
     if( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
     {
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
@@ -152,7 +152,7 @@ int main(int argc, char** argv)
     
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     
-    //Create window
+    // Create window
     auto window = SDL_CreateWindow( "Spider game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE );
     if( window == NULL )
     {
@@ -160,6 +160,7 @@ int main(int argc, char** argv)
         throw std::runtime_error("SDL init failed");
     }
     
+    // Create context
     auto glcontext = SDL_GL_CreateContext(window);
     
     // Create camera
