@@ -64,27 +64,6 @@ void update_camera(GLCamera& camera, const glm::vec3& spider_position, const glm
     }
 }
 
-void create_cube(GLNode& root)
-{
-    auto geometry = MeshCreator::create_box(false);
-    auto uv_attribute = shared_ptr<Attribute<VertexID, vec2>>(new Attribute<VertexID, vec2>());
-    
-    for (auto vertex = geometry->vertices_begin(); vertex != geometry->vertices_end(); vertex = vertex->next())
-    {
-        vec3 pos = geometry->position()->at(vertex);
-        auto uv = vec2(0., 0.);
-        if(pos.x < 0)
-            uv.x = 1.;
-        if(pos.y > 0)
-            uv.y = 1.;
-        uv_attribute->at(*vertex) = uv;
-    }
-    
-    auto test_texture = make_shared<GLTexture2D>("resources/test_texture.jpg");
-    auto material = shared_ptr<GLMaterial>(new GLTextureMaterial(test_texture, uv_attribute));
-    root.add_leaf(geometry, material);
-}
-
 bool handle_events(Spider& spider)
 {
     SDL_Event e;
@@ -187,8 +166,6 @@ int main(int argc, char** argv)
     
     std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, &terrain, std::placeholders::_1);
     auto spider = Spider(scene, initial_position, glm::vec3(0., 0., 1.), get_height_at);
-    
-    create_cube(scene);
     
     // Create light
     scene.add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.5, 0.))));
