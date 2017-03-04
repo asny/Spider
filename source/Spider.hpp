@@ -38,9 +38,7 @@ class Spider
             geometry->create_edge(hip_vertex, foot_vertex);
         }
         
-        void update(const glm::mat4& local2world, std::function<double(glm::vec3)> get_height_at);
-        
-        void update(float time);
+        void update(const glm::mat4& local2world, std::function<double(glm::vec3)> get_height_at, float time);
     };
     
     glm::vec3 position;

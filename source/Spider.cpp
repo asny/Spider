@@ -51,30 +51,13 @@ void Spider::create_scene_graph(GLScene& scene)
     scene.add_leaf(legs_geometry, legs_material);
 }
 
-void Spider::Leg::update(const glm::mat4& local2world, std::function<double(glm::vec3)> get_height_at)
+void Spider::Leg::update(const glm::mat4& local2world, std::function<double(glm::vec3)> get_height_at, float time)
 {
     geometry->position()->at(hip_vertex) = glm::vec3(local2world * glm::vec4(default_hip_pos_local, 1.));
     
-    const static float sqrRadius = 0.75 * 0.75;
-    if(!is_moving)
-    {
-        origin_foot_pos = geometry->position()->at(foot_vertex);
-        glm::vec3 default_pos = glm::vec3(local2world * glm::vec4(default_foot_pos_local, 1.));
-        auto vec = default_pos - origin_foot_pos;
-        if(vec.x * vec.x + vec.z * vec.z > sqrRadius)
-        {
-            destination_foot_pos = glm::vec3(default_pos.x + 0.25 * vec.x, 0.f, default_pos.z + 0.25 * vec.z);
-            destination_foot_pos.y = get_height_at(destination_foot_pos);
-            is_moving = true;
-        }
-    }
-}
-
-void Spider::Leg::update(float time)
-{
-    const static float move_time = 0.2;
     if(is_moving)
     {
+        const float move_time = 0.2;
         t += std::abs(time);
         
         if(t >= move_time)
@@ -89,6 +72,19 @@ void Spider::Leg::update(float time)
             glm::vec3 foot_pos = factor * destination_foot_pos + (1.f-factor) * origin_foot_pos;
             foot_pos.y += 0.3 * sin(factor * M_PI);
             geometry->position()->at(foot_vertex) = foot_pos;
+        }
+    }
+    else
+    {
+        const float sqrRadius = 0.75 * 0.75;
+        origin_foot_pos = geometry->position()->at(foot_vertex);
+        glm::vec3 default_pos = glm::vec3(local2world * glm::vec4(default_foot_pos_local, 1.));
+        auto vec = default_pos - origin_foot_pos;
+        if(vec.x * vec.x + vec.z * vec.z > sqrRadius)
+        {
+            destination_foot_pos = glm::vec3(default_pos.x + 0.25 * vec.x, 0.f, default_pos.z + 0.25 * vec.z);
+            destination_foot_pos.y = get_height_at(destination_foot_pos);
+            is_moving = true;
         }
     }
 }
@@ -117,9 +113,6 @@ void Spider::update_local2world()
     mat4 spider_rotation_pitch = orientation(normalize(vec3(0., spider_view_direction.y, 1.)), vec3(0., 0., 1.));
     mat4 spider_translation = translate(spider_position);
     *local2world = spider_translation * spider_rotation_yaw * spider_rotation_pitch;
-    for (Leg& leg : legs) {
-        leg.update(*local2world, get_height_at);
-    }
 }
 
 void Spider::jump()
@@ -167,7 +160,8 @@ void Spider::update(float time)
     
     update_local2world();
     
-    for (Leg& leg : legs) {
-        leg.update(time);
+    for (Leg& leg : legs)
+    {
+        leg.update(*local2world, get_height_at, time);
     }
 }
