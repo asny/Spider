@@ -24,13 +24,6 @@ using namespace gle;
 using namespace mesh;
 using namespace std::chrono;
 
-SDL_Window* window = NULL;
-
-void OnError(int errorCode, const char* msg)
-{
-    throw std::runtime_error(msg);
-}
-
 void print_fps(double elapsedTime)
 {
     static int draws = 0;
@@ -137,9 +130,6 @@ void create_cube(GLNode& root)
 
 int main(int argc, char** argv)
 {
-    int window_width = 1400;
-    int window_height = 700;
-    
     // Initialize SDL
     if( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
     {
@@ -149,10 +139,11 @@ int main(int argc, char** argv)
     
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     
     // Create window
+    int window_width = 1400;
+    int window_height = 700;
     auto window = SDL_CreateWindow( "Spider game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE );
     if( window == NULL )
     {
