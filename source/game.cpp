@@ -124,18 +124,22 @@ bool handle_events(Spider& spider)
         switch( e.key.keysym.sym )
         {
             case SDLK_UP:
+            case SDLK_w:
             spider.move_foward(e.type == SDL_KEYDOWN);
             break;
             
             case SDLK_DOWN:
+            case SDLK_s:
             spider.move_backward(e.type == SDL_KEYDOWN);
             break;
             
             case SDLK_LEFT:
+            case SDLK_a:
             spider.rotate_left(e.type == SDL_KEYDOWN);
             break;
             
             case SDLK_RIGHT:
+            case SDLK_d:
             spider.rotate_right(e.type == SDL_KEYDOWN);
             break;
         }
