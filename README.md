@@ -1,5 +1,8 @@
 # Spider
 
+## What is it?
+A procedurally generated world of a spider. Please feel free to contact me if you have any comments/questions.
+
 ## Installation (Mac OS X):
 - Install SDL2 (https://www.libsdl.org/) and SDL2_image (https://www.libsdl.org/projects/SDL_image/)
 - Download GLM (http://glm.g-truc.net/0.9.5/index.html) and copy all header files in the glm folder to /usr/local/include/glm/
