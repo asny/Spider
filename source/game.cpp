@@ -6,6 +6,7 @@
 #include "GLCamera.h"
 #include "Materials.h"
 #include "effects/GLFogEffect.h"
+#include "effects/GLAmbientOcclusionEffect.h"
 
 #include "Spider.hpp"
 #include "Terrain.hpp"
@@ -23,6 +24,8 @@ using namespace std::chrono;
 enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD, WORM };
 
 VIEW_TYPE view_type = FIRST_PERSON;
+
+bool ssao_enabled = false;
 
 void print_fps(double elapsedTime)
 {
@@ -73,37 +76,41 @@ bool handle_events(Spider& spider)
         {
             case SDLK_UP:
             case SDLK_w:
-            spider.move_foward(e.type == SDL_KEYDOWN);
-            break;
+                spider.move_foward(e.type == SDL_KEYDOWN);
+                break;
             case SDLK_DOWN:
             case SDLK_s:
-            spider.move_backward(e.type == SDL_KEYDOWN);
-            break;
+                spider.move_backward(e.type == SDL_KEYDOWN);
+                break;
             case SDLK_LEFT:
             case SDLK_a:
-            spider.rotate_left(e.type == SDL_KEYDOWN);
-            break;
+                spider.rotate_left(e.type == SDL_KEYDOWN);
+                break;
             case SDLK_RIGHT:
             case SDLK_d:
-            spider.rotate_right(e.type == SDL_KEYDOWN);
-            break;
+                spider.rotate_right(e.type == SDL_KEYDOWN);
+                break;
             case SDLK_1:
-            view_type = FIRST_PERSON;
-            break;
+                view_type = FIRST_PERSON;
+                break;
             case SDLK_2:
-            view_type = THIRD_PERSON;
-            break;
+                view_type = THIRD_PERSON;
+                break;
             case SDLK_3:
-            view_type = BIRD;
-            break;
+                view_type = BIRD;
+                break;
             case SDLK_4:
-            view_type = WORM;
-            break;
+                view_type = WORM;
+                break;
+            case SDLK_0:
+                if(e.type == SDL_KEYDOWN)
+                    ssao_enabled = !ssao_enabled;
+                break;
             case SDLK_SPACE:
-            spider.jump();
-            break;
+                spider.jump();
+                break;
             default:
-            break;
+                break;
         }
     }
     return false;
@@ -137,8 +144,8 @@ int main(int argc, char** argv)
     
     // Create camera
     auto camera = GLCamera(window_width, window_height);
-    auto fog_effect = std::make_shared<GLFogEffect>(make_shared<GLTexture2D>("resources/water_noise.jpg"));
-    camera.add_post_effect(fog_effect);
+    auto ssao_effect = GLAmbientOcclusionEffect();
+    auto fog_effect = GLFogEffect(make_shared<GLTexture2D>("resources/water_noise.jpg"));
     
     // Create scene
     auto scene = GLScene();
@@ -178,6 +185,9 @@ int main(int argc, char** argv)
         
         // draw one frame
         camera.draw(scene);
+        if(ssao_enabled)
+            camera.apply_post_effect(ssao_effect);
+        camera.apply_post_effect(fog_effect);
         
         SDL_GL_SwapWindow(window);
     }
