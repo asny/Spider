@@ -5,6 +5,7 @@
 
 #include "GLCamera.h"
 #include "Materials.h"
+#include "effects/GLDebugEffect.h"
 #include "effects/GLFogEffect.h"
 #include "effects/GLAmbientOcclusionEffect.h"
 
@@ -63,7 +64,7 @@ void update_camera(GLCamera& camera, const glm::vec3& spider_position, const glm
     }
 }
 
-bool handle_events(Spider& spider)
+bool handle_events(Spider& spider, GLDebugEffect& debug_effect)
 {
     SDL_Event e;
     while( SDL_PollEvent( &e ) != 0 )
@@ -101,6 +102,18 @@ bool handle_events(Spider& spider)
                 break;
             case SDLK_4:
                 view_type = WORM;
+                break;
+            case SDLK_6:
+                debug_effect.type = gle::GLDebugEffect::POSITION;
+                break;
+            case SDLK_7:
+                debug_effect.type = gle::GLDebugEffect::NORMAL;
+                break;
+            case SDLK_8:
+                debug_effect.type = gle::GLDebugEffect::COLOR;
+                break;
+            case SDLK_9:
+                debug_effect.type = gle::GLDebugEffect::NONE;
                 break;
             case SDLK_0:
                 if(e.type == SDL_KEYDOWN)
@@ -146,6 +159,7 @@ int main(int argc, char** argv)
     auto camera = GLCamera(window_width, window_height);
     auto ssao_effect = GLAmbientOcclusionEffect();
     auto fog_effect = GLFogEffect(make_shared<GLTexture2D>("resources/water_noise.jpg"));
+    auto debug_effect = GLDebugEffect();
     
     // Create scene
     auto scene = GLScene();
@@ -167,7 +181,7 @@ int main(int argc, char** argv)
     while( !quit )
     {
         // Handle events
-        quit = handle_events(spider);
+        quit = handle_events(spider, debug_effect);
         
         // Update time
         float current_time = gle::time();
@@ -188,6 +202,7 @@ int main(int argc, char** argv)
         if(ssao_enabled)
             camera.apply_post_effect(ssao_effect);
         camera.apply_post_effect(fog_effect);
+        camera.apply_post_effect(debug_effect);
         
         SDL_GL_SwapWindow(window);
     }
