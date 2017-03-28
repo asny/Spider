@@ -20,7 +20,6 @@ using namespace std;
 using namespace glm;
 using namespace gle;
 using namespace mesh;
-using namespace std::chrono;
 
 enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD, WORM };
 

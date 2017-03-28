@@ -6,7 +6,7 @@
 //  Copyright © 2015 Asger Nyman Christiansen. All rights reserved.
 //
 
-#include "spider.hpp"
+#include "Spider.hpp"
 #include "Materials.h"
 
 using namespace glm;
