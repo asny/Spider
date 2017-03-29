@@ -4,7 +4,7 @@
 //
 
 #include "glm.hpp"
-#include "terrain.hpp"
+#include "Terrain.hpp"
 #include "Random.h"
 #include "Materials.h"
 
