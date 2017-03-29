@@ -44,13 +44,10 @@
 		7A370D901BD964E2000783CA /* grass.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grass.geom; path = shaders/grass.geom; sourceTree = "<group>"; };
 		7A383A1C1BBFB6AC00E29333 /* Spider */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Spider; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A383A261BBFB6F700E29333 /* game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = game.cpp; path = source/game.cpp; sourceTree = "<group>"; };
-		7A5252671D83F6BC00BE9D1C /* fog.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fog.frag; path = shaders/fog.frag; sourceTree = "<group>"; };
 		7AB0F2BE1BC07B52009D85FD /* Spider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Spider.cpp; path = source/Spider.cpp; sourceTree = "<group>"; };
 		7AB0F2BF1BC07B52009D85FD /* Spider.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Spider.hpp; path = source/Spider.hpp; sourceTree = "<group>"; };
 		7AB0F2C31BC25326009D85FD /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Terrain.cpp; path = source/Terrain.cpp; sourceTree = "<group>"; };
 		7AB0F2C41BC25326009D85FD /* Terrain.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Terrain.hpp; path = source/Terrain.hpp; sourceTree = "<group>"; };
-		7AB0F2C61BC28EEB009D85FD /* terrain.geom */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = terrain.geom; path = shaders/terrain.geom; sourceTree = "<group>"; };
-		7ABC06551D8423A800D259E8 /* fog.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fog.vert; path = shaders/fog.vert; sourceTree = "<group>"; };
 		7AE74B671C18B00800466559 /* spider_legs.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = spider_legs.geom; path = shaders/spider_legs.geom; sourceTree = "<group>"; };
 		7AF4B53F1D27B3D0008A5074 /* grass.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grass.frag; path = shaders/grass.frag; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -115,12 +112,9 @@
 			children = (
 				49EBFAE61E3FDD3300503199 /* terrain.frag */,
 				49EBFAE41E3F1DE400503199 /* water.frag */,
-				7ABC06551D8423A800D259E8 /* fog.vert */,
-				7A5252671D83F6BC00BE9D1C /* fog.frag */,
 				7AE74B671C18B00800466559 /* spider_legs.geom */,
 				7AF4B53F1D27B3D0008A5074 /* grass.frag */,
 				7A370D901BD964E2000783CA /* grass.geom */,
-				7AB0F2C61BC28EEB009D85FD /* terrain.geom */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";

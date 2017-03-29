@@ -80,42 +80,6 @@ public:
     }
 };
 
-class GLFogMaterial : public gle::GLMaterial
-{
-    const std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> normals;
-    std::shared_ptr<float> time;
-    float radius;
-public:
-    GLFogMaterial(const std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> _normals, const std::shared_ptr<float> _time, float _radius)
-        : GLMaterial(gle::FORWARD), normals(_normals), time(_time), radius(_radius)
-    {
-        shader = gle::GLShader::create_or_get("shaders/fog.vert",  "shaders/fog.frag", "../GLEngine/shaders/particle.geom");
-    }
-    
-    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
-                                   std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
-    {
-        vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
-        vec3_vertex_attributes.push_back(shader->create_attribute("normal", normals));
-    }
-    
-    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
-    {
-        gle::GLState::depth_test(true);
-        gle::GLState::depth_write(false);
-        gle::GLState::cull_back_faces(true);
-        
-        auto modelView = view * model;
-        
-        gle::GLUniform::use(shader, "eyePosition", camera_position);
-        gle::GLUniform::use(shader, "MVMatrix", modelView);
-        gle::GLUniform::use(shader, "PMatrix", projection);
-        
-        gle::GLUniform::use(shader, "radius", radius);
-        gle::GLUniform::use(shader, "time", *time);
-    }
-};
-
 class WaterMaterial : public gle::GLMaterial
 {
     std::shared_ptr<float> time;
