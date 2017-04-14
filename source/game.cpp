@@ -102,6 +102,9 @@ bool handle_events(Spider& spider, GLDebugEffect& debug_effect)
             case SDLK_4:
                 view_type = WORM;
                 break;
+            case SDLK_5:
+                debug_effect.type = gle::GLDebugEffect::DEPTH;
+                break;
             case SDLK_6:
                 debug_effect.type = gle::GLDebugEffect::POSITION;
                 break;
