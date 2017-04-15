@@ -175,7 +175,9 @@ int main(int argc, char** argv)
     auto spider = Spider(scene, initial_position, glm::vec3(0., 0., 1.), get_height_at);
     
     // Create light
-    scene.add_light(std::make_shared<GLDirectionalLight>(normalize(vec3(-0.5, -0.5, 0.))));
+    auto directional_light = make_shared<GLDirectionalLight>();
+    scene.add_light(directional_light);
+    directional_light->direction = normalize(vec3(-0.5, -0.5, 0.));
     
     bool quit = false;
     float last_time = gle::time();
