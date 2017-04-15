@@ -12,6 +12,7 @@
 #include "Spider.hpp"
 #include "Terrain.hpp"
 #include "Butterfly.hpp"
+#include "Firefly.hpp"
 
 #define SDL_MAIN_HANDLED
 #include "SDL.h"
@@ -194,6 +195,7 @@ int main(int argc, char** argv)
         // Update the scene based on the time elapsed since last update
         spider.update(elapsed_time);
         Butterfly::spawn_and_destroy_and_update(scene);
+        Firefly::spawn_and_destroy_and_update(scene);
         terrain.update(spider.get_position());
         
         // Update the camera
