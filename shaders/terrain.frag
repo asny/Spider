@@ -4,6 +4,7 @@ uniform sampler2D groundTexture;
 uniform sampler2D lakeTexture;
 uniform sampler2D noiseTexture;
 uniform float time;
+const vec3 windDirection = vec3(1., 0., 0.);
 
 in vec2 coords;
 in vec3 nor;
@@ -22,10 +23,10 @@ void main()
     }
     else {
         float noise = texture(noiseTexture, coords).x - 0.5;
-        float wave = sin(mod(time * (1.f + noise), 6.28));
+        float wave = sin(mod(2. * (pos.x * windDirection.x + pos.z * windDirection.z + time), 6.28));
         vec2 uv = coords
-            - 0.1 * vec2(wave, wave)
-            - 0.5 * vec2(noise, noise);
+            - 0.01 * vec2(noise, noise)
+            - 0.005 * windDirection.xz * wave;
         vec3 bottomColor = texture(lakeTexture, uv).xyz;
         
         // absorption
