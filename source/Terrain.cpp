@@ -258,7 +258,7 @@ void Terrain::spawn_terrain(const glm::vec3& _position)
     }
     
     // Update water geometry
-    double size = TerrainPatch::SIZE;
+    double size = TerrainPatch::SIZE * PATCH_SIDE_LENGTH;
     auto vertex = water_geometry->vertices_begin();
     water_geometry->position()->at(vertex) = origo;
     water_uv_coordinates->at(vertex) = vec2(0., 0.);
