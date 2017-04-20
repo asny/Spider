@@ -129,10 +129,11 @@ class TerrainMaterial : public gle::GLMaterial
     std::shared_ptr<glm::vec3> wind_direction;
     std::shared_ptr<gle::GLTexture> ground_texture, lake_texture, noise_texture;
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
+    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> normals;
 public:
     
-    TerrainMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture> _ground_texture, std::shared_ptr<gle::GLTexture> _lake_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
-        : GLMaterial(gle::DEFERRED), time(_time), wind_direction(_wind_direction), ground_texture(_ground_texture), lake_texture(_lake_texture), uv_coordinates(_uv_coordinates), noise_texture(_noise_texture)
+    TerrainMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture> _ground_texture, std::shared_ptr<gle::GLTexture> _lake_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> _normals)
+        : GLMaterial(gle::DEFERRED), time(_time), wind_direction(_wind_direction), ground_texture(_ground_texture), lake_texture(_lake_texture), uv_coordinates(_uv_coordinates), noise_texture(_noise_texture), normals(_normals)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/texture.vert",  "shaders/terrain.frag");
     }
@@ -141,7 +142,7 @@ public:
                            std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
     {
         vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
-        vec3_vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
+        vec3_vertex_attributes.push_back(shader->create_attribute("normal", normals));
         vec2_vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
     }
     

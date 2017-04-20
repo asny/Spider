@@ -29,6 +29,7 @@ class Terrain
         std::shared_ptr<mesh::Mesh> water_geometry = std::make_shared<mesh::Mesh>();
         std::shared_ptr<mesh::Mesh> grass_geometry = std::make_shared<mesh::Mesh>();
         std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> ground_uv_coordinates = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
+        std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> ground_normals = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec3>>();
         std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> water_uv_coordinates = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
         
         void set_height(double scale, int r, int c, std::vector<double> neighbour_heights);
@@ -64,6 +65,11 @@ class Terrain
         std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> get_uv_coordinates()
         {
             return ground_uv_coordinates;
+        }
+        
+        std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> get_normals()
+        {
+            return ground_normals;
         }
         
         std::shared_ptr<mesh::Mesh> get_grass()
