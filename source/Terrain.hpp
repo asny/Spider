@@ -52,7 +52,6 @@ class Terrain
     std::shared_ptr<mesh::Mesh> ground_geometry = std::make_shared<mesh::Mesh>();
     std::shared_ptr<mesh::Mesh> water_geometry = std::make_shared<mesh::Mesh>();
     std::shared_ptr<mesh::Mesh> grass_geometry = std::make_shared<mesh::Mesh>();
-    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> ground_normals = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec3>>();
     
     std::shared_ptr<float> time = std::make_shared<float>(0.f);
     std::shared_ptr<glm::vec3> wind_direction = std::make_shared<glm::vec3>(0., 0., 0.);

@@ -149,7 +149,7 @@ Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
     scene.add_leaf(skybox_geometry, skybox_material);
     
     // Create terrain
-    auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, noise_texture, ground_uv_coordinates, ground_normals);
+    auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, noise_texture, ground_uv_coordinates);
     scene.add_leaf(ground_geometry, terrain_material);
     
     auto water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, noise_texture, water_uv_coordinates);
@@ -233,7 +233,7 @@ void Terrain::update(const glm::vec3& _position)
     {
         for (int c = 0; c < VERTICES_PER_SIDE; c++)
         {
-            vec3 pos = vec3(origo.x + r * TerrainPatch::VERTEX_DISTANCE, 0., origo.z + c * TerrainPatch::VERTEX_DISTANCE);
+            vec3 pos = origo + vec3(r * TerrainPatch::VERTEX_DISTANCE, 0., c * TerrainPatch::VERTEX_DISTANCE);
             pos.y = get_height_at(pos);
             auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
             ground_geometry->position()->at(ground_vertex) = pos;
@@ -241,20 +241,12 @@ void Terrain::update(const glm::vec3& _position)
     }
     
     // Update ground normals
-    for (int r = 0; r < VERTICES_PER_SIDE; r++)
-    {
-        for (int c = 0; c < VERTICES_PER_SIDE; c++)
-        {
-            auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
-            ground_normals->at(ground_vertex) = ground_geometry->normal(ground_vertex);
-        }
-    }
+    ground_geometry->update_normals();
     
     // Update grass geometry
     for (auto edge = grass_geometry->edges_begin(); edge != grass_geometry->edges_end(); edge = edge->next())
     {
-        auto pos = origo + vec3(Random::value(0., 0.999 * SIZE), 0.,
-                                Random::value(0., 0.999 * SIZE));
+        auto pos = origo + vec3(Random::value(0., 0.999 * SIZE), 0., Random::value(0., 0.999 * SIZE));
         pos.y = get_height_at(pos);
         if(pos.y < 0.)
         {
