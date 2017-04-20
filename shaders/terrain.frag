@@ -4,7 +4,7 @@ uniform sampler2D groundTexture;
 uniform sampler2D lakeTexture;
 uniform sampler2D noiseTexture;
 uniform float time;
-const vec3 windDirection = vec3(1., 0., 0.);
+uniform vec3 windDirection;
 
 in vec2 coords;
 in vec3 nor;

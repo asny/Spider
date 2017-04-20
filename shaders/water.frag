@@ -4,7 +4,7 @@ uniform samplerCube texture0;
 uniform sampler2D noiseTexture;
 uniform vec3 eyePosition;
 uniform float time;
-const vec3 windDirection = vec3(1., 0., 0.);
+uniform vec3 windDirection;
 
 in vec3 pos;
 in vec3 nor;

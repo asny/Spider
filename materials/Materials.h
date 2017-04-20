@@ -14,15 +14,16 @@
 #include "materials/GLSkyboxMaterial.h"
 #include "materials/GLColorMaterial.h"
 
-class GLGrassMaterial : public gle::GLMaterial
+class GrassMaterial : public gle::GLMaterial
 {
     std::shared_ptr<glm::vec3> spider_position;
-    std::shared_ptr<glm::vec3> wind;
+    std::shared_ptr<glm::vec3> wind_direction;
+    std::shared_ptr<float> time;
     glm::vec3 color;
 public:
     
-    GLGrassMaterial(const std::shared_ptr<glm::vec3> _spider_position,const std::shared_ptr<glm::vec3> _wind, const glm::vec3& _color)
-        : GLMaterial(gle::DEFERRED), spider_position(_spider_position), wind(_wind), color(_color)
+    GrassMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, const std::shared_ptr<glm::vec3> _spider_position, const glm::vec3& _color)
+        : GLMaterial(gle::DEFERRED), spider_position(_spider_position), time(_time), wind_direction(_wind_direction), color(_color)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/color_material.frag", "shaders/grass.geom");
     }
@@ -44,7 +45,7 @@ public:
         gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
         
         gle::GLUniform::use(shader, "spiderPosition", *spider_position);
-        gle::GLUniform::use(shader, "wind", *wind);
+        gle::GLUniform::use(shader, "wind", glm::vec3(0.5 * sin(*time) + 0.5, 0., 0.5 * cos(*time + 0.5) + 0.5));
         
         gle::GLUniform::use(shader, "materialColor", color);
     }
@@ -83,11 +84,12 @@ public:
 class WaterMaterial : public gle::GLMaterial
 {
     std::shared_ptr<float> time;
+    std::shared_ptr<glm::vec3> wind_direction;
     std::shared_ptr<gle::GLTexture> texture, noise_texture;
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
 public:
-    WaterMaterial(const std::shared_ptr<float> _time, std::shared_ptr<gle::GLTexture3D> _texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
-        : GLMaterial(gle::FORWARD), texture(_texture) , time(_time), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
+    WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
+        : GLMaterial(gle::FORWARD), texture(_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/texture.vert",  "shaders/water.frag");
     }
@@ -117,18 +119,21 @@ public:
         
         gle::GLUniform::use(shader, "eyePosition", camera_position);
         gle::GLUniform::use(shader, "time", *time);
+        gle::GLUniform::use(shader, "windDirection", *wind_direction);
     }
 };
 
 class TerrainMaterial : public gle::GLMaterial
 {
     std::shared_ptr<float> time;
+    std::shared_ptr<glm::vec3> wind_direction;
     std::shared_ptr<gle::GLTexture> ground_texture, lake_texture, noise_texture;
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
+    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> normals;
 public:
     
-    TerrainMaterial(const std::shared_ptr<float> _time, std::shared_ptr<gle::GLTexture> _ground_texture, std::shared_ptr<gle::GLTexture> _lake_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
-        : GLMaterial(gle::DEFERRED), time(_time), ground_texture(_ground_texture), lake_texture(_lake_texture), uv_coordinates(_uv_coordinates), noise_texture(_noise_texture)
+    TerrainMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture> _ground_texture, std::shared_ptr<gle::GLTexture> _lake_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec3>> _normals)
+        : GLMaterial(gle::DEFERRED), time(_time), wind_direction(_wind_direction), ground_texture(_ground_texture), lake_texture(_lake_texture), uv_coordinates(_uv_coordinates), noise_texture(_noise_texture), normals(_normals)
     {
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/texture.vert",  "shaders/terrain.frag");
     }
@@ -137,7 +142,7 @@ public:
                            std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
     {
         vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
-        vec3_vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
+        vec3_vertex_attributes.push_back(shader->create_attribute("normal", normals));
         vec2_vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
     }
     
@@ -158,5 +163,6 @@ public:
         gle::GLUniform::use(shader, "MVPMatrix", projection * view * model);
         gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
         gle::GLUniform::use(shader, "time", *time);
+        gle::GLUniform::use(shader, "windDirection", *wind_direction);
     }
 };
