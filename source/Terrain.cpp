@@ -261,15 +261,14 @@ void Terrain::update(const glm::vec3& _position)
     }
     
     // Update water geometry
-    double size = TerrainPatch::SIZE * PATCH_SIDE_LENGTH;
     auto vertex = water_geometry->vertices_begin();
     water_geometry->position()->at(vertex) = origo;
     vertex = vertex->next();
-    water_geometry->position()->at(vertex) = origo + glm::vec3(size, 0., 0.);
+    water_geometry->position()->at(vertex) = origo + glm::vec3(SIZE, 0., 0.);
     vertex = vertex->next();
-    water_geometry->position()->at(vertex) = origo + glm::vec3(size, 0., size);
+    water_geometry->position()->at(vertex) = origo + glm::vec3(SIZE, 0., SIZE);
     vertex = vertex->next();
-    water_geometry->position()->at(vertex) = origo + glm::vec3(0., 0., size);
+    water_geometry->position()->at(vertex) = origo + glm::vec3(0., 0., SIZE);
 }
 
 double Terrain::get_height_at(const glm::vec3& position)
