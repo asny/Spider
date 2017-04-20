@@ -97,6 +97,7 @@ glm::vec3 Terrain::TerrainPatch::get_origo()
 Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
 {
     // Initialize ground geometry
+    auto ground_uv_coordinates = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
     for (int r = 0; r < VERTICES_PER_SIDE; r++)
     {
         for (int c = 0; c < VERTICES_PER_SIDE; c++)
@@ -108,6 +109,7 @@ Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
                 ground_geometry->create_face(ground_mapping.at(pair<int, int>(r,c-1)), ground_mapping.at(pair<int, int>(r-1,c-1)), vertex);
                 ground_geometry->create_face(ground_mapping.at(pair<int, int>(r-1,c)), vertex, ground_mapping.at(pair<int, int>(r-1,c-1)));
             }
+            ground_uv_coordinates->at(vertex) = vec2(fmod(static_cast<double>(PATCH_SIDE_LENGTH * r)/static_cast<double>(VERTICES_PER_SIDE), VERTICES_PER_SIDE/static_cast<double>(PATCH_SIDE_LENGTH)), fmod(static_cast<double>(PATCH_SIDE_LENGTH * c)/static_cast<double>(VERTICES_PER_SIDE), VERTICES_PER_SIDE/static_cast<double>(PATCH_SIDE_LENGTH)));
         }
     }
     
@@ -122,6 +124,11 @@ Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
     mesh::VertexID* v2 = water_geometry->create_vertex();
     mesh::VertexID* v3 = water_geometry->create_vertex();
     mesh::VertexID* v4 = water_geometry->create_vertex();
+    auto water_uv_coordinates = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
+    water_uv_coordinates->at(v1) = vec2(0., 0.);
+    water_uv_coordinates->at(v2) = vec2(1., 0.);
+    water_uv_coordinates->at(v3) = vec2(1., 1.);
+    water_uv_coordinates->at(v4) = vec2(0., 1.);
     water_geometry->create_face(v2, v1, v3);
     water_geometry->create_face(v4, v3, v1);
     
@@ -230,7 +237,6 @@ void Terrain::update(const glm::vec3& _position)
             pos.y = get_height_at(pos);
             auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
             ground_geometry->position()->at(ground_vertex) = pos;
-            ground_uv_coordinates->at(ground_vertex) = vec2(fmod(static_cast<double>(PATCH_SIDE_LENGTH * r)/static_cast<double>(VERTICES_PER_SIDE), VERTICES_PER_SIDE/static_cast<double>(PATCH_SIDE_LENGTH)), fmod(static_cast<double>(PATCH_SIDE_LENGTH * c)/static_cast<double>(VERTICES_PER_SIDE), VERTICES_PER_SIDE/static_cast<double>(PATCH_SIDE_LENGTH)));
         }
     }
     
@@ -265,16 +271,12 @@ void Terrain::update(const glm::vec3& _position)
     double size = TerrainPatch::SIZE * PATCH_SIDE_LENGTH;
     auto vertex = water_geometry->vertices_begin();
     water_geometry->position()->at(vertex) = origo;
-    water_uv_coordinates->at(vertex) = vec2(0., 0.);
     vertex = vertex->next();
     water_geometry->position()->at(vertex) = origo + glm::vec3(size, 0., 0.);
-    water_uv_coordinates->at(vertex) = vec2(1., 0.);
     vertex = vertex->next();
     water_geometry->position()->at(vertex) = origo + glm::vec3(size, 0., size);
-    water_uv_coordinates->at(vertex) = vec2(1., 1.);
     vertex = vertex->next();
     water_geometry->position()->at(vertex) = origo + glm::vec3(0., 0., size);
-    water_uv_coordinates->at(vertex) = vec2(0., 1.);
 }
 
 double Terrain::get_height_at(const glm::vec3& position)
