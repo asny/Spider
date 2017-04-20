@@ -40,6 +40,8 @@ class Terrain
     };
     const static int NO_GRASS_STRAW = 100000;
     const static int PATCH_RADIUS = 1;
+    constexpr const static int PATCH_SIDE_LENGTH = 2 * PATCH_RADIUS + 1;
+    constexpr const static int VERTICES_PER_SIDE = static_cast<int>(TerrainPatch::SIZE) * TerrainPatch::VERTICES_PER_UNIT * PATCH_SIDE_LENGTH;
     
     std::vector<TerrainPatch> patches;
     std::map<std::pair<int,int>, mesh::VertexID*> ground_mapping;

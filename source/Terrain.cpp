@@ -100,12 +100,10 @@ glm::vec3 Terrain::TerrainPatch::get_origo()
 
 Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
 {
-    int map_size = static_cast<int>((PATCH_RADIUS * 2 + 1) * TerrainPatch::SIZE) * TerrainPatch::VERTICES_PER_UNIT;
-    
     // Initialize ground geometry
-    for (int r = 0; r < map_size; r++)
+    for (int r = 0; r < VERTICES_PER_SIDE; r++)
     {
-        for (int c = 0; c < map_size; c++)
+        for (int c = 0; c < VERTICES_PER_SIDE; c++)
         {
             auto vertex = ground_geometry->create_vertex();
             ground_mapping[pair<int, int>(r,c)] = vertex;
@@ -223,25 +221,23 @@ void Terrain::spawn_terrain(const glm::vec3& _position)
     auto patch = patch_at(index);
     auto origo = patch->get_origo();
     
-    int no_patches_side = PATCH_RADIUS * 2 + 1;
-    int map_size = static_cast<int>(no_patches_side * TerrainPatch::SIZE) * TerrainPatch::VERTICES_PER_UNIT;
     // Update ground geometry
-    for (int r = 0; r < map_size; r++)
+    for (int r = 0; r < VERTICES_PER_SIDE; r++)
     {
-        for (int c = 0; c < map_size; c++)
+        for (int c = 0; c < VERTICES_PER_SIDE; c++)
         {
             vec3 pos = vec3(origo.x + r * TerrainPatch::VERTEX_DISTANCE, 0., origo.z + c * TerrainPatch::VERTEX_DISTANCE);
             pos.y = get_height_at(pos);
             auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
             ground_geometry->position()->at(ground_vertex) = pos;
-            ground_uv_coordinates->at(ground_vertex) = vec2(fmod(static_cast<double>(no_patches_side * r)/static_cast<double>(map_size), map_size/static_cast<double>(no_patches_side)), fmod(static_cast<double>(no_patches_side * c)/static_cast<double>(map_size), map_size/static_cast<double>(no_patches_side)));
+            ground_uv_coordinates->at(ground_vertex) = vec2(fmod(static_cast<double>(PATCH_SIDE_LENGTH * r)/static_cast<double>(VERTICES_PER_SIDE), VERTICES_PER_SIDE/static_cast<double>(PATCH_SIDE_LENGTH)), fmod(static_cast<double>(PATCH_SIDE_LENGTH * c)/static_cast<double>(VERTICES_PER_SIDE), VERTICES_PER_SIDE/static_cast<double>(PATCH_SIDE_LENGTH)));
         }
     }
     
     // Update ground normals
-    for (int r = 0; r < map_size; r++)
+    for (int r = 0; r < VERTICES_PER_SIDE; r++)
     {
-        for (int c = 0; c < map_size; c++)
+        for (int c = 0; c < VERTICES_PER_SIDE; c++)
         {
             auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
             ground_normals->at(ground_vertex) = ground_geometry->normal(ground_vertex);
@@ -251,7 +247,7 @@ void Terrain::spawn_terrain(const glm::vec3& _position)
     // Update grass geometry
     for (auto edge = grass_geometry->edges_begin(); edge != grass_geometry->edges_end(); edge = edge->next())
     {
-        auto pos = origo + vec3(Random::value(0., 0.999 * TerrainPatch::SIZE * no_patches_side), 0., Random::value(0., 0.999 * TerrainPatch::SIZE * no_patches_side));
+        auto pos = origo + vec3(Random::value(0., 0.999 * TerrainPatch::SIZE * PATCH_SIDE_LENGTH), 0., Random::value(0., 0.999 * TerrainPatch::SIZE * PATCH_SIDE_LENGTH));
         pos.y = get_height_at(pos);
         if(pos.y < 0.)
         {
