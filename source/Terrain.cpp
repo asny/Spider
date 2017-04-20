@@ -28,27 +28,23 @@ double average(std::vector<double> heights)
 
 Terrain::TerrainPatch::TerrainPatch()
 {
-    int map_size = static_cast<int>(SIZE) * VERTICES_PER_UNIT + 1;
-    
     // Initialize height map
-    heightmap = vector<vector<double>>(map_size);
-    for ( auto r = 0; r < map_size; r++ )
+    heightmap = vector<vector<double>>(VERTICES_PER_SIDE + 1);
+    for ( auto r = 0; r <= VERTICES_PER_SIDE; r++ )
     {
-        heightmap[r] = vector<double>(map_size);
+        heightmap[r] = vector<double>(VERTICES_PER_SIDE + 1);
     }
 }
 
 void Terrain::TerrainPatch::update(const vec3& _origo)
 {
     origo = _origo;
-    int map_size = static_cast<int>(SIZE) * VERTICES_PER_UNIT + 1;
     
-    // Update height map
     set_height(SIZE, 0, 0, {});
-    set_height(SIZE, 0, map_size - 1, {});
-    set_height(SIZE, map_size - 1, 0, {});
-    set_height(SIZE, map_size - 1, map_size - 1, {});
-    subdivide(0, 0, map_size-1);
+    set_height(SIZE, 0, VERTICES_PER_SIDE, {});
+    set_height(SIZE, VERTICES_PER_SIDE, 0, {});
+    set_height(SIZE, VERTICES_PER_SIDE, VERTICES_PER_SIDE, {});
+    subdivide(0, 0, VERTICES_PER_SIDE);
 }
 
 void Terrain::TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
