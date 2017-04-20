@@ -125,7 +125,7 @@ Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
     water_geometry->create_face(v2, v1, v3);
     water_geometry->create_face(v4, v3, v1);
     
-    spawn_terrain(_position);
+    update(_position);
     
     // Load textures
     auto ground_texture = make_shared<GLTexture2D>("resources/grass.jpg");
@@ -169,8 +169,12 @@ Terrain::TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
     return nullptr;
 }
 
-void Terrain::spawn_terrain(const glm::vec3& _position)
+void Terrain::update(const glm::vec3& _position)
 {
+    *time = gle::time();
+    *position = _position;
+    *wind_direction = vec3(1., 0., 0.);
+    
     auto index_at_position = index_at(_position);
     
     std::vector<TerrainPatch*> free_patches;
@@ -271,15 +275,6 @@ void Terrain::spawn_terrain(const glm::vec3& _position)
     vertex = vertex->next();
     water_geometry->position()->at(vertex) = origo + glm::vec3(0., 0., size);
     water_uv_coordinates->at(vertex) = vec2(0., 1.);
-}
-
-void Terrain::update(const glm::vec3& _position)
-{
-    *time = gle::time();
-    *position = _position;
-    *wind_direction = vec3(1., 0., 0.);
-    
-    spawn_terrain(_position);
 }
 
 double Terrain::get_height_at(const glm::vec3& position)

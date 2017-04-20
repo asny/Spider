@@ -62,8 +62,6 @@ class Terrain
     
     TerrainPatch* patch_at(std::pair<int, int> index);
     
-    void spawn_terrain(const glm::vec3& position);
-    
 public:
     
     Terrain(gle::GLScene& scene, const glm::vec3& position);
