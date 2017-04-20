@@ -253,7 +253,8 @@ void Terrain::update(const glm::vec3& _position)
     // Update grass geometry
     for (auto edge = grass_geometry->edges_begin(); edge != grass_geometry->edges_end(); edge = edge->next())
     {
-        auto pos = origo + vec3(Random::value(0., 0.999 * TerrainPatch::SIZE * PATCH_SIDE_LENGTH), 0., Random::value(0., 0.999 * TerrainPatch::SIZE * PATCH_SIDE_LENGTH));
+        auto pos = origo + vec3(Random::value(0., 0.999 * SIZE), 0.,
+                                Random::value(0., 0.999 * SIZE));
         pos.y = get_height_at(pos);
         if(pos.y < 0.)
         {
