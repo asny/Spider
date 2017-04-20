@@ -36,35 +36,6 @@ Terrain::TerrainPatch::TerrainPatch()
     {
         heightmap[r] = vector<double>(map_size);
     }
-    
-    // Initialize ground geometry
-    for (int r = 0; r < map_size; r++)
-    {
-        for (int c = 0; c < map_size; c++)
-        {
-            auto vertex = ground_geometry->create_vertex();
-            ground_mapping[pair<int, int>(r,c)] = vertex;
-            if(r > 0 && c > 0)
-            {
-                ground_geometry->create_face(ground_mapping.at(pair<int, int>(r,c-1)), ground_mapping.at(pair<int, int>(r-1,c-1)), vertex);
-                ground_geometry->create_face(ground_mapping.at(pair<int, int>(r-1,c)), vertex, ground_mapping.at(pair<int, int>(r-1,c-1)));
-            }
-        }
-    }
-    
-    // Initialize grass geometry
-    for (int i = 0; i < NO_GRASS_STRAW; i++)
-    {
-        grass_geometry->create_edge(grass_geometry->create_vertex(), grass_geometry->create_vertex());
-    }
-    
-    // Initialize water geometry
-    mesh::VertexID* v1 = water_geometry->create_vertex();
-    mesh::VertexID* v2 = water_geometry->create_vertex();
-    mesh::VertexID* v3 = water_geometry->create_vertex();
-    mesh::VertexID* v4 = water_geometry->create_vertex();
-    water_geometry->create_face(v2, v1, v3);
-    water_geometry->create_face(v4, v3, v1);
 }
 
 void Terrain::TerrainPatch::update(const vec3& _origo)
@@ -78,66 +49,6 @@ void Terrain::TerrainPatch::update(const vec3& _origo)
     set_height(SIZE, map_size - 1, 0, {});
     set_height(SIZE, map_size - 1, map_size - 1, {});
     subdivide(0, 0, map_size-1);
-    
-    // Update ground geometry
-    for (int r = 0; r < map_size; r++)
-    {
-        for (int c = 0; c < map_size; c++)
-        {
-            vec3 pos = vec3(origo.x + r * VERTEX_DISTANCE, heightmap[r][c], origo.z + c * VERTEX_DISTANCE);
-            auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
-            ground_geometry->position()->at(ground_vertex) = pos;
-            ground_uv_coordinates->at(ground_vertex) = vec2(static_cast<double>(r)/static_cast<double>(map_size), static_cast<double>(c)/static_cast<double>(map_size));
-        }
-    }
-    
-    // Update ground normals
-    for (int r = 0; r < map_size; r++)
-    {
-        for (int c = 0; c < map_size; c++)
-        {
-            auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
-            if(r == 0 || c == 0 || r == map_size-1 || c == map_size-1)
-            {
-                ground_normals->at(ground_vertex) = vec3(0.f, 1.f, 0.f);
-            }
-            else {
-                ground_normals->at(ground_vertex) = ground_geometry->normal(ground_vertex);
-            }
-        }
-    }
-    
-    // Update grass geometry
-    for (auto edge = grass_geometry->edges_begin(); edge != grass_geometry->edges_end(); edge = edge->next())
-    {
-        auto pos = origo + vec3(Random::value(0., 0.999 * SIZE), 0., Random::value(0., 0.999 * SIZE));
-        pos.y = get_height_at(pos);
-        if(pos.y < 0.)
-        {
-            grass_geometry->position()->at(edge->v1()) = pos;
-            grass_geometry->position()->at(edge->v2()) = pos;
-        }
-        else
-        {
-            grass_geometry->position()->at(edge->v1()) = pos;
-            grass_geometry->position()->at(edge->v2()) = pos + vec3(Random::value(-0.2, 0.2), Random::value(0.1, 0.3), Random::value(-0.2, 0.2));
-        }
-    }
-    
-    // Update water geometry
-    double size = SIZE;
-    auto vertex = water_geometry->vertices_begin();
-    water_geometry->position()->at(vertex) = origo;
-    water_uv_coordinates->at(vertex) = vec2(0., 0.);
-    vertex = vertex->next();
-    water_geometry->position()->at(vertex) = origo + glm::vec3(size, 0., 0.);
-    water_uv_coordinates->at(vertex) = vec2(1., 0.);
-    vertex = vertex->next();
-    water_geometry->position()->at(vertex) = origo + glm::vec3(size, 0., size);
-    water_uv_coordinates->at(vertex) = vec2(1., 1.);
-    vertex = vertex->next();
-    water_geometry->position()->at(vertex) = origo + glm::vec3(0., 0., size);
-    water_uv_coordinates->at(vertex) = vec2(0., 1.);
 }
 
 void Terrain::TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
@@ -189,6 +100,37 @@ glm::vec3 Terrain::TerrainPatch::get_origo()
 
 Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
 {
+    int map_size = static_cast<int>((PATCH_RADIUS * 2 + 1) * TerrainPatch::SIZE) * TerrainPatch::VERTICES_PER_UNIT;
+    
+    // Initialize ground geometry
+    for (int r = 0; r < map_size; r++)
+    {
+        for (int c = 0; c < map_size; c++)
+        {
+            auto vertex = ground_geometry->create_vertex();
+            ground_mapping[pair<int, int>(r,c)] = vertex;
+            if(r > 0 && c > 0)
+            {
+                ground_geometry->create_face(ground_mapping.at(pair<int, int>(r,c-1)), ground_mapping.at(pair<int, int>(r-1,c-1)), vertex);
+                ground_geometry->create_face(ground_mapping.at(pair<int, int>(r-1,c)), vertex, ground_mapping.at(pair<int, int>(r-1,c-1)));
+            }
+        }
+    }
+    
+    // Initialize grass geometry
+    for (int i = 0; i < NO_GRASS_STRAW; i++)
+    {
+        grass_geometry->create_edge(grass_geometry->create_vertex(), grass_geometry->create_vertex());
+    }
+    
+    // Initialize water geometry
+    mesh::VertexID* v1 = water_geometry->create_vertex();
+    mesh::VertexID* v2 = water_geometry->create_vertex();
+    mesh::VertexID* v3 = water_geometry->create_vertex();
+    mesh::VertexID* v4 = water_geometry->create_vertex();
+    water_geometry->create_face(v2, v1, v3);
+    water_geometry->create_face(v4, v3, v1);
+    
     spawn_terrain(_position);
     
     // Load textures
@@ -206,17 +148,14 @@ Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
     scene.add_leaf(skybox_geometry, skybox_material);
     
     // Create terrain
+    auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, noise_texture, ground_uv_coordinates, ground_normals);
+    scene.add_leaf(ground_geometry, terrain_material);
+    
+    auto water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, noise_texture, water_uv_coordinates);
+    scene.add_leaf(water_geometry, water_material);
+    
     auto grass_material = make_shared<GrassMaterial>(time, wind_direction, position, vec3(0.3f,0.7f,0.f));
-    for (TerrainPatch& patch : patches)
-    {
-        auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, noise_texture, patch.get_uv_coordinates(), patch.get_normals());
-        scene.add_leaf(patch.get_ground(), terrain_material);
-        
-        auto water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, noise_texture, patch.get_water_uv_coordinates());
-        scene.add_leaf(patch.get_water(), water_material);
-        
-        scene.add_leaf(patch.get_grass(), grass_material);
-    }
+    scene.add_leaf(grass_geometry, grass_material);
 }
 
 pair<int, int> Terrain::index_at(const vec3& position)
@@ -250,9 +189,11 @@ void Terrain::spawn_terrain(const glm::vec3& _position)
         }
     }
     
-    for (int i = -1; i <= 1; i++)
+    bool hasChanged = false;
+    
+    for (int i = -PATCH_RADIUS; i <= PATCH_RADIUS; i++)
     {
-        for (int j = -1; j <= 1; j++)
+        for (int j = -PATCH_RADIUS; j <= PATCH_RADIUS; j++)
         {
             auto index = make_pair(index_at_position.first + i, index_at_position.second + j);
             auto patch = patch_at(index);
@@ -270,9 +211,74 @@ void Terrain::spawn_terrain(const glm::vec3& _position)
                 }
                 vec3 origo = vec3(TerrainPatch::SIZE * static_cast<double>(index.first), 0., TerrainPatch::SIZE * static_cast<double>(index.second));
                 patch->update(origo);
+                hasChanged = true;
             }
         }
     }
+    
+    if(!hasChanged)
+        return;
+    
+    auto index = make_pair(index_at_position.first - PATCH_RADIUS, index_at_position.second - PATCH_RADIUS);
+    auto patch = patch_at(index);
+    auto origo = patch->get_origo();
+    
+    int no_patches_side = PATCH_RADIUS * 2 + 1;
+    int map_size = static_cast<int>(no_patches_side * TerrainPatch::SIZE) * TerrainPatch::VERTICES_PER_UNIT;
+    // Update ground geometry
+    for (int r = 0; r < map_size; r++)
+    {
+        for (int c = 0; c < map_size; c++)
+        {
+            vec3 pos = vec3(origo.x + r * TerrainPatch::VERTEX_DISTANCE, 0., origo.z + c * TerrainPatch::VERTEX_DISTANCE);
+            pos.y = get_height_at(pos);
+            auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
+            ground_geometry->position()->at(ground_vertex) = pos;
+            ground_uv_coordinates->at(ground_vertex) = vec2(fmod(static_cast<double>(no_patches_side * r)/static_cast<double>(map_size), map_size/static_cast<double>(no_patches_side)), fmod(static_cast<double>(no_patches_side * c)/static_cast<double>(map_size), map_size/static_cast<double>(no_patches_side)));
+        }
+    }
+    
+    // Update ground normals
+    for (int r = 0; r < map_size; r++)
+    {
+        for (int c = 0; c < map_size; c++)
+        {
+            auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
+            ground_normals->at(ground_vertex) = ground_geometry->normal(ground_vertex);
+        }
+    }
+    
+    // Update grass geometry
+    for (auto edge = grass_geometry->edges_begin(); edge != grass_geometry->edges_end(); edge = edge->next())
+    {
+        auto pos = origo + vec3(Random::value(0., 0.999 * TerrainPatch::SIZE * no_patches_side), 0., Random::value(0., 0.999 * TerrainPatch::SIZE * no_patches_side));
+        pos.y = get_height_at(pos);
+        if(pos.y < 0.)
+        {
+            grass_geometry->position()->at(edge->v1()) = pos;
+            grass_geometry->position()->at(edge->v2()) = pos;
+        }
+        else
+        {
+            grass_geometry->position()->at(edge->v1()) = pos;
+            grass_geometry->position()->at(edge->v2()) = pos + vec3(Random::value(-0.2, 0.2), Random::value(0.1, 0.3), Random::value(-0.2, 0.2));
+        }
+    }
+    
+    // Update water geometry
+    double size = TerrainPatch::SIZE;
+    auto vertex = water_geometry->vertices_begin();
+    water_geometry->position()->at(vertex) = origo;
+    water_uv_coordinates->at(vertex) = vec2(0., 0.);
+    vertex = vertex->next();
+    water_geometry->position()->at(vertex) = origo + glm::vec3(size, 0., 0.);
+    water_uv_coordinates->at(vertex) = vec2(1., 0.);
+    vertex = vertex->next();
+    water_geometry->position()->at(vertex) = origo + glm::vec3(size, 0., size);
+    water_uv_coordinates->at(vertex) = vec2(1., 1.);
+    vertex = vertex->next();
+    water_geometry->position()->at(vertex) = origo + glm::vec3(0., 0., size);
+    water_uv_coordinates->at(vertex) = vec2(0., 1.);
 }
 
 void Terrain::update(const glm::vec3& _position)
