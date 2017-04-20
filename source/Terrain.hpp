@@ -39,10 +39,11 @@ class Terrain
         
         glm::vec3 get_origo();
     };
-    const static int NO_GRASS_STRAW = 100000;
     const static int PATCH_RADIUS = 1;
     constexpr const static int PATCH_SIDE_LENGTH = 2 * PATCH_RADIUS + 1;
     constexpr const static int VERTICES_PER_SIDE = TerrainPatch::VERTICES_PER_SIDE * PATCH_SIDE_LENGTH;
+    const static int NO_GRASS_STRAW_PER_UNIT = 3;
+    constexpr const static int NO_GRASS_STRAW = NO_GRASS_STRAW_PER_UNIT * VERTICES_PER_SIDE * VERTICES_PER_SIDE;
     
     std::vector<TerrainPatch> patches;
     std::map<std::pair<int,int>, mesh::VertexID*> ground_mapping;
