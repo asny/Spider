@@ -173,7 +173,7 @@ glm::vec3 Terrain::TerrainPatch::get_origo()
 
 Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
 {
-    update(_position);
+    spawn_terrain(_position);
     
     // Load textures
     auto ground_texture = make_shared<GLTexture2D>("resources/grass.jpg");
@@ -190,13 +190,13 @@ Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
     scene.add_leaf(skybox_geometry, skybox_material);
     
     // Create terrain
-    auto grass_material = make_shared<GLGrassMaterial>(position, wind, vec3(0.3f,0.7f,0.f));
+    auto grass_material = make_shared<GrassMaterial>(time, wind_direction, position, vec3(0.3f,0.7f,0.f));
     for (TerrainPatch& patch : patches)
     {
-        auto terrain_material = make_shared<TerrainMaterial>(time, ground_texture, lake_texture, noise_texture, patch.get_uv_coordinates());
+        auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, noise_texture, patch.get_uv_coordinates());
         scene.add_leaf(patch.get_ground(), terrain_material);
         
-        auto water_material = make_shared<WaterMaterial>(time, skybox_texture, noise_texture, patch.get_water_uv_coordinates());
+        auto water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, noise_texture, patch.get_water_uv_coordinates());
         scene.add_leaf(patch.get_water(), water_material);
         
         scene.add_leaf(patch.get_grass(), grass_material);
@@ -220,12 +220,8 @@ Terrain::TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
     return nullptr;
 }
 
-void Terrain::update(const glm::vec3& _position)
+void Terrain::spawn_terrain(const glm::vec3& _position)
 {
-    *time = gle::time();
-    *position = _position;
-    *wind = glm::vec3(0.5 * sin(*time) + 0.5, 0., 0.5 * cos(*time + 0.5) + 0.5);
-    
     auto index_at_position = index_at(_position);
     
     std::vector<TerrainPatch*> free_patches;
@@ -261,6 +257,15 @@ void Terrain::update(const glm::vec3& _position)
             }
         }
     }
+}
+
+void Terrain::update(const glm::vec3& _position)
+{
+    *time = gle::time();
+    *position = _position;
+    *wind_direction = vec3(1., 0., 0.);
+    
+    spawn_terrain(_position);
 }
 
 double Terrain::get_height_at(const glm::vec3& position)

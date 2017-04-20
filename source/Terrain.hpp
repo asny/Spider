@@ -75,12 +75,14 @@ class Terrain
     std::vector<TerrainPatch> patches;
     
     std::shared_ptr<float> time = std::make_shared<float>(0.f);
-    std::shared_ptr<glm::vec3> wind = std::make_shared<glm::vec3>(0., 0., 0.);
+    std::shared_ptr<glm::vec3> wind_direction = std::make_shared<glm::vec3>(0., 0., 0.);
     std::shared_ptr<glm::vec3> position = std::make_shared<glm::vec3>(0., 0., 0.);
     
     std::pair<int, int> index_at(const glm::vec3& position);
     
     TerrainPatch* patch_at(std::pair<int, int> index);
+    
+    void spawn_terrain(const glm::vec3& position);
     
 public:
     
