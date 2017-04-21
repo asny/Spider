@@ -28,7 +28,6 @@ double average(std::vector<double> heights)
 
 Terrain::TerrainPatch::TerrainPatch()
 {
-    // Initialize height map
     heightmap = vector<vector<double>>(VERTICES_PER_SIDE + 1);
     for ( auto r = 0; r <= VERTICES_PER_SIDE; r++ )
     {
@@ -45,6 +44,18 @@ void Terrain::TerrainPatch::update(const vec3& _origo)
     set_height(SIZE, VERTICES_PER_SIDE, 0, {});
     set_height(SIZE, VERTICES_PER_SIDE, VERTICES_PER_SIDE, {});
     subdivide(0, 0, VERTICES_PER_SIDE);
+    
+    grass_map.clear();
+    for (int i = 0; i < NO_GRASS_STRAW; i++)
+    {
+        auto pos = origo + vec3(Random::value(0., 0.999 * SIZE), 0., Random::value(0., 0.999 * SIZE));
+        pos.y = get_height_at(pos);
+        if(pos.y > 0.)
+        {
+            auto straw = vec3(Random::value(-0.2, 0.2), Random::value(0.1, 0.3), Random::value(-0.2, 0.2));
+            grass_map.push_back( { pos, straw } );
+        }
+    }
 }
 
 void Terrain::TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
@@ -113,12 +124,6 @@ Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
             }
             ground_uv_coordinates->at(vertex) = vec2(PATCH_SIDE_LENGTH * r * TerrainPatch::VERTEX_DISTANCE/SIZE, PATCH_SIDE_LENGTH * c * TerrainPatch::VERTEX_DISTANCE/SIZE);
         }
-    }
-    
-    // Initialize grass geometry
-    for (int i = 0; i < NO_GRASS_STRAW; i++)
-    {
-        grass_geometry->create_edge(grass_geometry->create_vertex(), grass_geometry->create_vertex());
     }
     
     // Initialize water geometry
@@ -246,20 +251,27 @@ void Terrain::update(const glm::vec3& _position)
     ground_geometry->update_normals();
     
     // Update grass geometry
-    for (auto edge = grass_geometry->edges_begin(); edge != grass_geometry->edges_end(); edge = edge->next())
+    auto edge = grass_geometry->edges_begin();
+    for (auto patch : patches)
     {
-        auto pos = origo + vec3(Random::value(0., 0.999 * SIZE), 0., Random::value(0., 0.999 * SIZE));
-        pos.y = get_height_at(pos);
-        if(pos.y < 0.)
+        for (auto grass_straw : patch.get_grass_straws())
         {
-            grass_geometry->position()->at(edge->v1()) = pos;
-            grass_geometry->position()->at(edge->v2()) = pos;
+            if(edge == grass_geometry->edges_end())
+            {
+                edge = grass_geometry->create_edge(grass_geometry->create_vertex(), grass_geometry->create_vertex());
+            }
+            
+            grass_geometry->position()->at(edge->v1()) = grass_straw.position;
+            grass_geometry->position()->at(edge->v2()) = grass_straw.position + grass_straw.straw;
+            
+            edge = edge->next();
         }
-        else
-        {
-            grass_geometry->position()->at(edge->v1()) = pos;
-            grass_geometry->position()->at(edge->v2()) = pos + vec3(Random::value(-0.2, 0.2), Random::value(0.1, 0.3), Random::value(-0.2, 0.2));
-        }
+    }
+    
+    for (; edge != grass_geometry->edges_end(); edge = edge->next())
+    {
+        grass_geometry->position()->at(edge->v1()) = vec3(0., 0., 0.);
+        grass_geometry->position()->at(edge->v2()) = vec3(0., 0., 0.);
     }
     
     // Update water geometry
