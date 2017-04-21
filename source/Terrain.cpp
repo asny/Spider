@@ -109,7 +109,7 @@ Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
                 ground_geometry->create_face(ground_mapping.at(pair<int, int>(r,c-1)), ground_mapping.at(pair<int, int>(r-1,c-1)), vertex);
                 ground_geometry->create_face(ground_mapping.at(pair<int, int>(r-1,c)), vertex, ground_mapping.at(pair<int, int>(r-1,c-1)));
             }
-            ground_uv_coordinates->at(vertex) = vec2(fmod(static_cast<double>(PATCH_SIDE_LENGTH * r)/static_cast<double>(VERTICES_PER_SIDE), VERTICES_PER_SIDE/static_cast<double>(PATCH_SIDE_LENGTH)), fmod(static_cast<double>(PATCH_SIDE_LENGTH * c)/static_cast<double>(VERTICES_PER_SIDE), VERTICES_PER_SIDE/static_cast<double>(PATCH_SIDE_LENGTH)));
+            ground_uv_coordinates->at(vertex) = vec2(PATCH_SIDE_LENGTH * r * TerrainPatch::VERTEX_DISTANCE/SIZE, PATCH_SIDE_LENGTH * c * TerrainPatch::VERTEX_DISTANCE/SIZE);
         }
     }
     
