@@ -76,11 +76,13 @@ void Terrain::TerrainPatch::subdivide(int origo_r, int origo_c, int size)
 
 double Terrain::TerrainPatch::get_height_at(const vec3& position) const
 {
-    double tx = fmod(position.x - origo.x, VERTEX_DISTANCE);
-    double tz = fmod(position.z - origo.z, VERTEX_DISTANCE);
+    vec3 vec = position - origo;
     
-    int r = static_cast<int>((position.x - tx - origo.x) / VERTEX_DISTANCE);
-    int c = static_cast<int>((position.z - tz - origo.z) / VERTEX_DISTANCE);
+    double r = floor(vec.x * VERTICES_PER_UNIT);
+    double c = floor(vec.z * VERTICES_PER_UNIT);
+    
+    double tx = vec.x * VERTICES_PER_UNIT - r;
+    double tz = vec.z * VERTICES_PER_UNIT - c;
     
     auto height = (1. - tx) * (1. - tz) * heightmap.at(r).at(c);
     height += tx * (1. - tz) * heightmap.at(r+1).at(c);
