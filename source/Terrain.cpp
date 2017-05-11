@@ -257,7 +257,7 @@ void Terrain::update(const glm::vec3& _position)
     for (auto vertex = ground_geometry->vertices_begin(); vertex != ground_geometry->vertices_end(); vertex = vertex->next())
     {
         glm::vec3 pos = ground_geometry->position()->at(vertex);
-        sand_density->at(vertex) = glm::vec2(1. - 10. * pos.y, 0.);
+        sand_density->at(vertex) = 1. - 10. * pos.y;
     }
     
     // Update grass geometry

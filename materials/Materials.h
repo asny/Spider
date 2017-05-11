@@ -168,15 +168,20 @@ public:
 
 class SandMaterial : public gle::GLMaterial
 {
-    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> sand_density;
+    std::shared_ptr<mesh::Attribute<mesh::VertexID, float>> sand_density;
     std::unique_ptr<gle::GLTexture2D> noise_texture;
 public:
     
-    SandMaterial(std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _sand_density)
+    SandMaterial(std::shared_ptr<mesh::Attribute<mesh::VertexID, float>> _sand_density)
     : GLMaterial(gle::FORWARD), sand_density(_sand_density)
     {
         shader = gle::GLShader::create_or_get("shaders/sand.vert",  "shaders/sand.frag");
         create_noise_texture();
+    }
+    
+    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<float>>>& float_vertex_attributes)
+    {
+        float_vertex_attributes.push_back(shader->create_attribute("density", sand_density));
     }
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
@@ -184,7 +189,6 @@ public:
     {
         vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
         vec3_vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
-        vec2_vertex_attributes.push_back(shader->create_attribute("density", sand_density));
     }
     
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
