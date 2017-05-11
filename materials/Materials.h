@@ -173,7 +173,7 @@ class SandMaterial : public gle::GLMaterial
 public:
     
     SandMaterial(std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _sand_density)
-    : GLMaterial(gle::DEFERRED), sand_density(_sand_density)
+    : GLMaterial(gle::FORWARD), sand_density(_sand_density)
     {
         shader = gle::GLShader::create_or_get("shaders/sand.vert",  "shaders/sand.frag");
         create_noise_texture();
