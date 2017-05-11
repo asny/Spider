@@ -164,6 +164,9 @@ Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
     
     auto grass_material = make_shared<GrassMaterial>(time, wind_direction, position, vec3(0.3f,0.7f,0.f));
     scene.add_leaf(grass_geometry, grass_material);
+    
+    auto sand_material = make_shared<SandMaterial>(sand_density);
+    scene.add_leaf(ground_geometry, sand_material);
 }
 
 pair<int, int> Terrain::index_at(const vec3& position)
@@ -249,6 +252,13 @@ void Terrain::update(const glm::vec3& _position)
     
     // Update ground normals
     ground_geometry->update_normals();
+    
+    // Update sand
+    for (auto vertex = ground_geometry->vertices_begin(); vertex != ground_geometry->vertices_end(); vertex = vertex->next())
+    {
+        glm::vec3 pos = ground_geometry->position()->at(vertex);
+        sand_density->at(vertex) = glm::vec2(1. - 10. * pos.y, 0.);
+    }
     
     // Update grass geometry
     auto edge = grass_geometry->edges_begin();
