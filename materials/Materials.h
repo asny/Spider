@@ -165,3 +165,34 @@ public:
         gle::GLUniform::use(shader, "windDirection", *wind_direction);
     }
 };
+
+class SandMaterial : public gle::GLMaterial
+{
+    std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> sand_density;
+public:
+    
+    SandMaterial(std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _sand_density)
+    : GLMaterial(gle::DEFERRED), sand_density(_sand_density)
+    {
+        shader = gle::GLShader::create_or_get("shaders/sand.vert",  "shaders/sand.frag");
+    }
+    
+    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
+                           std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
+    {
+        vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
+        vec3_vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
+        vec2_vertex_attributes.push_back(shader->create_attribute("density", sand_density));
+    }
+    
+    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    {
+        gle::GLState::depth_test(true);
+        gle::GLState::depth_write(true);
+        gle::GLState::cull_back_faces(true);
+        
+        gle::GLUniform::use(shader, "MMatrix", model);
+        gle::GLUniform::use(shader, "MVPMatrix", projection * view * model);
+        gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
+    }
+};
