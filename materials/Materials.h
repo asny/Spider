@@ -169,12 +169,14 @@ public:
 class SandMaterial : public gle::GLMaterial
 {
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> sand_density;
+    std::unique_ptr<gle::GLTexture2D> noise_texture;
 public:
     
     SandMaterial(std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _sand_density)
     : GLMaterial(gle::DEFERRED), sand_density(_sand_density)
     {
         shader = gle::GLShader::create_or_get("shaders/sand.vert",  "shaders/sand.frag");
+        create_noise_texture();
     }
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
@@ -191,8 +193,23 @@ public:
         gle::GLState::depth_write(true);
         gle::GLState::cull_back_faces(true);
         
+        noise_texture->use(0);
+        gle::GLUniform::use(shader, "noiseTexture", 0);
+        
         gle::GLUniform::use(shader, "MMatrix", model);
         gle::GLUniform::use(shader, "MVPMatrix", projection * view * model);
         gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
+    }
+    
+private:
+    void create_noise_texture()
+    {
+        const int noise_size = 128;
+        auto noise = std::vector<float>(noise_size * noise_size);
+        for (int i = 0; i < noise_size * noise_size; ++i)
+        {
+            noise[i] = gle::random(-0.5, 0.5);
+        }
+        noise_texture = std::unique_ptr<gle::GLTexture2D>(new gle::GLTexture2D(&noise[0], noise_size, noise_size, GL_RED));
     }
 };
