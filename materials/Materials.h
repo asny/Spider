@@ -208,7 +208,7 @@ private:
         auto noise = std::vector<float>(noise_size * noise_size);
         for (int i = 0; i < noise_size * noise_size; ++i)
         {
-            noise[i] = gle::random(-0.5, 0.5);
+            noise[i] = gle::random(0., 1.);
         }
         noise_texture = std::unique_ptr<gle::GLTexture2D>(new gle::GLTexture2D(&noise[0], noise_size, noise_size, GL_RED));
     }
