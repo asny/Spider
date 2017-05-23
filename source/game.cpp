@@ -202,6 +202,7 @@ int main(int argc, char** argv)
         
         // Update the camera
         update_camera(camera, spider.get_position(), spider.get_view_direction());
+        directional_light->shadow_target = spider.get_position();
         
         // draw one frame
         camera.draw(scene);
