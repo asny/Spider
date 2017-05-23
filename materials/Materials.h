@@ -28,12 +28,6 @@ public:
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/color_material.frag", "shaders/grass.geom");
     }
     
-    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
-                           std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
-    {
-        vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
-    }
-    
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
     {
         gle::GLState::depth_test(true);
@@ -62,12 +56,6 @@ public:
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/color_material.frag", "shaders/spider_legs.geom");
     }
     
-    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
-                           std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
-    {
-        vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
-    }
-    
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
     {
         gle::GLState::depth_test(true);
@@ -94,12 +82,16 @@ public:
         shader = gle::GLShader::create_or_get("../GLEngine/shaders/texture.vert",  "shaders/water.frag");
     }
     
-    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
-                           std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
+    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vertex_attributes)
     {
-        vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
-        vec3_vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
-        vec2_vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
+        GLMaterial::create_attributes(geometry, vertex_attributes);
+        vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
+    }
+    
+    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vertex_attributes)
+    {
+        GLMaterial::create_attributes(geometry, vertex_attributes);
+        vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
     }
     
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
@@ -138,12 +130,16 @@ public:
         create_noise_texture();
     }
     
-    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vec2_vertex_attributes,
-                           std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vec3_vertex_attributes)
+    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vertex_attributes)
     {
-        vec3_vertex_attributes.push_back(shader->create_attribute("position", geometry->position()));
-        vec3_vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
-        vec2_vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
+        GLMaterial::create_attributes(geometry, vertex_attributes);
+        vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
+    }
+    
+    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vertex_attributes)
+    {
+        GLMaterial::create_attributes(geometry, vertex_attributes);
+        vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
     }
     
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
