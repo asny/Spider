@@ -77,7 +77,7 @@ class WaterMaterial : public gle::GLMaterial
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
 public:
     WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
-        : GLMaterial(gle::FORWARD, "../GLEngine/shaders/texture.vert",  "shaders/water.frag"), texture(_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
+        : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag", "shaders/water.geom"), texture(_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
         
     }
@@ -107,7 +107,7 @@ public:
         
         gle::GLUniform::use(shader, "MMatrix", model);
         gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
-        gle::GLUniform::use(shader, "MVPMatrix", projection * view * model);
+        gle::GLUniform::use(shader, "VPMatrix", projection * view);
         
         gle::GLUniform::use(shader, "eyePosition", camera_position);
         gle::GLUniform::use(shader, "time", *time);
