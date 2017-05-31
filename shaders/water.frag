@@ -13,6 +13,7 @@ layout (location = 0) out vec4 color;
 const float Eta = 1. / 1.5; // Ratio of indices of refraction
 const float FresnelPower = 5.0;
 const float F = ((1.0-Eta) * (1.0-Eta)) / ((1.0+Eta) * (1.0+Eta));
+const vec4 waterColor = vec4(0.1,0.3,0.4, 0.5);
 
 void main()
 {
@@ -32,6 +33,7 @@ void main()
     vec3 reflectDir = normalize(reflect(incidentDir, normal));
     vec3 reflectColor = texture(environmentMap, reflectDir).xyz;
     
-    // Mix reflection and absorption
-    color = vec4(reflectColor, fresnel);
+    // Mix water color, reflection and refraction (absorption and bottom texture)
+    float opacity = mix(fresnel, 1.f, waterColor.w);
+    color = vec4(mix(reflectColor, waterColor.xyz, waterColor.w/opacity), opacity);
 }
