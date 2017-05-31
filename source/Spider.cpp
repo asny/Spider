@@ -146,6 +146,10 @@ void Spider::update(Terrain& terrain, float time)
         }
     }
     
+    // Update terrain
+    terrain.update(position);
+    
+    // Get world position and view direction
     vec3 world_position = get_position(terrain);
     vec3 world_view_direction = get_view_direction(terrain);
     
@@ -160,7 +164,4 @@ void Spider::update(Terrain& terrain, float time)
     {
         leg.update(*local2world, terrain, time);
     }
-    
-    // Update terrain
-    terrain.update(position);
 }

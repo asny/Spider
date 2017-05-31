@@ -107,7 +107,7 @@ glm::vec3 Terrain::TerrainPatch::get_origo()
     return origo;
 }
 
-Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
+Terrain::Terrain(GLScene& scene)
 {
     // Initialize ground geometry
     auto ground_uv_coordinates = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
@@ -138,8 +138,6 @@ Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
     water_uv_coordinates->at(v4) = vec2(0., 1.);
     water_geometry->create_face(v2, v1, v3);
     water_geometry->create_face(v4, v3, v1);
-    
-    update(_position);
     
     // Load textures
     auto ground_texture = make_shared<GLTexture2D>("resources/grass.jpg");
@@ -283,6 +281,9 @@ void Terrain::update(const glm::vec3& _position)
     water_geometry->position()->at(vertex) = origo + glm::vec3(SIZE, 0., SIZE);
     vertex = vertex->next();
     water_geometry->position()->at(vertex) = origo + glm::vec3(0., 0., SIZE);
+    
+    // Update water normals
+    water_geometry->update_normals();
 }
 
 double Terrain::get_height_at(const glm::vec3& position)

@@ -51,7 +51,7 @@ class Spider
     const float speed = 2.;
     const float angular_speed = 1.;
     const float gravity = -9.82;
-    float height;
+    const float height = 0.3f;
     glm::vec3 jump_vector;
     
     // Move states
@@ -64,7 +64,7 @@ class Spider
 public:
     Spider(gle::GLScene& scene, glm::vec3 _position, glm::vec3 _view_direction) : position(_position), view_direction(_view_direction)
     {
-        height = position.y;
+        position.y = height;
         create_scene_graph(scene);
     }
     
