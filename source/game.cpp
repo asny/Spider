@@ -170,9 +170,7 @@ int main(int argc, char** argv)
     // Create objects
     auto initial_position = glm::vec3(0., 0.3, -5.);
     auto terrain = Terrain(scene, initial_position);
-    
-    std::function<double(glm::vec3)> get_height_at = std::bind(&Terrain::get_height_at, &terrain, std::placeholders::_1);
-    auto spider = Spider(scene, initial_position, glm::vec3(0., 0., 1.), get_height_at);
+    auto spider = Spider(scene, terrain, initial_position, glm::vec3(0., 0., 1.));
     
     // Create light
     auto directional_light = make_shared<GLDirectionalLight>();
@@ -195,14 +193,13 @@ int main(int argc, char** argv)
         print_fps(elapsed_time);
         
         // Update the scene based on the time elapsed since last update
-        spider.update(elapsed_time);
+        spider.update(terrain, elapsed_time);
         Butterfly::spawn_and_destroy_and_update(scene);
         Firefly::spawn_and_destroy_and_update(scene);
-        terrain.update(spider.get_position());
         
         // Update the camera
-        update_camera(camera, spider.get_position(), spider.get_view_direction());
-        directional_light->shadow_target = spider.get_position();
+        update_camera(camera, spider.get_position(terrain), spider.get_view_direction(terrain));
+        directional_light->shadow_target = spider.get_position(terrain);
         
         // draw one frame
         camera.draw(scene);
