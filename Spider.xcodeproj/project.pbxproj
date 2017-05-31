@@ -115,10 +115,10 @@
 		7A383A341BBFD93A00E29333 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				497A954F1EDECDB6004AA2CA /* water.geom */,
 				497A95501EDECDB6004AA2CA /* water.vert */,
-				49EBFAE61E3FDD3300503199 /* terrain.frag */,
+				497A954F1EDECDB6004AA2CA /* water.geom */,
 				49EBFAE41E3F1DE400503199 /* water.frag */,
+				49EBFAE61E3FDD3300503199 /* terrain.frag */,
 				7AE74B671C18B00800466559 /* spider_legs.geom */,
 				7AF4B53F1D27B3D0008A5074 /* grass.frag */,
 				7A370D901BD964E2000783CA /* grass.geom */,

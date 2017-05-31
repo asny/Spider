@@ -88,12 +88,6 @@ public:
         vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
     }
     
-    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vertex_attributes)
-    {
-        GLMaterial::create_attributes(geometry, vertex_attributes);
-        vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
-    }
-    
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
     {
         gle::GLState::depth_test(true);
@@ -106,7 +100,6 @@ public:
         gle::GLUniform::use(shader, "noiseTexture", 1);
         
         gle::GLUniform::use(shader, "MMatrix", model);
-        gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
         gle::GLUniform::use(shader, "VPMatrix", projection * view);
         
         gle::GLUniform::use(shader, "eyePosition", camera_position);

@@ -157,8 +157,8 @@ Terrain::Terrain(GLScene& scene)
     auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, noise_texture, ground_uv_coordinates);
     scene.add_leaf(ground_geometry, terrain_material);
     
-    auto water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, noise_texture, water_uv_coordinates);
-    scene.add_leaf(water_geometry, water_material);
+    auto water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, noise_texture, ground_uv_coordinates);
+    scene.add_leaf(ground_geometry, water_material);
     
     auto grass_material = make_shared<GrassMaterial>(time, wind_direction, position, vec3(0.3f,0.7f,0.f));
     scene.add_leaf(grass_geometry, grass_material);
@@ -281,9 +281,6 @@ void Terrain::update(const glm::vec3& _position)
     water_geometry->position()->at(vertex) = origo + glm::vec3(SIZE, 0., SIZE);
     vertex = vertex->next();
     water_geometry->position()->at(vertex) = origo + glm::vec3(0., 0., SIZE);
-    
-    // Update water normals
-    water_geometry->update_normals();
 }
 
 double Terrain::get_height_at(const glm::vec3& position)
