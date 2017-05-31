@@ -117,7 +117,7 @@ public:
             amplitude.push_back(0.1f / t);
             wavelength.push_back(4 * M_PI / t);
             speed.push_back(0.1f + 0.2*i);
-            direction.push_back(glm::vec2(wind_direction->x, wind_direction->z));
+            direction.push_back(normalize(glm::vec2(wind_direction->x, wind_direction->z) + 0.1f * glm::vec2(sin(0.01* *time), cos(0.01* *time))));
         }
         
         gle::GLUniform::use(shader, "amplitude", amplitude[0], no_waves);

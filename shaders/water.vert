@@ -8,6 +8,7 @@ uniform float amplitude[8];
 uniform float wavelength[8];
 uniform float speed[8];
 uniform vec2 direction[8];
+uniform sampler2D noiseTexture;
 
 in vec3 position;
 in vec2 uv_coordinates;
@@ -67,7 +68,8 @@ float waveHeight(float x, float y)
 void main()
 {
     pos = (MMatrix * vec4(position, 1.)).xyz;
-    pos.y = waveHeight(pos.x, pos.z);
+    float noise = sin(3.14 * texture(noiseTexture, uv_coordinates).x + time);
+    pos.y = waveHeight(pos.x, pos.z) + 0.05 * noise;
     nor = waveNormal(pos.x, pos.z);
     gl_Position = VPMatrix * vec4(pos, 1.);
     coords = uv_coordinates;

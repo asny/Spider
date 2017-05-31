@@ -2,7 +2,6 @@
 
 uniform samplerCube environmentMap;
 uniform vec3 eyePosition;
-uniform sampler2D noiseTexture;
 
 in vec3 pos;
 in vec3 nor;
@@ -18,10 +17,7 @@ const vec4 waterColor = vec4(0.1,0.3,0.4, 0.5);
 void main()
 {
     vec3 incidentDir = normalize(pos - eyePosition.xyz);
-    
-    // Compute normal
-    float noise = texture(noiseTexture, coords).x - 0.5;
-    vec3 normal = normalize(nor + 0.5 * vec3(noise, 0., noise));
+    vec3 normal = normalize(nor);
     
     // Compute cosine to the incident angle
     float cosAngle = dot(normal, -incidentDir);
