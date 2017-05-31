@@ -105,25 +105,25 @@ public:
         gle::GLUniform::use(shader, "eyePosition", camera_position);
         gle::GLUniform::use(shader, "time", *time);
         
-        gle::GLUniform::use(shader, "noWaves", 1);
-        
         auto amplitude = std::vector<float>();
         auto wavelength = std::vector<float>();
         auto speed = std::vector<float>();
         auto direction = std::vector<glm::vec2>();
         
-        const int no_waves = 1;
+        const int no_waves = 4;
         for(int i = 0; i < no_waves; i++)
         {
-            amplitude.push_back(0.2);
-            wavelength.push_back(2.);
-            speed.push_back(0.2);
+            float t = i + 1.f;
+            amplitude.push_back(0.1f / t);
+            wavelength.push_back(4 * M_PI / t);
+            speed.push_back(0.1f + 0.2*i);
             direction.push_back(glm::vec2(wind_direction->x, wind_direction->z));
         }
-        gle::GLUniform::use(shader, "amplitude", amplitude[0]);
-        gle::GLUniform::use(shader, "wavelength", wavelength[0]);
-        gle::GLUniform::use(shader, "speed", speed[0]);
-        gle::GLUniform::use(shader, "direction", direction[0]);
+        
+        gle::GLUniform::use(shader, "amplitude", amplitude[0], no_waves);
+        gle::GLUniform::use(shader, "wavelength", wavelength[0], no_waves);
+        gle::GLUniform::use(shader, "speed", speed[0], no_waves);
+        gle::GLUniform::use(shader, "direction", direction[0], no_waves);
         gle::GLUniform::use(shader, "noWaves", no_waves);
         
     }

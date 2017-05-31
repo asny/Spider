@@ -17,7 +17,6 @@ out vec3 nor;
 out vec3 pos;
 
 const float pi = 3.14159;
-const float waterHeight = 0.f;
 
 float dWavedx(int i, float x, float y)
 {
@@ -49,14 +48,16 @@ vec3 waveNormal(float x, float y)
     return normalize(n);
 }
 
-float wave(int i, float x, float y) {
+float wave(int i, float x, float y)
+{
     float frequency = 2*pi/wavelength[i];
     float phase = speed[i] * frequency;
     float theta = dot(direction[i], vec2(x, y));
     return amplitude[i] * sin(theta * frequency + time * phase);
 }
 
-float waveHeight(float x, float y) {
+float waveHeight(float x, float y)
+{
     float height = 0.0;
     for (int i = 0; i < noWaves; ++i)
         height += wave(i, x, y);
