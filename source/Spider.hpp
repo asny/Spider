@@ -61,14 +61,11 @@ class Spider
     bool is_rotating_left = false;
     bool is_jumping = false;
     
-    void update_local2world(Terrain& terrain);
-    
 public:
-    Spider(gle::GLScene& scene, Terrain& terrain, glm::vec3 _position, glm::vec3 _view_direction) : position(_position), view_direction(_view_direction)
+    Spider(gle::GLScene& scene, glm::vec3 _position, glm::vec3 _view_direction) : position(_position), view_direction(_view_direction)
     {
         height = position.y;
         create_scene_graph(scene);
-        update_local2world(terrain);
     }
     
     glm::vec3 get_position(Terrain& terrain);

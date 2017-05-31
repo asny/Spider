@@ -103,18 +103,6 @@ vec3 Spider::get_view_direction(Terrain& terrain)
     return glm::normalize(glm::vec3(view_direction.x, y_view_dir, view_direction.z));
 }
 
-void Spider::update_local2world(Terrain& terrain)
-{
-    vec3 spider_position = get_position(terrain);
-    vec3 spider_view_direction = get_view_direction(terrain);
-    
-    // Compute spider model matrix
-    mat4 spider_rotation_yaw = orientation(normalize(vec3(spider_view_direction.x, 0., spider_view_direction.z)), vec3(0., 0., 1.));
-    mat4 spider_rotation_pitch = orientation(normalize(vec3(0., spider_view_direction.y, 1.)), vec3(0., 0., 1.));
-    mat4 spider_translation = translate(spider_position);
-    *local2world = spider_translation * spider_rotation_yaw * spider_rotation_pitch;
-}
-
 void Spider::jump()
 {
     if(!is_jumping)
@@ -158,11 +146,21 @@ void Spider::update(Terrain& terrain, float time)
         }
     }
     
-    update_local2world(terrain);
+    vec3 world_position = get_position(terrain);
+    vec3 world_view_direction = get_view_direction(terrain);
     
+    // Compute spider model matrix
+    mat4 spider_rotation_yaw = orientation(normalize(vec3(world_view_direction.x, 0., world_view_direction.z)), vec3(0., 0., 1.));
+    mat4 spider_rotation_pitch = orientation(normalize(vec3(0., world_view_direction.y, 1.)), vec3(0., 0., 1.));
+    mat4 spider_translation = translate(world_position);
+    *local2world = spider_translation * spider_rotation_yaw * spider_rotation_pitch;
+    
+    // Update legs
     for (Leg& leg : legs)
     {
         leg.update(*local2world, terrain, time);
     }
-    terrain.update(get_position(terrain));
+    
+    // Update terrain
+    terrain.update(position);
 }
