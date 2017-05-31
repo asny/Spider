@@ -61,7 +61,6 @@ class Terrain
     std::map<std::pair<int,int>, mesh::VertexID*> ground_mapping;
     
     std::shared_ptr<mesh::Mesh> ground_geometry = std::make_shared<mesh::Mesh>();
-    std::shared_ptr<mesh::Mesh> water_geometry = std::make_shared<mesh::Mesh>();
     std::shared_ptr<mesh::Mesh> grass_geometry = std::make_shared<mesh::Mesh>();
     
     std::shared_ptr<float> time = std::make_shared<float>(0.f);

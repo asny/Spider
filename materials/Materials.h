@@ -73,11 +73,11 @@ class WaterMaterial : public gle::GLMaterial
 {
     std::shared_ptr<float> time;
     std::shared_ptr<glm::vec3> wind_direction;
-    std::shared_ptr<gle::GLTexture> texture, noise_texture;
+    std::shared_ptr<gle::GLTexture> environment_texture, noise_texture;
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
 public:
-    WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
-        : GLMaterial(gle::FORWARD, "../GLEngine/shaders/texture.vert",  "shaders/water.frag"), texture(_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
+    WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _environment_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
+        : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag"), environment_texture(_environment_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
         
     }
@@ -88,30 +88,44 @@ public:
         vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
     }
     
-    void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vertex_attributes)
-    {
-        GLMaterial::create_attributes(geometry, vertex_attributes);
-        vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
-    }
-    
     void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
     {
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(false);
         gle::GLState::cull_back_faces(true);
         
-        texture->use(0);
-        gle::GLUniform::use(shader, "texture0", 0);
+        environment_texture->use(0);
+        gle::GLUniform::use(shader, "environmentMap", 0);
         noise_texture->use(1);
         gle::GLUniform::use(shader, "noiseTexture", 1);
         
         gle::GLUniform::use(shader, "MMatrix", model);
-        gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
-        gle::GLUniform::use(shader, "MVPMatrix", projection * view * model);
+        gle::GLUniform::use(shader, "VPMatrix", projection * view);
         
         gle::GLUniform::use(shader, "eyePosition", camera_position);
         gle::GLUniform::use(shader, "time", *time);
-        gle::GLUniform::use(shader, "windDirection", *wind_direction);
+        
+        auto amplitude = std::vector<float>();
+        auto wavelength = std::vector<float>();
+        auto speed = std::vector<float>();
+        auto direction = std::vector<glm::vec2>();
+        
+        const int no_waves = 4;
+        for(int i = 0; i < no_waves; i++)
+        {
+            float t = i + 1.f;
+            amplitude.push_back(0.1f / t);
+            wavelength.push_back(4 * M_PI / t);
+            speed.push_back(0.1f + 0.2*i);
+            direction.push_back(normalize(glm::vec2(wind_direction->x, wind_direction->z) + 0.1f * glm::vec2(sin(0.01* *time), cos(0.01* *time))));
+        }
+        
+        gle::GLUniform::use(shader, "amplitude", amplitude[0], no_waves);
+        gle::GLUniform::use(shader, "wavelength", wavelength[0], no_waves);
+        gle::GLUniform::use(shader, "speed", speed[0], no_waves);
+        gle::GLUniform::use(shader, "direction", direction[0], no_waves);
+        gle::GLUniform::use(shader, "noWaves", no_waves);
+        
     }
 };
 
