@@ -126,19 +126,6 @@ Terrain::Terrain(GLScene& scene)
         }
     }
     
-    // Initialize water geometry
-    mesh::VertexID* v1 = water_geometry->create_vertex();
-    mesh::VertexID* v2 = water_geometry->create_vertex();
-    mesh::VertexID* v3 = water_geometry->create_vertex();
-    mesh::VertexID* v4 = water_geometry->create_vertex();
-    auto water_uv_coordinates = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
-    water_uv_coordinates->at(v1) = vec2(0., 0.);
-    water_uv_coordinates->at(v2) = vec2(1., 0.);
-    water_uv_coordinates->at(v3) = vec2(1., 1.);
-    water_uv_coordinates->at(v4) = vec2(0., 1.);
-    water_geometry->create_face(v2, v1, v3);
-    water_geometry->create_face(v4, v3, v1);
-    
     // Load textures
     auto ground_texture = make_shared<GLTexture2D>("resources/grass.jpg");
     auto lake_texture = make_shared<GLTexture2D>("resources/bottom.png");
@@ -271,16 +258,6 @@ void Terrain::update(const glm::vec3& _position)
         grass_geometry->position()->at(edge->v1()) = vec3(0., 0., 0.);
         grass_geometry->position()->at(edge->v2()) = vec3(0., 0., 0.);
     }
-    
-    // Update water geometry
-    auto vertex = water_geometry->vertices_begin();
-    water_geometry->position()->at(vertex) = origo;
-    vertex = vertex->next();
-    water_geometry->position()->at(vertex) = origo + glm::vec3(SIZE, 0., 0.);
-    vertex = vertex->next();
-    water_geometry->position()->at(vertex) = origo + glm::vec3(SIZE, 0., SIZE);
-    vertex = vertex->next();
-    water_geometry->position()->at(vertex) = origo + glm::vec3(0., 0., SIZE);
 }
 
 double Terrain::get_height_at(const glm::vec3& position)
