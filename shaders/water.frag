@@ -1,6 +1,6 @@
 #version 330
 
-uniform samplerCube texture0;
+uniform samplerCube environmentMap;
 uniform vec3 eyePosition;
 uniform sampler2D noiseTexture;
 
@@ -22,7 +22,7 @@ void main()
     float noise = texture(noiseTexture, coords).x - 0.5;
     vec3 normal = normalize(nor + 0.5 * vec3(noise, 0., noise));
     
-    // Compute cosinus to the incident angle
+    // Compute cosine to the incident angle
     float cosAngle = dot(normal, -incidentDir);
     
     // Compute fresnel approximation
@@ -30,8 +30,8 @@ void main()
     
     // Reflection
     vec3 reflectDir = normalize(reflect(incidentDir, normal));
-    vec3 reflectColor = texture(texture0, reflectDir).xyz;
+    vec3 reflectColor = texture(environmentMap, reflectDir).xyz;
     
-    // Mix reflection and absprbtion
+    // Mix reflection and absorption
     color = vec4(reflectColor, fresnel);
 }

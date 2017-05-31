@@ -73,11 +73,11 @@ class WaterMaterial : public gle::GLMaterial
 {
     std::shared_ptr<float> time;
     std::shared_ptr<glm::vec3> wind_direction;
-    std::shared_ptr<gle::GLTexture> texture, noise_texture;
+    std::shared_ptr<gle::GLTexture> environment_texture, noise_texture;
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
 public:
-    WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
-        : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag", "shaders/water.geom"), texture(_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
+    WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _environment_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
+        : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag", "shaders/water.geom"), environment_texture(_environment_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
         
     }
@@ -94,8 +94,8 @@ public:
         gle::GLState::depth_write(false);
         gle::GLState::cull_back_faces(true);
         
-        texture->use(0);
-        gle::GLUniform::use(shader, "texture0", 0);
+        environment_texture->use(0);
+        gle::GLUniform::use(shader, "environmentMap", 0);
         noise_texture->use(1);
         gle::GLUniform::use(shader, "noiseTexture", 1);
         
