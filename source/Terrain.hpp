@@ -74,7 +74,7 @@ class Terrain
     
 public:
     
-    Terrain(gle::GLScene& scene, const glm::vec3& position);
+    Terrain(gle::GLScene& scene);
     
     void update(const glm::vec3& position);
     

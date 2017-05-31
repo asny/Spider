@@ -16,6 +16,7 @@
 #include "glm.hpp"
 #include "Mesh.h"
 #include "GLScene.h"
+#include "Terrain.hpp"
 #include <vector>
 #include <cmath>
 
@@ -38,20 +39,19 @@ class Spider
             geometry->create_edge(hip_vertex, foot_vertex);
         }
         
-        void update(const glm::mat4& local2world, std::function<double(glm::vec3)> get_height_at, float time);
+        void update(const glm::mat4& local2world, Terrain& terrain, float time);
     };
     
     glm::vec3 position;
     glm::vec3 view_direction;
     std::shared_ptr<glm::mat4> local2world = std::make_shared<glm::mat4>(1.);
-    std::function<double(glm::vec3)> get_height_at;
     
     std::vector<Leg> legs;
     
     const float speed = 2.;
     const float angular_speed = 1.;
     const float gravity = -9.82;
-    float height;
+    const float height = 0.3f;
     glm::vec3 jump_vector;
     
     // Move states
@@ -61,18 +61,15 @@ class Spider
     bool is_rotating_left = false;
     bool is_jumping = false;
     
-    void update_local2world();
-    
 public:
-    Spider(gle::GLScene& scene, glm::vec3 _position, glm::vec3 _view_direction, std::function<double(glm::vec3)> _get_height_at) : position(_position), view_direction(_view_direction), get_height_at(_get_height_at)
+    Spider(gle::GLScene& scene, glm::vec3 _position, glm::vec3 _view_direction) : position(_position), view_direction(_view_direction)
     {
-        height = position.y;
+        position.y = height;
         create_scene_graph(scene);
-        update_local2world();
     }
     
-    glm::vec3 get_position();
-    glm::vec3 get_view_direction();
+    glm::vec3 get_position(Terrain& terrain);
+    glm::vec3 get_view_direction(Terrain& terrain);
     
     void move_foward(bool value)
     {
@@ -96,7 +93,7 @@ public:
     
     void jump();
     
-    void update(float time);
+    void update(Terrain& terrain, float time);
     
 private:
     void create_scene_graph(gle::GLScene& scene);
