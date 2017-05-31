@@ -1,22 +1,73 @@
 #version 330
 
+uniform mat4 VPMatrix;
 uniform mat4 MMatrix;
 uniform float time;
-uniform vec3 windDirection;
+uniform int noWaves;
+uniform float amplitude[8];
+uniform float wavelength[8];
+uniform float speed[8];
+uniform vec2 direction[8];
 
 in vec3 position;
 in vec2 uv_coordinates;
 
-out VertexData {
-    vec2 coords;
-} VertexOut;
+out vec2 coords;
+out vec3 nor;
+out vec3 pos;
+
+const float pi = 3.14159;
+const float waterHeight = 0.f;
+
+float dWavedx(int i, float x, float y)
+{
+    float frequency = 2*pi/wavelength[i];
+    float phase = speed[i] * frequency;
+    float theta = dot(direction[i], vec2(x, y));
+    float A = amplitude[i] * direction[i].x * frequency;
+    return A * cos(theta * frequency + time * phase);
+}
+
+float dWavedy(int i, float x, float y)
+{
+    float frequency = 2*pi/wavelength[i];
+    float phase = speed[i] * frequency;
+    float theta = dot(direction[i], vec2(x, y));
+    float A = amplitude[i] * direction[i].y * frequency;
+    return A * cos(theta * frequency + time * phase);
+}
+
+vec3 waveNormal(float x, float y)
+{
+    float dx = 0.0;
+    float dy = 0.0;
+    for (int i = 0; i < noWaves; ++i) {
+        dx += dWavedx(i, x, y);
+        dy += dWavedy(i, x, y);
+    }
+    vec3 n = vec3(-dx, 1.0, -dy);
+    return normalize(n);
+}
+
+float wave(int i, float x, float y) {
+    float frequency = 2*pi/wavelength[i];
+    float phase = speed[i] * frequency;
+    float theta = dot(direction[i], vec2(x, y));
+    return amplitude[i] * sin(theta * frequency + time * phase);
+}
+
+float waveHeight(float x, float y) {
+    float height = 0.0;
+    for (int i = 0; i < noWaves; ++i)
+        height += wave(i, x, y);
+    return height;
+}
 
 void main()
 {
-    // Calculate height
-    float wave = sin(mod(2. * (position.x * windDirection.x + position.z * windDirection.z + time), 6.28));
-    float height = 0.1 * wave;
-    
-    VertexOut.coords = uv_coordinates;
-    gl_Position = MMatrix * vec4(position.x, height, position.z, 1.);
+    pos = (MMatrix * vec4(position, 1.)).xyz;
+    pos.y = waveHeight(pos.x, pos.z);
+    nor = waveNormal(pos.x, pos.z);
+    gl_Position = VPMatrix * vec4(pos, 1.);
+    coords = uv_coordinates;
 }

@@ -77,7 +77,7 @@ class WaterMaterial : public gle::GLMaterial
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
 public:
     WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _environment_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
-        : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag", "shaders/water.geom"), environment_texture(_environment_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
+        : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag"), environment_texture(_environment_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
         
     }
@@ -104,7 +104,28 @@ public:
         
         gle::GLUniform::use(shader, "eyePosition", camera_position);
         gle::GLUniform::use(shader, "time", *time);
-        gle::GLUniform::use(shader, "windDirection", *wind_direction);
+        
+        gle::GLUniform::use(shader, "noWaves", 1);
+        
+        auto amplitude = std::vector<float>();
+        auto wavelength = std::vector<float>();
+        auto speed = std::vector<float>();
+        auto direction = std::vector<glm::vec2>();
+        
+        const int no_waves = 1;
+        for(int i = 0; i < no_waves; i++)
+        {
+            amplitude.push_back(0.2);
+            wavelength.push_back(2.);
+            speed.push_back(0.2);
+            direction.push_back(glm::vec2(wind_direction->x, wind_direction->z));
+        }
+        gle::GLUniform::use(shader, "amplitude", amplitude[0]);
+        gle::GLUniform::use(shader, "wavelength", wavelength[0]);
+        gle::GLUniform::use(shader, "speed", speed[0]);
+        gle::GLUniform::use(shader, "direction", direction[0]);
+        gle::GLUniform::use(shader, "noWaves", no_waves);
+        
     }
 };
 
