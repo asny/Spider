@@ -99,6 +99,9 @@ public:
         noise_texture->use(1);
         gle::GLUniform::use(shader, "noiseTexture", 1);
         
+        input.source_render_target->bind_depth_texture_for_reading(2);
+        gle::GLUniform::use(shader, "depthMap", 2);
+        
         gle::GLUniform::use(shader, "MMatrix", model);
         gle::GLUniform::use(shader, "VPMatrix", input.projection * input.view);
         

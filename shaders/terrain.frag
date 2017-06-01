@@ -36,11 +36,7 @@ void main()
         vec2 uv = coords
             - 0.01 * vec2(noise, noise)
             - 0.005 * windDirection.xz * wave;
-        vec3 bottomColor = texture(lakeTexture, 3.*uv).xyz;
-        
-        // absorption
-        float absorption = clamp(0.5f + abs(pos.y + 0.25f), 0.f, 1.f);
-        blend_color = mix(bottomColor, absorptionColor, absorption);
+        blend_color = texture(lakeTexture, 3.*uv).xyz;
     }
     color = vec4(mix(sand_color, blend_color, sand_factor), 1.);
     normal = vec4(nor, 1.0);
