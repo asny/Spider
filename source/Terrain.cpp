@@ -50,7 +50,7 @@ void Terrain::TerrainPatch::update(const vec3& _origo)
     {
         auto pos = origo + vec3(Random::value(0., 0.999 * SIZE), 0., Random::value(0., 0.999 * SIZE));
         pos.y = get_height_at(pos);
-        if(pos.y > 0.1)
+        if(pos.y > 0.15)
         {
             auto straw = vec3(Random::value(-0.2, 0.2), Random::value(0.1, 0.3), Random::value(-0.2, 0.2));
             grass_map.push_back( { pos, straw } );
