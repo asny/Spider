@@ -102,6 +102,9 @@ public:
         input.source_render_target->bind_depth_texture_for_reading(2);
         gle::GLUniform::use(shader, "depthMap", 2);
         
+        input.source_render_target->bind_color_texture_for_reading(0, 3);
+        gle::GLUniform::use(shader, "colorMap", 3);
+        
         gle::GLUniform::use(shader, "MMatrix", model);
         gle::GLUniform::use(shader, "VPMatrix", input.projection * input.view);
         
