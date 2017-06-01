@@ -28,14 +28,14 @@ public:
         
     }
     
-    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    void pre_draw(const gle::DrawPassInput& input, const glm::mat4& model)
     {
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(true);
         gle::GLState::cull_back_faces(false);
         
         gle::GLUniform::use(shader, "MMatrix", model);
-        gle::GLUniform::use(shader, "VPMatrix", projection * view);
+        gle::GLUniform::use(shader, "VPMatrix", input.projection * input.view);
         gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
         
         gle::GLUniform::use(shader, "spiderPosition", *spider_position);
@@ -56,14 +56,14 @@ public:
         
     }
     
-    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    void pre_draw(const gle::DrawPassInput& input, const glm::mat4& model)
     {
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(true);
         gle::GLState::cull_back_faces(true);
         
         gle::GLUniform::use(shader, "MMatrix", model);
-        gle::GLUniform::use(shader, "VPMatrix", projection * view);
+        gle::GLUniform::use(shader, "VPMatrix", input.projection * input.view);
         
         gle::GLUniform::use(shader, "materialColor", color);
     }
@@ -88,7 +88,7 @@ public:
         vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
     }
     
-    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    void pre_draw(const gle::DrawPassInput& input, const glm::mat4& model)
     {
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(false);
@@ -100,9 +100,9 @@ public:
         gle::GLUniform::use(shader, "noiseTexture", 1);
         
         gle::GLUniform::use(shader, "MMatrix", model);
-        gle::GLUniform::use(shader, "VPMatrix", projection * view);
+        gle::GLUniform::use(shader, "VPMatrix", input.projection * input.view);
         
-        gle::GLUniform::use(shader, "eyePosition", camera_position);
+        gle::GLUniform::use(shader, "eyePosition", input.camera_position);
         gle::GLUniform::use(shader, "time", *time);
         
         auto amplitude = std::vector<float>();
@@ -155,7 +155,7 @@ public:
         vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
     }
     
-    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    void pre_draw(const gle::DrawPassInput& input, const glm::mat4& model)
     {
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(true);
@@ -171,7 +171,7 @@ public:
         gle::GLUniform::use(shader, "noiseTexture", 3);
         
         gle::GLUniform::use(shader, "MMatrix", model);
-        gle::GLUniform::use(shader, "MVPMatrix", projection * view * model);
+        gle::GLUniform::use(shader, "MVPMatrix", input.projection * input.view * model);
         gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
         gle::GLUniform::use(shader, "time", *time);
         gle::GLUniform::use(shader, "windDirection", *wind_direction);
