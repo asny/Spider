@@ -37,7 +37,6 @@
 		493F8F121E475DF600D94AC1 /* Butterfly.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Butterfly.cpp; path = source/Butterfly.cpp; sourceTree = "<group>"; };
 		493F8F131E475DF600D94AC1 /* Butterfly.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Butterfly.hpp; path = source/Butterfly.hpp; sourceTree = "<group>"; };
 		496B07A91DF99EFC00CFBD10 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		497A954F1EDECDB6004AA2CA /* water.geom */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = water.geom; path = shaders/water.geom; sourceTree = "<group>"; };
 		497A95501EDECDB6004AA2CA /* water.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = water.vert; path = shaders/water.vert; sourceTree = "<group>"; };
 		49E383391E6A11240024D5D7 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Random.h; path = random/Random.h; sourceTree = "<group>"; };
 		49E3833A1E6A11240024D5D7 /* simplexnoise.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = simplexnoise.cpp; path = random/simplexnoise.cpp; sourceTree = "<group>"; };
@@ -116,7 +115,6 @@
 			isa = PBXGroup;
 			children = (
 				497A95501EDECDB6004AA2CA /* water.vert */,
-				497A954F1EDECDB6004AA2CA /* water.geom */,
 				49EBFAE41E3F1DE400503199 /* water.frag */,
 				49EBFAE61E3FDD3300503199 /* terrain.frag */,
 				7AE74B671C18B00800466559 /* spider_legs.geom */,
