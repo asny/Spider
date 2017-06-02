@@ -24,7 +24,7 @@ void main()
 {
     vec3 incidentDir = normalize(pos - eyePosition.xyz);
     vec3 normal = normalize(nor);
-    vec2 screen_uv = gl_FragCoord.xy/vec2(1400., 700.);
+    vec2 screen_uv = gl_FragCoord.xy/vec2(1400., 700.) - 0.05 * normal.xz;
     vec3 backgroundColor = texture(colorMap, screen_uv).xyz;
     float depth = distance(eyePosition, texture(positionMap, screen_uv).xyz);
     
@@ -39,10 +39,9 @@ void main()
     vec3 reflectColor = texture(environmentMap, reflectDir).xyz;
     
     // Refraction
-    vec3 refractColor = equilibriumColorAtInfinity;
     float waterDepth = depth - distance(eyePosition, pos);
     vec3 a = vec3(clamp( pow(c.r, waterDepth), 0., 1.), clamp( pow(c.g, waterDepth), 0., 1.), clamp( pow(c.b, waterDepth), 0., 1.));
-    refractColor = a * 0.8 * backgroundColor + (1 - a) * equilibriumColorAtInfinity;
+    vec3 refractColor = a * 0.8 * backgroundColor + (1 - a) * equilibriumColorAtInfinity;
     
     // Mix refraction and reflection
     color = vec4(mix(refractColor, reflectColor, fresnel), 1.);
