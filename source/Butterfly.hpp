@@ -25,7 +25,7 @@ class Butterfly : public gle::GLNode
     
     static void spawn(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node)
     {
-        static int NO_BUTTERFLIES = 10;
+        static int NO_BUTTERFLIES = 0;
         if(butterflies.size() < NO_BUTTERFLIES)
         {
             auto butterfly = std::make_shared<Butterfly>();
