@@ -5,6 +5,7 @@ uniform vec3 eyePosition;
 uniform sampler2D positionMap;
 uniform sampler2D colorMap;
 uniform sampler2D maskSampler;
+uniform vec2 screenSize;
 
 in vec3 pos;
 in vec3 nor;
@@ -25,7 +26,7 @@ void main()
 {
     vec3 incidentDir = normalize(pos - eyePosition.xyz);
     vec3 normal = normalize(nor);
-    vec2 screen_uv = gl_FragCoord.xy/vec2(1400., 700.) - 0.05 * normal.xz;
+    vec2 screen_uv = gl_FragCoord.xy/screenSize - 0.05 * normal.xz;
     vec3 backgroundColor = texture(colorMap, screen_uv).xyz;
     vec3 bottomPos = texture(positionMap, screen_uv).xyz;
     float depth = distance(eyePosition, bottomPos);

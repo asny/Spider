@@ -110,6 +110,7 @@ public:
         gle::GLUniform::use(shader, "VPMatrix", input.projection * input.view);
         
         gle::GLUniform::use(shader, "eyePosition", input.camera_position);
+        gle::GLUniform::use(shader, "screenSize", input.screen_size);
         gle::GLUniform::use(shader, "time", *time);
         
         auto amplitude = std::vector<float>();
