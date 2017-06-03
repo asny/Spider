@@ -28,14 +28,14 @@ public:
         
     }
     
-    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    void pre_draw(const gle::DrawPassInput& input, const glm::mat4& model)
     {
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(true);
         gle::GLState::cull_back_faces(false);
         
         gle::GLUniform::use(shader, "MMatrix", model);
-        gle::GLUniform::use(shader, "VPMatrix", projection * view);
+        gle::GLUniform::use(shader, "VPMatrix", input.projection * input.view);
         gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
         
         gle::GLUniform::use(shader, "spiderPosition", *spider_position);
@@ -56,14 +56,14 @@ public:
         
     }
     
-    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    void pre_draw(const gle::DrawPassInput& input, const glm::mat4& model)
     {
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(true);
         gle::GLState::cull_back_faces(true);
         
         gle::GLUniform::use(shader, "MMatrix", model);
-        gle::GLUniform::use(shader, "VPMatrix", projection * view);
+        gle::GLUniform::use(shader, "VPMatrix", input.projection * input.view);
         
         gle::GLUniform::use(shader, "materialColor", color);
     }
@@ -73,12 +73,13 @@ class WaterMaterial : public gle::GLMaterial
 {
     std::shared_ptr<float> time;
     std::shared_ptr<glm::vec3> wind_direction;
-    std::shared_ptr<gle::GLTexture> environment_texture, noise_texture;
+    std::shared_ptr<gle::GLTexture> environment_texture, noise_texture, water_foam;
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
 public:
     WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _environment_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
         : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag"), environment_texture(_environment_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
+        water_foam = std::make_shared<gle::GLTexture2D>("resources/water_foam.png");
         
     }
     
@@ -88,7 +89,7 @@ public:
         vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
     }
     
-    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    void pre_draw(const gle::DrawPassInput& input, const glm::mat4& model)
     {
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(false);
@@ -96,13 +97,20 @@ public:
         
         environment_texture->use(0);
         gle::GLUniform::use(shader, "environmentMap", 0);
-        noise_texture->use(1);
-        gle::GLUniform::use(shader, "noiseTexture", 1);
+        water_foam->use(1);
+        gle::GLUniform::use(shader, "maskSampler", 1);
+        
+        input.source_render_target->bind_color_texture_for_reading(1, 2);
+        gle::GLUniform::use(shader, "positionMap", 2);
+        
+        input.source_render_target->bind_color_texture_for_reading(0, 3);
+        gle::GLUniform::use(shader, "colorMap", 3);
         
         gle::GLUniform::use(shader, "MMatrix", model);
-        gle::GLUniform::use(shader, "VPMatrix", projection * view);
+        gle::GLUniform::use(shader, "VPMatrix", input.projection * input.view);
         
-        gle::GLUniform::use(shader, "eyePosition", camera_position);
+        gle::GLUniform::use(shader, "eyePosition", input.camera_position);
+        gle::GLUniform::use(shader, "screenSize", input.screen_size);
         gle::GLUniform::use(shader, "time", *time);
         
         auto amplitude = std::vector<float>();
@@ -155,7 +163,7 @@ public:
         vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
     }
     
-    void pre_draw(const glm::vec3& camera_position, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+    void pre_draw(const gle::DrawPassInput& input, const glm::mat4& model)
     {
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(true);
@@ -171,7 +179,7 @@ public:
         gle::GLUniform::use(shader, "noiseTexture", 3);
         
         gle::GLUniform::use(shader, "MMatrix", model);
-        gle::GLUniform::use(shader, "MVPMatrix", projection * view * model);
+        gle::GLUniform::use(shader, "MVPMatrix", input.projection * input.view * model);
         gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
         gle::GLUniform::use(shader, "time", *time);
         gle::GLUniform::use(shader, "windDirection", *wind_direction);
