@@ -75,11 +75,19 @@ class WaterMaterial : public gle::GLMaterial
     std::shared_ptr<glm::vec3> wind_direction;
     std::shared_ptr<gle::GLTexture> texture, noise_texture;
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
+    const float ring_effect_time = 1.;
+    
+    std::vector<glm::vec4> samples;
 public:
     WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
         : GLMaterial(gle::FORWARD, "../GLEngine/shaders/texture.vert",  "shaders/water.frag"), texture(_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
         
+    }
+    
+    void affect(const glm::vec3& position)
+    {
+        samples.push_back(glm::vec4(position, *time));
     }
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vertex_attributes)
@@ -112,6 +120,18 @@ public:
         gle::GLUniform::use(shader, "eyePosition", camera_position);
         gle::GLUniform::use(shader, "time", *time);
         gle::GLUniform::use(shader, "windDirection", *wind_direction);
+        
+        while(samples.size() > 0 && *time > samples.front().w + ring_effect_time)
+        {
+            samples.erase(samples.begin());
+        }
+        
+        if(samples.size() > 0)
+        {
+            gle::GLUniform::use(shader, "ringEffectTime", ring_effect_time);
+            gle::GLUniform::use(shader, "noEffects", static_cast<int>(samples.size()));
+            gle::GLUniform::use(shader, "ringCenterAndTime", samples[0], static_cast<int>(samples.size()));
+        }
     }
 };
 

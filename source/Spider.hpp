@@ -16,6 +16,7 @@
 #include "glm.hpp"
 #include "Mesh.h"
 #include "GLScene.h"
+#include "Terrain.hpp"
 #include <vector>
 #include <cmath>
 
@@ -38,7 +39,7 @@ class Spider
             geometry->create_edge(hip_vertex, foot_vertex);
         }
         
-        void update(const glm::mat4& local2world, std::function<double(glm::vec3)> get_height_at, float time);
+        void update(Terrain& terrain, const glm::mat4& local2world, std::function<double(glm::vec3)> get_height_at, float time);
     };
     
     glm::vec3 position;
@@ -96,7 +97,7 @@ public:
     
     void jump();
     
-    void update(float time);
+    void update(Terrain& terrain, float time);
     
 private:
     void create_scene_graph(gle::GLScene& scene);

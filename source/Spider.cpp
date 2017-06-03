@@ -51,7 +51,7 @@ void Spider::create_scene_graph(GLScene& scene)
     scene.add_leaf(legs_geometry, legs_material);
 }
 
-void Spider::Leg::update(const glm::mat4& local2world, std::function<double(glm::vec3)> get_height_at, float time)
+void Spider::Leg::update(Terrain& terrain, const glm::mat4& local2world, std::function<double(glm::vec3)> get_height_at, float time)
 {
     geometry->position()->at(hip_vertex) = glm::vec3(local2world * glm::vec4(default_hip_pos_local, 1.));
     
@@ -65,6 +65,7 @@ void Spider::Leg::update(const glm::mat4& local2world, std::function<double(glm:
             is_moving = false;
             t = 0.f;
             geometry->position()->at(foot_vertex) = destination_foot_pos;
+            terrain.affect_water_at(destination_foot_pos);
         }
         else
         {
@@ -127,7 +128,7 @@ void Spider::jump()
     }
 }
 
-void Spider::update(float time)
+void Spider::update(Terrain& terrain, float time)
 {
     if(is_jumping)
     {
@@ -162,6 +163,6 @@ void Spider::update(float time)
     
     for (Leg& leg : legs)
     {
-        leg.update(*local2world, get_height_at, time);
+        leg.update(terrain, *local2world, get_height_at, time);
     }
 }

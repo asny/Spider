@@ -195,7 +195,7 @@ int main(int argc, char** argv)
         print_fps(elapsed_time);
         
         // Update the scene based on the time elapsed since last update
-        spider.update(elapsed_time);
+        spider.update(terrain, elapsed_time);
         Butterfly::spawn_and_destroy_and_update(scene);
         Firefly::spawn_and_destroy_and_update(scene);
         terrain.update(spider.get_position());

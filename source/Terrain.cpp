@@ -6,7 +6,6 @@
 #include "glm.hpp"
 #include "Terrain.hpp"
 #include "Random.h"
-#include "Materials.h"
 
 using namespace std;
 using namespace glm;
@@ -159,7 +158,7 @@ Terrain::Terrain(GLScene& scene, const glm::vec3& _position)
     auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, noise_texture, ground_uv_coordinates);
     scene.add_leaf(ground_geometry, terrain_material);
     
-    auto water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, noise_texture, water_uv_coordinates);
+    water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, noise_texture, water_uv_coordinates);
     scene.add_leaf(water_geometry, water_material);
     
     auto grass_material = make_shared<GrassMaterial>(time, wind_direction, position, vec3(0.3f,0.7f,0.f));

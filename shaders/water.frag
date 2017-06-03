@@ -5,6 +5,9 @@ uniform sampler2D noiseTexture;
 uniform vec3 eyePosition;
 uniform float time;
 uniform vec3 windDirection;
+uniform vec4 ringCenterAndTime[128];
+uniform int noEffects;
+uniform float ringEffectTime;
 
 in vec3 pos;
 in vec3 nor;
@@ -24,9 +27,22 @@ void main()
     // Perturb normal
     float noise = texture(noiseTexture, coords).x - 0.5;
     float wave = sin(mod(2. * (pos.x * windDirection.x + pos.z * windDirection.z + time), 6.28));
-    normal = normalize(normal +
+    
+    vec3 ring = vec3(0., 0., 0.);
+    for (int i = 0; i < noEffects; i++)
+    {
+        vec4 ringCAT = ringCenterAndTime[i];
+        if(ringCAT.w >= 0.)
+        {
+            float dist = distance(pos, ringCAT.xyz);
+            float time_difference = time - ringCAT.w;
+            ring += (ringEffectTime - time_difference) * (1. - clamp(abs(time_difference - dist), 0., 1.)) * normalize(ringCAT.xyz - pos);
+        }
+    }
+    normal = normalize(normal
                        + 0.2 * vec3(noise, 0., noise)
-                       + 0.1 * windDirection * wave);
+                       + 0.1 * windDirection * wave
+                       + ring / noEffects);
     
     // Compute cosinus to the incident angle
     float cosAngle = dot(normal, -incidentDir);
