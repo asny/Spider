@@ -24,12 +24,21 @@ const vec3 equilibriumColorAtInfinity = vec3(0., 0.1, 0.14); // Water color at "
 
 void main()
 {
-    vec3 incidentDir = normalize(pos - eyePosition.xyz);
     vec3 normal = normalize(nor);
-    vec2 screen_uv = gl_FragCoord.xy/screenSize - 0.05 * normal.xz;
-    vec3 backgroundColor = texture(colorMap, screen_uv).xyz;
+    vec2 screen_uv = gl_FragCoord.xy/screenSize - 0.05 * normal.xz; // Shift the water bottom.
     vec3 bottomPos = texture(positionMap, screen_uv).xyz;
-    float depth = distance(eyePosition, bottomPos);
+    float distanceToWater = distance(eyePosition, pos);
+    float distanceToBottom = distance(eyePosition, bottomPos);
+    if(distanceToWater > distanceToBottom)
+    {
+        // Do not shift something that is in front of the water.
+        screen_uv = gl_FragCoord.xy/screenSize;
+        bottomPos = texture(positionMap, screen_uv).xyz;
+        distanceToWater = distance(eyePosition, pos);
+        distanceToBottom = distance(eyePosition, bottomPos);
+    }
+    vec3 incidentDir = (pos - eyePosition.xyz)/distanceToWater;
+    vec3 backgroundColor = texture(colorMap, screen_uv).xyz;
     
     // Compute cosine to the incident angle
     float cosAngle = dot(normal, -incidentDir);
@@ -42,9 +51,9 @@ void main()
     vec3 reflectColor = texture(environmentMap, reflectDir).xyz;
     
     // Refraction
-    float viewWaterDepth = depth - distance(eyePosition, pos);
+    float viewWaterDepth = distanceToBottom - distanceToWater;
     vec3 a = vec3(clamp( pow(c.r, viewWaterDepth), 0., 1.), clamp( pow(c.g, viewWaterDepth), 0., 1.), clamp( pow(c.b, viewWaterDepth), 0., 1.));
-    vec3 refractColor = a * 0.8 * backgroundColor + (1 - a) * equilibriumColorAtInfinity;
+    vec3 refractColor = a * backgroundColor + (1 - a) * equilibriumColorAtInfinity;
     
     // Mix refraction and reflection
     vec3 col = mix(refractColor, reflectColor, fresnel);
