@@ -125,10 +125,10 @@ public:
         for(int i = 0; i < no_waves; i++)
         {
             float t = i + 1.f;
-            amplitude.push_back(0.1f / t);
+            amplitude.push_back(0.05f / t);
             wavelength.push_back(2. * M_PI / t);
-            speed.push_back(0.05f * t);
-            steepness.push_back(0.1f / t);
+            speed.push_back(0.02f * t);
+            steepness.push_back(0.05f / t);
             
             direction.push_back(normalize(wind_dir + ortho_wind_dir * 0.5f * (float)sin(t + 0.1f * *time)));
         }
