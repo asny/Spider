@@ -69,7 +69,7 @@ void main()
     
     // Reflection
     vec3 reflectDir = normalize(reflect(incidentDir, normal));
-    vec3 reflectColor = texture(environmentMap, reflectDir).xyz;
+    vec3 reflectColor = mix(texture(environmentMap, reflectDir).xyz, vec3(1., 1., 1.), 0.5);
     
     // Refraction
     float viewWaterDepth = distanceToBottom - distanceToWater;

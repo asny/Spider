@@ -146,21 +146,27 @@ public:
         auto amplitude = std::vector<float>();
         auto wavelength = std::vector<float>();
         auto speed = std::vector<float>();
+        auto steepness = std::vector<float>();
         auto direction = std::vector<glm::vec2>();
         
-        const int no_waves = 4;
+        auto wind_dir = glm::vec2(wind_direction->x, wind_direction->z);
+        auto ortho_wind_dir = glm::vec2(-wind_direction->z, wind_direction->x);
+        const int no_waves = 8;
         for(int i = 0; i < no_waves; i++)
         {
             float t = i + 1.f;
-            amplitude.push_back(0.1f / t);
-            wavelength.push_back(4 * M_PI / t);
-            speed.push_back(0.1f + 0.2*i);
-            direction.push_back(normalize(glm::vec2(wind_direction->x, wind_direction->z) + 0.1f * glm::vec2(sin(0.01* *time), cos(0.01* *time))));
+            amplitude.push_back(0.05f / t);
+            wavelength.push_back(2. * M_PI / t);
+            speed.push_back(0.02f * t);
+            steepness.push_back(0.05f / t);
+            
+            direction.push_back(normalize(wind_dir + ortho_wind_dir * 0.5f * (float)sin(t + 0.1f * *time)));
         }
         
         gle::GLUniform::use(shader, "amplitude", amplitude[0], no_waves);
         gle::GLUniform::use(shader, "wavelength", wavelength[0], no_waves);
         gle::GLUniform::use(shader, "speed", speed[0], no_waves);
+        gle::GLUniform::use(shader, "steepness", steepness[0], no_waves);
         gle::GLUniform::use(shader, "direction", direction[0], no_waves);
         gle::GLUniform::use(shader, "noWaves", no_waves);
         
