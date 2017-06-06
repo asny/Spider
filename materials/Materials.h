@@ -83,12 +83,22 @@ public:
         : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag"), environment_texture(_environment_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
         water_foam = std::make_shared<gle::GLTexture2D>("resources/water_foam.png");
-        
+        for(int i = 0; i < 8; i++)
+        {
+            samples.push_back(glm::vec4(0., 0., 0., -1.));
+        }
     }
     
     void affect(const glm::vec3& position)
     {
-        samples.push_back(glm::vec4(position, *time));
+        for(glm::vec4& sample : samples)
+        {
+            if(sample.w < 0.)
+            {
+                sample = glm::vec4(position, *time);
+                return;
+            }
+        }
     }
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vertex_attributes)
@@ -121,17 +131,17 @@ public:
         gle::GLUniform::use(shader, "screenSize", input.screen_size);
         gle::GLUniform::use(shader, "time", *time);
         
-        while(samples.size() > 0 && *time > samples.front().w + ring_effect_time)
+        for(glm::vec4& sample : samples)
         {
-            samples.erase(samples.begin());
+            if(sample.w > 0. && *time > sample.w + ring_effect_time)
+            {
+                sample = glm::vec4(0., 0., 0., -1.);
+            }
         }
         
-        if(samples.size() > 0)
-        {
-            gle::GLUniform::use(shader, "ringEffectTime", ring_effect_time);
-            gle::GLUniform::use(shader, "noEffects", static_cast<int>(samples.size()));
-            gle::GLUniform::use(shader, "ringCenterAndTime", samples[0], static_cast<int>(samples.size()));
-        }
+        gle::GLUniform::use(shader, "ringEffectTime", ring_effect_time);
+        gle::GLUniform::use(shader, "noEffects", static_cast<int>(samples.size()));
+        gle::GLUniform::use(shader, "ringCenterAndTime", samples[0], static_cast<int>(samples.size()));
         
         auto amplitude = std::vector<float>();
         auto wavelength = std::vector<float>();

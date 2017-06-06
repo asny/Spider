@@ -33,16 +33,19 @@ void main()
     vec3 ring = vec3(0., 0., 0.);
     for (int i = 0; i < noEffects; i++)
     {
-        vec4 ringCAT = ringCenterAndTime[i];
-        if(ringCAT.w >= 0.)
+        vec3 center = ringCenterAndTime[i].xyz;
+        float startTime = ringCenterAndTime[i].w;
+        if(startTime >= 0.)
         {
-            float dist = distance(pos, ringCAT.xyz);
-            float time_difference = time - ringCAT.w;
-            ring += (ringEffectTime - time_difference) * (1. - clamp(abs(time_difference - dist), 0., 1.)) * normalize(ringCAT.xyz - pos);
+            float dist = distance(pos, center);
+            float timeSinceStart = time - startTime;
+            float fadeFactor = ringEffectTime - timeSinceStart;
+            float ringFactor = exp(-20.*pow(dist - timeSinceStart, 2));
+            ring += fadeFactor * ringFactor * normalize(pos - center);
         }
     }
     
-    vec3 normal = normalize(nor + ring / noEffects);
+    vec3 normal = normalize(nor + ring);
     vec2 screen_uv = gl_FragCoord.xy/screenSize - 0.05 * normal.xz; // Shift the water bottom.
     vec3 bottomPos = texture(positionMap, screen_uv).xyz;
     float distanceToWater = distance(eyePosition, pos);
