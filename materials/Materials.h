@@ -75,7 +75,7 @@ class WaterMaterial : public gle::GLMaterial
     std::shared_ptr<glm::vec3> wind_direction;
     std::shared_ptr<gle::GLTexture> environment_texture, noise_texture, water_foam;
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
-    const float ring_effect_time = 1.;
+    const float ring_effect_time = 4.;
     
     std::vector<glm::vec4> samples;
 public:

@@ -35,12 +35,13 @@ void main()
     {
         vec3 center = ringCenterAndTime[i].xyz;
         float startTime = ringCenterAndTime[i].w;
-        if(startTime >= 0.)
+        float dist = distance(pos, center);
+        float timeSinceStart = time - startTime;
+        float spread = 0.25 * timeSinceStart;
+        if(startTime >= 0. && dist < spread)
         {
-            float dist = distance(pos, center);
-            float timeSinceStart = time - startTime;
-            float fadeFactor = ringEffectTime - timeSinceStart;
-            float ringFactor = exp(-20.*pow(dist - timeSinceStart, 2));
+            float fadeFactor = 1. - smoothstep(0., ringEffectTime, timeSinceStart);
+            float ringFactor = sin(100.*(spread - dist));
             ring += fadeFactor * ringFactor * normalize(pos - center);
         }
     }
