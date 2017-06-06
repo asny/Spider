@@ -4,7 +4,7 @@ uniform samplerCube environmentMap;
 uniform vec3 eyePosition;
 uniform float time;
 uniform vec3 windDirection;
-uniform vec4 ringCenterAndTime[128];
+uniform vec4 ringCenterAndTime[32];
 uniform int noEffects;
 uniform float ringEffectTime;
 
