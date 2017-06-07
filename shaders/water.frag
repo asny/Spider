@@ -41,7 +41,7 @@ void main()
         if(startTime >= 0. && dist < spread)
         {
             float fadeFactor = 1. - smoothstep(0., ringEffectTime, timeSinceStart);
-            float ringFactor = sin(100.*(spread - dist));
+            float ringFactor = smoothstep(0., spread, dist) * sin(100.*(spread - dist));
             ring += fadeFactor * ringFactor * normalize(pos - center);
         }
     }
