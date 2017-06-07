@@ -2,6 +2,12 @@
 
 uniform samplerCube environmentMap;
 uniform vec3 eyePosition;
+uniform float time;
+uniform vec3 windDirection;
+uniform vec4 ringCenterAndTime[32];
+uniform int noEffects;
+uniform float ringEffectTime;
+
 uniform sampler2D positionMap;
 uniform sampler2D colorMap;
 uniform sampler2D maskSampler;
@@ -24,7 +30,23 @@ const vec3 equilibriumColorAtInfinity = vec3(0., 0.1, 0.14); // Water color at "
 
 void main()
 {
-    vec3 normal = normalize(nor);
+    vec3 ring = vec3(0., 0., 0.);
+    for (int i = 0; i < noEffects; i++)
+    {
+        vec3 center = ringCenterAndTime[i].xyz;
+        float startTime = ringCenterAndTime[i].w;
+        float dist = distance(pos, center);
+        float timeSinceStart = time - startTime;
+        float spread = 0.25 * timeSinceStart;
+        if(startTime >= 0. && dist < spread)
+        {
+            float fadeFactor = 1. - smoothstep(0., ringEffectTime, timeSinceStart);
+            float ringFactor = smoothstep(0., spread, dist) * sin(100.*(spread - dist));
+            ring += fadeFactor * ringFactor * normalize(pos - center);
+        }
+    }
+    
+    vec3 normal = normalize(nor + ring);
     vec2 screen_uv = gl_FragCoord.xy/screenSize - 0.05 * normal.xz; // Shift the water bottom.
     vec3 bottomPos = texture(positionMap, screen_uv).xyz;
     float distanceToWater = distance(eyePosition, pos);

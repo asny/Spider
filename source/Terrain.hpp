@@ -13,6 +13,7 @@
 #include "vec3.hpp"
 #include "Mesh.h"
 #include "GLScene.h"
+#include "Materials.h"
 
 class Terrain
 {
@@ -71,6 +72,8 @@ class Terrain
     
     TerrainPatch* patch_at(std::pair<int, int> index);
     
+    std::shared_ptr<WaterMaterial> water_material;
+    
 public:
     
     Terrain(gle::GLScene& scene);
@@ -78,4 +81,9 @@ public:
     void update(const glm::vec3& position);
     
     double get_height_at(const glm::vec3& position);
+    
+    void affect_water_at(const glm::vec3& position)
+    {
+        water_material->affect(position);
+    }
 };
