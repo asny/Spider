@@ -75,12 +75,30 @@ class WaterMaterial : public gle::GLMaterial
     std::shared_ptr<glm::vec3> wind_direction;
     std::shared_ptr<gle::GLTexture> environment_texture, noise_texture, water_foam;
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
+    
+    const float ring_effect_time = 4.;
+    std::vector<glm::vec4> ring_effects;
 public:
     WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _environment_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
         : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag"), environment_texture(_environment_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
         water_foam = std::make_shared<gle::GLTexture2D>("resources/water_foam.png");
-        
+        for(int i = 0; i < 32; i++)
+        {
+            ring_effects.push_back(glm::vec4(0., 0., 0., -1.));
+        }
+    }
+    
+    void affect(const glm::vec3& position)
+    {
+        for(glm::vec4& ring_effect : ring_effects)
+        {
+            if(ring_effect.w < 0.)
+            {
+                ring_effect = glm::vec4(position.x, 0., position.z, *time);
+                return;
+            }
+        }
     }
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vertex_attributes)
@@ -112,6 +130,18 @@ public:
         gle::GLUniform::use(shader, "eyePosition", input.camera_position);
         gle::GLUniform::use(shader, "screenSize", input.screen_size);
         gle::GLUniform::use(shader, "time", *time);
+        
+        for(glm::vec4& ring_effect : ring_effects)
+        {
+            if(ring_effect.w > 0. && *time > ring_effect.w + ring_effect_time)
+            {
+                ring_effect = glm::vec4(0., 0., 0., -1.);
+            }
+        }
+        
+        gle::GLUniform::use(shader, "ringEffectTime", ring_effect_time);
+        gle::GLUniform::use(shader, "noEffects", static_cast<int>(ring_effects.size()));
+        gle::GLUniform::use(shader, "ringCenterAndTime", ring_effects[0], static_cast<int>(ring_effects.size()));
         
         auto amplitude = std::vector<float>();
         auto wavelength = std::vector<float>();
