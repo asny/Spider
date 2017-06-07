@@ -65,13 +65,18 @@ void Spider::Leg::update(const glm::mat4& local2world, Terrain& terrain, float t
             is_moving = false;
             t = 0.f;
             geometry->position()->at(foot_vertex) = destination_foot_pos;
-            terrain.affect_water_at(destination_foot_pos);
         }
         else
         {
             auto factor = t / move_time;
             glm::vec3 foot_pos = factor * destination_foot_pos + (1.f-factor) * origin_foot_pos;
             foot_pos.y += 0.3 * sin(factor * M_PI);
+            
+            glm::vec3 old_foot_pos = geometry->position()->at(foot_vertex);
+            if(old_foot_pos.y >= 0. && foot_pos.y <= 0.)
+            {
+                terrain.affect_water_at(foot_pos);
+            }
             geometry->position()->at(foot_vertex) = foot_pos;
         }
     }

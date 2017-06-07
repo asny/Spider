@@ -95,7 +95,7 @@ public:
         {
             if(ring_effect.w < 0.)
             {
-                ring_effect = glm::vec4(position, *time);
+                ring_effect = glm::vec4(position.x, 0., position.z, *time);
                 return;
             }
         }
