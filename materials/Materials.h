@@ -118,10 +118,10 @@ public:
         water_foam->use(1);
         gle::GLUniform::use(shader, "maskSampler", 1);
         
-        input.source_render_target->bind_color_texture_for_reading(1, 2);
+        input.geometry_pass_render_target->bind_color_texture_for_reading(1, 2);
         gle::GLUniform::use(shader, "positionMap", 2);
         
-        input.source_render_target->bind_color_texture_for_reading(0, 3);
+        input.light_pass_render_target->bind_color_texture_for_reading(0, 3);
         gle::GLUniform::use(shader, "colorMap", 3);
         
         gle::GLUniform::use(shader, "MMatrix", model);
