@@ -10,6 +10,10 @@
 		490C32511EA23E6C00AC12FF /* Firefly.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 490C324F1EA23E6C00AC12FF /* Firefly.cpp */; };
 		493F8F141E475DF600D94AC1 /* Butterfly.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 493F8F121E475DF600D94AC1 /* Butterfly.cpp */; };
 		496B07AA1DF99EFC00CFBD10 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 496B07A91DF99EFC00CFBD10 /* OpenGL.framework */; };
+		499B410D1EEDD0D600BD5CCA /* imgui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 499B41031EEDD0D600BD5CCA /* imgui.cpp */; };
+		499B410E1EEDD0D600BD5CCA /* imgui_demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 499B41051EEDD0D600BD5CCA /* imgui_demo.cpp */; };
+		499B410F1EEDD0D600BD5CCA /* imgui_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 499B41061EEDD0D600BD5CCA /* imgui_draw.cpp */; };
+		499B41101EEDD0D600BD5CCA /* imgui_impl_sdl_gl3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 499B41071EEDD0D600BD5CCA /* imgui_impl_sdl_gl3.cpp */; };
 		49E3833C1E6A11240024D5D7 /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49E3833A1E6A11240024D5D7 /* simplexnoise.cpp */; };
 		49EBFAF41E43BEA400503199 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EBFAF21E43BEA400503199 /* SDL2_image.framework */; };
 		49EBFAF51E43BEA400503199 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EBFAF31E43BEA400503199 /* SDL2.framework */; };
@@ -38,6 +42,17 @@
 		493F8F131E475DF600D94AC1 /* Butterfly.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Butterfly.hpp; path = source/Butterfly.hpp; sourceTree = "<group>"; };
 		496B07A91DF99EFC00CFBD10 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		497A95501EDECDB6004AA2CA /* water.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = water.vert; path = shaders/water.vert; sourceTree = "<group>"; };
+		499B41021EEDD0D600BD5CCA /* imconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imconfig.h; sourceTree = "<group>"; };
+		499B41031EEDD0D600BD5CCA /* imgui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui.cpp; sourceTree = "<group>"; };
+		499B41041EEDD0D600BD5CCA /* imgui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgui.h; sourceTree = "<group>"; };
+		499B41051EEDD0D600BD5CCA /* imgui_demo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_demo.cpp; sourceTree = "<group>"; };
+		499B41061EEDD0D600BD5CCA /* imgui_draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_draw.cpp; sourceTree = "<group>"; };
+		499B41071EEDD0D600BD5CCA /* imgui_impl_sdl_gl3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_impl_sdl_gl3.cpp; sourceTree = "<group>"; };
+		499B41081EEDD0D600BD5CCA /* imgui_impl_sdl_gl3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgui_impl_sdl_gl3.h; sourceTree = "<group>"; };
+		499B41091EEDD0D600BD5CCA /* imgui_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgui_internal.h; sourceTree = "<group>"; };
+		499B410A1EEDD0D600BD5CCA /* stb_rect_pack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_rect_pack.h; sourceTree = "<group>"; };
+		499B410B1EEDD0D600BD5CCA /* stb_textedit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_textedit.h; sourceTree = "<group>"; };
+		499B410C1EEDD0D600BD5CCA /* stb_truetype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_truetype.h; sourceTree = "<group>"; };
 		49E383391E6A11240024D5D7 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Random.h; path = random/Random.h; sourceTree = "<group>"; };
 		49E3833A1E6A11240024D5D7 /* simplexnoise.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = simplexnoise.cpp; path = random/simplexnoise.cpp; sourceTree = "<group>"; };
 		49E3833B1E6A11240024D5D7 /* simplexnoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplexnoise.h; path = random/simplexnoise.h; sourceTree = "<group>"; };
@@ -80,6 +95,25 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		499B41011EEDD0D600BD5CCA /* imgui */ = {
+			isa = PBXGroup;
+			children = (
+				499B41021EEDD0D600BD5CCA /* imconfig.h */,
+				499B41031EEDD0D600BD5CCA /* imgui.cpp */,
+				499B41041EEDD0D600BD5CCA /* imgui.h */,
+				499B41051EEDD0D600BD5CCA /* imgui_demo.cpp */,
+				499B41061EEDD0D600BD5CCA /* imgui_draw.cpp */,
+				499B41071EEDD0D600BD5CCA /* imgui_impl_sdl_gl3.cpp */,
+				499B41081EEDD0D600BD5CCA /* imgui_impl_sdl_gl3.h */,
+				499B41091EEDD0D600BD5CCA /* imgui_internal.h */,
+				499B410A1EEDD0D600BD5CCA /* stb_rect_pack.h */,
+				499B410B1EEDD0D600BD5CCA /* stb_textedit.h */,
+				499B410C1EEDD0D600BD5CCA /* stb_truetype.h */,
+			);
+			name = imgui;
+			path = ../imgui;
+			sourceTree = "<group>";
+		};
 		49E3833D1E6A112D0024D5D7 /* Random */ = {
 			isa = PBXGroup;
 			children = (
@@ -93,6 +127,7 @@
 		7A383A131BBFB6AC00E29333 = {
 			isa = PBXGroup;
 			children = (
+				499B41011EEDD0D600BD5CCA /* imgui */,
 				7A383A341BBFD93A00E29333 /* Shaders */,
 				49E3833D1E6A112D0024D5D7 /* Random */,
 				7AF9C41A1BEBEB12008AE5F5 /* Rendering */,
@@ -206,8 +241,12 @@
 				493F8F141E475DF600D94AC1 /* Butterfly.cpp in Sources */,
 				490C32511EA23E6C00AC12FF /* Firefly.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
+				499B410F1EEDD0D600BD5CCA /* imgui_draw.cpp in Sources */,
+				499B41101EEDD0D600BD5CCA /* imgui_impl_sdl_gl3.cpp in Sources */,
 				7AB0F2C01BC07B52009D85FD /* Spider.cpp in Sources */,
 				7AB0F2C51BC25326009D85FD /* Terrain.cpp in Sources */,
+				499B410D1EEDD0D600BD5CCA /* imgui.cpp in Sources */,
+				499B410E1EEDD0D600BD5CCA /* imgui_demo.cpp in Sources */,
 				49E3833C1E6A11240024D5D7 /* simplexnoise.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

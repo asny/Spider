@@ -14,6 +14,9 @@
 #include "Butterfly.hpp"
 #include "Firefly.hpp"
 
+#include "../../imgui/imgui.h"
+#include "../../imgui/imgui_impl_sdl_gl3.h"
+
 #define SDL_MAIN_HANDLED
 #include "SDL.h"
 
@@ -132,6 +135,67 @@ bool handle_events(Spider& spider, GLDebugEffect& debug_effect)
     return false;
 }
 
+SDL_Window* initialize_gui()
+{
+    // Setup ImGui binding
+    auto gui = SDL_CreateWindow( "GUI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 200, 200, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE );
+    if( gui == NULL )
+    {
+        printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+        throw std::runtime_error("SDL init failed");
+    }
+    ImGui_ImplSdlGL3_Init(gui);
+    return gui;
+}
+
+void update_gui(SDL_Window* spider_window, SDL_Window* gui_window, SDL_GLContext& glcontext)
+{
+    static bool show_test_window = true;
+    static bool show_another_window = false;
+    static ImVec4 clear_color = ImColor(114, 144, 154);
+    
+    SDL_GL_MakeCurrent(gui_window, glcontext);
+    
+    ImGui_ImplSdlGL3_NewFrame(gui_window);
+    
+    // 1. Show a simple window
+    // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
+    {
+        static float f = 0.0f;
+        ImGui::Text("Hello, world!");
+        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+        ImGui::ColorEdit3("clear color", (float*)&clear_color);
+        if (ImGui::Button("Test Window")) show_test_window ^= 1;
+        if (ImGui::Button("Another Window")) show_another_window ^= 1;
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    }
+    
+    // 2. Show another simple window, this time using an explicit Begin/End pair
+    if (show_another_window)
+    {
+        ImGui::SetNextWindowSize(ImVec2(200,100), ImGuiSetCond_FirstUseEver);
+        ImGui::Begin("Another Window", &show_another_window);
+        ImGui::Text("Hello");
+        ImGui::End();
+    }
+    
+    // 3. Show the ImGui test window. Most of the sample code is in ImGui::ShowTestWindow()
+    if (show_test_window)
+    {
+        ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
+        ImGui::ShowTestWindow(&show_test_window);
+    }
+    
+    // Rendering
+    glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
+    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ImGui::Render();
+    SDL_GL_SwapWindow(gui_window);
+    
+    SDL_GL_MakeCurrent(spider_window, glcontext);
+}
+
 int main(int argc, char** argv)
 {
     // Initialize SDL
@@ -179,11 +243,20 @@ int main(int argc, char** argv)
     bool quit = false;
     float last_time = gle::time();
     
+    auto gui = initialize_gui();
+    
     //While application is running
     while( !quit )
     {
         // Handle events
         quit = handle_events(spider, debug_effect);
+        
+        SDL_Event e;
+        while( SDL_PollEvent( &e ) != 0 )
+        {
+            ImGui_ImplSdlGL3_ProcessEvent(&e);
+        }
+        update_gui(window, gui, glcontext);
         
         // Update time
         float current_time = gle::time();
@@ -209,6 +282,8 @@ int main(int argc, char** argv)
         
         SDL_GL_SwapWindow(window);
     }
+
+    ImGui_ImplSdlGL3_Shutdown();
     
     // Delete context
     SDL_GL_DeleteContext(glcontext);
