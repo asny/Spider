@@ -1,7 +1,7 @@
 #version 330
 
 layout (lines) in;
-layout (triangle_strip, max_vertices = 24) out;
+layout (triangle_strip, max_vertices = 8) out;
 
 uniform mat4 NMatrix;
 uniform mat4 MMatrix;
@@ -19,11 +19,13 @@ const vec3 up_direction = vec3(0., 1., 0.);
 
 float func(float x)
 {
+    x = 0.5 * x;
     return -0.5625f * x*x + 0.75f * x;
 }
 
 float dfunc(float x)
 {
+    x = 0.5 * x;
     return -1.125f*x + 0.75f;
 }
 
@@ -40,7 +42,7 @@ vec3 compute_normal(vec3 origin, vec3 corner, vec3 top, float parameter)
 
 void emit_straw_half(vec3 origin, vec3 corner, vec3 top, float step_size)
 {
-    for (float parameter = 0.f; parameter < 1.f; parameter += step_size)
+    for (float parameter = 0.f; parameter <= 1.f; parameter += step_size)
     {
         nor = compute_normal(origin, corner, top, parameter);
         
@@ -107,7 +109,6 @@ void main()
     vec3 corner2 = origin - half_width * leave_direction - 0.5 * half_width * bend_direction;
     
     // Emit vertices
-    float step_size = 0.2f;
-    emit_straw_half(origin, corner1, top, step_size);
-    emit_straw_half(origin, corner2, top, step_size);
+    float step_size = 0.33f;
+    emit_straw_half(corner1, corner2, top, step_size);
 }
