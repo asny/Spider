@@ -40,18 +40,23 @@ vec3 compute_normal(vec3 origin, vec3 corner, vec3 top, float parameter)
     return normalize(cross(corner - origin, tangent));
 }
 
-void emit_straw_half(vec3 origin, vec3 corner, vec3 top, float step_size)
+void emit_straw_half(vec3 corner1, vec3 corner2, vec3 top, float step_size)
 {
     for (float parameter = 0.f; parameter <= 1.f; parameter += step_size)
     {
-        nor = compute_normal(origin, corner, top, parameter);
+        nor = compute_normal(corner1, corner2, top, parameter);
         
-        pos = compute_position(origin, top, parameter);
+        float fattness = 0.5;
+        if(parameter < 0.9)
+            fattness *= smoothstep(0., 0.95, parameter);
+        else
+            fattness *= 1.-smoothstep(0.95, 1.0, parameter);
+        pos = fattness * (corner1 - corner2) + compute_position(corner1, top, parameter);
         coords = vec2(0., parameter);
         gl_Position = VPMatrix * vec4(pos, 1.);
         EmitVertex();
         
-        pos = compute_position(corner, top, parameter);
+        pos = fattness * (corner2 - corner1) + compute_position(corner2, top, parameter);
         coords = vec2(1., parameter);
         gl_Position = VPMatrix * vec4(pos, 1.);
         EmitVertex();
