@@ -23,7 +23,7 @@ class GrassMaterial : public gle::GLMaterial
 public:
     
     GrassMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, const std::shared_ptr<glm::vec3> _spider_position, const glm::vec3& _color)
-        : GLMaterial(gle::DEFERRED, "../GLEngine/shaders/pre_geom.vert",  "../GLEngine/shaders/color_material.frag", "shaders/grass.geom"), spider_position(_spider_position), time(_time), wind_direction(_wind_direction), color(_color)
+        : GLMaterial(gle::DEFERRED, "../GLEngine/shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom"), spider_position(_spider_position), time(_time), wind_direction(_wind_direction), color(_color)
     {
         
     }

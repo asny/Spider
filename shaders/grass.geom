@@ -12,7 +12,7 @@ uniform vec3 wind;
 
 out vec3 pos;
 out vec3 nor;
-out float ambientFactor;
+out vec2 coords;
 
 const float half_width = 0.015f;
 const vec3 up_direction = vec3(0., 1., 0.);
@@ -47,12 +47,12 @@ void emit_straw_half(vec3 origin, vec3 corner, vec3 top, float step_size)
         nor = compute_normal(origin, corner, top, parameter);
         
         pos = compute_position(origin, top, parameter);
-        ambientFactor = 0.6;
+        coords = vec2(0., parameter);
         gl_Position = VPMatrix * vec4(pos, 1.);
         EmitVertex();
         
         pos = compute_position(corner, top, parameter);
-        ambientFactor = 1.;
+        coords = vec2(1., parameter);
         gl_Position = VPMatrix * vec4(pos, 1.);
         EmitVertex();
     }
