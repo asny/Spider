@@ -14,7 +14,7 @@ out vec3 pos;
 out vec3 nor;
 out vec2 coords;
 
-const float half_width = 0.015f;
+const float half_width = 0.01f;
 const vec3 up_direction = vec3(0., 1., 0.);
 
 float func(float x)
@@ -63,11 +63,6 @@ void emit_straw_half(vec3 origin, vec3 corner, vec3 top, float step_size)
 vec3 compute_top(vec3 origin, vec3 straw, vec3 bend_direction, vec3 spider_position, float distance_to_spider)
 {
     const float spider_power_radius = 0.8f;
-    if (distance_to_spider < 0.4 * spider_power_radius)
-    {
-        return origin;
-    }
-    
     float l = length(straw);
     
     // Apply wind or spider forces
@@ -100,6 +95,10 @@ void main()
     // Find distance to spider
     vec3 spider_position = (MMatrix * vec4(spiderPosition, 1.)).xyz;
     float distance_to_spider = distance(origin, spider_position);
+    if (distance_to_spider < 0.1)
+    {
+        return;
+    }
     
     // Compute top
     vec3 top = compute_top(origin, straw, bend_direction, spider_position, distance_to_spider);
