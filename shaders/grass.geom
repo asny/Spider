@@ -1,7 +1,7 @@
 #version 330
 
 layout (lines) in;
-layout (triangle_strip, max_vertices = 24) out;
+layout (triangle_strip, max_vertices = 8) out;
 
 uniform mat4 NMatrix;
 uniform mat4 MMatrix;
@@ -12,18 +12,20 @@ uniform vec3 wind;
 
 out vec3 pos;
 out vec3 nor;
-out float ambientFactor;
+out vec2 coords;
 
-const float half_width = 0.015f;
+const float half_width = 0.01f;
 const vec3 up_direction = vec3(0., 1., 0.);
 
 float func(float x)
 {
+    x = 0.5 * x;
     return -0.5625f * x*x + 0.75f * x;
 }
 
 float dfunc(float x)
 {
+    x = 0.5 * x;
     return -1.125f*x + 0.75f;
 }
 
@@ -38,19 +40,24 @@ vec3 compute_normal(vec3 origin, vec3 corner, vec3 top, float parameter)
     return normalize(cross(corner - origin, tangent));
 }
 
-void emit_straw_half(vec3 origin, vec3 corner, vec3 top, float step_size)
+void emit_straw_half(vec3 corner1, vec3 corner2, vec3 top, float step_size)
 {
-    for (float parameter = 0.f; parameter < 1.f; parameter += step_size)
+    for (float parameter = 0.f; parameter <= 1.f; parameter += step_size)
     {
-        nor = compute_normal(origin, corner, top, parameter);
+        nor = compute_normal(corner1, corner2, top, parameter);
         
-        pos = compute_position(origin, top, parameter);
-        ambientFactor = 0.6;
+        float fattness = 0.5;
+        if(parameter < 0.9)
+            fattness *= smoothstep(0., 0.95, parameter);
+        else
+            fattness *= 1.-smoothstep(0.95, 1.0, parameter);
+        pos = fattness * (corner1 - corner2) + compute_position(corner1, top, parameter);
+        coords = vec2(0., parameter);
         gl_Position = VPMatrix * vec4(pos, 1.);
         EmitVertex();
         
-        pos = compute_position(corner, top, parameter);
-        ambientFactor = 1.;
+        pos = fattness * (corner2 - corner1) + compute_position(corner2, top, parameter);
+        coords = vec2(1., parameter);
         gl_Position = VPMatrix * vec4(pos, 1.);
         EmitVertex();
     }
@@ -61,11 +68,6 @@ void emit_straw_half(vec3 origin, vec3 corner, vec3 top, float step_size)
 vec3 compute_top(vec3 origin, vec3 straw, vec3 bend_direction, vec3 spider_position, float distance_to_spider)
 {
     const float spider_power_radius = 0.8f;
-    if (distance_to_spider < 0.4 * spider_power_radius)
-    {
-        return origin;
-    }
-    
     float l = length(straw);
     
     // Apply wind or spider forces
@@ -98,6 +100,10 @@ void main()
     // Find distance to spider
     vec3 spider_position = (MMatrix * vec4(spiderPosition, 1.)).xyz;
     float distance_to_spider = distance(origin, spider_position);
+    if (distance_to_spider < 0.1)
+    {
+        return;
+    }
     
     // Compute top
     vec3 top = compute_top(origin, straw, bend_direction, spider_position, distance_to_spider);
@@ -107,7 +113,6 @@ void main()
     vec3 corner2 = origin - half_width * leave_direction - 0.5 * half_width * bend_direction;
     
     // Emit vertices
-    float step_size = 0.2f;
-    emit_straw_half(origin, corner1, top, step_size);
-    emit_straw_half(origin, corner2, top, step_size);
+    float step_size = 0.33f;
+    emit_straw_half(corner1, corner2, top, step_size);
 }
