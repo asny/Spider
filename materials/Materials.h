@@ -30,6 +30,7 @@ public:
     
     void pre_draw(const gle::DrawPassInput& input, const glm::mat4& model)
     {
+        auto shader = get_shader();
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(true);
         gle::GLState::cull_back_faces(false);
@@ -58,6 +59,7 @@ public:
     
     void pre_draw(const gle::DrawPassInput& input, const glm::mat4& model)
     {
+        auto shader = get_shader();
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(true);
         gle::GLState::cull_back_faces(true);
@@ -103,12 +105,14 @@ public:
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vertex_attributes)
     {
+        auto shader = get_shader();
         GLMaterial::create_attributes(geometry, vertex_attributes);
         vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
     }
     
     void pre_draw(const gle::DrawPassInput& input, const glm::mat4& model)
     {
+        auto shader = get_shader();
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(false);
         gle::GLState::cull_back_faces(true);
@@ -189,18 +193,21 @@ public:
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec2>>>& vertex_attributes)
     {
+        auto shader = get_shader();
         GLMaterial::create_attributes(geometry, vertex_attributes);
         vertex_attributes.push_back(shader->create_attribute("uv_coordinates", uv_coordinates));
     }
     
     void create_attributes(std::shared_ptr<mesh::Mesh> geometry, std::vector<std::shared_ptr<gle::GLVertexAttribute<glm::vec3>>>& vertex_attributes)
     {
+        auto shader = get_shader();
         GLMaterial::create_attributes(geometry, vertex_attributes);
         vertex_attributes.push_back(shader->create_attribute("normal", geometry->normal()));
     }
     
     void pre_draw(const gle::DrawPassInput& input, const glm::mat4& model)
     {
+        auto shader = get_shader();
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(true);
         gle::GLState::cull_back_faces(true);

@@ -125,6 +125,10 @@ bool handle_events(Spider& spider, GLDebugEffect& debug_effect)
             case SDLK_SPACE:
                 spider.jump();
                 break;
+            case SDLK_BACKSPACE:
+                if(e.type == SDL_KEYDOWN)
+                    GLShader::reload_shaders();
+                break;
             default:
                 break;
         }
