@@ -29,6 +29,8 @@ Butterfly::Butterfly()
         
         auto geometry1 = MeshCreator::create_quad();
         auto geometry2 = MeshCreator::create_quad();
+        geometry1->transform(glm::scale(glm::vec3(0.2, 0.2, 0.2)));
+        geometry2->transform(glm::scale(glm::vec3(0.2, 0.2, 0.2)));
         
         auto vertexId = geometry1->vertices_begin();
         uv_coordinates1->at(vertexId) = glm::vec2(0., 0.);
@@ -52,6 +54,8 @@ Butterfly::Butterfly()
         
         auto material1 = make_shared<GLTextureMaterial>(texture, uv_coordinates1);
         auto material2 = make_shared<GLTextureMaterial>(texture, uv_coordinates2);
+        material1->cull_back_faces = false;
+        material2->cull_back_faces = false;
         
         wing_node1 = std::make_shared<gle::GLNode>();
         wing_node2 = std::make_shared<gle::GLNode>();
@@ -60,14 +64,14 @@ Butterfly::Butterfly()
         wing_node2->add_leaf(geometry2, material2);
     }
     
-    auto global_transformation = std::make_shared<GLTransformationNode>(transformation);
+    auto global_transformation = std::make_shared<GLTransformationNode>(local2world);
     this->add_child(global_transformation);
     
     // First wing
     auto rotation1 = std::make_shared<GLRotationNode>(glm::vec3(0., -1., 0.), wing_angle);
     global_transformation->add_child(rotation1);
     
-    auto transformation1 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(-1., 0., 0.)));
+    auto transformation1 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(-0.2, 0., 0.)));
     rotation1->add_child(transformation1);
     
     transformation1->add_child(wing_node1);
@@ -76,29 +80,30 @@ Butterfly::Butterfly()
     auto rotation2 = std::make_shared<GLRotationNode>(glm::vec3(0., 1., 0.), wing_angle);
     global_transformation->add_child(rotation2);
     
-    auto transformation2 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(1., 0., 0.)));
+    auto transformation2 = std::make_shared<GLTransformationNode>(glm::translate(glm::vec3(0.2, 0., 0.)));
     rotation2->add_child(transformation2);
     
     transformation2->add_child(wing_node2);
     
-    // Initialise position and view direction
-    view_direction = Random::direction();
-    position = vec3(Random::value(-5, 5), Random::value(2, 5), Random::value(-5, 5));
+    // Initialise configuration
+    translation = glm::translate(vec3(Random::value(-5, 5), Random::value(0, 2), Random::value(-5, 5)));
+    rotation = orientation(Random::direction(), vec3(0., 1., 0.));
     start_wing_angle = Random::value(0, pi<double>());
 }
 
-void Butterfly::update()
+void Butterfly::update(Terrain& terrain)
 {
     float time = gle::time();
     float elapsed_time = time - last_time;
     last_time = time;
     
-    *wing_angle = sin(start_wing_angle + 15.f * time);
+    *wing_angle = sin(start_wing_angle + 20.*time);
     
-    view_direction = normalize(view_direction + 0.1f * Random::direction());
-    position += elapsed_time * view_direction;
+    const float speed = 0.4f;
     
-    *transformation = glm::translate(position) * orientation(view_direction, vec3(0., 1., 0.));
+    translation *= glm::translate(mat3(rotation) * vec3(0., speed * elapsed_time, 0.));
+    rotation *= orientation(normalize(0.1f * Random::direction() + vec3(0., 1., 0.)), vec3(0., 1., 0.));
+    *local2world = translation * rotation;
     
 }
 
