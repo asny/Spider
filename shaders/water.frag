@@ -65,7 +65,7 @@ void main()
         if(startTime >= 0. && dist < spread)
         {
             float fadeFactor = 1. - smoothstep(0., ringEffectTime, timeSinceStart);
-            float ringFactor = smoothstep(0., spread, dist) * sin(100.*(spread - dist));
+            float ringFactor = 0.4 * smoothstep(0., spread, dist) * sin(100.*(spread - dist));
             ring += fadeFactor * ringFactor * normalize(pos - center);
         }
     }
@@ -130,7 +130,7 @@ void main()
         mask = pow(mask, 2);
         mask = clamp(mask, 0, 1);
         
-        foam = clamp(foam - mask, 0, 1);
+        foam = clamp(foam - mask, 0, 0.5);
         col = mix(col, vec3(0.8,0.8,0.8), foam);
     }
     
