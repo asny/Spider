@@ -37,7 +37,7 @@ class Terrain
         constexpr const static int VERTICES_PER_UNIT = 8;
         constexpr const static int VERTICES_PER_SIDE = static_cast<int>(SIZE) * VERTICES_PER_UNIT;
         constexpr const static double VERTEX_DISTANCE = 1./static_cast<double>(VERTICES_PER_UNIT);
-        const static int NO_GRASS_STRAW_PER_UNIT = 1000;
+        const static int NO_GRASS_STRAW_PER_UNIT = 500;
         constexpr const static int NO_GRASS_STRAW = NO_GRASS_STRAW_PER_UNIT * SIZE * SIZE;
         
         TerrainPatch();

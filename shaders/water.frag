@@ -1,5 +1,6 @@
 #version 330
 
+uniform mat4 VPMatrix;
 uniform samplerCube environmentMap;
 uniform vec3 eyePosition;
 uniform float time;
@@ -28,6 +29,29 @@ const vec3 absorption = vec3(0.4, 0.955, 0.99); // Absorption coefficient
 const vec3 c = scattering * absorption;
 const vec3 equilibriumColorAtInfinity = vec3(0., 0.1, 0.14); // Water color at "infinity"
 
+vec3 reflect_color(vec3 incidentDir, vec3 normal)
+{
+    vec3 reflectDir = normalize(reflect(incidentDir, normal));
+    vec3 stepDir = 0.5 * reflectDir;
+    vec3 p_w = pos;
+    for (int i = 0; i < 8; i++)
+    {
+        p_w += stepDir;
+        vec4 p_s = VPMatrix * vec4(p_w, 1.);
+        p_s /= p_s.w;
+        vec2 uv = 0.5 + 0.5 * p_s.xy;
+        if(uv.x < 0. || uv.x > 1. || uv.y < 0. || uv.y > 1.)
+            break;
+        float dist = distance(eyePosition, p_w);
+        float depth = distance(eyePosition, texture(positionMap, uv).xyz);
+        if(depth < dist)
+        {
+            return texture(colorMap, uv).xyz;
+        }
+    }
+    return texture(environmentMap, reflectDir).xyz;
+}
+
 void main()
 {
     vec3 ring = vec3(0., 0., 0.);
@@ -41,7 +65,7 @@ void main()
         if(startTime >= 0. && dist < spread)
         {
             float fadeFactor = 1. - smoothstep(0., ringEffectTime, timeSinceStart);
-            float ringFactor = smoothstep(0., spread, dist) * sin(100.*(spread - dist));
+            float ringFactor = 0.4 * smoothstep(0., spread, dist) * sin(100.*(spread - dist));
             ring += fadeFactor * ringFactor * normalize(pos - center);
         }
     }
@@ -69,8 +93,7 @@ void main()
     float fresnel = mix(F, 1.f, pow(1. - max(cosAngle, 0.), FresnelPower));
     
     // Reflection
-    vec3 reflectDir = normalize(reflect(incidentDir, normal));
-    vec3 reflectColor = mix(texture(environmentMap, reflectDir).xyz, vec3(1., 1., 1.), 0.5);
+    vec3 reflectColor = mix(reflect_color(incidentDir, normal), vec3(1., 1., 1.), 0.5);
     
     // Refraction
     float viewWaterDepth = distanceToBottom - distanceToWater;
@@ -107,7 +130,7 @@ void main()
         mask = pow(mask, 2);
         mask = clamp(mask, 0, 1);
         
-        foam = clamp(foam - mask, 0, 1);
+        foam = clamp(foam - mask, 0, 0.5);
         col = mix(col, vec3(0.8,0.8,0.8), foam);
     }
     
