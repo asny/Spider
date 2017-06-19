@@ -41,7 +41,7 @@ class Butterfly : public gle::GLNode
         for (int i = 0; i < butterflies.size(); i++)
         {
             auto current_position = glm::vec3(butterflies[i]->translation[3]);
-            if(distance(current_position, spider.get_position(terrain)) > 5.)
+            if(distance(current_position, spider.get_position(terrain)) > 8.)
             {
                 node.remove_child(butterflies[i]);
                 butterflies.erase(butterflies.begin() + i);

@@ -86,7 +86,7 @@ Butterfly::Butterfly()
     transformation2->add_child(wing_node2);
     
     // Initialise configuration
-    translation = glm::translate(vec3(Random::value(-5, 5), Random::value(0, 2), Random::value(-5, 5)));
+    translation = glm::translate(vec3(Random::value(-5, 5), Random::value(2, 5), Random::value(-5, 5)));
     rotation = orientation(Random::direction(), vec3(0., 1., 0.));
     start_wing_angle = Random::value(0, pi<double>());
 }
@@ -102,23 +102,31 @@ void Butterfly::update(Terrain& terrain, const Spider& spider)
     float elapsed_time = time - last_time;
     last_time = time;
     
+    vec3 current_position = vec3(translation[3]);
+    float terrain_height = terrain.get_height_at(current_position);
+    vec3 spider_position = spider.get_position(terrain);
+    
     // Wing
     *wing_angle = sin(start_wing_angle + 30.*time);
     
     // Direction
-    auto current_position = vec3(translation[3]);
-    auto current_direction = mat3(rotation) * vec3(0., 1., 0.);
+    vec3 current_direction = mat3(rotation) * vec3(0., 1., 0.);
     vec3 new_direction = current_direction + 0.1f * Random::direction();
     
     // Repel ground/sky
-    float dist_to_ground = abs(current_position.y - terrain.get_height_at(current_position));
-    float dist_to_sky = 5.f - current_position.y;
+    float dist_to_ground = abs(current_position.y - terrain_height);
+    float dist_to_sky = abs(5.f - current_position.y);
     new_direction += (repel_function(dist_to_ground) - repel_function(dist_to_sky)) * vec3(0.f, 1.f, 0.f);
     
     // Repel/attract spider
-    vec3 spider_position = spider.get_position(terrain);
     float dist_to_spider = glm::distance(current_position, spider_position);
-    new_direction += (repel_function(dist_to_spider) - repel_function(5. - dist_to_spider)) * normalize(current_position - spider_position);
+    if(dist_to_spider > 5.)
+    {
+        new_direction =normalize(current_position - spider_position);
+    }
+    else {
+        new_direction += (repel_function(dist_to_spider) - repel_function(5. - dist_to_spider)) * normalize(current_position - spider_position);
+    }
     
     // Rotate
     rotation = orientation(normalize(new_direction), vec3(0., 1., 0.));
