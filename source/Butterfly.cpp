@@ -97,12 +97,27 @@ void Butterfly::update(Terrain& terrain)
     float elapsed_time = time - last_time;
     last_time = time;
     
-    *wing_angle = sin(start_wing_angle + 20.*time);
+    // Wing
+    *wing_angle = sin(start_wing_angle + 30.*time);
     
+    // Direction
+    auto current_position = glm::vec3(translation[3]);
+    auto current_direction = mat3(rotation) * vec3(0., 1., 0.);
+    vec3 new_direction = current_direction + 0.1f * Random::direction();
+    
+    // Ground
+    float dist_to_ground = abs(current_position.y - terrain.get_height_at(current_position));
+    float repel_ground = std::max(1.f - dist_to_ground*dist_to_ground, 0.f);
+    new_direction += repel_ground * vec3(0.f, 1.f, 0.f);
+    
+    // Rotate
+    rotation = orientation(normalize(new_direction), vec3(0., 1., 0.));
+    
+    // Move
     const float speed = 0.4f;
-    
     translation *= glm::translate(mat3(rotation) * vec3(0., speed * elapsed_time, 0.));
-    rotation *= orientation(normalize(0.1f * Random::direction() + vec3(0., 1., 0.)), vec3(0., 1., 0.));
+    
+    // Update local to world
     *local2world = translation * rotation;
     
 }
