@@ -95,12 +95,12 @@ void Spider::Leg::update(const glm::mat4& local2world, Terrain& terrain, float t
     }
 }
 
-vec3 Spider::get_position(Terrain& terrain)
+vec3 Spider::get_position(Terrain& terrain) const
 {
     return glm::vec3(position.x, position.y + terrain.get_height_at(position), position.z);
 }
 
-vec3 Spider::get_view_direction(Terrain& terrain)
+vec3 Spider::get_view_direction(Terrain& terrain) const
 {
     double height0 = terrain.get_height_at(position);
     double height1 = terrain.get_height_at(position + 0.5f * view_direction);

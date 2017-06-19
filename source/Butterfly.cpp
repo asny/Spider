@@ -91,7 +91,12 @@ Butterfly::Butterfly()
     start_wing_angle = Random::value(0, pi<double>());
 }
 
-void Butterfly::update(Terrain& terrain)
+float repel_function(float distance)
+{
+    return std::max(1.f - distance*distance, 0.f);
+}
+
+void Butterfly::update(Terrain& terrain, const Spider& spider)
 {
     float time = gle::time();
     float elapsed_time = time - last_time;
@@ -107,10 +112,13 @@ void Butterfly::update(Terrain& terrain)
     
     // Repel ground/sky
     float dist_to_ground = abs(current_position.y - terrain.get_height_at(current_position));
-    float repel_ground = std::max(1.f - dist_to_ground*dist_to_ground, 0.f);
     float dist_to_sky = 5.f - current_position.y;
-    float repel_sky = std::max(1.f - dist_to_sky*dist_to_sky, 0.f);
-    new_direction += (repel_ground - repel_sky) * vec3(0.f, 1.f, 0.f);
+    new_direction += (repel_function(dist_to_ground) - repel_function(dist_to_sky)) * vec3(0.f, 1.f, 0.f);
+    
+    // Repel/attract spider
+    vec3 spider_position = spider.get_position(terrain);
+    float dist_to_spider = glm::distance(current_position, spider_position);
+    new_direction += (repel_function(dist_to_spider) - repel_function(5. - dist_to_spider)) * normalize(current_position - spider_position);
     
     // Rotate
     rotation = orientation(normalize(new_direction), vec3(0., 1., 0.));

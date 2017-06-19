@@ -11,6 +11,7 @@
 #include <memory>
 #include "GLScene.h"
 #include "Terrain.hpp"
+#include "Spider.hpp"
 
 class Butterfly : public gle::GLNode
 {
@@ -22,11 +23,11 @@ class Butterfly : public gle::GLNode
     std::shared_ptr<glm::mat4> local2world = std::make_shared<glm::mat4>(1.);
     std::shared_ptr<float> wing_angle = std::make_shared<float>(0.f);
     
-    void update(Terrain& terrain);
+    void update(Terrain& terrain, const Spider& spider);
     
     static void spawn(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node)
     {
-        static int NO_BUTTERFLIES = 1;
+        static int NO_BUTTERFLIES = 100;
         if(butterflies.size() < NO_BUTTERFLIES)
         {
             auto butterfly = std::make_shared<Butterfly>();
@@ -35,30 +36,32 @@ class Butterfly : public gle::GLNode
         }
     }
     
-    static void destroy(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node)
+    static void destroy(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node, Terrain& terrain, const Spider& spider)
     {
-//        for (int i = 0; i < butterflies.size(); i++) {
-//            if(butterflies[i]->position.y < 0)
-//            {
-//                node.remove_child(butterflies[i]);
-//                butterflies.erase(butterflies.begin() + i);
-//                i--;
-//            }
-//        }
+        for (int i = 0; i < butterflies.size(); i++)
+        {
+            auto current_position = glm::vec3(butterflies[i]->translation[3]);
+            if(distance(current_position, spider.get_position(terrain)) > 5.)
+            {
+                node.remove_child(butterflies[i]);
+                butterflies.erase(butterflies.begin() + i);
+                i--;
+            }
+        }
     }
     
 public:
     Butterfly();
     
-    static void spawn_and_destroy_and_update(gle::GLNode& node, Terrain& terrain)
+    static void spawn_and_destroy_and_update(gle::GLNode& node, Terrain& terrain, const Spider& spider)
     {
         static std::vector<std::shared_ptr<Butterfly>> butterflies;
         spawn(butterflies, node);
-        destroy(butterflies, node);
+        destroy(butterflies, node, terrain, spider);
         
         for(auto butterfly : butterflies)
         {
-            butterfly->update(terrain);
+            butterfly->update(terrain, spider);
         }
     }
 };
