@@ -17,7 +17,7 @@ using namespace std;
 using namespace gle;
 using namespace glm;
 
-Butterfly::Butterfly()
+Butterfly::Butterfly(const glm::vec3& spider_position)
 {
     static std::shared_ptr<gle::GLNode> wing_node1 = nullptr;
     static std::shared_ptr<gle::GLNode> wing_node2 = nullptr;
@@ -86,9 +86,9 @@ Butterfly::Butterfly()
     transformation2->add_child(wing_node2);
     
     // Initialise configuration
-    translation = glm::translate(vec3(Random::value(-5, 5), Random::value(2, 5), Random::value(-5, 5)));
+    translation = glm::translate(spider_position + Random::value(4.f, 5.f) * Random::hemisphere_direction(vec3(0., 1., 0.)));
     rotation = orientation(Random::direction(), vec3(0., 1., 0.));
-    start_wing_angle = Random::value(0, pi<double>());
+    start_wing_angle = Random::value(0., pi<double>());
 }
 
 float repel_function(float distance)
