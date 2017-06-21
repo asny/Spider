@@ -139,28 +139,13 @@ bool handle_events(Spider& spider, GLDebugEffect& debug_effect)
     return false;
 }
 
-SDL_Window* initialize_gui()
-{
-    // Setup ImGui binding
-    auto gui = SDL_CreateWindow( "GUI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 200, 200, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE );
-    if( gui == NULL )
-    {
-        printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-        throw std::runtime_error("SDL init failed");
-    }
-    ImGui_ImplSdlGL3_Init(gui);
-    return gui;
-}
-
-void update_gui(SDL_Window* spider_window, SDL_Window* gui_window, SDL_GLContext& glcontext)
+void update_gui(SDL_Window* window, SDL_GLContext& glcontext)
 {
     static bool show_test_window = true;
     static bool show_another_window = false;
     static ImVec4 clear_color = ImColor(114, 144, 154);
     
-    SDL_GL_MakeCurrent(gui_window, glcontext);
-    
-    ImGui_ImplSdlGL3_NewFrame(gui_window);
+    ImGui_ImplSdlGL3_NewFrame(window);
     
     // 1. Show a simple window
     // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
@@ -191,13 +176,8 @@ void update_gui(SDL_Window* spider_window, SDL_Window* gui_window, SDL_GLContext
     }
     
     // Rendering
-    glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
-    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-    glClear(GL_COLOR_BUFFER_BIT);
+//    glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
     ImGui::Render();
-    SDL_GL_SwapWindow(gui_window);
-    
-    SDL_GL_MakeCurrent(spider_window, glcontext);
 }
 
 int main(int argc, char** argv)
@@ -247,20 +227,13 @@ int main(int argc, char** argv)
     bool quit = false;
     float last_time = gle::time();
     
-    auto gui = initialize_gui();
+    ImGui_ImplSdlGL3_Init(window);
     
     //While application is running
     while( !quit )
     {
         // Handle events
         quit = handle_events(spider, debug_effect);
-        
-        SDL_Event e;
-        while( SDL_PollEvent( &e ) != 0 )
-        {
-            ImGui_ImplSdlGL3_ProcessEvent(&e);
-        }
-        update_gui(window, gui, glcontext);
         
         // Update time
         float current_time = gle::time();
@@ -277,12 +250,15 @@ int main(int argc, char** argv)
         update_camera(camera, spider.get_position(terrain), spider.get_view_direction(terrain));
         directional_light->shadow_target = spider.get_position(terrain);
         
-        // draw one frame
+        // Draw one frame
         camera.draw(scene);
         if(ssao_enabled)
             camera.apply_post_effect(ssao_effect);
         camera.apply_post_effect(fog_effect);
         camera.apply_post_effect(debug_effect);
+        
+        // Draw gui on top
+        update_gui(window, glcontext);
         
         SDL_GL_SwapWindow(window);
     }
