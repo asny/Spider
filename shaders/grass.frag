@@ -1,31 +1,20 @@
 #version 330
 
-uniform mat4 VMatrix;
-
-uniform vec3 lightPos;
-
-uniform vec3 ambientMat;
-uniform vec3 diffuseMat;
-uniform float opacity;
+uniform vec3 materialColor;
 
 in vec3 pos;
 in vec3 nor;
-in float ambientFactor;
+in vec2 coords;
 
 layout (location = 0) out vec4 color;
+layout (location = 1) out vec4 position;
+layout (location = 2) out vec4 normal;
 
 void main(void)
 {
-    // Compute vectors
-    vec3 N = normalize(nor);
-    if(!gl_FrontFacing)
-    {
-        N = -N;
-    }
-    vec3 L = normalize((VMatrix * vec4(lightPos, 1.f)).xyz - pos);
-    
     // Calculate colour
-    vec3 ambient = ambientFactor * ambientMat;
-    vec3 diffuse = clamp( diffuseMat * max(dot(N,L), 0.0) , 0.0, 1.0 ) ;
-    color = vec4(ambient + diffuse, opacity);
+    float shadow = 0.5 + 0.5 * smoothstep(0., 0.5, abs(0.5 - coords.x));
+    color = vec4(shadow * materialColor, 1.);
+    position = vec4(pos, 1.0);
+    normal = vec4(nor, 1.0);
 }

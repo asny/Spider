@@ -128,6 +128,10 @@ bool handle_events(Spider& spider, GLDebugEffect& debug_effect)
             case SDLK_SPACE:
                 spider.jump();
                 break;
+            case SDLK_BACKSPACE:
+                if(e.type == SDL_KEYDOWN)
+                    GLShader::reload_shaders();
+                break;
             default:
                 break;
         }
@@ -266,7 +270,7 @@ int main(int argc, char** argv)
         
         // Update the scene based on the time elapsed since last update
         spider.update(terrain, elapsed_time);
-        Butterfly::spawn_and_destroy_and_update(scene);
+        Butterfly::spawn_and_destroy_and_update(scene, terrain, spider);
         Firefly::spawn_and_destroy_and_update(scene);
         
         // Update the camera

@@ -68,8 +68,8 @@ public:
         create_scene_graph(scene);
     }
     
-    glm::vec3 get_position(Terrain& terrain);
-    glm::vec3 get_view_direction(Terrain& terrain);
+    glm::vec3 get_position(Terrain& terrain) const;
+    glm::vec3 get_view_direction(Terrain& terrain) const;
     
     void move_foward(bool value)
     {
