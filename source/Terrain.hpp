@@ -72,9 +72,9 @@ class Terrain
     
     TerrainPatch* patch_at(std::pair<int, int> index);
     
-    std::shared_ptr<WaterMaterial> water_material;
-    
 public:
+    
+    std::shared_ptr<WaterMaterial> water_material;
     
     Terrain(gle::GLScene& scene);
     

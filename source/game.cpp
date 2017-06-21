@@ -139,13 +139,12 @@ bool handle_events(Spider& spider, GLDebugEffect& debug_effect)
     return false;
 }
 
-void update_gui(SDL_Window* window, SDL_GLContext& glcontext)
+void update_gui(SDL_Window* window, Terrain& terrain)
 {
     ImGui_ImplSdlGL3_NewFrame(window);
     
-    static float f = 0.0f;
-    ImGui::Text("Hello, world!");
-    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+    ImGui::Text("Water parameters");
+    ImGui::SliderFloat("Amplitude", &terrain.water_material->amplitude, 0.0f, 1.0f);
     
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     
@@ -231,7 +230,7 @@ int main(int argc, char** argv)
         camera.apply_post_effect(debug_effect);
         
         // Draw gui on top
-        update_gui(window, glcontext);
+        update_gui(window, terrain);
         
         SDL_GL_SwapWindow(window);
     }

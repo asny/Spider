@@ -81,6 +81,9 @@ class WaterMaterial : public gle::GLMaterial
     const float ring_effect_time = 4.;
     std::vector<glm::vec4> ring_effects;
 public:
+    
+    float amplitude = 0.05;
+    
     WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _environment_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
         : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag"), environment_texture(_environment_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
@@ -147,7 +150,7 @@ public:
         gle::GLUniform::use(shader, "noEffects", static_cast<int>(ring_effects.size()));
         gle::GLUniform::use(shader, "ringCenterAndTime", ring_effects[0], static_cast<int>(ring_effects.size()));
         
-        auto amplitude = std::vector<float>();
+        auto amplitudes = std::vector<float>();
         auto wavelength = std::vector<float>();
         auto speed = std::vector<float>();
         auto steepness = std::vector<float>();
@@ -159,7 +162,7 @@ public:
         for(int i = 0; i < no_waves; i++)
         {
             float t = i + 1.f;
-            amplitude.push_back(0.05f / t);
+            amplitudes.push_back(amplitude / t);
             wavelength.push_back(2. * M_PI / t);
             speed.push_back(0.02f * t);
             steepness.push_back(0.05f / t);
@@ -167,7 +170,7 @@ public:
             direction.push_back(normalize(wind_dir + ortho_wind_dir * 0.5f * (float)sin(t + 0.1f * *time)));
         }
         
-        gle::GLUniform::use(shader, "amplitude", amplitude[0], no_waves);
+        gle::GLUniform::use(shader, "amplitude", amplitudes[0], no_waves);
         gle::GLUniform::use(shader, "wavelength", wavelength[0], no_waves);
         gle::GLUniform::use(shader, "speed", speed[0], no_waves);
         gle::GLUniform::use(shader, "steepness", steepness[0], no_waves);
