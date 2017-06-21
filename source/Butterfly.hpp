@@ -15,7 +15,7 @@
 
 class Butterfly : public gle::GLNode
 {
-    double last_time = 0.;
+    double last_time = gle::time();
     double start_wing_angle;
     
     glm::mat4 rotation = glm::mat4(1.);
@@ -25,23 +25,23 @@ class Butterfly : public gle::GLNode
     
     void update(Terrain& terrain, const Spider& spider);
     
-    static void spawn(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node)
+    static void spawn(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node, const glm::vec3& spider_position)
     {
         static int NO_BUTTERFLIES = 100;
         if(butterflies.size() < NO_BUTTERFLIES)
         {
-            auto butterfly = std::make_shared<Butterfly>();
+            auto butterfly = std::make_shared<Butterfly>(spider_position);
             butterflies.push_back(butterfly);
             node.add_child(butterfly);
         }
     }
     
-    static void destroy(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node, Terrain& terrain, const Spider& spider)
+    static void destroy(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node, const glm::vec3& spider_position)
     {
         for (int i = 0; i < butterflies.size(); i++)
         {
             auto current_position = glm::vec3(butterflies[i]->translation[3]);
-            if(distance(current_position, spider.get_position(terrain)) > 8.)
+            if(distance(current_position, spider_position) > 8.)
             {
                 node.remove_child(butterflies[i]);
                 butterflies.erase(butterflies.begin() + i);
@@ -51,13 +51,14 @@ class Butterfly : public gle::GLNode
     }
     
 public:
-    Butterfly();
+    Butterfly(const glm::vec3& spider_position);
     
     static void spawn_and_destroy_and_update(gle::GLNode& node, Terrain& terrain, const Spider& spider)
     {
+        glm::vec3 spider_position = spider.get_position(terrain);
         static std::vector<std::shared_ptr<Butterfly>> butterflies;
-        spawn(butterflies, node);
-        destroy(butterflies, node, terrain, spider);
+        spawn(butterflies, node, spider_position);
+        destroy(butterflies, node, spider_position);
         
         for(auto butterfly : butterflies)
         {

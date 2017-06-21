@@ -17,7 +17,7 @@ using namespace std;
 using namespace gle;
 using namespace glm;
 
-Butterfly::Butterfly()
+Butterfly::Butterfly(const glm::vec3& spider_position)
 {
     static std::shared_ptr<gle::GLNode> wing_node1 = nullptr;
     static std::shared_ptr<gle::GLNode> wing_node2 = nullptr;
@@ -86,9 +86,9 @@ Butterfly::Butterfly()
     transformation2->add_child(wing_node2);
     
     // Initialise configuration
-    translation = glm::translate(vec3(Random::value(-5, 5), Random::value(2, 5), Random::value(-5, 5)));
+    translation = glm::translate(spider_position + Random::value(4.f, 5.f) * Random::hemisphere_direction(vec3(0., 1., 0.)));
     rotation = orientation(Random::direction(), vec3(0., 1., 0.));
-    start_wing_angle = Random::value(0, pi<double>());
+    start_wing_angle = Random::value(0., pi<double>());
 }
 
 float repel_function(float distance)
@@ -118,21 +118,15 @@ void Butterfly::update(Terrain& terrain, const Spider& spider)
     float dist_to_sky = abs(5.f - current_position.y);
     new_direction += (repel_function(dist_to_ground) - repel_function(dist_to_sky)) * vec3(0.f, 1.f, 0.f);
     
-    // Repel/attract spider
+    // Repel spider
     float dist_to_spider = glm::distance(current_position, spider_position);
-    if(dist_to_spider > 5.)
-    {
-        new_direction =normalize(current_position - spider_position);
-    }
-    else {
-        new_direction += (repel_function(dist_to_spider) - repel_function(5. - dist_to_spider)) * normalize(current_position - spider_position);
-    }
+    new_direction += repel_function(dist_to_spider) * normalize(current_position - spider_position);
     
     // Rotate
     rotation = orientation(normalize(new_direction), vec3(0., 1., 0.));
     
     // Move
-    const float speed = 0.4f;
+    const float speed = 0.8f;
     translation *= translate(mat3(rotation) * vec3(0., speed * elapsed_time, 0.));
     
     // Update local to world
