@@ -144,7 +144,12 @@ void update_gui(SDL_Window* window, Terrain& terrain)
     ImGui_ImplSdlGL3_NewFrame(window);
     
     ImGui::Text("Water parameters");
-    ImGui::SliderFloat("Amplitude", &terrain.water_material->amplitude, 0.0f, 1.0f);
+    ImGui::SliderFloat("Amplitude: ", &terrain.water_material->amplitude, 0.0f, 1.0f);
+    ImGui::SliderFloat("Wavelength: ", &terrain.water_material->wavelength, 0.0f, 5.0f);
+    ImGui::SliderFloat("Steepness: ", &terrain.water_material->steepness, 0.0f, 5.0f);
+    ImGui::SliderFloat("Speed: ", &terrain.water_material->speed, 0.0f, 1.0f);
+    ImGui::SliderFloat("Wind variation: ", &terrain.water_material->wind_variation, 0.0f, 1.0f);
+    ImGui::SliderFloat("Wind variation speed: ", &terrain.water_material->wind_variation_speed, 0.0f, 1.0f);
     
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     
