@@ -139,7 +139,7 @@ bool handle_events(Spider& spider, GLDebugEffect& debug_effect)
     return false;
 }
 
-void update_gui(SDL_Window* window, Terrain& terrain)
+void update_gui(SDL_Window* window, Terrain& terrain, GLFogEffect& fog_effect)
 {
     ImGui_ImplSdlGL3_NewFrame(window);
     
@@ -150,6 +150,9 @@ void update_gui(SDL_Window* window, Terrain& terrain)
     ImGui::SliderFloat("Speed: ", &terrain.water_material->speed, 0.0f, 1.0f);
     ImGui::SliderFloat("Wind variation: ", &terrain.water_material->wind_variation, 0.0f, 1.0f);
     ImGui::SliderFloat("Wind variation speed: ", &terrain.water_material->wind_variation_speed, 0.0f, 1.0f);
+    
+    ImGui::Text("Fog parameters");
+    ImGui::SliderFloat("Density: ", &fog_effect.density, 0.0f, 1.0f);
     
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     
@@ -235,7 +238,7 @@ int main(int argc, char** argv)
         camera.apply_post_effect(debug_effect);
         
         // Draw gui on top
-        update_gui(window, terrain);
+        update_gui(window, terrain, fog_effect);
         
         SDL_GL_SwapWindow(window);
     }
