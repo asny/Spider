@@ -114,7 +114,7 @@ void Butterfly::update(Terrain& terrain, const Spider& spider)
     vec3 new_direction = current_direction + 0.1f * Random::direction();
     
     // Repel ground/sky
-    float dist_to_ground = abs(current_position.y - terrain_height);
+    float dist_to_ground = std::max(abs(current_position.y - terrain_height), 0.2f);
     float dist_to_sky = abs(5.f - current_position.y);
     new_direction += (repel_function(dist_to_ground) - repel_function(dist_to_sky)) * vec3(0.f, 1.f, 0.f);
     
