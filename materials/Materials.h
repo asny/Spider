@@ -81,6 +81,14 @@ class WaterMaterial : public gle::GLMaterial
     const float ring_effect_time = 4.;
     std::vector<glm::vec4> ring_effects;
 public:
+    
+    float amplitude = 0.02f;
+    float wavelength = 1.f;
+    float speed = 0.03f;
+    float steepness = 2.f;
+    float wind_variation = 0.5f;
+    float wind_variation_speed = 0.06f;
+    
     WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _environment_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
         : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag"), environment_texture(_environment_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
     {
@@ -147,30 +155,30 @@ public:
         gle::GLUniform::use(shader, "noEffects", static_cast<int>(ring_effects.size()));
         gle::GLUniform::use(shader, "ringCenterAndTime", ring_effects[0], static_cast<int>(ring_effects.size()));
         
-        auto amplitude = std::vector<float>();
-        auto wavelength = std::vector<float>();
-        auto speed = std::vector<float>();
-        auto steepness = std::vector<float>();
+        auto amplitudes = std::vector<float>();
+        auto wavelengths = std::vector<float>();
+        auto speeds = std::vector<float>();
+        auto steepnesses = std::vector<float>();
         auto direction = std::vector<glm::vec2>();
         
         auto wind_dir = glm::vec2(wind_direction->x, wind_direction->z);
         auto ortho_wind_dir = glm::vec2(-wind_direction->z, wind_direction->x);
-        const int no_waves = 8;
+        const int no_waves = 4;
         for(int i = 0; i < no_waves; i++)
         {
             float t = i + 1.f;
-            amplitude.push_back(0.05f / t);
-            wavelength.push_back(2. * M_PI / t);
-            speed.push_back(0.02f * t);
-            steepness.push_back(0.05f / t);
+            amplitudes.push_back(amplitude / t);
+            wavelengths.push_back(wavelength * M_PI / t);
+            speeds.push_back(speed * t);
+            steepnesses.push_back(steepness / t);
             
-            direction.push_back(normalize(wind_dir + ortho_wind_dir * 0.5f * (float)sin(t + 0.1f * *time)));
+            direction.push_back(normalize(wind_dir + ortho_wind_dir * wind_variation * (float)sin(i * 0.5 * M_PI + wind_variation_speed * *time)));
         }
         
-        gle::GLUniform::use(shader, "amplitude", amplitude[0], no_waves);
-        gle::GLUniform::use(shader, "wavelength", wavelength[0], no_waves);
-        gle::GLUniform::use(shader, "speed", speed[0], no_waves);
-        gle::GLUniform::use(shader, "steepness", steepness[0], no_waves);
+        gle::GLUniform::use(shader, "amplitude", amplitudes[0], no_waves);
+        gle::GLUniform::use(shader, "wavelength", wavelengths[0], no_waves);
+        gle::GLUniform::use(shader, "speed", speeds[0], no_waves);
+        gle::GLUniform::use(shader, "steepness", steepnesses[0], no_waves);
         gle::GLUniform::use(shader, "direction", direction[0], no_waves);
         gle::GLUniform::use(shader, "noWaves", no_waves);
         
