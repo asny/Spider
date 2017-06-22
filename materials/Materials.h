@@ -82,12 +82,12 @@ class WaterMaterial : public gle::GLMaterial
     std::vector<glm::vec4> ring_effects;
 public:
     
-    float amplitude = 0.05f;
-    float wavelength = 2.f;
-    float speed = 0.02f;
-    float steepness = 0.05f;
-    float wind_variation = 0.2f;
-    float wind_variation_speed = 0.02f;
+    float amplitude = 0.02f;
+    float wavelength = 1.f;
+    float speed = 0.03f;
+    float steepness = 2.f;
+    float wind_variation = 0.5f;
+    float wind_variation_speed = 0.06f;
     
     WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _environment_texture, std::shared_ptr<gle::GLTexture> _noise_texture, std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
         : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag"), environment_texture(_environment_texture), time(_time), wind_direction(_wind_direction), noise_texture(_noise_texture), uv_coordinates(_uv_coordinates)
@@ -163,7 +163,7 @@ public:
         
         auto wind_dir = glm::vec2(wind_direction->x, wind_direction->z);
         auto ortho_wind_dir = glm::vec2(-wind_direction->z, wind_direction->x);
-        const int no_waves = 8;
+        const int no_waves = 4;
         for(int i = 0; i < no_waves; i++)
         {
             float t = i + 1.f;
