@@ -153,6 +153,7 @@ void update_gui(SDL_Window* window, Terrain& terrain, GLFogEffect& fog_effect)
     
     ImGui::Text("Fog parameters");
     ImGui::SliderFloat("Density: ", &fog_effect.density, 0.0f, 1.0f);
+    ImGui::SliderFloat("Fog height: ", &fog_effect.no_fog_height, 0.0f, 10.0f);
     
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     
