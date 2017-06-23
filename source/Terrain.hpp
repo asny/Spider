@@ -33,7 +33,7 @@ class Terrain
         void subdivide(int origo_x, int origo_y, int size);
         
     public:
-        constexpr const static double SIZE = 8.;
+        constexpr const static double SIZE = 16.;
         constexpr const static int VERTICES_PER_UNIT = 8;
         constexpr const static int VERTICES_PER_SIDE = static_cast<int>(SIZE) * VERTICES_PER_UNIT;
         constexpr const static double VERTEX_DISTANCE = 1./static_cast<double>(VERTICES_PER_UNIT);
