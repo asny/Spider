@@ -259,6 +259,12 @@ void Terrain::update(const glm::vec3& _position)
     }
 }
 
+bool Terrain::is_inside(const glm::vec3& position)
+{
+    auto index = index_at(position);
+    return patch_at(index);
+}
+
 double Terrain::get_height_at(const glm::vec3& position)
 {
     auto index = index_at(position);

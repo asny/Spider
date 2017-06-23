@@ -36,12 +36,12 @@ class Butterfly : public gle::GLNode
         }
     }
     
-    static void destroy(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node, const glm::vec3& spider_position)
+    static void destroy(std::vector<std::shared_ptr<Butterfly>>& butterflies, gle::GLNode& node, const glm::vec3& spider_position, Terrain& terrain)
     {
         for (int i = 0; i < butterflies.size(); i++)
         {
             auto current_position = glm::vec3(butterflies[i]->translation[3]);
-            if(distance(current_position, spider_position) > 8.)
+            if(!terrain.is_inside(current_position))
             {
                 node.remove_child(butterflies[i]);
                 butterflies.erase(butterflies.begin() + i);
@@ -58,7 +58,7 @@ public:
         glm::vec3 spider_position = spider.get_position(terrain);
         static std::vector<std::shared_ptr<Butterfly>> butterflies;
         spawn(butterflies, node, spider_position);
-        destroy(butterflies, node, spider_position);
+        destroy(butterflies, node, spider_position, terrain);
         
         for(auto butterfly : butterflies)
         {

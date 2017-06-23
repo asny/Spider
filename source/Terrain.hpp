@@ -80,6 +80,8 @@ public:
     
     void update(const glm::vec3& position);
     
+    bool is_inside(const glm::vec3& position);
+    
     double get_height_at(const glm::vec3& position);
     
     void affect_water_at(const glm::vec3& position)
