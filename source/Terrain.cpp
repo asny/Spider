@@ -3,6 +3,7 @@
 //  Copyright © 2015 Asger Nyman Christiansen. All rights reserved.
 //
 
+#include <thread>
 #include "glm.hpp"
 #include "Terrain.hpp"
 #include "Random.h"
@@ -167,14 +168,8 @@ Terrain::TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
     return nullptr;
 }
 
-void Terrain::update(const glm::vec3& _position)
+bool Terrain::update_patches(const pair<int, int>& index_at_position)
 {
-    *time = gle::time();
-    *position = _position;
-    *wind_direction = vec3(1., 0., 0.);
-    
-    auto index_at_position = index_at(_position);
-    
     std::vector<TerrainPatch*> free_patches;
     for (auto& patch : patches)
     {
@@ -185,7 +180,7 @@ void Terrain::update(const glm::vec3& _position)
         }
     }
     
-    bool hasChanged = false;
+    bool has_changed = false;
     
     for (int i = -PATCH_RADIUS; i <= PATCH_RADIUS; i++)
     {
@@ -207,12 +202,23 @@ void Terrain::update(const glm::vec3& _position)
                 }
                 vec3 origo = vec3(TerrainPatch::SIZE * static_cast<double>(index.first), 0., TerrainPatch::SIZE * static_cast<double>(index.second));
                 patch->update(origo);
-                hasChanged = true;
+                has_changed = true;
             }
         }
     }
+    return has_changed;
+}
+
+void Terrain::update(const glm::vec3& _position)
+{
+    *time = gle::time();
+    *position = _position;
+    *wind_direction = vec3(1., 0., 0.);
     
-    if(!hasChanged)
+    auto index_at_position = index_at(_position);
+    bool has_changed = update_patches(index_at_position);
+    
+    if(!has_changed)
         return;
     
     auto index = make_pair(index_at_position.first - PATCH_RADIUS, index_at_position.second - PATCH_RADIUS);
