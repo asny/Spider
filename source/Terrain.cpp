@@ -3,6 +3,7 @@
 //  Copyright © 2015 Asger Nyman Christiansen. All rights reserved.
 //
 
+#include <future>
 #include <thread>
 #include "glm.hpp"
 #include "Terrain.hpp"
@@ -168,7 +169,7 @@ Terrain::TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
     return nullptr;
 }
 
-bool Terrain::update_patches(const pair<int, int>& index_at_position)
+void Terrain::update_patches(const pair<int, int>& index_at_position)
 {
     std::vector<TerrainPatch*> free_patches;
     for (auto& patch : patches)
@@ -206,17 +207,6 @@ bool Terrain::update_patches(const pair<int, int>& index_at_position)
             }
         }
     }
-    return has_changed;
-}
-
-void Terrain::update(const glm::vec3& _position)
-{
-    *time = gle::time();
-    *position = _position;
-    *wind_direction = vec3(1., 0., 0.);
-    
-    auto index_at_position = index_at(_position);
-    bool has_changed = update_patches(index_at_position);
     
     if(!has_changed)
         return;
@@ -263,6 +253,17 @@ void Terrain::update(const glm::vec3& _position)
         grass_geometry->position()->at(edge->v1()) = vec3(0., 0., 0.);
         grass_geometry->position()->at(edge->v2()) = vec3(0., 0., 0.);
     }
+}
+
+void Terrain::update(const glm::vec3& _position)
+{
+    *time = gle::time();
+    *position = _position;
+    *wind_direction = vec3(1., 0., 0.);
+    
+    auto index_at_position = index_at(_position);
+    std::function<void(const pair<int, int>& index_at_position)> f = std::bind(&Terrain::update_patches, this, std::placeholders::_1);
+    std::future<void> has_changed = std::async(f,index_at_position);
 }
 
 bool Terrain::is_inside(const glm::vec3& position)
