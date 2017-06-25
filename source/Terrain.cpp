@@ -169,6 +169,19 @@ Terrain::TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
     return nullptr;
 }
 
+bool Terrain::should_generate_patches(const pair<int, int>& index_at_position)
+{
+    for (auto& patch : patches)
+    {
+        auto index = index_at(patch.get_origo());
+        if(abs(index_at_position.first - index.first) > 1 || abs(index_at_position.second - index.second) > 1)
+        {
+            return true;
+        }
+    }
+    return patches.size() == 0;
+}
+
 void Terrain::update_patches(const pair<int, int>& index_at_position)
 {
     std::vector<TerrainPatch*> free_patches;
@@ -180,8 +193,6 @@ void Terrain::update_patches(const pair<int, int>& index_at_position)
             free_patches.push_back(&patch);
         }
     }
-    
-    bool has_changed = false;
     
     for (int i = -PATCH_RADIUS; i <= PATCH_RADIUS; i++)
     {
@@ -203,13 +214,9 @@ void Terrain::update_patches(const pair<int, int>& index_at_position)
                 }
                 vec3 origo = vec3(TerrainPatch::SIZE * static_cast<double>(index.first), 0., TerrainPatch::SIZE * static_cast<double>(index.second));
                 patch->update(origo);
-                has_changed = true;
             }
         }
     }
-    
-    if(!has_changed)
-        return;
     
     auto index = make_pair(index_at_position.first - PATCH_RADIUS, index_at_position.second - PATCH_RADIUS);
     auto patch = patch_at(index);
@@ -262,8 +269,12 @@ void Terrain::update(const glm::vec3& _position)
     *wind_direction = vec3(1., 0., 0.);
     
     auto index_at_position = index_at(_position);
-    std::function<void(const pair<int, int>& index_at_position)> f = std::bind(&Terrain::update_patches, this, std::placeholders::_1);
-    std::future<void> has_changed = std::async(f,index_at_position);
+    if(should_generate_patches(index_at_position))
+    {
+        
+        std::function<void(const pair<int, int>& index_at_position)> f = std::bind(&Terrain::update_patches, this, std::placeholders::_1);
+        std::future<void> has_changed = std::async(f,index_at_position);
+    }
 }
 
 bool Terrain::is_inside(const glm::vec3& position)

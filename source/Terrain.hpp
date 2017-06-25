@@ -74,6 +74,8 @@ class Terrain
     
     std::shared_ptr<WaterMaterial> water_material;
     
+    bool should_generate_patches(const std::pair<int, int>& index_at_position);
+    
     void update_patches(const std::pair<int, int>& index_at_position);
     
 public:
