@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <math.h>
+#include <future>
 
 #include "vec2.hpp"
 #include "vec3.hpp"
@@ -80,6 +81,9 @@ class Terrain
     bool should_generate_patches(const std::pair<int, int>& index_at_position);
     
     void update_patches(const std::pair<int, int>& index_at_position);
+    
+    bool is_generating = false;
+    std::future<void> fut;
     
 public:
     

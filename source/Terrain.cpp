@@ -3,7 +3,6 @@
 //  Copyright © 2015 Asger Nyman Christiansen. All rights reserved.
 //
 
-#include <future>
 #include "glm.hpp"
 #include "Terrain.hpp"
 #include "Random.h"
@@ -263,6 +262,7 @@ void Terrain::update_patches(const pair<int, int>& index_at_position)
     ground->update_buffers();
     water->update_buffers();
     grass->update_buffers();
+    is_generating = false;
 }
 
 void Terrain::update(const glm::vec3& _position)
@@ -276,10 +276,11 @@ void Terrain::update(const glm::vec3& _position)
     {
         update_patches(index_at_position);
     }
-    else if(should_generate_patches(index_at_position))
+    else if(!is_generating && should_generate_patches(index_at_position))
     {
+        is_generating = true;
         std::function<void(const pair<int, int>& index_at_position)> f = std::bind(&Terrain::update_patches, this, std::placeholders::_1);
-        static future<void> fut = std::async(std::launch::async, f, index_at_position);
+        fut = std::async(std::launch::async, f, index_at_position);
     }
 }
 
