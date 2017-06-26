@@ -14,6 +14,7 @@
 #include "Mesh.h"
 #include "GLScene.h"
 #include "Materials.h"
+#include "GLObject.h"
 
 class Terrain
 {
@@ -63,6 +64,8 @@ class Terrain
     
     std::shared_ptr<mesh::Mesh> ground_geometry = std::make_shared<mesh::Mesh>();
     std::shared_ptr<mesh::Mesh> grass_geometry = std::make_shared<mesh::Mesh>();
+    
+    gle::GLObject *ground, *water, *grass;
     
     std::shared_ptr<float> time = std::make_shared<float>(0.f);
     std::shared_ptr<glm::vec3> wind_direction = std::make_shared<glm::vec3>(0., 0., 0.);

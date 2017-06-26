@@ -4,7 +4,6 @@
 //
 
 #include <future>
-#include <thread>
 #include "glm.hpp"
 #include "Terrain.hpp"
 #include "Random.h"
@@ -143,13 +142,13 @@ Terrain::Terrain(GLScene& scene)
     
     // Create terrain
     auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, noise_texture, ground_uv_coordinates);
-    scene.add_leaf(ground_geometry, terrain_material);
+    ground = scene.add_leaf(ground_geometry, terrain_material);
     
     water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, noise_texture, ground_uv_coordinates);
-    scene.add_leaf(ground_geometry, water_material);
+    water = scene.add_leaf(ground_geometry, water_material);
     
     auto grass_material = make_shared<GrassMaterial>(time, wind_direction, position, vec3(0.3f,0.7f,0.f));
-    scene.add_leaf(grass_geometry, grass_material);
+    grass = scene.add_leaf(grass_geometry, grass_material);
 }
 
 pair<int, int> Terrain::index_at(const vec3& position)
@@ -179,7 +178,7 @@ bool Terrain::should_generate_patches(const pair<int, int>& index_at_position)
             return true;
         }
     }
-    return patches.size() == 0;
+    return false;
 }
 
 void Terrain::update_patches(const pair<int, int>& index_at_position)
@@ -260,6 +259,10 @@ void Terrain::update_patches(const pair<int, int>& index_at_position)
         grass_geometry->position()->at(edge->v1()) = vec3(0., 0., 0.);
         grass_geometry->position()->at(edge->v2()) = vec3(0., 0., 0.);
     }
+    
+    ground->update_buffers();
+    water->update_buffers();
+    grass->update_buffers();
 }
 
 void Terrain::update(const glm::vec3& _position)
@@ -269,11 +272,14 @@ void Terrain::update(const glm::vec3& _position)
     *wind_direction = vec3(1., 0., 0.);
     
     auto index_at_position = index_at(_position);
-    if(should_generate_patches(index_at_position))
+    if(patches.size() == 0)
     {
-        
+        update_patches(index_at_position);
+    }
+    else if(should_generate_patches(index_at_position))
+    {
         std::function<void(const pair<int, int>& index_at_position)> f = std::bind(&Terrain::update_patches, this, std::placeholders::_1);
-        std::future<void> has_changed = std::async(f,index_at_position);
+        static future<void> fut = std::async(std::launch::async, f, index_at_position);
     }
 }
 

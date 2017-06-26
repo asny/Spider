@@ -37,6 +37,8 @@ class Spider
             foot_vertex = geometry->create_vertex();
             hip_vertex = geometry->create_vertex();
             geometry->create_edge(hip_vertex, foot_vertex);
+            geometry->position()->at(hip_vertex) = default_hip_pos_local;
+            geometry->position()->at(foot_vertex) = default_foot_pos_local;
         }
         
         void update(const glm::mat4& local2world, Terrain& terrain, float time);
@@ -47,6 +49,7 @@ class Spider
     std::shared_ptr<glm::mat4> local2world = std::make_shared<glm::mat4>(1.);
     
     std::vector<Leg> legs;
+    gle::GLObject *legs_object;
     
     const float speed = 2.;
     const float angular_speed = 1.;

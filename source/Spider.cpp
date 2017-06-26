@@ -48,7 +48,7 @@ void Spider::create_scene_graph(GLScene& scene)
     {
         legs.push_back(Leg(legs_geometry, foot_pos));
     }
-    scene.add_leaf(legs_geometry, legs_material);
+    legs_object = scene.add_leaf(legs_geometry, legs_material);
 }
 
 void Spider::Leg::update(const glm::mat4& local2world, Terrain& terrain, float time)
@@ -170,4 +170,5 @@ void Spider::update(Terrain& terrain, float time)
     {
         leg.update(*local2world, terrain, time);
     }
+    legs_object->update_buffers();
 }
