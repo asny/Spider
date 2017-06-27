@@ -259,9 +259,9 @@ void Terrain::update_patches(const pair<int, int>& index_at_position)
         grass_geometry->position()->at(edge->v2()) = vec3(0., 0., 0.);
     }
     
-    ground->update_buffers();
-    water->update_buffers();
-    grass->update_buffers();
+    ground->invalidate();
+    water->invalidate();
+    grass->invalidate();
     is_generating = false;
 }
 

@@ -170,5 +170,5 @@ void Spider::update(Terrain& terrain, float time)
     {
         leg.update(*local2world, terrain, time);
     }
-    legs_object->update_buffers();
+    legs_object->invalidate();
 }
