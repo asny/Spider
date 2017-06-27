@@ -106,7 +106,7 @@ glm::vec3 Terrain::TerrainPatch::get_origo()
     return origo;
 }
 
-Terrain::Terrain(GLScene& scene)
+Terrain::Terrain(GLScene* scene) : scene(scene)
 {
     // Initialize ground geometry
     auto ground_uv_coordinates = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
@@ -137,17 +137,17 @@ Terrain::Terrain(GLScene& scene)
     // Create skybox
     auto skybox_material = make_shared<GLSkyboxMaterial>(skybox_texture);
     auto skybox_geometry = MeshCreator::create_box(true);
-    scene.add_leaf(skybox_geometry, skybox_material);
+    scene->add_leaf(skybox_geometry, skybox_material);
     
     // Create terrain
     auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, noise_texture, ground_uv_coordinates);
-    ground = scene.add_leaf(ground_geometry, terrain_material);
+    scene->add_leaf(ground_geometry, terrain_material);
     
     water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, noise_texture, ground_uv_coordinates);
-    water = scene.add_leaf(ground_geometry, water_material);
+    scene->add_leaf(ground_geometry, water_material);
     
     auto grass_material = make_shared<GrassMaterial>(time, wind_direction, position, vec3(0.3f,0.7f,0.f));
-    grass = scene.add_leaf(grass_geometry, grass_material);
+    scene->add_leaf(grass_geometry, grass_material);
 }
 
 pair<int, int> Terrain::index_at(const vec3& position)
@@ -259,9 +259,9 @@ void Terrain::update_patches(const pair<int, int>& index_at_position)
         grass_geometry->position()->at(edge->v2()) = vec3(0., 0., 0.);
     }
     
-    ground->invalidate();
-    water->invalidate();
-    grass->invalidate();
+    scene->invalidate(ground_geometry);
+    scene->invalidate(grass_geometry);
+    
     is_generating = false;
 }
 

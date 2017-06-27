@@ -174,8 +174,8 @@ int main(int argc, char** argv)
     auto scene = GLScene();
     
     // Create objects
-    auto terrain = Terrain(scene);
-    auto spider = Spider(scene, glm::vec3(0., 0., -5.), glm::vec3(0., 0., 1.));
+    auto terrain = Terrain(&scene);
+    auto spider = Spider(&scene, glm::vec3(0., 0., -5.), glm::vec3(0., 0., 1.));
     
     // Create light
     auto directional_light = make_shared<GLDirectionalLight>();

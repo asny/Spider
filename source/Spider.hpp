@@ -49,7 +49,7 @@ class Spider
     std::shared_ptr<glm::mat4> local2world = std::make_shared<glm::mat4>(1.);
     
     std::vector<Leg> legs;
-    gle::GLObject *legs_object;
+    std::shared_ptr<mesh::Mesh> legs_geometry;
     
     const float speed = 2.;
     const float angular_speed = 1.;
@@ -64,11 +64,13 @@ class Spider
     bool is_rotating_left = false;
     bool is_jumping = false;
     
+    gle::GLScene *scene;
+    
 public:
-    Spider(gle::GLScene& scene, glm::vec3 _position, glm::vec3 _view_direction) : position(_position), view_direction(_view_direction)
+    Spider(gle::GLScene* scene, glm::vec3 _position, glm::vec3 _view_direction) : scene(scene), position(_position), view_direction(_view_direction)
     {
         position.y = height;
-        create_scene_graph(scene);
+        create_scene_graph();
     }
     
     glm::vec3 get_position(Terrain& terrain) const;
@@ -99,6 +101,6 @@ public:
     void update(Terrain& terrain, float time);
     
 private:
-    void create_scene_graph(gle::GLScene& scene);
+    void create_scene_graph();
     
 };
