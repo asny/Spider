@@ -14,11 +14,11 @@ using namespace gle;
 using namespace std;
 using namespace mesh;
 
-void Spider::create_scene_graph(GLScene& scene)
+void Spider::create_scene_graph()
 {
     // Create body
     auto spider_transformation = std::make_shared<GLTransformationNode>(local2world);
-    scene.add_child(spider_transformation);
+    scene->add_child(spider_transformation);
     
     auto geometry = shared_ptr<Mesh>(new Mesh());
     auto normals = shared_ptr<Attribute<VertexID, vec3>>(new Attribute<VertexID, vec3>());
@@ -42,13 +42,13 @@ void Spider::create_scene_graph(GLScene& scene)
     
     // Create legs
     auto legs_material = make_shared<GLSpiderLegsMaterial>(glm::vec3(0.3f, 0.2f, 0.2f));
-    auto legs_geometry = std::make_shared<mesh::Mesh>();
+    legs_geometry = std::make_shared<mesh::Mesh>();
     for (auto foot_pos : {glm::vec3(0.75, 0., 2.), glm::vec3(1.,0.,1.), glm::vec3(1.,0.,-0.5), glm::vec3(0.75,0.,-2.),
         glm::vec3(-0.75, 0., 2.), glm::vec3(-1.,0.,1.), glm::vec3(-1.,0.,-0.5), glm::vec3(-0.75,0.,-2.)})
     {
         legs.push_back(Leg(legs_geometry, foot_pos));
     }
-    scene.add_leaf(legs_geometry, legs_material);
+    scene->add_leaf(legs_geometry, legs_material);
 }
 
 void Spider::Leg::update(const glm::mat4& local2world, Terrain& terrain, float time)
@@ -170,4 +170,5 @@ void Spider::update(Terrain& terrain, float time)
     {
         leg.update(*local2world, terrain, time);
     }
+    scene->invalidate(legs_geometry);
 }

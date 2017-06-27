@@ -106,7 +106,7 @@ glm::vec3 Terrain::TerrainPatch::get_origo()
     return origo;
 }
 
-Terrain::Terrain(GLScene& scene)
+Terrain::Terrain(GLScene* scene) : scene(scene)
 {
     // Initialize ground geometry
     auto ground_uv_coordinates = std::make_shared<mesh::Attribute<mesh::VertexID, glm::vec2>>();
@@ -137,17 +137,17 @@ Terrain::Terrain(GLScene& scene)
     // Create skybox
     auto skybox_material = make_shared<GLSkyboxMaterial>(skybox_texture);
     auto skybox_geometry = MeshCreator::create_box(true);
-    scene.add_leaf(skybox_geometry, skybox_material);
+    scene->add_leaf(skybox_geometry, skybox_material);
     
     // Create terrain
     auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, noise_texture, ground_uv_coordinates);
-    scene.add_leaf(ground_geometry, terrain_material);
+    scene->add_leaf(ground_geometry, terrain_material);
     
     water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, noise_texture, ground_uv_coordinates);
-    scene.add_leaf(ground_geometry, water_material);
+    scene->add_leaf(ground_geometry, water_material);
     
     auto grass_material = make_shared<GrassMaterial>(time, wind_direction, position, vec3(0.3f,0.7f,0.f));
-    scene.add_leaf(grass_geometry, grass_material);
+    scene->add_leaf(grass_geometry, grass_material);
 }
 
 pair<int, int> Terrain::index_at(const vec3& position)
@@ -167,14 +167,21 @@ Terrain::TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
     return nullptr;
 }
 
-void Terrain::update(const glm::vec3& _position)
+bool Terrain::should_generate_patches(const pair<int, int>& index_at_position)
 {
-    *time = gle::time();
-    *position = _position;
-    *wind_direction = vec3(1., 0., 0.);
-    
-    auto index_at_position = index_at(_position);
-    
+    for (auto& patch : patches)
+    {
+        auto index = index_at(patch.get_origo());
+        if(abs(index_at_position.first - index.first) > 1 || abs(index_at_position.second - index.second) > 1)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Terrain::update_patches(const pair<int, int>& index_at_position)
+{
     std::vector<TerrainPatch*> free_patches;
     for (auto& patch : patches)
     {
@@ -184,8 +191,6 @@ void Terrain::update(const glm::vec3& _position)
             free_patches.push_back(&patch);
         }
     }
-    
-    bool hasChanged = false;
     
     for (int i = -PATCH_RADIUS; i <= PATCH_RADIUS; i++)
     {
@@ -207,13 +212,9 @@ void Terrain::update(const glm::vec3& _position)
                 }
                 vec3 origo = vec3(TerrainPatch::SIZE * static_cast<double>(index.first), 0., TerrainPatch::SIZE * static_cast<double>(index.second));
                 patch->update(origo);
-                hasChanged = true;
             }
         }
     }
-    
-    if(!hasChanged)
-        return;
     
     auto index = make_pair(index_at_position.first - PATCH_RADIUS, index_at_position.second - PATCH_RADIUS);
     auto patch = patch_at(index);
@@ -257,6 +258,36 @@ void Terrain::update(const glm::vec3& _position)
         grass_geometry->position()->at(edge->v1()) = vec3(0., 0., 0.);
         grass_geometry->position()->at(edge->v2()) = vec3(0., 0., 0.);
     }
+    
+    scene->invalidate(ground_geometry);
+    scene->invalidate(grass_geometry);
+    
+    is_generating = false;
+}
+
+void Terrain::update(const glm::vec3& _position)
+{
+    *time = gle::time();
+    *position = _position;
+    *wind_direction = vec3(1., 0., 0.);
+    
+    auto index_at_position = index_at(_position);
+    if(patches.size() == 0)
+    {
+        update_patches(index_at_position);
+    }
+    else if(!is_generating && should_generate_patches(index_at_position))
+    {
+        is_generating = true;
+        std::function<void(const pair<int, int>& index_at_position)> f = std::bind(&Terrain::update_patches, this, std::placeholders::_1);
+        fut = std::async(std::launch::async, f, index_at_position);
+    }
+}
+
+bool Terrain::is_inside(const glm::vec3& position)
+{
+    auto index = index_at(position);
+    return patch_at(index);
 }
 
 double Terrain::get_height_at(const glm::vec3& position)

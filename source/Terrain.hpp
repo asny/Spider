@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <math.h>
+#include <future>
 
 #include "vec2.hpp"
 #include "vec3.hpp"
@@ -33,7 +34,7 @@ class Terrain
         void subdivide(int origo_x, int origo_y, int size);
         
     public:
-        constexpr const static double SIZE = 8.;
+        constexpr const static double SIZE = 16.;
         constexpr const static int VERTICES_PER_UNIT = 8;
         constexpr const static int VERTICES_PER_SIDE = static_cast<int>(SIZE) * VERTICES_PER_UNIT;
         constexpr const static double VERTEX_DISTANCE = 1./static_cast<double>(VERTICES_PER_UNIT);
@@ -74,11 +75,22 @@ class Terrain
     
     std::shared_ptr<WaterMaterial> water_material;
     
+    bool should_generate_patches(const std::pair<int, int>& index_at_position);
+    
+    void update_patches(const std::pair<int, int>& index_at_position);
+    
+    bool is_generating = false;
+    std::future<void> fut;
+    
+    gle::GLScene *scene;
+    
 public:
     
-    Terrain(gle::GLScene& scene);
+    Terrain(gle::GLScene* scene);
     
     void update(const glm::vec3& position);
+    
+    bool is_inside(const glm::vec3& position);
     
     double get_height_at(const glm::vec3& position);
     
