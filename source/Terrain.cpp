@@ -128,7 +128,6 @@ Terrain::Terrain(GLScene* scene) : scene(scene)
     // Load textures
     auto ground_texture = make_shared<GLTexture2D>("resources/grass.jpg");
     auto lake_texture = make_shared<GLTexture2D>("resources/bottom.png");
-    auto noise_texture = make_shared<GLTexture2D>("resources/water_noise.jpg");
     
     const string path = "resources/skybox_evening/";
     auto filenames = {path + "right.jpg", path + "left.jpg", path + "top.jpg", path + "top.jpg", path + "front.jpg", path + "back.jpg"};
@@ -140,10 +139,10 @@ Terrain::Terrain(GLScene* scene) : scene(scene)
     scene->add_leaf(skybox_geometry, skybox_material);
     
     // Create terrain
-    auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, noise_texture, ground_uv_coordinates);
+    auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, ground_uv_coordinates);
     scene->add_leaf(ground_geometry, terrain_material);
     
-    water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, noise_texture, ground_uv_coordinates);
+    water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, ground_uv_coordinates);
     scene->add_leaf(ground_geometry, water_material);
     
     auto grass_material = make_shared<GrassMaterial>(time, wind_direction, position, vec3(0.3f,0.7f,0.f));
