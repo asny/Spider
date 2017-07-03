@@ -2,10 +2,7 @@
 
 uniform sampler2D groundTexture;
 uniform sampler2D lakeTexture;
-uniform sampler2D waterNoiseTexture;
 uniform sampler2D noiseTexture;
-uniform float time;
-uniform vec3 windDirection;
 
 in vec2 coords;
 in vec3 nor;

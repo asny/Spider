@@ -165,7 +165,7 @@ int main(int argc, char** argv)
     // Create camera
     auto camera = GLCamera(window_width, window_height);
     auto ssao_effect = GLAmbientOcclusionEffect();
-    auto fog_effect = GLFogEffect(make_shared<GLTexture2D>("resources/water_noise.jpg"));
+    auto fog_effect = GLFogEffect();
     fog_effect.density = 0.1;
     fog_effect.no_fog_height = 4.;
     auto debug_effect = GLDebugEffect();
