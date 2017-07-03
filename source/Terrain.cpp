@@ -139,7 +139,7 @@ Terrain::Terrain(GLScene* scene) : scene(scene)
     scene->add_leaf(skybox_geometry, skybox_material);
     
     // Create terrain
-    auto terrain_material = make_shared<TerrainMaterial>(time, wind_direction, ground_texture, lake_texture, ground_uv_coordinates);
+    auto terrain_material = make_shared<TerrainMaterial>(ground_texture, lake_texture, ground_uv_coordinates);
     scene->add_leaf(ground_geometry, terrain_material);
     
     water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, ground_uv_coordinates);
