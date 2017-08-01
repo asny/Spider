@@ -82,12 +82,11 @@ class WaterMaterial : public gle::GLMaterial
     std::vector<glm::vec4> ring_effects;
 public:
     
-    float amplitude = 0.02f;
-    float wavelength = 1.f;
-    float speed = 0.03f;
+    float amplitude = 0.005f;
+    float wavelength = 0.5f;
+    float speed = 0.5f;
     float steepness = 2.f;
-    float wind_variation = 0.5f;
-    float wind_variation_speed = 0.06f;
+    float wind_variation = 0.2f;
     
     WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _environment_texture,
                   std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
@@ -164,16 +163,18 @@ public:
         
         auto wind_dir = glm::vec2(wind_direction->x, wind_direction->z);
         auto ortho_wind_dir = glm::vec2(-wind_direction->z, wind_direction->x);
-        const int no_waves = 4;
+        const int no_waves = 2;
         for(int i = 0; i < no_waves; i++)
         {
-            float t = i + 1.f;
-            amplitudes.push_back(amplitude / t);
-            wavelengths.push_back(wavelength * M_PI / t);
-            speeds.push_back(speed * t);
-            steepnesses.push_back(steepness / t);
+            amplitudes.push_back(amplitude);
+            wavelengths.push_back(wavelength * M_PI);
+            speeds.push_back(speed);
+            steepnesses.push_back(steepness);
             
-            direction.push_back(normalize(wind_dir + ortho_wind_dir * wind_variation * (float)sin(i * 0.5 * M_PI + wind_variation_speed * *time)));
+            static const float var[] = {0.83, 0.55};
+            static const float spe[] = {0.13 * M_PI, -0.25 * M_PI};
+            
+            direction.push_back(normalize(wind_dir + ortho_wind_dir * wind_variation * var[i] * (float)sin(spe[i])));
         }
         
         gle::GLUniform::use(shader, "amplitude", amplitudes[0], no_waves);
