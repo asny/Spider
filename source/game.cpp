@@ -166,8 +166,9 @@ int main(int argc, char** argv)
     auto camera = GLCamera(window_width, window_height);
     auto ssao_effect = GLAmbientOcclusionEffect();
     auto fog_effect = GLFogEffect();
-    fog_effect.density = 0.1;
-    fog_effect.no_fog_height = 4.;
+    fog_effect.density = 0.08;
+    fog_effect.no_fog_height = 6.;
+    fog_effect.animation = 0.05;
     auto debug_effect = GLDebugEffect();
     
     // Create scene
