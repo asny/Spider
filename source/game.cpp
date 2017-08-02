@@ -22,11 +22,9 @@ using namespace glm;
 using namespace gle;
 using namespace mesh;
 
-enum VIEW_TYPE { FIRST_PERSON, THIRD_PERSON, BIRD, WORM };
-
-VIEW_TYPE view_type = FIRST_PERSON;
-
 bool ssao_enabled = false;
+float zoom = 0.;
+float target = 0.;
 
 void print_fps(double elapsedTime)
 {
@@ -44,24 +42,27 @@ void print_fps(double elapsedTime)
 
 void update_camera(GLCamera& camera, const glm::vec3& spider_position, const glm::vec3& spider_view_direction)
 {
-    vec3 bird_view = normalize(vec3(0., -1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
-    vec3 third_person_view = normalize(vec3(spider_view_direction.x, -0.5, spider_view_direction.z));
-    vec3 worm_view = normalize(vec3(0., 1., 0.) + 0.1f * vec3(spider_view_direction.x, 0., spider_view_direction.z));
-    
-    switch (view_type) {
-        case FIRST_PERSON:
-            camera.set_view(spider_position - 0.5f * spider_view_direction + vec3(0.,0.4,0.), spider_view_direction);
-            break;
-        case THIRD_PERSON:
-            camera.set_view(spider_position - 2.f * third_person_view, third_person_view);
-            break;
-        case BIRD:
-            camera.set_view(spider_position - 4.f * bird_view, bird_view);
-            break;
-        case WORM:
-            camera.set_view(spider_position - 4.f * worm_view, worm_view);
-            break;
+    if(abs(target - zoom) > 0.001)
+    {
+        zoom += sign(target - zoom) * 0.01;
     }
+    vec3 third_person_view = normalize(vec3(spider_view_direction.x, -0.75, spider_view_direction.z));
+    vec3 pos, dir;
+    if(zoom < 1.f)
+    {
+        float f = 1.f - (1.f - zoom) * (1.f - zoom);
+        pos = (spider_position - 0.5f * spider_view_direction + vec3(0.,0.4,0.)) * (1.f-zoom) +
+        (spider_position - 5.f * third_person_view) * zoom;
+        dir = normalize(spider_view_direction * (1.f-f) + third_person_view * f);
+    }
+    else {
+        
+        pos = (spider_position - 20.f * third_person_view) * (zoom - 1.f) + (spider_position - 5.f * third_person_view) * (2.f - zoom);
+        dir = third_person_view;
+        
+    }
+    
+    camera.set_view(pos, dir);
 }
 
 bool handle_events(Spider& spider, GLDebugEffect& debug_effect)
@@ -72,6 +73,11 @@ bool handle_events(Spider& spider, GLDebugEffect& debug_effect)
         if( e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE)
         {
             return true;
+        }
+        if( e.type == SDL_MOUSEWHEEL)
+        {
+            zoom += e.wheel.y / 100.f;
+            zoom = clamp(zoom, 0.f, 2.f);
         }
         switch( e.key.keysym.sym )
         {
@@ -92,16 +98,13 @@ bool handle_events(Spider& spider, GLDebugEffect& debug_effect)
                 spider.rotate_right(e.type == SDL_KEYDOWN);
                 break;
             case SDLK_1:
-                view_type = FIRST_PERSON;
+                target = 0.f;
                 break;
             case SDLK_2:
-                view_type = THIRD_PERSON;
+                target = 1.f;
                 break;
             case SDLK_3:
-                view_type = BIRD;
-                break;
-            case SDLK_4:
-                view_type = WORM;
+                target = 2.f;
                 break;
             case SDLK_5:
                 debug_effect.type = gle::GLDebugEffect::DEPTH;
