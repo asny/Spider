@@ -43,18 +43,6 @@ void Terrain::TerrainPatch::update(const vec3& _origo)
     set_height(SIZE, VERTICES_PER_SIDE, 0, {});
     set_height(SIZE, VERTICES_PER_SIDE, VERTICES_PER_SIDE, {});
     subdivide(0, 0, VERTICES_PER_SIDE);
-    
-    grass_map.clear();
-    for (int i = 0; i < NO_GRASS_STRAW; i++)
-    {
-        auto pos = origo + vec3(Random::value(0., 0.999 * SIZE), 0., Random::value(0., 0.999 * SIZE));
-        pos.y = get_height_at(pos);
-        if(pos.y > 0.15)
-        {
-            auto straw = vec3(Random::value(-0.1, 0.1), Random::value(0.05, 0.15), Random::value(-0.1, 0.1));
-            grass_map.push_back( { pos, straw } );
-        }
-    }
 }
 
 void Terrain::TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
@@ -238,17 +226,23 @@ void Terrain::update_patches(const pair<int, int>& index_at_position)
     auto edge = grass_geometry->edges_begin();
     for (auto patch : patches)
     {
-        for (auto grass_straw : patch.get_grass_straws())
+        for (int i = 0; i < TerrainPatch::NO_GRASS_STRAW; i++)
         {
-            if(edge == grass_geometry->edges_end())
+            auto pos = origo + vec3(Random::value(0., 0.999 * SIZE), 0., Random::value(0., 0.999 * SIZE));
+            pos.y = get_height_at(pos);
+            if(pos.y > 0.15)
             {
-                edge = grass_geometry->create_edge(grass_geometry->create_vertex(), grass_geometry->create_vertex());
+                auto straw = vec3(Random::value(-0.1, 0.1), Random::value(0.05, 0.15), Random::value(-0.1, 0.1));
+                if(edge == grass_geometry->edges_end())
+                {
+                    edge = grass_geometry->create_edge(grass_geometry->create_vertex(), grass_geometry->create_vertex());
+                }
+                
+                grass_geometry->position()->at(edge->v1()) = pos;
+                grass_geometry->position()->at(edge->v2()) = pos + straw;
+                
+                edge = edge->next();
             }
-            
-            grass_geometry->position()->at(edge->v1()) = grass_straw.position;
-            grass_geometry->position()->at(edge->v2()) = grass_straw.position + grass_straw.straw;
-            
-            edge = edge->next();
         }
     }
     

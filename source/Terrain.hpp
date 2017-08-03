@@ -20,14 +20,8 @@ class Terrain
 {
     class TerrainPatch
     {
-        struct GrassStraw {
-            glm::vec3 position;
-            glm::vec3 straw;
-        };
-        
         glm::vec3 origo;
         std::vector<std::vector<double>> heightmap;
-        std::vector<GrassStraw> grass_map;
         
         void set_height(double scale, int r, int c, std::vector<double> neighbour_heights);
         
@@ -48,11 +42,6 @@ class Terrain
         double get_height_at(const glm::vec3& position) const;
         
         glm::vec3 get_origo();
-        
-        const std::vector<GrassStraw>& get_grass_straws()
-        {
-            return grass_map;
-        }
     };
     const static int PATCH_RADIUS = 1;
     constexpr const static int PATCH_SIDE_LENGTH = 2 * PATCH_RADIUS + 1;
