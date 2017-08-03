@@ -78,6 +78,7 @@ bool handle_events(Spider& spider, GLDebugEffect& debug_effect)
         {
             zoom += e.wheel.y / 100.f;
             zoom = clamp(zoom, 0.f, 2.f);
+            target = zoom;
         }
         switch( e.key.keysym.sym )
         {
