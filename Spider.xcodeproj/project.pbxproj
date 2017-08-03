@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		490C32511EA23E6C00AC12FF /* Firefly.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 490C324F1EA23E6C00AC12FF /* Firefly.cpp */; };
+		493F6D4C1F3304790086BC41 /* Grass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 493F6D4A1F3304790086BC41 /* Grass.cpp */; };
 		493F8F141E475DF600D94AC1 /* Butterfly.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 493F8F121E475DF600D94AC1 /* Butterfly.cpp */; };
 		496B07AA1DF99EFC00CFBD10 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 496B07A91DF99EFC00CFBD10 /* OpenGL.framework */; };
 		49E3833C1E6A11240024D5D7 /* simplexnoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49E3833A1E6A11240024D5D7 /* simplexnoise.cpp */; };
@@ -34,6 +35,8 @@
 		4900D18D1E0BBC4D00F92EBD /* Materials.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Materials.h; path = materials/Materials.h; sourceTree = "<group>"; };
 		490C324F1EA23E6C00AC12FF /* Firefly.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Firefly.cpp; path = source/Firefly.cpp; sourceTree = "<group>"; };
 		490C32501EA23E6C00AC12FF /* Firefly.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Firefly.hpp; path = source/Firefly.hpp; sourceTree = "<group>"; };
+		493F6D4A1F3304790086BC41 /* Grass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Grass.cpp; path = source/Grass.cpp; sourceTree = "<group>"; };
+		493F6D4B1F3304790086BC41 /* Grass.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Grass.hpp; path = source/Grass.hpp; sourceTree = "<group>"; };
 		493F8F121E475DF600D94AC1 /* Butterfly.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Butterfly.cpp; path = source/Butterfly.cpp; sourceTree = "<group>"; };
 		493F8F131E475DF600D94AC1 /* Butterfly.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Butterfly.hpp; path = source/Butterfly.hpp; sourceTree = "<group>"; };
 		496B07A91DF99EFC00CFBD10 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -135,6 +138,8 @@
 				7AB0F2C41BC25326009D85FD /* Terrain.hpp */,
 				490C324F1EA23E6C00AC12FF /* Firefly.cpp */,
 				490C32501EA23E6C00AC12FF /* Firefly.hpp */,
+				493F6D4A1F3304790086BC41 /* Grass.cpp */,
+				493F6D4B1F3304790086BC41 /* Grass.hpp */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -203,6 +208,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				493F6D4C1F3304790086BC41 /* Grass.cpp in Sources */,
 				493F8F141E475DF600D94AC1 /* Butterfly.cpp in Sources */,
 				490C32511EA23E6C00AC12FF /* Firefly.cpp in Sources */,
 				7A383A271BBFB6F700E29333 /* game.cpp in Sources */,
