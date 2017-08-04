@@ -10,7 +10,7 @@ using namespace std;
 using namespace glm;
 using namespace gle;
 
-void Grass::update(gle::GLScene* scene, TerrainPatch& patch, float time, const glm::vec3& spider_position)
+void Grass::update(TerrainPatch& patch, float time, const glm::vec3& spider_position)
 {
     // Update grass geometry
     auto edge = geometry->edges_begin();
@@ -40,7 +40,7 @@ void Grass::update(gle::GLScene* scene, TerrainPatch& patch, float time, const g
         geometry->position()->at(edge->v2()) = vec3(0., 0., 0.);
     }
     
-    scene->invalidate(geometry);
+    this->invalidate(geometry);
     
     material->spider_position = spider_position;
     material->time = time;

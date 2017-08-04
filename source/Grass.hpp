@@ -7,18 +7,18 @@
 
 #include "Terrain.hpp"
 
-class Grass
+class Grass : public gle::GLNode
 {
 private:
     std::shared_ptr<mesh::Mesh> geometry = std::make_shared<mesh::Mesh>();
     std::shared_ptr<GrassMaterial> material = std::make_shared<GrassMaterial>();
     
 public:
-    Grass(gle::GLScene* scene)
+    Grass()
     {
         material = std::make_shared<GrassMaterial>();
-//        scene->add_leaf(grass_geometry, grass_material);
+        this->add_leaf(geometry, material);
     }
     
-    void update(gle::GLScene* scene, TerrainPatch& patch, float time, const glm::vec3& spider_position);
+    void update(TerrainPatch& patch, float time, const glm::vec3& spider_position);
 };
