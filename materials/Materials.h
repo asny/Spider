@@ -16,14 +16,12 @@
 
 class GrassMaterial : public gle::GLMaterial
 {
-    std::shared_ptr<glm::vec3> spider_position;
-    std::shared_ptr<glm::vec3> wind_direction;
-    std::shared_ptr<float> time;
-    glm::vec3 color;
 public:
+    glm::vec3 color = glm::vec3(0.3f,0.7f,0.f);
+    float time = 0.f;
+    glm::vec3 spider_position = glm::vec3(0.f,0.f,0.f);
     
-    GrassMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, const std::shared_ptr<glm::vec3> _spider_position, const glm::vec3& _color)
-        : GLMaterial(gle::DEFERRED, "../GLEngine/shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom"), spider_position(_spider_position), time(_time), wind_direction(_wind_direction), color(_color)
+    GrassMaterial() : GLMaterial(gle::DEFERRED, "../GLEngine/shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom")
     {
         
     }
@@ -39,8 +37,8 @@ public:
         gle::GLUniform::use(shader, "VPMatrix", input.projection * input.view);
         gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
         
-        gle::GLUniform::use(shader, "spiderPosition", *spider_position);
-        gle::GLUniform::use(shader, "wind", glm::vec3(0.5 * sin(*time) + 0.5, 0., 0.5 * cos(*time + 0.5) + 0.5));
+        gle::GLUniform::use(shader, "spiderPosition", spider_position);
+        gle::GLUniform::use(shader, "wind", glm::vec3(0.5 * sin(time) + 0.5, 0., 0.5 * cos(time + 0.5) + 0.5));
         
         gle::GLUniform::use(shader, "materialColor", color);
     }

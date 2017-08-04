@@ -25,7 +25,7 @@ double average(std::vector<double> heights)
     return sum / static_cast<double>(heights.size());
 }
 
-Terrain::TerrainPatch::TerrainPatch()
+TerrainPatch::TerrainPatch()
 {
     heightmap = vector<vector<double>>(VERTICES_PER_SIDE + 1);
     for ( auto r = 0; r <= VERTICES_PER_SIDE; r++ )
@@ -34,7 +34,7 @@ Terrain::TerrainPatch::TerrainPatch()
     }
 }
 
-void Terrain::TerrainPatch::update(const vec3& _origo)
+void TerrainPatch::update(const vec3& _origo)
 {
     origo = _origo;
     
@@ -45,13 +45,13 @@ void Terrain::TerrainPatch::update(const vec3& _origo)
     subdivide(0, 0, VERTICES_PER_SIDE);
 }
 
-void Terrain::TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
+void TerrainPatch::set_height(double scale, int r, int c, std::vector<double> neighbour_heights)
 {
     heightmap[r][c] = average(neighbour_heights) +
         0.15 * scale * static_cast<double>(raw_noise_2d(origo.x + r * VERTEX_DISTANCE, origo.z + c * VERTEX_DISTANCE));
 }
 
-void Terrain::TerrainPatch::subdivide(int origo_r, int origo_c, int size)
+void TerrainPatch::subdivide(int origo_r, int origo_c, int size)
 {
     int half_size = size/2;
     if(half_size >= 1)
@@ -72,7 +72,7 @@ void Terrain::TerrainPatch::subdivide(int origo_r, int origo_c, int size)
     }
 }
 
-double Terrain::TerrainPatch::get_height_at(const vec3& position) const
+double TerrainPatch::get_height_at(const vec3& position) const
 {
     vec3 vec = position - origo;
     
@@ -89,7 +89,7 @@ double Terrain::TerrainPatch::get_height_at(const vec3& position) const
     return height;
 }
 
-glm::vec3 Terrain::TerrainPatch::get_origo()
+glm::vec3 TerrainPatch::get_origo()
 {
     return origo;
 }
@@ -132,9 +132,6 @@ Terrain::Terrain(GLScene* scene) : scene(scene)
     
     water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, ground_uv_coordinates);
     scene->add_leaf(ground_geometry, water_material);
-    
-    auto grass_material = make_shared<GrassMaterial>(time, wind_direction, position, vec3(0.3f,0.7f,0.f));
-    scene->add_leaf(grass_geometry, grass_material);
 }
 
 pair<int, int> Terrain::index_at(const vec3& position)
@@ -144,7 +141,7 @@ pair<int, int> Terrain::index_at(const vec3& position)
     return make_pair(static_cast<int>(index_vector.x), static_cast<int>(index_vector.y));
 }
 
-Terrain::TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
+TerrainPatch* Terrain::patch_at(std::pair<int, int> index)
 {
     for (auto& patch : patches)
     {
@@ -222,38 +219,7 @@ void Terrain::update_patches(const pair<int, int>& index_at_position)
     // Update ground normals
     ground_geometry->update_normals();
     
-    // Update grass geometry
-    auto edge = grass_geometry->edges_begin();
-    for (auto patch : patches)
-    {
-        for (int i = 0; i < TerrainPatch::NO_GRASS_STRAW; i++)
-        {
-            auto pos = origo + vec3(Random::value(0., 0.999 * SIZE), 0., Random::value(0., 0.999 * SIZE));
-            pos.y = get_height_at(pos);
-            if(pos.y > 0.15)
-            {
-                auto straw = vec3(Random::value(-0.1, 0.1), Random::value(0.05, 0.15), Random::value(-0.1, 0.1));
-                if(edge == grass_geometry->edges_end())
-                {
-                    edge = grass_geometry->create_edge(grass_geometry->create_vertex(), grass_geometry->create_vertex());
-                }
-                
-                grass_geometry->position()->at(edge->v1()) = pos;
-                grass_geometry->position()->at(edge->v2()) = pos + straw;
-                
-                edge = edge->next();
-            }
-        }
-    }
-    
-    for (; edge != grass_geometry->edges_end(); edge = edge->next())
-    {
-        grass_geometry->position()->at(edge->v1()) = vec3(0., 0., 0.);
-        grass_geometry->position()->at(edge->v2()) = vec3(0., 0., 0.);
-    }
-    
     scene->invalidate(ground_geometry);
-    scene->invalidate(grass_geometry);
     
     is_generating = false;
 }

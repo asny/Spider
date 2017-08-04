@@ -16,33 +16,34 @@
 #include "GLScene.h"
 #include "Materials.h"
 
+class TerrainPatch
+{
+    glm::vec3 origo;
+    std::vector<std::vector<double>> heightmap;
+    
+    void set_height(double scale, int r, int c, std::vector<double> neighbour_heights);
+    
+    void subdivide(int origo_x, int origo_y, int size);
+    
+public:
+    constexpr const static double SIZE = 16.;
+    constexpr const static int VERTICES_PER_UNIT = 8;
+    constexpr const static int VERTICES_PER_SIDE = static_cast<int>(SIZE) * VERTICES_PER_UNIT;
+    constexpr const static double VERTEX_DISTANCE = 1./static_cast<double>(VERTICES_PER_UNIT);
+    const static int NO_GRASS_STRAW_PER_UNIT = 500;
+    constexpr const static int NO_GRASS_STRAW = NO_GRASS_STRAW_PER_UNIT * SIZE * SIZE;
+    
+    TerrainPatch();
+    
+    void update(const glm::vec3& _origo);
+    
+    double get_height_at(const glm::vec3& position) const;
+    
+    glm::vec3 get_origo();
+};
+
 class Terrain
 {
-    class TerrainPatch
-    {
-        glm::vec3 origo;
-        std::vector<std::vector<double>> heightmap;
-        
-        void set_height(double scale, int r, int c, std::vector<double> neighbour_heights);
-        
-        void subdivide(int origo_x, int origo_y, int size);
-        
-    public:
-        constexpr const static double SIZE = 16.;
-        constexpr const static int VERTICES_PER_UNIT = 8;
-        constexpr const static int VERTICES_PER_SIDE = static_cast<int>(SIZE) * VERTICES_PER_UNIT;
-        constexpr const static double VERTEX_DISTANCE = 1./static_cast<double>(VERTICES_PER_UNIT);
-        const static int NO_GRASS_STRAW_PER_UNIT = 500;
-        constexpr const static int NO_GRASS_STRAW = NO_GRASS_STRAW_PER_UNIT * SIZE * SIZE;
-        
-        TerrainPatch();
-        
-        void update(const glm::vec3& _origo);
-        
-        double get_height_at(const glm::vec3& position) const;
-        
-        glm::vec3 get_origo();
-    };
     const static int PATCH_RADIUS = 1;
     constexpr const static int PATCH_SIDE_LENGTH = 2 * PATCH_RADIUS + 1;
     constexpr const static int VERTICES_PER_SIDE = TerrainPatch::VERTICES_PER_SIDE * PATCH_SIDE_LENGTH;
@@ -52,7 +53,6 @@ class Terrain
     std::map<std::pair<int,int>, mesh::VertexID*> ground_mapping;
     
     std::shared_ptr<mesh::Mesh> ground_geometry = std::make_shared<mesh::Mesh>();
-    std::shared_ptr<mesh::Mesh> grass_geometry = std::make_shared<mesh::Mesh>();
     
     std::shared_ptr<float> time = std::make_shared<float>(0.f);
     std::shared_ptr<glm::vec3> wind_direction = std::make_shared<glm::vec3>(0., 0., 0.);
