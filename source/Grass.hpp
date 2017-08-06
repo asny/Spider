@@ -18,9 +18,10 @@ private:
 public:
     Grass()
     {
-        material = std::make_shared<GrassMaterial>();
         this->add_leaf(geometry, material);
     }
     
-    void update(Terrain& patch, float time, const glm::vec3& spider_position);
+    void update(Terrain& patch);
+    
+    void animate(float time, const glm::vec3& spider_position);
 };

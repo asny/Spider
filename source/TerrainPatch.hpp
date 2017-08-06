@@ -6,15 +6,28 @@
 #pragma once
 
 #include "Terrain.hpp"
+#include "Grass.hpp"
 
-class TerrainPatch
+class TerrainPatch : gle::GLNode
 {
     Terrain terrain = Terrain();
+    std::shared_ptr<Grass> grass;
     
 public:
-    TerrainPatch()
+    TerrainPatch(gle::GLNode& parent)
     {
-        
+        grass = std::make_shared<Grass>();
+        parent.add_child(grass);
+    }
+    
+    void update(float time, const glm::vec3& spider_position)
+    {
+        grass->animate(time, spider_position);
+    }
+    
+    void update_grass()
+    {
+        grass->update(terrain);
     }
     
     Terrain& get_terrain()

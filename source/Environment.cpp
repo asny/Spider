@@ -45,6 +45,7 @@ Environment::Environment(GLScene* scene) : scene(scene)
     auto terrain_material = make_shared<TerrainMaterial>(ground_texture, lake_texture, ground_uv_coordinates);
     scene->add_leaf(ground_geometry, terrain_material);
     
+    // Create water
     water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, ground_uv_coordinates);
     scene->add_leaf(ground_geometry, water_material);
 }
@@ -102,7 +103,7 @@ void Environment::update_patches(const pair<int, int>& index_at_position)
                 TerrainPatch* patch;
                 if(free_patches.size() == 0)
                 {
-                    patches.push_back(TerrainPatch());
+                    patches.push_back(TerrainPatch(*scene));
                     patch = &patches.back();
                 }
                 else {
@@ -111,6 +112,7 @@ void Environment::update_patches(const pair<int, int>& index_at_position)
                 }
                 vec3 origo = vec3(Terrain::SIZE * static_cast<double>(index.first), 0., Terrain::SIZE * static_cast<double>(index.second));
                 patch->get_terrain().update(origo);
+                patch->update_grass();
             }
         }
     }
@@ -144,6 +146,11 @@ void Environment::update(const glm::vec3& _position)
     *time = gle::time();
     *position = _position;
     *wind_direction = vec3(1., 0., 0.);
+    
+    for (auto& patch : patches)
+    {
+        patch.update(*time, *position);
+    }
     
     auto index_at_position = index_at(_position);
     if(patches.size() == 0)
