@@ -24,7 +24,7 @@ Environment::Environment(GLScene* scene) : scene(scene)
                 ground_geometry->create_face(ground_mapping.at(pair<int, int>(r,c-1)), ground_mapping.at(pair<int, int>(r-1,c-1)), vertex);
                 ground_geometry->create_face(ground_mapping.at(pair<int, int>(r-1,c)), vertex, ground_mapping.at(pair<int, int>(r-1,c-1)));
             }
-            ground_uv_coordinates->at(vertex) = vec2(PATCH_SIDE_LENGTH * r * TerrainPatch::VERTEX_DISTANCE/SIZE, PATCH_SIDE_LENGTH * c * TerrainPatch::VERTEX_DISTANCE/SIZE);
+            ground_uv_coordinates->at(vertex) = vec2(PATCH_SIDE_LENGTH * r * Terrain::VERTEX_DISTANCE/SIZE, PATCH_SIDE_LENGTH * c * Terrain::VERTEX_DISTANCE/SIZE);
         }
     }
     
@@ -52,7 +52,7 @@ Environment::Environment(GLScene* scene) : scene(scene)
 pair<int, int> Environment::index_at(const vec3& position)
 {
     vec2 parameter = vec2(position.x, position.z);
-    vec2 index_vector = vec2(floor(parameter.x / TerrainPatch::SIZE), floor(parameter.y / TerrainPatch::SIZE));
+    vec2 index_vector = vec2(floor(parameter.x / Terrain::SIZE), floor(parameter.y / Terrain::SIZE));
     return make_pair(static_cast<int>(index_vector.x), static_cast<int>(index_vector.y));
 }
 
@@ -60,7 +60,7 @@ TerrainPatch* Environment::patch_at(std::pair<int, int> index)
 {
     for (auto& patch : patches)
     {
-        if(index == index_at(patch.get_origo()))
+        if(index == index_at(patch.get_terrain().get_origo()))
             return &patch;
     }
     return nullptr;
@@ -70,7 +70,7 @@ bool Environment::should_generate_patches(const pair<int, int>& index_at_positio
 {
     for (auto& patch : patches)
     {
-        auto index = index_at(patch.get_origo());
+        auto index = index_at(patch.get_terrain().get_origo());
         if(abs(index_at_position.first - index.first) > 1 || abs(index_at_position.second - index.second) > 1)
         {
             return true;
@@ -84,7 +84,7 @@ void Environment::update_patches(const pair<int, int>& index_at_position)
     std::vector<TerrainPatch*> free_patches;
     for (auto& patch : patches)
     {
-        auto index = index_at(patch.get_origo());
+        auto index = index_at(patch.get_terrain().get_origo());
         if(abs(index_at_position.first - index.first) > 1 || abs(index_at_position.second - index.second) > 1)
         {
             free_patches.push_back(&patch);
@@ -109,22 +109,22 @@ void Environment::update_patches(const pair<int, int>& index_at_position)
                     patch = free_patches.back();
                     free_patches.pop_back();
                 }
-                vec3 origo = vec3(TerrainPatch::SIZE * static_cast<double>(index.first), 0., TerrainPatch::SIZE * static_cast<double>(index.second));
-                patch->update(origo);
+                vec3 origo = vec3(Terrain::SIZE * static_cast<double>(index.first), 0., Terrain::SIZE * static_cast<double>(index.second));
+                patch->get_terrain().update(origo);
             }
         }
     }
     
     auto index = make_pair(index_at_position.first - PATCH_RADIUS, index_at_position.second - PATCH_RADIUS);
     auto patch = patch_at(index);
-    auto origo = patch->get_origo();
+    auto origo = patch->get_terrain().get_origo();
     
     // Update ground geometry
     for (int r = 0; r < VERTICES_PER_SIDE; r++)
     {
         for (int c = 0; c < VERTICES_PER_SIDE; c++)
         {
-            vec3 pos = origo + vec3(r * TerrainPatch::VERTEX_DISTANCE, 0., c * TerrainPatch::VERTEX_DISTANCE);
+            vec3 pos = origo + vec3(r * Terrain::VERTEX_DISTANCE, 0., c * Terrain::VERTEX_DISTANCE);
             pos.y = get_height_at(pos);
             auto ground_vertex = ground_mapping.at(pair<int, int>(r,c));
             ground_geometry->position()->at(ground_vertex) = pos;
@@ -168,5 +168,5 @@ double Environment::get_height_at(const glm::vec3& position)
 {
     auto index = index_at(position);
     TerrainPatch* patch = patch_at(index);
-    return patch->get_height_at(position);
+    return patch->get_terrain().get_height_at(position);
 }

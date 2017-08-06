@@ -14,8 +14,8 @@ class Environment {
     
     const static int PATCH_RADIUS = 1;
     constexpr const static int PATCH_SIDE_LENGTH = 2 * PATCH_RADIUS + 1;
-    constexpr const static int VERTICES_PER_SIDE = TerrainPatch::VERTICES_PER_SIDE * PATCH_SIDE_LENGTH;
-    constexpr const static double SIZE = TerrainPatch::SIZE * static_cast<double>(PATCH_SIDE_LENGTH);
+    constexpr const static int VERTICES_PER_SIDE = Terrain::VERTICES_PER_SIDE * PATCH_SIDE_LENGTH;
+    constexpr const static double SIZE = Terrain::SIZE * static_cast<double>(PATCH_SIDE_LENGTH);
     
     std::vector<TerrainPatch> patches;
     std::map<std::pair<int,int>, mesh::VertexID*> ground_mapping;
