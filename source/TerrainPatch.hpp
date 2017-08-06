@@ -25,8 +25,9 @@ public:
         grass->animate(time, spider_position);
     }
     
-    void update_grass()
+    void initialize(const glm::vec3& origo)
     {
+        terrain.update(origo);
         grass->update(terrain);
     }
     

@@ -111,8 +111,7 @@ void Environment::update_patches(const pair<int, int>& index_at_position)
                     free_patches.pop_back();
                 }
                 vec3 origo = vec3(Terrain::SIZE * static_cast<double>(index.first), 0., Terrain::SIZE * static_cast<double>(index.second));
-                patch->get_terrain().update(origo);
-                patch->update_grass();
+                patch->initialize(origo);
             }
         }
     }
