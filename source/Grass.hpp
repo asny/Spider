@@ -13,6 +13,8 @@ private:
     std::shared_ptr<mesh::Mesh> geometry = std::make_shared<mesh::Mesh>();
     std::shared_ptr<GrassMaterial> material = std::make_shared<GrassMaterial>();
     
+    const static int NO_GRASS_STRAW_PER_UNIT = 500;
+    
 public:
     Grass()
     {
@@ -20,5 +22,5 @@ public:
         this->add_leaf(geometry, material);
     }
     
-    void update(TerrainPatch& patch, float time, const glm::vec3& spider_position);
+    void update(Terrain& patch, float time, const glm::vec3& spider_position);
 };
