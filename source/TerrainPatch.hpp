@@ -8,16 +8,15 @@
 #include "Terrain.hpp"
 #include "Grass.hpp"
 
-class TerrainPatch : gle::GLNode
+class TerrainPatch : public gle::GLNode
 {
-    Terrain terrain = Terrain();
-    std::shared_ptr<Grass> grass;
+    std::shared_ptr<Terrain> terrain = std::make_shared<Terrain>();
+    std::shared_ptr<Grass> grass = std::make_shared<Grass>();
     
 public:
-    TerrainPatch(gle::GLNode& parent)
+    TerrainPatch()
     {
-        grass = std::make_shared<Grass>();
-        parent.add_child(grass);
+        this->add_child(grass);
     }
     
     void update(float time, const glm::vec3& spider_position)
@@ -27,13 +26,13 @@ public:
     
     void initialize(const glm::vec3& origo)
     {
-        terrain.update(origo);
-        grass->update(terrain);
+        terrain->update(origo);
+        grass->update(*terrain);
     }
     
     Terrain& get_terrain()
     {
-        return terrain;
+        return *terrain;
     }
     
 };

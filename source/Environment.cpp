@@ -57,24 +57,28 @@ pair<int, int> Environment::index_at(const vec3& position)
     return make_pair(static_cast<int>(index_vector.x), static_cast<int>(index_vector.y));
 }
 
-TerrainPatch* Environment::patch_at(std::pair<int, int> index)
+std::shared_ptr<TerrainPatch> Environment::patch_at(std::pair<int, int> index)
 {
     for (auto& patch : patches)
     {
-        if(index == index_at(patch.get_terrain().get_origo()))
-            return &patch;
+        if(index == index_at(patch->get_terrain().get_origo()))
+            return patch;
     }
     return nullptr;
 }
 
 bool Environment::should_generate_patches(const pair<int, int>& index_at_position)
 {
-    for (auto& patch : patches)
+    for (int i = -PATCH_RADIUS; i <= PATCH_RADIUS; i++)
     {
-        auto index = index_at(patch.get_terrain().get_origo());
-        if(abs(index_at_position.first - index.first) > 1 || abs(index_at_position.second - index.second) > 1)
+        for (int j = -PATCH_RADIUS; j <= PATCH_RADIUS; j++)
         {
-            return true;
+            auto index = make_pair(index_at_position.first + i, index_at_position.second + j);
+            auto patch = patch_at(index);
+            if(!patch)
+            {
+                return true;
+            }
         }
     }
     return false;
@@ -82,13 +86,13 @@ bool Environment::should_generate_patches(const pair<int, int>& index_at_positio
 
 void Environment::update_patches(const pair<int, int>& index_at_position)
 {
-    std::vector<TerrainPatch*> free_patches;
+    std::vector<std::shared_ptr<TerrainPatch>> free_patches;
     for (auto& patch : patches)
     {
-        auto index = index_at(patch.get_terrain().get_origo());
+        auto index = index_at(patch->get_terrain().get_origo());
         if(abs(index_at_position.first - index.first) > 1 || abs(index_at_position.second - index.second) > 1)
         {
-            free_patches.push_back(&patch);
+            free_patches.push_back(patch);
         }
     }
     
@@ -100,11 +104,12 @@ void Environment::update_patches(const pair<int, int>& index_at_position)
             auto patch = patch_at(index);
             if(!patch)
             {
-                TerrainPatch* patch;
+                std::shared_ptr<TerrainPatch> patch;
                 if(free_patches.size() == 0)
                 {
-                    patches.push_back(TerrainPatch(*scene));
-                    patch = &patches.back();
+                    patches.push_back(std::make_shared<TerrainPatch>());
+                    patch = patches.back();
+                    scene->add_child(patch);
                 }
                 else {
                     patch = free_patches.back();
@@ -148,7 +153,7 @@ void Environment::update(const glm::vec3& _position)
     
     for (auto& patch : patches)
     {
-        patch.update(*time, *position);
+        patch->update(*time, *position);
     }
     
     auto index_at_position = index_at(_position);
@@ -167,12 +172,12 @@ void Environment::update(const glm::vec3& _position)
 bool Environment::is_inside(const glm::vec3& position)
 {
     auto index = index_at(position);
-    return patch_at(index);
+    return patch_at(index) != nullptr;
 }
 
 double Environment::get_height_at(const glm::vec3& position)
 {
     auto index = index_at(position);
-    TerrainPatch* patch = patch_at(index);
+    auto patch = patch_at(index);
     return patch->get_terrain().get_height_at(position);
 }

@@ -17,7 +17,7 @@ class Environment {
     constexpr const static int VERTICES_PER_SIDE = Terrain::VERTICES_PER_SIDE * PATCH_SIDE_LENGTH;
     constexpr const static double SIZE = Terrain::SIZE * static_cast<double>(PATCH_SIDE_LENGTH);
     
-    std::vector<TerrainPatch> patches;
+    std::vector<std::shared_ptr<TerrainPatch>> patches;
     std::map<std::pair<int,int>, mesh::VertexID*> ground_mapping;
     
     std::shared_ptr<mesh::Mesh> ground_geometry = std::make_shared<mesh::Mesh>();
@@ -28,7 +28,7 @@ class Environment {
     
     std::pair<int, int> index_at(const glm::vec3& position);
     
-    TerrainPatch* patch_at(std::pair<int, int> index);
+    std::shared_ptr<TerrainPatch> patch_at(std::pair<int, int> index);
     
     std::shared_ptr<WaterMaterial> water_material;
     
