@@ -34,7 +34,7 @@ public:
     
     Terrain();
     
-    void update(const glm::vec3& _origo);
+    void initialize(const glm::vec3& _origo);
     
     double get_height_at(const glm::vec3& position) const;
     

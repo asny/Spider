@@ -10,7 +10,7 @@ using namespace std;
 using namespace glm;
 using namespace gle;
 
-void Grass::update(Terrain& patch)
+void Grass::initialize(Terrain& patch)
 {
     int NO_GRASS_STRAW = NO_GRASS_STRAW_PER_UNIT * Terrain::SIZE * Terrain::SIZE;
     

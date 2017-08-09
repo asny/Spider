@@ -21,7 +21,7 @@ public:
         this->add_leaf(geometry, material);
     }
     
-    void update(Terrain& terrain);
+    void initialize(Terrain& terrain);
     
     void animate(float time, const glm::vec3& spider_position);
 };

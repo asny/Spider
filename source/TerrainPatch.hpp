@@ -19,15 +19,15 @@ public:
         this->add_child(grass);
     }
     
-    void update(float time, const glm::vec3& spider_position)
+    void animate(float time, const glm::vec3& spider_position, const glm::vec3& wind_direction)
     {
         grass->animate(time, spider_position);
     }
     
     void initialize(const glm::vec3& origo)
     {
-        terrain->update(origo);
-        grass->update(*terrain);
+        terrain->initialize(origo);
+        grass->initialize(*terrain);
     }
     
     Terrain& get_terrain()

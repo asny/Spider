@@ -46,7 +46,7 @@ Environment::Environment(GLScene* scene) : scene(scene)
     scene->add_leaf(ground_geometry, terrain_material);
     
     // Create water
-    water_material = make_shared<WaterMaterial>(time, wind_direction, skybox_texture, ground_uv_coordinates);
+    water_material = make_shared<WaterMaterial>(skybox_texture, ground_uv_coordinates);
     scene->add_leaf(ground_geometry, water_material);
 }
 
@@ -121,11 +121,9 @@ void Environment::update_patches(const pair<int, int>& index_at_position)
         }
     }
     
-    auto index = make_pair(index_at_position.first - PATCH_RADIUS, index_at_position.second - PATCH_RADIUS);
-    auto patch = patch_at(index);
-    auto origo = patch->get_terrain().get_origo();
-    
     // Update ground geometry
+    vec3 origo = vec3(Terrain::SIZE * static_cast<double>(index_at_position.first - PATCH_RADIUS), 0.,
+                      Terrain::SIZE * static_cast<double>(index_at_position.second - PATCH_RADIUS));
     for (int r = 0; r < VERTICES_PER_SIDE; r++)
     {
         for (int c = 0; c < VERTICES_PER_SIDE; c++)
@@ -147,14 +145,15 @@ void Environment::update_patches(const pair<int, int>& index_at_position)
 
 void Environment::update(const glm::vec3& _position)
 {
-    *time = gle::time();
-    *position = _position;
-    *wind_direction = vec3(1., 0., 0.);
+    auto time = gle::time();
+    auto wind_direction = vec3(1., 0., 0.);
     
     for (auto& patch : patches)
     {
-        patch->update(*time, *position);
+        patch->animate(time, _position, wind_direction);
     }
+    water_material->time = time;
+    water_material->wind_direction = wind_direction;
     
     auto index_at_position = index_at(_position);
     if(patches.size() == 0)

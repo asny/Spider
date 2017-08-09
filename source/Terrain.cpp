@@ -34,7 +34,7 @@ Terrain::Terrain()
     }
 }
 
-void Terrain::update(const vec3& _origo)
+void Terrain::initialize(const vec3& _origo)
 {
     origo = _origo;
     
