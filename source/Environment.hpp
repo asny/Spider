@@ -17,6 +17,8 @@ class Environment {
     constexpr const static int VERTICES_PER_SIDE = Terrain::VERTICES_PER_SIDE * PATCH_SIDE_LENGTH;
     constexpr const static double SIZE = Terrain::SIZE * static_cast<double>(PATCH_SIDE_LENGTH);
     
+    std::pair<int, int> current_center = {0, 0};
+    
     std::vector<std::shared_ptr<TerrainPatch>> patches;
     std::map<std::pair<int,int>, mesh::VertexID*> ground_mapping;
     
@@ -31,8 +33,6 @@ class Environment {
     std::shared_ptr<TerrainPatch> patch_at(std::pair<int, int> index);
     
     std::shared_ptr<WaterMaterial> water_material;
-    
-    bool should_generate_patches(const std::pair<int, int>& index_at_position);
     
     void update_patches(const std::pair<int, int>& index_at_position);
     

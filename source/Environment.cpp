@@ -67,30 +67,13 @@ std::shared_ptr<TerrainPatch> Environment::patch_at(std::pair<int, int> index)
     return nullptr;
 }
 
-bool Environment::should_generate_patches(const pair<int, int>& index_at_position)
-{
-    for (int i = -PATCH_RADIUS; i <= PATCH_RADIUS; i++)
-    {
-        for (int j = -PATCH_RADIUS; j <= PATCH_RADIUS; j++)
-        {
-            auto index = make_pair(index_at_position.first + i, index_at_position.second + j);
-            auto patch = patch_at(index);
-            if(!patch)
-            {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
 void Environment::update_patches(const pair<int, int>& index_at_position)
 {
     std::vector<std::shared_ptr<TerrainPatch>> free_patches;
     for (auto& patch : patches)
     {
         auto index = index_at(patch->get_terrain().get_origo());
-        if(abs(index_at_position.first - index.first) > 1 || abs(index_at_position.second - index.second) > 1)
+        if(abs(index_at_position.first - index.first) > PATCH_RADIUS || abs(index_at_position.second - index.second) > PATCH_RADIUS)
         {
             free_patches.push_back(patch);
         }
@@ -120,6 +103,7 @@ void Environment::update_patches(const pair<int, int>& index_at_position)
             }
         }
     }
+    current_center = index_at_position;
     
     // Update ground geometry
     vec3 origo = vec3(Terrain::SIZE * static_cast<double>(index_at_position.first - PATCH_RADIUS), 0.,
@@ -160,7 +144,7 @@ void Environment::update(const glm::vec3& _position)
     {
         update_patches(index_at_position);
     }
-    else if(!is_generating && should_generate_patches(index_at_position))
+    else if(!is_generating && current_center != index_at_position)
     {
         is_generating = true;
         std::function<void(const pair<int, int>& index_at_position)> f = std::bind(&Environment::update_patches, this, std::placeholders::_1);
@@ -171,7 +155,7 @@ void Environment::update(const glm::vec3& _position)
 bool Environment::is_inside(const glm::vec3& position)
 {
     auto index = index_at(position);
-    return patch_at(index) != nullptr;
+    return abs(current_center.first - index.first) <= PATCH_RADIUS && abs(current_center.second - index.second) <= PATCH_RADIUS;
 }
 
 double Environment::get_height_at(const glm::vec3& position)
