@@ -13,6 +13,8 @@ class TerrainPatch : public gle::GLNode
     std::shared_ptr<Terrain> terrain = std::make_shared<Terrain>();
     std::shared_ptr<Grass> grass = std::make_shared<Grass>();
     
+    std::pair<int, int> index;
+    
 public:
     TerrainPatch()
     {
@@ -24,15 +26,22 @@ public:
         grass->animate(time, spider_position);
     }
     
-    void initialize(const glm::vec3& origo)
+    void initialize(const std::pair<int, int>& _index)
     {
+        index = _index;
+        glm::vec3 origo = glm::vec3(Terrain::SIZE * static_cast<double>(index.first), 0., Terrain::SIZE * static_cast<double>(index.second));
         terrain->initialize(origo);
         grass->initialize(*terrain);
     }
     
-    Terrain& get_terrain()
+    const std::pair<int, int>& get_index()
     {
-        return *terrain;
+        return index;
+    }
+    
+    double get_height_at(const glm::vec3& position)
+    {
+        return terrain->get_height_at(position);
     }
     
 };
