@@ -179,7 +179,7 @@ int main(int argc, char** argv)
     auto scene = GLScene();
     
     // Create objects
-    auto terrain = Terrain(&scene);
+    auto environment = Environment(&scene);
     auto spider = Spider(&scene, glm::vec3(0., 0., -5.), glm::vec3(0., 0., 1.));
     
     // Create light
@@ -203,13 +203,13 @@ int main(int argc, char** argv)
         print_fps(elapsed_time);
         
         // Update the scene based on the time elapsed since last update
-        spider.update(terrain, elapsed_time);
-        Butterfly::spawn_and_destroy_and_update(scene, terrain, spider);
+        spider.update(environment, elapsed_time);
+        Butterfly::spawn_and_destroy_and_update(scene, environment, spider);
         Firefly::spawn_and_destroy_and_update(scene);
         
         // Update the camera
-        update_camera(camera, spider.get_position(terrain), spider.get_view_direction(terrain));
-        directional_light->shadow_target = spider.get_position(terrain);
+        update_camera(camera, spider.get_position(environment), spider.get_view_direction(environment));
+        directional_light->shadow_target = spider.get_position(environment);
         
         // draw one frame
         camera.draw(scene);
