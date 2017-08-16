@@ -16,14 +16,12 @@
 
 class GrassMaterial : public gle::GLMaterial
 {
-    std::shared_ptr<glm::vec3> spider_position;
-    std::shared_ptr<glm::vec3> wind_direction;
-    std::shared_ptr<float> time;
-    glm::vec3 color;
 public:
+    glm::vec3 color = glm::vec3(0.3f,0.7f,0.f);
+    float time = 0.f;
+    glm::vec3 spider_position = glm::vec3(0.f,0.f,0.f);
     
-    GrassMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, const std::shared_ptr<glm::vec3> _spider_position, const glm::vec3& _color)
-        : GLMaterial(gle::DEFERRED, "../GLEngine/shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom"), spider_position(_spider_position), time(_time), wind_direction(_wind_direction), color(_color)
+    GrassMaterial() : GLMaterial(gle::DEFERRED, "../GLEngine/shaders/pre_geom.vert",  "shaders/grass.frag", "shaders/grass.geom")
     {
         
     }
@@ -39,8 +37,8 @@ public:
         gle::GLUniform::use(shader, "VPMatrix", input.projection * input.view);
         gle::GLUniform::use(shader, "NMatrix", inverseTranspose(model));
         
-        gle::GLUniform::use(shader, "spiderPosition", *spider_position);
-        gle::GLUniform::use(shader, "wind", glm::vec3(0.5 * sin(*time) + 0.5, 0., 0.5 * cos(*time + 0.5) + 0.5));
+        gle::GLUniform::use(shader, "spiderPosition", spider_position);
+        gle::GLUniform::use(shader, "wind", glm::vec3(0.5 * sin(time) + 0.5, 0., 0.5 * cos(time + 0.5) + 0.5));
         
         gle::GLUniform::use(shader, "materialColor", color);
     }
@@ -73,25 +71,24 @@ public:
 
 class WaterMaterial : public gle::GLMaterial
 {
-    std::shared_ptr<float> time;
-    std::shared_ptr<glm::vec3> wind_direction;
     std::shared_ptr<gle::GLTexture> environment_texture, water_foam;
     std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> uv_coordinates;
     
     const float ring_effect_time = 4.;
     std::vector<glm::vec4> ring_effects;
 public:
+    float time = 0.f;
+    glm::vec3 wind_direction = glm::vec3(1., 0., 0.);
     
-    float amplitude = 0.02f;
-    float wavelength = 1.f;
-    float speed = 0.03f;
+    float amplitude = 0.005f;
+    float wavelength = 0.5f;
+    float speed = 0.5f;
     float steepness = 2.f;
-    float wind_variation = 0.5f;
-    float wind_variation_speed = 0.06f;
+    float wind_variation = 0.2f;
     
-    WaterMaterial(const std::shared_ptr<float> _time, const std::shared_ptr<glm::vec3> _wind_direction, std::shared_ptr<gle::GLTexture3D> _environment_texture,
+    WaterMaterial(std::shared_ptr<gle::GLTexture3D> _environment_texture,
                   std::shared_ptr<mesh::Attribute<mesh::VertexID, glm::vec2>> _uv_coordinates)
-        : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag"), environment_texture(_environment_texture), time(_time), wind_direction(_wind_direction), uv_coordinates(_uv_coordinates)
+        : GLMaterial(gle::FORWARD, "shaders/water.vert",  "shaders/water.frag"), environment_texture(_environment_texture), uv_coordinates(_uv_coordinates)
     {
         water_foam = std::make_shared<gle::GLTexture2D>("resources/water_foam.png");
         for(int i = 0; i < 32; i++)
@@ -106,7 +103,7 @@ public:
         {
             if(ring_effect.w < 0.)
             {
-                ring_effect = glm::vec4(position.x, 0., position.z, *time);
+                ring_effect = glm::vec4(position.x, 0., position.z, time);
                 return;
             }
         }
@@ -142,11 +139,11 @@ public:
         
         gle::GLUniform::use(shader, "eyePosition", input.camera_position);
         gle::GLUniform::use(shader, "screenSize", input.screen_size);
-        gle::GLUniform::use(shader, "time", *time);
+        gle::GLUniform::use(shader, "time", time);
         
         for(glm::vec4& ring_effect : ring_effects)
         {
-            if(ring_effect.w > 0. && *time > ring_effect.w + ring_effect_time)
+            if(ring_effect.w > 0. && time > ring_effect.w + ring_effect_time)
             {
                 ring_effect = glm::vec4(0., 0., 0., -1.);
             }
@@ -162,18 +159,20 @@ public:
         auto steepnesses = std::vector<float>();
         auto direction = std::vector<glm::vec2>();
         
-        auto wind_dir = glm::vec2(wind_direction->x, wind_direction->z);
-        auto ortho_wind_dir = glm::vec2(-wind_direction->z, wind_direction->x);
-        const int no_waves = 4;
+        auto wind_dir = glm::vec2(wind_direction.x, wind_direction.z);
+        auto ortho_wind_dir = glm::vec2(-wind_direction.z, wind_direction.x);
+        const int no_waves = 2;
         for(int i = 0; i < no_waves; i++)
         {
-            float t = i + 1.f;
-            amplitudes.push_back(amplitude / t);
-            wavelengths.push_back(wavelength * M_PI / t);
-            speeds.push_back(speed * t);
-            steepnesses.push_back(steepness / t);
+            amplitudes.push_back(amplitude);
+            wavelengths.push_back(wavelength * M_PI);
+            speeds.push_back(speed);
+            steepnesses.push_back(steepness);
             
-            direction.push_back(normalize(wind_dir + ortho_wind_dir * wind_variation * (float)sin(i * 0.5 * M_PI + wind_variation_speed * *time)));
+            static const float var[] = {0.83, 0.55};
+            static const float spe[] = {0.13 * M_PI, -0.25 * M_PI};
+            
+            direction.push_back(normalize(wind_dir + ortho_wind_dir * wind_variation * var[i] * (float)sin(spe[i])));
         }
         
         gle::GLUniform::use(shader, "amplitude", amplitudes[0], no_waves);

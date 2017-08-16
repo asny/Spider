@@ -16,7 +16,7 @@
 #include "glm.hpp"
 #include "Mesh.h"
 #include "GLScene.h"
-#include "Terrain.hpp"
+#include "Environment.hpp"
 #include <vector>
 #include <cmath>
 
@@ -41,7 +41,7 @@ class Spider
             geometry->position()->at(foot_vertex) = default_foot_pos_local;
         }
         
-        void update(const glm::mat4& local2world, Terrain& terrain, float time);
+        void update(const glm::mat4& local2world, Environment& environment, float time);
     };
     
     glm::vec3 position;
@@ -73,8 +73,8 @@ public:
         create_scene_graph();
     }
     
-    glm::vec3 get_position(Terrain& terrain) const;
-    glm::vec3 get_view_direction(Terrain& terrain) const;
+    glm::vec3 get_position(Environment& environment) const;
+    glm::vec3 get_view_direction(Environment& environment) const;
     
     void move_foward(bool value)
     {
@@ -98,7 +98,7 @@ public:
     
     void jump();
     
-    void update(Terrain& terrain, float time);
+    void update(Environment& environment, float time);
     
 private:
     void create_scene_graph();

@@ -96,15 +96,15 @@ float repel_function(float distance)
     return std::max(1.f - distance*distance, 0.f);
 }
 
-void Butterfly::update(Terrain& terrain, const Spider& spider)
+void Butterfly::update(Environment& environment, const Spider& spider)
 {
     float time = gle::time();
     float elapsed_time = time - last_time;
     last_time = time;
     
     vec3 current_position = vec3(translation[3]);
-    float terrain_height = terrain.get_height_at(current_position);
-    vec3 spider_position = spider.get_position(terrain);
+    float terrain_height = environment.get_height_at(current_position);
+    vec3 spider_position = spider.get_position(environment);
     
     // Wing
     *wing_angle = sin(start_wing_angle + 30.*time);
