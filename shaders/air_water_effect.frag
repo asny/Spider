@@ -8,6 +8,7 @@ uniform vec3 fogColor;
 uniform float noFogHeight;
 uniform float animation;
 uniform vec3 eyePosition;
+const float waterDensity = 0.5;
 
 in vec2 uv;
 
@@ -155,7 +156,7 @@ void main()
     t2 = clamp(-b/(a-b), 0., 1.);
     water_dist *= abs(t1 - t2);
     
-    x = water_dist * fogDensity;
+    x = water_dist * waterDensity;
     float water_factor = 1. - 1. / exp(x * x);
     
     // Output
