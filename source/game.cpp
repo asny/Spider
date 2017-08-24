@@ -8,6 +8,7 @@
 #include "effects/GLDebugEffect.h"
 #include "effects/GLFogEffect.h"
 #include "effects/GLAmbientOcclusionEffect.h"
+#include "AirWaterEffect.h"
 
 #include "Spider.hpp"
 #include "Terrain.hpp"
@@ -169,10 +170,10 @@ int main(int argc, char** argv)
     // Create camera
     auto camera = GLCamera(window_width, window_height);
     auto ssao_effect = GLAmbientOcclusionEffect();
-    auto fog_effect = GLFogEffect();
-    fog_effect.density = 0.08;
-    fog_effect.no_fog_height = 6.;
-    fog_effect.animation = 0.05;
+    auto air_water_effect = AirWaterEffect();
+    air_water_effect.density = 0.08;
+    air_water_effect.no_fog_height = 6.;
+    air_water_effect.animation = 0.05;
     auto debug_effect = GLDebugEffect();
     
     // Create scene
@@ -215,7 +216,7 @@ int main(int argc, char** argv)
         camera.draw(scene);
         if(ssao_enabled)
             camera.apply_post_effect(ssao_effect);
-        camera.apply_post_effect(fog_effect);
+        camera.apply_post_effect(air_water_effect);
         camera.apply_post_effect(debug_effect);
         
         SDL_GL_SwapWindow(window);
