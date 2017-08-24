@@ -54,6 +54,7 @@ vec3 reflect_color(vec3 incidentDir, vec3 normal)
 
 void main()
 {
+    // Rings
     vec3 ring = vec3(0., 0., 0.);
     for (int i = 0; i < noEffects; i++)
     {
@@ -71,20 +72,29 @@ void main()
     }
     
     vec3 normal = normalize(nor + ring);
-    vec2 screen_uv = gl_FragCoord.xy/screenSize - 0.05 * normal.xz; // Shift the water bottom.
+    vec2 screen_uv = gl_FragCoord.xy/screenSize;
     vec3 bottomPos = texture(positionMap, screen_uv).xyz;
-    float distanceToWater = distance(eyePosition, pos);
-    float distanceToBottom = distance(eyePosition, bottomPos);
-    if(distanceToWater > distanceToBottom)
+    vec3 incidentDir = normalize(pos - eyePosition);
+    
+    if(dot(normal, incidentDir) > 0.0)
     {
-        // Do not shift something that is in front of the water.
-        screen_uv = gl_FragCoord.xy/screenSize;
-        bottomPos = texture(positionMap, screen_uv).xyz;
-        distanceToWater = distance(eyePosition, pos);
-        distanceToBottom = distance(eyePosition, bottomPos);
+        vec3 col = texture(colorMap, screen_uv + 0.05 * normal.xz).xyz;
+        float dist = min(distance(pos, eyePosition), 100.);
+        vec3 colorChange = vec3(clamp( pow(c.r, dist), 0., 1.), clamp( pow(c.g, dist), 0., 1.), clamp( pow(c.b, dist), 0., 1.));
+        color = vec4(colorChange * col + (1 - colorChange) * equilibriumColorAtInfinity, 1.);
+        return;
     }
-    vec3 incidentDir = (pos - eyePosition.xyz)/distanceToWater;
-    vec3 backgroundColor = texture(colorMap, screen_uv).xyz;
+    
+    // Do not draw when something is in front of the water.
+    if(dot(eyePosition - pos, eyePosition - bottomPos) < 0.0)
+    {
+        discard;
+    }
+    
+    // Shift the water bottom.
+    screen_uv -= 0.05 * normal.xz;
+    bottomPos = texture(positionMap, screen_uv).xyz;
+    float viewWaterDepth = distance(bottomPos, pos);
     
     // Compute cosine to the incident angle
     float cosAngle = dot(normal, -incidentDir);
@@ -96,7 +106,7 @@ void main()
     vec3 reflectColor = mix(reflect_color(incidentDir, normal), vec3(1., 1., 1.), 0.5);
     
     // Refraction
-    float viewWaterDepth = distanceToBottom - distanceToWater;
+    vec3 backgroundColor = texture(colorMap, screen_uv).xyz;
     vec3 a = vec3(clamp( pow(c.r, viewWaterDepth), 0., 1.), clamp( pow(c.g, viewWaterDepth), 0., 1.), clamp( pow(c.b, viewWaterDepth), 0., 1.));
     vec3 refractColor = a * backgroundColor + (1 - a) * equilibriumColorAtInfinity;
     
