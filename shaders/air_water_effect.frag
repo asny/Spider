@@ -11,6 +11,8 @@ uniform vec3 eyePosition;
 
 in vec2 uv;
 
+const vec3 equilibriumColorAtInfinity = vec3(0., 0.1, 0.14); // Water color at "infinity"
+
 layout (location = 0) out vec4 color;
 
 
@@ -129,24 +131,33 @@ float snoise(vec3 v)
 // factor: 1 == full fog, 0 == no fog
 void main()
 {
-    vec4 pos = texture(positionMap, uv);
-    
-    // Distance
-    float dist = min(distance(pos.xyz, eyePosition), 100.);
+    vec3 pos = texture(positionMap, uv).xyz;
     float a = eyePosition.y;
     float b = pos.y;
+    
+    // Distance
+    float fog_dist = min(distance(pos, eyePosition), 100.);
     float t1 = clamp(-b/(a-b), 0., 1.);
     float t2 = clamp((noFogHeight-b)/(a-b), 0., 1.);
-    dist *= abs(t1 - t2);
+    fog_dist *= abs(t1 - t2);
     
-    float x = dist * fogDensity;
-    float factor = 1. - 1. / exp(x * x);
+    float x = fog_dist * fogDensity;
+    float fog_factor = 1. - 1. / exp(x * x);
     
     // Noise
-    float n = snoise(0.05 * pos.xyz);
-    factor *=  (1. + animation * n * cos(time));
-    factor = clamp(factor, 0., 1.);
+    float n = snoise(0.05 * pos);
+    fog_factor *=  (1. + animation * n * cos(time));
+    fog_factor = clamp(fog_factor, 0., 1.);
+    
+    // Water
+    float water_dist = min(distance(pos, eyePosition), 100.);
+    t1 = clamp((-100.0-b)/(a-b), 0., 1.);
+    t2 = clamp(-b/(a-b), 0., 1.);
+    water_dist *= abs(t1 - t2);
+    
+    x = water_dist * fogDensity;
+    float water_factor = 1. - 1. / exp(x * x);
     
     // Output
-    color = vec4(fogColor, factor);
+    color = vec4(mix(equilibriumColorAtInfinity, fogColor, fog_factor/(water_factor + fog_factor)), min(fog_factor + water_factor, 1.));
 }
