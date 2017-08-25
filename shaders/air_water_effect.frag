@@ -1,6 +1,7 @@
 #version 330
 
 uniform sampler2D positionMap;
+uniform sampler2D colorMap;
 
 uniform float time;
 uniform float fogDensity;
@@ -8,11 +9,8 @@ uniform vec3 fogColor;
 uniform float noFogHeight;
 uniform float animation;
 uniform vec3 eyePosition;
-const float waterDensity = 0.5;
 
 in vec2 uv;
-
-const vec3 equilibriumColorAtInfinity = vec3(0., 0.1, 0.14); // Water color at "infinity"
 
 layout (location = 0) out vec4 color;
 
@@ -128,11 +126,16 @@ float snoise(vec3 v)
     
     return 42.0 * dot(m4, pdotx);
 }
+const vec3 scattering = vec3(0.2, 0.4, 0.2); // Scattering coefficient (due to particles in the water)
+const vec3 absorption = vec3(0.4, 0.955, 0.99); // Absorption coefficient
+const vec3 c = scattering * absorption;
+const vec3 equilibriumColorAtInfinity = vec3(0., 0.1, 0.14); // Water color at "infinity"
 
 // factor: 1 == full fog, 0 == no fog
 void main()
 {
     vec3 pos = texture(positionMap, uv).xyz;
+    vec3 col = texture(colorMap, uv).xyz;
     float a = eyePosition.y;
     float b = pos.y;
     
@@ -156,9 +159,24 @@ void main()
     t2 = clamp(-b/(a-b), 0., 1.);
     water_dist *= abs(t1 - t2);
     
-    x = water_dist * waterDensity;
-    float water_factor = 1. - 1. / exp(x * x);
+    vec3 colorChange = vec3(clamp( pow(c.r, water_dist), 0., 1.), clamp( pow(c.g, water_dist), 0., 1.), clamp( pow(c.b, water_dist), 0., 1.));
+    
+    if(b > 0.0)
+    {
+        col = mix(col, fogColor, fog_factor);
+        if(a < 0.0)
+        {
+            col = colorChange * col + (1 - colorChange) * equilibriumColorAtInfinity;
+        }
+    }
+    else {
+        col = colorChange * col + (1 - colorChange) * equilibriumColorAtInfinity;
+        if(b < 0.0)
+        {
+            col = mix(col, fogColor, fog_factor);
+        }
+    }
     
     // Output
-    color = vec4(mix(equilibriumColorAtInfinity, fogColor, fog_factor/(water_factor + fog_factor)), min(fog_factor + water_factor, 1.));
+    color = vec4(col, 1.);
 }

@@ -32,6 +32,9 @@ namespace gle
             input.position_texture->use(0);
             GLUniform::use(shader, "positionMap", 0);
             
+            input.shaded_color_texture->use(1);
+            GLUniform::use(shader, "colorMap", 1);
+            
             GLUniform::use(shader, "fogColor", color);
             GLUniform::use(shader, "fogDensity", density);
             GLUniform::use(shader, "noFogHeight", no_fog_height);
