@@ -66,13 +66,14 @@ vec3 fog(vec3 col, vec3 p1, vec3 p2)
     return mix(col, fogColor, factor);
 }
 
-vec3 water(vec3 col, float dist)
+vec3 water(vec3 col, vec3 p1, vec3 p2)
 {
     const vec3 scattering = vec3(0.2, 0.4, 0.2); // Scattering coefficient (due to particles in the water)
     const vec3 absorption = vec3(0.4, 0.955, 0.99); // Absorption coefficient
     const vec3 c = scattering * absorption;
     const vec3 equilibriumColorAtInfinity = vec3(0., 0.1, 0.14); // Water color at "infinity"
     
+    float dist = min(distance(p1, p2), 100.);
     vec3 colorChange = vec3(clamp( pow(c.r, dist), 0., 1.), clamp( pow(c.g, dist), 0., 1.), clamp( pow(c.b, dist), 0., 1.));
     return colorChange * col + (1 - colorChange) * equilibriumColorAtInfinity;
 }
@@ -111,13 +112,10 @@ void main()
     backgroundPos = texture(positionMap, screen_uv).xyz;
     vec3 col = texture(colorMap, screen_uv).xyz;
     
-    float background2WaterDistance = min(distance(pos, backgroundPos), 100.);
-    float camera2WaterDistance = min(distance(pos, eyePosition), 100.);
-    
     if(dot(normal, incidentDir) > 0.0)
     {
         col = fog(col, pos, backgroundPos);
-        col = water(col, camera2WaterDistance);
+        col = water(col, eyePosition, pos);
         color = vec4(col, 1.);
         return;
     }
@@ -132,7 +130,7 @@ void main()
     vec3 reflectColor = mix(reflect_color(incidentDir, normal), vec3(1., 1., 1.), 0.5);
     
     // Refraction
-    vec3 refractColor = water(col, background2WaterDistance);
+    vec3 refractColor = water(col, pos, backgroundPos);
     
     // Mix refraction and reflection
     col = mix(refractColor, reflectColor, fresnel);

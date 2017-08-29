@@ -126,47 +126,59 @@ float snoise(vec3 v)
     
     return 42.0 * dot(m4, pdotx);
 }
-const vec3 scattering = vec3(0.2, 0.4, 0.2); // Scattering coefficient (due to particles in the water)
-const vec3 absorption = vec3(0.4, 0.955, 0.99); // Absorption coefficient
-const vec3 c = scattering * absorption;
-const vec3 equilibriumColorAtInfinity = vec3(0., 0.1, 0.14); // Water color at "infinity"
 
-// factor: 1 == full fog, 0 == no fog
+vec3 fog(vec3 col, vec3 p1, vec3 p2)
+{
+    const float fogDensity = 0.08;
+    const vec3 fogColor = vec3(0.8, 0.8, 0.8);
+    const float noFogHeight = 6.;
+    
+    float a = p1.y;
+    float b = p2.y;
+    float t1 = clamp(-b/(a-b), 0., 1.);
+    float t2 = clamp((noFogHeight-b)/(a-b), 0., 1.);
+    
+    float dist = min(distance(p1, p2), 100.) * abs(t1 - t2);
+    
+    float x = dist * fogDensity;
+    float factor = 1. - 1. / exp(x * x);
+    
+    // Noise
+    float n = snoise(0.05 * p2);
+    factor *=  (1. + animation * n * cos(time));
+    factor = clamp(factor, 0., 1.);
+    
+    return mix(col, fogColor, factor);
+}
+
+vec3 water(vec3 col, vec3 p1, vec3 p2)
+{
+    const vec3 scattering = vec3(0.2, 0.4, 0.2); // Scattering coefficient (due to particles in the water)
+    const vec3 absorption = vec3(0.4, 0.955, 0.99); // Absorption coefficient
+    const vec3 c = scattering * absorption;
+    const vec3 equilibriumColorAtInfinity = vec3(0., 0.1, 0.14); // Water color at "infinity"
+    
+    float a = p1.y;
+    float b = p2.y;
+    float t1 = clamp((-100.0-b)/(a-b), 0., 1.);
+    float t2 = clamp(-b/(a-b), 0., 1.);
+    
+    float dist = min(distance(p1, p2), 100.) * abs(t1 - t2);
+    vec3 colorChange = vec3(clamp( pow(c.r, dist), 0., 1.), clamp( pow(c.g, dist), 0., 1.), clamp( pow(c.b, dist), 0., 1.));
+    return colorChange * col + (1 - colorChange) * equilibriumColorAtInfinity;
+}
+
 void main()
 {
     vec3 pos = texture(positionMap, uv).xyz;
     vec3 col = texture(colorMap, uv).xyz;
-    float a = eyePosition.y;
-    float b = pos.y;
     
-    // Distance
-    float fog_dist = min(distance(pos, eyePosition), 100.);
-    float t1 = clamp(-b/(a-b), 0., 1.);
-    float t2 = clamp((noFogHeight-b)/(a-b), 0., 1.);
-    fog_dist *= abs(t1 - t2);
-    
-    float x = fog_dist * fogDensity;
-    float fog_factor = 1. - 1. / exp(x * x);
-    
-    // Noise
-    float n = snoise(0.05 * pos);
-    fog_factor *=  (1. + animation * n * cos(time));
-    fog_factor = clamp(fog_factor, 0., 1.);
-    
-    // Water
-    float water_dist = min(distance(pos, eyePosition), 100.);
-    t1 = clamp((-100.0-b)/(a-b), 0., 1.);
-    t2 = clamp(-b/(a-b), 0., 1.);
-    water_dist *= abs(t1 - t2);
-    
-    vec3 colorChange = vec3(clamp( pow(c.r, water_dist), 0., 1.), clamp( pow(c.g, water_dist), 0., 1.), clamp( pow(c.b, water_dist), 0., 1.));
-    
-    if(b > 0.0 || distance(pos, eyePosition) >= 50.0)
+    if(pos.y > 0.0 || distance(pos, eyePosition) >= 50.0)
     {
-        col = mix(col, fogColor, fog_factor);
+        col = fog(col, eyePosition, pos);
     }
     else {
-        col = colorChange * col + (1 - colorChange) * equilibriumColorAtInfinity;
+        col = water(col, eyePosition, pos);
     }
     
     // Output
