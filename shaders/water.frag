@@ -24,11 +24,6 @@ const float Eta = 1. / 1.5; // Ratio of indices of refraction
 const float FresnelPower = 5.0;
 const float F = ((1.0-Eta) * (1.0-Eta)) / ((1.0+Eta) * (1.0+Eta));
 
-const vec3 scattering = vec3(0.2, 0.4, 0.2); // Scattering coefficient (due to particles in the water)
-const vec3 absorption = vec3(0.4, 0.955, 0.99); // Absorption coefficient
-const vec3 c = scattering * absorption;
-const vec3 equilibriumColorAtInfinity = vec3(0., 0.1, 0.14); // Water color at "infinity"
-
 vec3 reflect_color(vec3 incidentDir, vec3 normal)
 {
     vec3 reflectDir = normalize(reflect(incidentDir, normal));
@@ -52,8 +47,47 @@ vec3 reflect_color(vec3 incidentDir, vec3 normal)
     return texture(environmentMap, reflectDir).xyz;
 }
 
+vec3 fog(vec3 col, vec3 p1, vec3 p2)
+{
+    const float fogDensity = 0.08;
+    const vec3 fogColor = vec3(0.8, 0.8, 0.8);
+    const float noFogHeight = 6.;
+    
+    float a = p1.y;
+    float b = p2.y;
+    float t1 = clamp(-b/(a-b), 0., 1.);
+    float t2 = clamp((noFogHeight-b)/(a-b), 0., 1.);
+    
+    float dist = min(distance(p1, p2), 100.) * abs(t1 - t2);
+    
+    float x = dist * fogDensity;
+    float factor = 1. - 1. / exp(x * x);
+    
+    return mix(col, fogColor, factor);
+}
+
+vec3 water(vec3 col, float dist)
+{
+    const vec3 scattering = vec3(0.2, 0.4, 0.2); // Scattering coefficient (due to particles in the water)
+    const vec3 absorption = vec3(0.4, 0.955, 0.99); // Absorption coefficient
+    const vec3 c = scattering * absorption;
+    const vec3 equilibriumColorAtInfinity = vec3(0., 0.1, 0.14); // Water color at "infinity"
+    
+    vec3 colorChange = vec3(clamp( pow(c.r, dist), 0., 1.), clamp( pow(c.g, dist), 0., 1.), clamp( pow(c.b, dist), 0., 1.));
+    return colorChange * col + (1 - colorChange) * equilibriumColorAtInfinity;
+}
+
 void main()
 {
+    vec2 screen_uv = gl_FragCoord.xy/screenSize;
+    vec3 backgroundPos = texture(positionMap, screen_uv).xyz;
+    
+    // Do not draw when something is in front of the water.
+    if(dot(eyePosition - pos, eyePosition - backgroundPos) < 0.0)
+    {
+        discard;
+    }
+    
     // Rings
     vec3 ring = vec3(0., 0., 0.);
     for (int i = 0; i < noEffects; i++)
@@ -70,31 +104,23 @@ void main()
             ring += fadeFactor * ringFactor * normalize(pos - center);
         }
     }
-    
     vec3 normal = normalize(nor + ring);
-    vec2 screen_uv = gl_FragCoord.xy/screenSize;
-    vec3 bottomPos = texture(positionMap, screen_uv).xyz;
+    
     vec3 incidentDir = normalize(pos - eyePosition);
+    screen_uv -= 0.05 * normal.xz; // Shift the water bottom/sky.
+    backgroundPos = texture(positionMap, screen_uv).xyz;
+    vec3 col = texture(colorMap, screen_uv).xyz;
+    
+    float background2WaterDistance = min(distance(pos, backgroundPos), 100.);
+    float camera2WaterDistance = min(distance(pos, eyePosition), 100.);
     
     if(dot(normal, incidentDir) > 0.0)
     {
-        vec3 col = texture(colorMap, screen_uv + 0.05 * normal.xz).xyz;
-        float dist = min(distance(pos, eyePosition), 100.);
-        vec3 colorChange = vec3(clamp( pow(c.r, dist), 0., 1.), clamp( pow(c.g, dist), 0., 1.), clamp( pow(c.b, dist), 0., 1.));
-        color = vec4(colorChange * col + (1 - colorChange) * equilibriumColorAtInfinity, 1.);
+        col = fog(col, pos, backgroundPos);
+        col = water(col, camera2WaterDistance);
+        color = vec4(col, 1.);
         return;
     }
-    
-    // Do not draw when something is in front of the water.
-    if(dot(eyePosition - pos, eyePosition - bottomPos) < 0.0)
-    {
-        discard;
-    }
-    
-    // Shift the water bottom.
-    screen_uv -= 0.05 * normal.xz;
-    bottomPos = texture(positionMap, screen_uv).xyz;
-    float viewWaterDepth = distance(bottomPos, pos);
     
     // Compute cosine to the incident angle
     float cosAngle = dot(normal, -incidentDir);
@@ -106,15 +132,13 @@ void main()
     vec3 reflectColor = mix(reflect_color(incidentDir, normal), vec3(1., 1., 1.), 0.5);
     
     // Refraction
-    vec3 backgroundColor = texture(colorMap, screen_uv).xyz;
-    vec3 a = vec3(clamp( pow(c.r, viewWaterDepth), 0., 1.), clamp( pow(c.g, viewWaterDepth), 0., 1.), clamp( pow(c.b, viewWaterDepth), 0., 1.));
-    vec3 refractColor = a * backgroundColor + (1 - a) * equilibriumColorAtInfinity;
+    vec3 refractColor = water(col, background2WaterDistance);
     
     // Mix refraction and reflection
-    vec3 col = mix(refractColor, reflectColor, fresnel);
+    col = mix(refractColor, reflectColor, fresnel);
     
     // Foam
-    float waterDepth = pos.y-bottomPos.y;
+    float waterDepth = pos.y-backgroundPos.y;
     const float minFoamDepth = 0.;
     const float peakFoamDepth = 0.02;
     const float maxFoamDepth = 0.1;
@@ -143,6 +167,9 @@ void main()
         foam = clamp(foam - mask, 0, 0.5);
         col = mix(col, vec3(0.8,0.8,0.8), foam);
     }
+    
+    // Fog
+    col = fog(col, eyePosition, pos);
     
     color = vec4(col, 1.);
 }

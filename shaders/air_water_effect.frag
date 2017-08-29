@@ -161,20 +161,12 @@ void main()
     
     vec3 colorChange = vec3(clamp( pow(c.r, water_dist), 0., 1.), clamp( pow(c.g, water_dist), 0., 1.), clamp( pow(c.b, water_dist), 0., 1.));
     
-    if(b > 0.0)
+    if(b > 0.0 || distance(pos, eyePosition) >= 50.0)
     {
         col = mix(col, fogColor, fog_factor);
-        if(a < 0.0)
-        {
-            col = colorChange * col + (1 - colorChange) * equilibriumColorAtInfinity;
-        }
     }
     else {
         col = colorChange * col + (1 - colorChange) * equilibriumColorAtInfinity;
-        if(b < 0.0)
-        {
-            col = mix(col, fogColor, fog_factor);
-        }
     }
     
     // Output
