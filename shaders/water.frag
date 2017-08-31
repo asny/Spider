@@ -112,7 +112,9 @@ void main()
     backgroundPos = texture(positionMap, screen_uv).xyz;
     vec3 col = texture(colorMap, screen_uv).xyz;
     
-    if(dot(normal, incidentDir) > 0.0)
+    bool underWater = dot(normal, incidentDir) > 0.1 || dot(normal, incidentDir) > -0.1 && eyePosition.y < 0.0;
+    
+    if(underWater)
     {
         col = fog(col, pos, backgroundPos);
         col = water(col, eyePosition, pos);

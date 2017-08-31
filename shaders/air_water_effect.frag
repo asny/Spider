@@ -173,12 +173,21 @@ void main()
     vec3 pos = texture(positionMap, uv).xyz;
     vec3 col = texture(colorMap, uv).xyz;
     
-    if(pos.y > 0.0 || distance(pos, eyePosition) >= 50.0)
+    bool underWater;
+    if(distance(pos, eyePosition) >= 50.0)
     {
-        col = fog(col, eyePosition, pos);
+        underWater = eyePosition.y < 0.0 && pos.y < 5.;
     }
     else {
+        underWater = pos.y < -0.1 || pos.y < 0.1 && eyePosition.y < 0.0;
+    }
+    
+    if(underWater)
+    {
         col = water(col, eyePosition, pos);
+    }
+    else {
+        col = fog(col, eyePosition, pos);
     }
     
     // Output
