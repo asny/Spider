@@ -213,10 +213,12 @@ int main(int argc, char** argv)
         directional_light->shadow_target = spider.get_position(environment);
         
         // draw one frame
-        camera.draw(scene);
+        camera.deferred_pass(scene);
+        camera.apply_post_effect(air_water_effect);
+        camera.forward_pass(scene);
+        
         if(ssao_enabled)
             camera.apply_post_effect(ssao_effect);
-        camera.apply_post_effect(air_water_effect);
         camera.apply_post_effect(debug_effect);
         
         SDL_GL_SwapWindow(window);
