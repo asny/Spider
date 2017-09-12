@@ -129,10 +129,6 @@ float snoise(vec3 v)
 
 vec3 fog(vec3 col, vec3 p1, vec3 p2)
 {
-    const float fogDensity = 0.08;
-    const vec3 fogColor = vec3(0.8, 0.8, 0.8);
-    const float noFogHeight = 6.;
-    
     float a = p1.y;
     float b = p2.y;
     float t1 = clamp(-b/(a-b), 0., 1.);

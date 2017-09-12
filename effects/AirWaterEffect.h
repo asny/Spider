@@ -13,8 +13,8 @@ namespace gle
     {
     public:
         glm::vec3 color = glm::vec3(0.8, 0.8, 0.8);
-        float density = 0.2;
-        float no_fog_height = 3;
+        float density = 0.08;
+        float no_fog_height = 6.;
         float animation = 0.1;
         
         AirWaterEffect()
