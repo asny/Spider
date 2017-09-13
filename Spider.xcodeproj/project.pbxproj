@@ -47,6 +47,8 @@
 		493F8F131E475DF600D94AC1 /* Butterfly.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Butterfly.hpp; path = source/Butterfly.hpp; sourceTree = "<group>"; };
 		496B07A91DF99EFC00CFBD10 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		497A95501EDECDB6004AA2CA /* water.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = water.vert; path = shaders/water.vert; sourceTree = "<group>"; };
+		49AD69BE1F4F0F40001BF4F9 /* AirWaterEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AirWaterEffect.h; path = effects/AirWaterEffect.h; sourceTree = "<group>"; };
+		49AD69BF1F4F0F4B001BF4F9 /* air_water_effect.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = air_water_effect.frag; path = shaders/air_water_effect.frag; sourceTree = "<group>"; };
 		49E383391E6A11240024D5D7 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Random.h; path = random/Random.h; sourceTree = "<group>"; };
 		49E3833A1E6A11240024D5D7 /* simplexnoise.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = simplexnoise.cpp; path = random/simplexnoise.cpp; sourceTree = "<group>"; };
 		49E3833B1E6A11240024D5D7 /* simplexnoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simplexnoise.h; path = random/simplexnoise.h; sourceTree = "<group>"; };
@@ -89,6 +91,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		49AD69BD1F4F0F2D001BF4F9 /* Effects */ = {
+			isa = PBXGroup;
+			children = (
+				49AD69BE1F4F0F40001BF4F9 /* AirWaterEffect.h */,
+			);
+			name = Effects;
+			sourceTree = "<group>";
+		};
 		49E3833D1E6A112D0024D5D7 /* Random */ = {
 			isa = PBXGroup;
 			children = (
@@ -102,6 +112,7 @@
 		7A383A131BBFB6AC00E29333 = {
 			isa = PBXGroup;
 			children = (
+				49AD69BD1F4F0F2D001BF4F9 /* Effects */,
 				7A383A341BBFD93A00E29333 /* Shaders */,
 				49E3833D1E6A112D0024D5D7 /* Random */,
 				7AF9C41A1BEBEB12008AE5F5 /* Rendering */,
@@ -123,6 +134,7 @@
 		7A383A341BBFD93A00E29333 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				49AD69BF1F4F0F4B001BF4F9 /* air_water_effect.frag */,
 				497A95501EDECDB6004AA2CA /* water.vert */,
 				49EBFAE41E3F1DE400503199 /* water.frag */,
 				49EBFAE61E3FDD3300503199 /* terrain.frag */,

@@ -121,7 +121,7 @@ public:
         auto shader = get_shader();
         gle::GLState::depth_test(true);
         gle::GLState::depth_write(false);
-        gle::GLState::cull_back_faces(true);
+        gle::GLState::cull_back_faces(false);
         
         environment_texture->use(0);
         gle::GLUniform::use(shader, "environmentMap", 0);
