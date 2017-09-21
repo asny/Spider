@@ -78,17 +78,8 @@ vec3 water(vec3 col, vec3 p1, vec3 p2)
     return colorChange * col + (1 - colorChange) * equilibriumColorAtInfinity;
 }
 
-void main()
+vec3 get_normal()
 {
-    vec2 screen_uv = gl_FragCoord.xy/screenSize;
-    vec3 backgroundPos = texture(positionMap, screen_uv).xyz;
-    
-    // Do not draw when something is in front of the water.
-    if(dot(eyePosition - pos, eyePosition - backgroundPos) < 0.0)
-    {
-        discard;
-    }
-    
     // Rings
     vec3 ring = vec3(0., 0., 0.);
     for (int i = 0; i < noEffects; i++)
@@ -105,8 +96,21 @@ void main()
             ring += fadeFactor * ringFactor * normalize(pos - center);
         }
     }
-    vec3 normal = normalize(nor + ring);
+    return normalize(nor + ring);
+}
+
+void main()
+{
+    vec2 screen_uv = gl_FragCoord.xy/screenSize;
+    vec3 backgroundPos = texture(positionMap, screen_uv).xyz;
     
+    // Do not draw when something is in front of the water.
+    if(dot(eyePosition - pos, eyePosition - backgroundPos) < 0.0)
+    {
+        discard;
+    }
+    
+    vec3 normal = get_normal();
     vec3 incidentDir = normalize(pos - eyePosition);
     screen_uv -= 0.05 * normal.xz; // Shift the water bottom/sky.
     backgroundPos = texture(positionMap, screen_uv).xyz;
