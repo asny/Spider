@@ -3,12 +3,13 @@
 uniform mat4 VPMatrix;
 uniform mat4 MMatrix;
 uniform float time;
-uniform int noWaves;
-uniform float amplitude[8];
-uniform float wavelength[8];
-uniform float speed[8];
-uniform vec2 direction[8];
-uniform float steepness[8];
+uniform float median_wavelength;
+uniform float speed;
+uniform float wind_variation;
+uniform vec2 wind_direction;
+
+const int noWaves = 4;
+const float pi = 3.14159;
 
 in vec3 position;
 in vec2 uv_coordinates;
@@ -17,40 +18,32 @@ out vec2 coords;
 out vec3 nor;
 out vec3 pos;
 
-const int noWaves_ = 4;
-const float _noWaves = 4.0;
-
-const float pi = 3.14159;
-const float g = 9.81;
-const float median_wavelength = 1.0;
-const vec2 wind_direction = normalize(vec2(1.0, 0.5));
-
 void main()
 {
     pos = (MMatrix * vec4(position, 1.)).xyz;
     pos.y = 0.;
     nor = vec3(0., 1., 0.);
     
-    float wavelength_var[noWaves_];
+    float wavelength_var[noWaves];
     wavelength_var[0] = 0.146;
     wavelength_var[1] = 0.335;
     wavelength_var[2] = 0.64632;
     wavelength_var[3] = 0.73134;
     
-    float direction_var[noWaves_];
+    float direction_var[noWaves];
     direction_var[0] = 0.821;
     direction_var[1] = 0.4572;
     direction_var[2] = 0.014;
     direction_var[3] = 0.71;
     
     // Offset position
-    for (int i = 0; i < noWaves_; ++i)
+    for (int i = 0; i < noWaves; ++i)
     {
         float min_wavelength = 0.5 * median_wavelength;
         float max_wavelength = 2.0 * median_wavelength;
         float wavelength = mix(min_wavelength, max_wavelength, wavelength_var[i]);
         
-        float dir_angle = 0.1 * pi * (2.0 * direction_var[i] - 1.0);
+        float dir_angle = wind_variation * pi * (2.0 * direction_var[i] - 1.0);
         float cos_angle = cos(dir_angle);
         float sin_angle = sin(dir_angle);
         vec2 dir = normalize(vec2( cos_angle * wind_direction.x - sin_angle * wind_direction.y,
@@ -58,8 +51,7 @@ void main()
         
         float frequency = 2.0 * pi / wavelength;//sqrt(g * wavelength / (2.0 * pi)) * tanh(2.0 * pi * waterDepth / wavelength);
         float amplitude = wavelength / 100.0;
-        float steepness = wavelength_var[i]/(frequency * amplitude * _noWaves);
-        float speed = 0.5;//wavelength / 2.0; // TODO: What should this be?
+        float steepness = wavelength_var[i]/(frequency * amplitude * noWaves);
         float phase = speed * frequency;
         
         float theta = dot(dir, pos.xz);
