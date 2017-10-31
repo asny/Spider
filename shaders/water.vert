@@ -17,7 +17,13 @@ out vec2 coords;
 out vec3 nor;
 out vec3 pos;
 
+const int noWaves_ = 4;
+const float _noWaves = 4.0;
+
 const float pi = 3.14159;
+const float g = 9.81;
+const float median_wavelength = 1.0;
+const vec2 wind_direction = normalize(vec2(1.0, 0.5));
 
 void main()
 {
@@ -25,22 +31,49 @@ void main()
     pos.y = 0.;
     nor = vec3(0., 1., 0.);
     
+    float wavelength_var[noWaves_];
+    wavelength_var[0] = 0.146;
+    wavelength_var[1] = 0.335;
+    wavelength_var[2] = 0.64632;
+    wavelength_var[3] = 0.73134;
+    
+    float direction_var[noWaves_];
+    direction_var[0] = 0.821;
+    direction_var[1] = 0.4572;
+    direction_var[2] = 0.014;
+    direction_var[3] = 0.71;
+    
     // Offset position
-    for (int i = 0; i < noWaves; ++i)
+    for (int i = 0; i < noWaves_; ++i)
     {
-        float frequency = 2*pi/wavelength[i];
-        float phase = speed[i] * frequency;
-        float theta = dot(direction[i], pos.xz);
+        float min_wavelength = 0.5 * median_wavelength;
+        float max_wavelength = 2.0 * median_wavelength;
+        float wavelength = mix(min_wavelength, max_wavelength, wavelength_var[i]);
+        
+        float dir_angle = 0.1 * pi * (2.0 * direction_var[i] - 1.0);
+        float cos_angle = cos(dir_angle);
+        float sin_angle = sin(dir_angle);
+        vec2 dir = normalize(vec2( cos_angle * wind_direction.x - sin_angle * wind_direction.y,
+                                  sin_angle * wind_direction.x + cos_angle * wind_direction.y));
+        
+        float frequency = 2.0 * pi / wavelength;//sqrt(g * wavelength / (2.0 * pi)) * tanh(2.0 * pi * waterDepth / wavelength);
+        float amplitude = wavelength / 100.0;
+        float steepness = wavelength_var[i]/(frequency * amplitude * _noWaves);
+        float speed = 0.5;//wavelength / 2.0; // TODO: What should this be?
+        float phase = speed * frequency;
+        
+        float theta = dot(dir, pos.xz);
         float a = theta * frequency + time * phase;
         float sin_a = sin(a);
         float cos_a = cos(a);
-        pos.y += amplitude[i] * sin_a;
-        pos.x += steepness[i] * amplitude[i] * direction[i].x * cos_a;
-        pos.z += steepness[i] * amplitude[i] * direction[i].y * cos_a;
         
-        nor.y -= steepness[i] * frequency * amplitude[i] * sin_a;
-        nor.x -= direction[i].x * frequency * amplitude[i] * cos_a;
-        nor.z -= direction[i].y * frequency * amplitude[i] * cos_a;
+        pos.y += amplitude * sin_a;
+        pos.x += steepness * amplitude * dir.x * cos_a;
+        pos.z += steepness * amplitude * dir.y * cos_a;
+        
+        nor.y -= steepness * frequency * amplitude * sin_a;
+        nor.x -= dir.x * frequency * amplitude * cos_a;
+        nor.z -= dir.y * frequency * amplitude * cos_a;
     }
     
     gl_Position = VPMatrix * vec4(pos, 1.);
